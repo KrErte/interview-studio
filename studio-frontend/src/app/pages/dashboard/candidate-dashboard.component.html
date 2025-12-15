@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-slate-950 px-4 py-8 text-slate-100">
+  <div class="mx-auto max-w-6xl space-y-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300">
+          Candidate
+        </p>
+        <h1 class="text-3xl font-bold text-slate-50">Your Career Dashboard</h1>
+        <p class="text-sm text-slate-400">
+          Manage your CV, run matches, and review analyses.
+        </p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-2">
+      <div class="flex flex-wrap gap-1">
+        <a
+          routerLink="./upload-cv"
+          routerLinkActive="tab-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="tab-link"
+        >
+          Upload CV
+        </a>
+        <a
+          routerLink="./match"
+          routerLinkActive="tab-active"
+          class="tab-link"
+        >
+          Match
+        </a>
+        <a
+          routerLink="./job-analysis"
+          routerLinkActive="tab-active"
+          class="tab-link"
+        >
+          Job Analysis
+        </a>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+

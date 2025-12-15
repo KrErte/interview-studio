@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-26-transition-profile" author="architect">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="transition_profile"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="transition_profile">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jobseeker_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_role" type="VARCHAR(255)"/>
+            <column name="target_role" type="VARCHAR(255)"/>
+            <column name="skills_json" type="TEXT"/>
+            <column name="preferred_locations" type="VARCHAR(255)"/>
+            <column name="summary" type="TEXT"/>
+            <column name="experience_years" type="INT"/>
+            <column name="visibility" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="transition_profile"
+                                 baseColumnNames="jobseeker_user_id"
+                                 constraintName="fk_transition_profile_user"
+                                 referencedTableName="app_users"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="transition_profile" indexName="idx_transition_profile_user">
+            <column name="jobseeker_user_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2025-12-26-pivot-role-match" author="architect">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="pivot_role_match"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="pivot_role_match">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transition_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="target_role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="match_score" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="future_proof_score" type="DECIMAL(5,2)"/>
+            <column name="gap_summary" type="TEXT"/>
+            <column name="recommended_actions" type="TEXT"/>
+            <column name="computed_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="pivot_role_match"
+                                 baseColumnNames="transition_profile_id"
+                                 constraintName="fk_role_match_profile"
+                                 referencedTableName="transition_profile"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="pivot_role_match" indexName="idx_role_match_profile">
+            <column name="transition_profile_id"/>
+        </createIndex>
+        <createIndex tableName="pivot_role_match" indexName="idx_role_match_computed_at">
+            <column name="computed_at"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2025-12-26-pivot-future-proof-score" author="architect">
+        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
+            <not>
+                <tableExists tableName="pivot_future_proof_score"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="pivot_future_proof_score">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transition_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="overall_score" type="DECIMAL(5,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adaptability_score" type="DECIMAL(5,2)"/>
+            <column name="skill_relevance_score" type="DECIMAL(5,2)"/>
+            <column name="market_demand_score" type="DECIMAL(5,2)"/>
+            <column name="stability_score" type="DECIMAL(5,2)"/>
+            <column name="source_event_id" type="UUID"/>
+            <column name="computed_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="pivot_future_proof_score"
+                                 baseColumnNames="transition_profile_id"
+                                 constraintName="fk_future_score_profile"
+                                 referencedTableName="transition_profile"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="pivot_future_proof_score" indexName="idx_pivot_future_score_profile">
+            <column name="transition_profile_id"/>
+        </createIndex>
+        <createIndex tableName="pivot_future_proof_score" indexName="idx_pivot_future_score_computed_at">
+            <column name="computed_at"/>
+        </createIndex>
+
+        <createTable tableName="future_proof_score_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event_id" type="UUID">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="transition_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trigger_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="TEXT"/>
+            <column name="computed_score" type="DECIMAL(5,2)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="future_proof_score_event"
+                                 baseColumnNames="transition_profile_id"
+                                 constraintName="fk_future_score_event_profile"
+                                 referencedTableName="transition_profile"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="future_proof_score_event" indexName="idx_future_score_event_profile">
+            <column name="transition_profile_id"/>
+        </createIndex>
+
+        <createTable tableName="pivot_marketplace_profile">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transition_profile_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="headline" type="VARCHAR(255)"/>
+            <column name="anonymized_label" type="VARCHAR(255)"/>
+            <column name="location_preference" type="VARCHAR(255)"/>
+            <column name="target_rate" type="DECIMAL(10,2)"/>
+            <column name="open_to_interview" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_email" type="VARCHAR(255)"/>
+            <column name="contact_handle" type="VARCHAR(255)"/>
+            <column name="availability_start" type="DATE"/>
+            <column name="visibility" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="pivot_marketplace_profile"
+                                 baseColumnNames="transition_profile_id"
+                                 constraintName="fk_marketplace_profile_transition"
+                                 referencedTableName="transition_profile"
+                                 referencedColumnNames="id"/>
+
+        <createIndex tableName="pivot_marketplace_profile" indexName="idx_pivot_marketplace_profile_visibility">
+            <column name="visibility"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+

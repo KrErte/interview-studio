@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-23-career-marketplace" author="backend-agent">
+        <createTable tableName="skill_profile">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_family" type="varchar(255)"/>
+            <column name="location" type="varchar(255)"/>
+            <column name="years_experience" type="int"/>
+            <column name="skills_json" type="text"/>
+            <column name="visibility" type="varchar(20)" defaultValue="LIMITED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="future_proof_score" type="numeric(10,2)"/>
+            <column name="future_proof_explain_json" type="text"/>
+            <column name="updated_at" type="timestamp"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="skill_profile" indexName="idx_skill_profile_email">
+            <column name="email"/>
+        </createIndex>
+
+        <createTable tableName="role_profile">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_key" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="role_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_family" type="varchar(255)"/>
+            <column name="required_skills_json" type="text"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <createTable tableName="role_match">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="skill_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="overlap_percent" type="numeric(10,2)"/>
+            <column name="gap_skills_json" type="text"/>
+            <column name="estimated_weeks" type="int"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="role_match" indexName="idx_role_match_skill_profile">
+            <column name="skill_profile_id"/>
+        </createIndex>
+
+        <createTable tableName="future_proof_score">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="skill_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="numeric(10,2)"/>
+            <column name="explain_json" type="text"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="future_proof_score" indexName="idx_future_score_skill_profile">
+            <column name="skill_profile_id"/>
+        </createIndex>
+
+        <createTable tableName="marketplace_profile">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="skill_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="headline" type="varchar(500)"/>
+            <column name="role_family" type="varchar(255)"/>
+            <column name="location" type="varchar(255)"/>
+            <column name="visibility" type="varchar(20)" defaultValue="LIMITED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="score" type="numeric(10,2)"/>
+            <column name="overlap_percent" type="numeric(10,2)"/>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="marketplace_profile" indexName="idx_marketplace_visibility_score">
+            <column name="visibility"/>
+            <column name="score"/>
+        </createIndex>
+
+        <createTable tableName="pivot_assessment_template">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_family" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight_core" type="numeric(10,2)"/>
+            <column name="weight_gap" type="numeric(10,2)"/>
+            <column name="baseline_skills_json" type="text"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <createTable tableName="candidate_discovery_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="skill_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload_json" type="text"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="candidate_discovery_event" indexName="idx_candidate_discovery_skill_profile">
+            <column name="skill_profile_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+

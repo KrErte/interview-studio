@@ -1,0 +1,541 @@
+<div class="space-y-6">
+  <div
+    class="rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-slate-950 to-slate-900 p-6 shadow-xl shadow-emerald-500/20"
+  >
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-sm font-semibold text-emerald-400">Ghost Interviewer LITE</p>
+        <h1 class="text-2xl font-semibold text-slate-50">AI Interview Studio</h1>
+        <p class="text-sm text-slate-400">
+          Generate a quick simulated interview tailored to a role and company.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-[minmax(0,3fr)_minmax(0,4fr)]">
+    <div class="space-y-4">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+        <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-300">
+          Interview setup
+        </h2>
+
+        <div class="space-y-4">
+          <!-- CV upload is the natural starting point before running the interview -->
+          <app-cv-upload-panel [required]="false"></app-cv-upload-panel>
+
+          <section
+            *ngIf="cvProfile"
+            class="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 space-y-3"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300">
+                  Interview focus preview
+                </p>
+                <p class="text-[11px] text-slate-400">
+                  We’ll use your CV to focus on the most relevant topics. This does not affect scoring.
+                </p>
+              </div>
+              <span
+                *ngIf="cvProfile.cvFilename"
+                class="truncate rounded-full bg-slate-900/80 px-3 py-1 text-[11px] text-slate-300"
+              >
+                From: {{ cvProfile.cvFilename }}
+              </span>
+            </div>
+
+            <div class="grid gap-3 md:grid-cols-3 text-[11px]">
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-200">Key skills you mentioned</p>
+                <ul class="space-y-0.5 text-slate-300">
+                  <li *ngFor="let s of cvProfile.candidateKeySkills">
+                    • {{ s }}
+                  </li>
+                  <li *ngIf="!cvProfile.candidateKeySkills?.length" class="text-slate-500">
+                    We’ll start by clarifying your core skills.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-200">Experience depth</p>
+                <ul class="space-y-0.5 text-slate-300">
+                  <li *ngFor="let s of cvProfile.candidateExperienceDepth">
+                    • {{ s }}
+                  </li>
+                  <li *ngIf="!cvProfile.candidateExperienceDepth?.length" class="text-slate-500">
+                    We’ll explore how your experience translates to this role.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-200">Real-world examples</p>
+                <ul class="space-y-0.5 text-slate-300">
+                  <li *ngFor="let s of cvProfile.candidateRealExamples">
+                    • {{ s }}
+                  </li>
+                  <li *ngIf="!cvProfile.candidateRealExamples?.length" class="text-slate-500">
+                    We’ll ask for concrete stories from your work.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-slate-500">
+              No risks or scores are shown here—this preview only explains what we’ll focus on.
+            </p>
+          </section>
+
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-400">Your email</label>
+            <input
+              type="email"
+              [(ngModel)]="candidateEmail"
+              placeholder="you@example.com"
+              class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+            />
+          </div>
+
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-400">Company</label>
+            <input
+              type="text"
+              [(ngModel)]="companyName"
+              placeholder="e.g. Stripe"
+              class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+            />
+          </div>
+
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-400">Role title</label>
+            <input
+              type="text"
+              [(ngModel)]="roleTitle"
+              placeholder="e.g. Senior Frontend Engineer"
+              class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+            />
+          </div>
+
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-400">Seniority</label>
+            <select
+              [(ngModel)]="seniority"
+              class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+            >
+              <option *ngFor="let level of seniorityOptions" [ngValue]="level">
+                {{ level }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-xs font-medium text-slate-400">Interview style</label>
+            <select
+              [(ngModel)]="interviewerStyle"
+              class="w-full rounded-lg border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+            >
+              <option *ngFor="let style of styleOptions" [ngValue]="style">
+                {{ style }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            (click)="runInterview()"
+            [disabled]="loading"
+            class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <span *ngIf="!loading">Run AI interview</span>
+            <span *ngIf="loading" class="flex items-center gap-2">
+              <span
+                class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-900 border-t-emerald-300"
+              ></span>
+              Running…
+            </span>
+          </button>
+        </div>
+
+        <p
+          *ngIf="error"
+          class="mt-4 rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-100"
+        >
+          {{ error }}
+        </p>
+
+        <p *ngIf="loading && !error" class="mt-4 text-xs text-slate-400">
+          Generating tailored interview questions for {{ roleTitle || 'this role' }}…
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="text-xs uppercase tracking-wide text-emerald-300">Active interview</p>
+            <h2 class="text-sm font-semibold text-slate-100">Ghost Interviewer session</h2>
+          </div>
+          <div class="flex items-center gap-2 text-[11px]">
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900 px-3 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-500/70 focus:ring-offset-0"
+              *ngIf="isFitInExploration; else fitBadge"
+              title="Sobivuse arvutamiseks vajame veel mõnda vastust."
+              (click)="openFitExplain()"
+              (keydown.enter)="openFitExplain()"
+              (keydown.space)="openFitExplain(); $event.preventDefault()"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+              <span class="text-slate-300">Tutvume sinuga</span>
+            </button>
+            <ng-template #fitBadge>
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-slate-900 px-3 py-1 text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/70 focus:ring-offset-0"
+                title="See hinnang põhineb sinu senistel vastustel."
+                (click)="openFitExplain()"
+                (keydown.enter)="openFitExplain()"
+                (keydown.space)="openFitExplain(); $event.preventDefault()"
+              >
+                <span class="text-slate-400">Sobivus:</span>
+                <span class="font-semibold text-sm leading-none">
+                  {{ fitOverallLabel }}%
+                </span>
+                <span
+                  *ngIf="showFitTrend"
+                  class="inline-flex items-center gap-1 text-[10px] text-slate-400"
+                  title="Trend põhineb viimastel vastustel."
+                >
+                  <span>{{ fitTrendSymbol }}</span>
+                  <span>{{ fitTrendText }}</span>
+                </span>
+              </button>
+            </ng-template>
+
+            <div class="flex flex-col items-end gap-1">
+              <span class="inline-flex items-center gap-1 rounded-full bg-slate-800 px-3 py-1 text-emerald-200">
+                <span
+                  class="inline-block h-1.5 w-1.5 rounded-full"
+                  [ngClass]="{
+                    'bg-emerald-400 animate-pulse': vm.currentQuestion && !loading && !summary,
+                    'bg-amber-400 animate-pulse': loading && !summary,
+                    'bg-slate-500': !vm.currentQuestion && !summary
+                  }"
+                ></span>
+                <span *ngIf="!summary && vm.currentQuestion && !loading">Live · Waiting for your answer</span>
+                <span *ngIf="!summary && vm.currentQuestion && loading">AI analyzing your answer…</span>
+                <span *ngIf="!summary && !vm.currentQuestion && !loading">Idle · Start an interview on the left</span>
+                <span *ngIf="summary">Session finished</span>
+              </span>
+              <span class="rounded-full bg-slate-900/80 px-3 py-1 text-slate-300">
+                Style: {{ interviewerStyle }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              (click)="toggleControlRoom()"
+              class="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] font-medium text-slate-200 hover:border-emerald-400 hover:text-emerald-200"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              <span>Control Room</span>
+            </button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="summary; else liveInterview">
+          <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs uppercase tracking-wide text-slate-400">Overall fit</p>
+                <p class="text-3xl font-semibold text-emerald-300">
+                  {{ (summary?.fitScore || 0) * 100 | number:'1.0-0' }}%
+                </p>
+              </div>
+              <div
+                class="h-14 w-14 rounded-full border border-emerald-500/40 bg-emerald-500/10 flex items-center justify-center text-emerald-200 font-bold"
+              >
+                {{ (summary?.fitScore || 0) * 100 | number:'1.0-0' }}%
+              </div>
+            </div>
+
+            <div class="grid gap-3 md:grid-cols-2">
+              <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 space-y-2">
+                <p class="text-xs uppercase tracking-wide text-emerald-300">Strengths</p>
+                <ng-container *ngIf="summary?.strengths?.length; else noStrengths">
+                  <ul class="space-y-1 text-sm text-slate-100">
+                    <li *ngFor="let s of summary?.strengths" class="flex items-start gap-2">
+                      <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+                      <span>{{ s }}</span>
+                    </li>
+                  </ul>
+                </ng-container>
+                <ng-template #noStrengths>
+                  <p class="text-xs text-slate-500">No strengths reported.</p>
+                </ng-template>
+              </div>
+
+              <div class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 space-y-2">
+                <p class="text-xs uppercase tracking-wide text-amber-300">Weaknesses</p>
+                <ng-container *ngIf="summary?.weaknesses?.length; else noWeaknesses">
+                  <ul class="space-y-1 text-sm text-slate-100">
+                    <li *ngFor="let w of summary?.weaknesses" class="flex items-start gap-2">
+                      <span class="mt-1 h-1.5 w-1.5 rounded-full bg-amber-300"></span>
+                      <span>{{ w }}</span>
+                    </li>
+                  </ul>
+                </ng-container>
+                <ng-template #noWeaknesses>
+                  <p class="text-xs text-slate-500">No weaknesses reported.</p>
+                </ng-template>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">Dimension scores</p>
+              <div class="space-y-3">
+                <div
+                  *ngFor="let dim of summary?.dimensionScores || []"
+                  class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 space-y-2"
+                >
+                  <div class="flex items-center justify-between text-xs text-slate-400">
+                    <div>
+                      <p class="font-semibold text-slate-100">
+                        {{ humanLabel(dim.dimension) }}
+                      </p>
+                      <p class="text-[11px] text-slate-500" *ngIf="!dimensionMeta(dim.dimension)">
+                        No metadata found for "{{ dim.dimension }}".
+                      </p>
+                      <p class="text-[11px] text-slate-400" *ngIf="dimensionMeta(dim.dimension)">
+                        {{ dimensionMeta(dim.dimension)?.definition }}
+                      </p>
+                    </div>
+                    <span class="text-xs text-emerald-300 font-semibold">
+                      {{ (dim.score || 0) * 100 | number:'1.0-0' }}%
+                    </span>
+                  </div>
+                  <div class="h-2 w-full rounded-full bg-slate-800">
+                    <div
+                      class="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500"
+                      [style.width.%]="dimensionWidth(dim.score)"
+                    ></div>
+                  </div>
+                  <button
+                    type="button"
+                    class="text-[11px] text-emerald-300 hover:text-emerald-200 flex items-center gap-1"
+                    (click)="toggleDim(dim.dimension)"
+                  >
+                    <span class="text-lg leading-none">{{ isExpanded(dim.dimension) ? '−' : '+' }}</span>
+                    <span>Details</span>
+                  </button>
+                  <div *ngIf="isExpanded(dim.dimension)" class="space-y-2 text-xs text-slate-300">
+                    <ng-container *ngIf="dimensionMeta(dim.dimension) as meta">
+                      <div>
+                        <p class="text-[11px] uppercase tracking-wide text-emerald-300">What high performance looks like</p>
+                        <ul class="list-disc list-inside space-y-1">
+                          <li *ngFor="let item of meta.highSignals">{{ item }}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p class="text-[11px] uppercase tracking-wide text-amber-300">Red flags</p>
+                        <ul class="list-disc list-inside space-y-1">
+                          <li *ngFor="let item of meta.lowSignals">{{ item }}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-300">Interview signals</p>
+                        <ul class="list-disc list-inside space-y-1">
+                          <li *ngFor="let item of meta.interviewSignals">{{ item }}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p class="text-[11px] uppercase tracking-wide text-sky-300">Coaching ideas</p>
+                        <ul class="list-disc list-inside space-y-1">
+                          <li *ngFor="let item of meta.coachingIdeas">{{ item }}</li>
+                        </ul>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #liveInterview>
+          <ng-container *ngIf="vm.currentQuestion; else emptyState">
+            <div class="rounded-xl border border-slate-800 bg-slate-950/80 p-4 space-y-3">
+              <div class="flex items-center justify-between gap-3">
+                <p class="text-xs uppercase tracking-wide text-emerald-300">
+                  Question {{ vm.questionCount || currentQuestionNumber || '?' }} of {{ totalQuestions || '?' }}
+                </p>
+                <span class="rounded-full bg-slate-800 px-3 py-1 text-[11px] text-slate-200">
+                  Session: {{ displaySessionId || currentSessionId || '—' }}
+                </span>
+              </div>
+
+              <div *ngIf="totalQuestions && (vm.questionCount || currentQuestionNumber)" class="mt-1 space-y-1">
+                <div class="flex items-center justify-between text-[11px] text-slate-400">
+                  <span>Progress</span>
+                  <span>
+                    {{ vm.questionCount || currentQuestionNumber }} / {{ totalQuestions }}
+                  </span>
+                </div>
+                <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-800/80">
+                  <div
+                    class="h-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500"
+                    [style.width.%]="((vm.questionCount || currentQuestionNumber)! / (totalQuestions || 1)) * 100"
+                  ></div>
+                </div>
+              </div>
+
+              <p class="text-base font-semibold text-slate-100">
+                {{ vm.currentQuestion }}
+              </p>
+
+              <p *ngIf="currentQuestion?.modelAnswerHint" class="text-sm text-slate-300">
+                Model hint: {{ currentQuestion?.modelAnswerHint }}
+              </p>
+
+              <app-fit-indicator
+                *ngIf="vm.progress"
+                [compact]="true"
+                [overall]="vm.fit?.overall"
+                [trend]="vm.fit?.trend"
+                [computed]="vm.fit?.computed === true"
+                [questionCount]="vm.progress?.questionCount || vm.questionCount"
+                [focusDimension]="vm.fit?.currentDimension"
+              ></app-fit-indicator>
+
+              <div class="space-y-2">
+                <label class="text-xs text-slate-400">Your answer</label>
+                <textarea
+                  [(ngModel)]="currentAnswerText"
+                  rows="6"
+                  class="w-full rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+                  placeholder="Write your response here..."
+                ></textarea>
+              </div>
+
+              <button
+                type="button"
+                (click)="submitAnswer()"
+                [disabled]="loading || isSubmitting || !hasValidSessionId() || !vm.currentQuestion"
+                class="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span *ngIf="!loading">Submit answer</span>
+                <span *ngIf="loading" class="flex items-center gap-2">
+                  <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-900 border-t-emerald-300"></span>
+                  Sending…
+                </span>
+              </button>
+
+              <p *ngIf="syncNotice" class="text-[11px] text-slate-400">
+                {{ syncNotice }}
+              </p>
+
+              <p *ngIf="loading" class="text-[11px] text-slate-400">
+                The AI is scoring your answer against soft-skill dimensions and preparing the next question.
+              </p>
+
+              <div *ngIf="lastLocalAnalysis" class="rounded-lg border border-slate-800 bg-slate-900/60 p-3 space-y-2">
+                <p class="text-[11px] uppercase tracking-wide text-slate-400">Signals</p>
+                <div class="flex flex-wrap gap-2 text-xs">
+                  <ng-container *ngIf="lastLocalAnalysis?.detectedStrengths?.length">
+                    <span
+                      class="rounded-full bg-emerald-500/10 px-3 py-1 text-emerald-200 border border-emerald-500/40"
+                      *ngFor="let s of lastLocalAnalysis?.detectedStrengths"
+                    >
+                      + {{ s }}
+                    </span>
+                  </ng-container>
+                  <ng-container *ngIf="lastLocalAnalysis?.detectedRisks?.length">
+                    <span
+                      class="rounded-full bg-amber-500/10 px-3 py-1 text-amber-200 border border-amber-500/40"
+                      *ngFor="let r of lastLocalAnalysis?.detectedRisks"
+                    >
+                      ⚠ {{ r }}
+                    </span>
+                  </ng-container>
+                </div>
+              </div>
+
+              <p
+                *ngIf="error"
+                class="rounded-md border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-100"
+              >
+                {{ error }}
+              </p>
+            </div>
+
+            <!-- Transcript must not render observer/debug events. Q/A only. -->
+            <div *ngIf="vm.transcript.length" class="rounded-xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-300">
+                  Transcript
+                </h3>
+                <span class="text-[11px] text-slate-400">
+                  {{ vm.transcript.length }} answer{{ vm.transcript.length === 1 ? '' : 's' }}
+                  logged
+                </span>
+              </div>
+              <ol class="space-y-3 max-h-56 overflow-y-auto pr-1">
+                <li
+                  *ngFor="let entry of vm.transcript"
+                  class="rounded-lg border border-slate-800 bg-slate-950/80 p-3 space-y-1 text-sm"
+                >
+                  <p class="text-[11px] font-medium uppercase tracking-wide text-emerald-300">
+                    Question {{ entry.questionNumber }}
+                  </p>
+                  <p class="text-slate-100">
+                    {{ entry.question }}
+                  </p>
+                  <p class="mt-1 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+                    Your answer
+                  </p>
+                  <p class="whitespace-pre-line text-slate-200">
+                    {{ entry.answer }}
+                  </p>
+                </li>
+              </ol>
+            </div>
+
+            <app-candidate-summary-panel class="mt-4"></app-candidate-summary-panel>
+          </ng-container>
+        </ng-template>
+
+        <ng-template #emptyState>
+          <div
+            class="flex h-44 flex-col items-center justify-center text-center text-sm text-slate-400 rounded-xl border border-dashed border-slate-800 bg-slate-950/50"
+          >
+            <p class="mb-1">No active interview yet.</p>
+            <p>Fill in the setup on the left and start your AI interview.</p>
+          </div>
+        </ng-template>
+
+        <div *ngIf="summary" class="flex items-center justify-end">
+          <button
+            type="button"
+            (click)="restart()"
+            class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-emerald-400 hover:text-emerald-200"
+          >
+            New interview
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-control-room-drawer></app-control-room-drawer>
+  <app-fit-explain-panel
+    [open]="isFitExplainOpen"
+    [fit]="vm.fit"
+    [breakdown]="vm.fitBreakdown"
+    (closed)="closeFitExplain()"
+  ></app-fit-explain-panel>
+</div>

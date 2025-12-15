@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-16-add-candidate-summary" author="assistant">
+        <addColumn tableName="interview_session">
+            <column name="candidate_summary_json" type="jsonb" defaultValue="{}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="candidate_summary_updated_at" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2025-12-16-create-interview-session-event" author="assistant">
+        <createTable tableName="interview_session_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="session_uuid" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload_json" type="jsonb"/>
+        </createTable>
+
+        <createIndex indexName="idx_session_event_session_uuid" tableName="interview_session_event">
+            <column name="session_uuid"/>
+        </createIndex>
+        <createIndex indexName="idx_session_event_created" tableName="interview_session_event">
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+

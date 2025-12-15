@@ -1,0 +1,43 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: local
+  liquibase:
+    drop-first: false
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: ee.kerrete.ainterview.config.H2FriendlyPostgreSQLDialect
+        format_sql: true
+
+logging:
+  level:
+    root: INFO
+    liquibase: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+openai:
+  base-url: https://api.openai.com/v1
+  api-key: ${OPENAI_API_KEY:dummy-openai-key}
+  model: gpt-4.1-mini
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,mappings
+      base-path: /actuator
+
+# JWT Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:this-is-a-development-secret-key-min-32-chars}
+    expiration-ms: 86400000        # 24 hours
+    refresh-expiration-ms: 604800000  # 7 days

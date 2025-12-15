@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-21-add-interview-profile-json" author="backend-agent">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="interview_session" columnName="interview_profile_json"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="interview_session">
+            <column name="interview_profile_json" type="CLOB" defaultValue="{}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
+

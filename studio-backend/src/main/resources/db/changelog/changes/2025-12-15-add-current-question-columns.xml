@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-15-add-current-question-columns" author="backend-agent">
+        <addColumn tableName="interview_session">
+            <column name="current_question_id" type="VARCHAR(255)"/>
+            <column name="current_question_text" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
+

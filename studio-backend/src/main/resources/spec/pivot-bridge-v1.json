@@ -1,0 +1,364 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Pivot Bridge API",
+    "version": "1.0.0",
+    "description": "Role match + FutureProofScore + marketplace bridge between jobseeker and interviewer apps."
+  },
+  "paths": {
+    "/api/pivot/role-matches/compute": {
+      "post": {
+        "tags": ["pivot-role-matches"],
+        "summary": "Compute role matches and FutureProofScore for the current jobseeker",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComputeRoleMatchesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Computed matches and score",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComputeRoleMatchesResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/pivot/role-matches": {
+      "get": {
+        "tags": ["pivot-role-matches"],
+        "summary": "List latest role matches for the current jobseeker",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "responses": {
+          "200": {
+            "description": "Role matches",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PivotRoleMatchDto" }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/future-proof-score": {
+      "get": {
+        "tags": ["pivot-future-proof-score"],
+        "summary": "Get latest FutureProofScore for the current jobseeker",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "responses": {
+          "200": {
+            "description": "Latest score",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FutureProofScoreResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/marketplace/profile": {
+      "put": {
+        "tags": ["pivot-marketplace"],
+        "summary": "Upsert marketplace profile for the current jobseeker",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MarketplaceProfileUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated profile",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MarketplaceProfileResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "422": { "$ref": "#/components/responses/UnprocessableEntity" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    },
+    "/api/marketplace/candidates/search": {
+      "get": {
+        "tags": ["pivot-marketplace"],
+        "summary": "Search candidates by target role, location, visibility, and score",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "parameters": [
+          {
+            "name": "targetRole",
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "minFutureProofScore",
+            "in": "query",
+            "schema": { "type": "number", "format": "double" }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "visibility",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/VisibilityLevel" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CandidateSearchResult" }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Roles: JOBSEEKER, INTERVIEWER, ORG_ADMIN"
+      }
+    },
+    "schemas": {
+      "ComputeRoleMatchesRequest": {
+        "type": "object",
+        "required": ["currentRole", "targetRoles"],
+        "properties": {
+          "currentRole": { "type": "string" },
+          "targetRoles": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "jobDescription": { "type": "string" },
+          "skillsJson": { "type": "string" },
+          "preferredLocations": { "type": "string" },
+          "experienceYears": { "type": "integer", "format": "int32" }
+        }
+      },
+      "ComputeRoleMatchesResponse": {
+        "type": "object",
+        "properties": {
+          "matches": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PivotRoleMatchDto" }
+          },
+          "futureProofScore": { "$ref": "#/components/schemas/FutureProofScoreResponse" }
+        }
+      },
+      "PivotRoleMatchDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "targetRole": { "type": "string" },
+          "matchScore": { "type": "number", "format": "double" },
+          "futureProofScore": { "type": "number", "format": "double" },
+          "gapSummary": { "type": "string" },
+          "recommendedActions": { "type": "string" },
+          "computedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "FutureProofScoreResponse": {
+        "type": "object",
+        "properties": {
+          "overallScore": { "type": "number", "format": "double" },
+          "adaptabilityScore": { "type": "number", "format": "double" },
+          "skillRelevanceScore": { "type": "number", "format": "double" },
+          "marketDemandScore": { "type": "number", "format": "double" },
+          "stabilityScore": { "type": "number", "format": "double" },
+          "computedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "MarketplaceProfileUpdateRequest": {
+        "type": "object",
+        "required": ["visibility"],
+        "properties": {
+          "headline": { "type": "string" },
+          "anonymizedLabel": { "type": "string" },
+          "locationPreference": { "type": "string" },
+          "targetRate": { "type": "number", "format": "double" },
+          "openToInterview": { "type": "boolean", "default": true },
+          "contactEmail": { "type": "string", "format": "email" },
+          "contactHandle": { "type": "string" },
+          "availabilityStart": { "type": "string", "format": "date" },
+          "visibility": { "$ref": "#/components/schemas/VisibilityLevel" }
+        }
+      },
+      "MarketplaceProfileResponse": {
+        "allOf": [
+          { "$ref": "#/components/schemas/MarketplaceProfileUpdateRequest" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer", "format": "int64" },
+              "targetRole": { "type": "string" },
+              "preferredLocations": { "type": "string" },
+              "updatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        ]
+      },
+      "CandidateSearchResult": {
+        "type": "object",
+        "properties": {
+          "profileId": { "type": "integer", "format": "int64" },
+          "displayName": { "type": "string" },
+          "headline": { "type": "string" },
+          "targetRole": { "type": "string" },
+          "visibility": { "$ref": "#/components/schemas/VisibilityLevel" },
+          "matchScore": { "type": "number", "format": "double" },
+          "futureProofScore": { "type": "number", "format": "double" },
+          "locationPreference": { "type": "string" },
+          "openToInterview": { "type": "boolean" }
+        }
+      },
+      "VisibilityLevel": {
+        "type": "string",
+        "enum": ["OFF", "ANON", "PUBLIC"]
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "UnprocessableEntity": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" },
+                "message": { "type": "string" },
+                "violations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "field": { "type": "string" },
+                      "message": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" },
+                "message": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

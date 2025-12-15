@@ -1,0 +1,12 @@
+/* Additional drawer-specific styling. Tailwind covers most layout. */
+
+.control-room-drawer {
+  max-height: 90vh;
+}
+
+.control-room-drawer__body {
+  /* Ensure inner content scrolls while header/footer remain fixed */
+  min-height: 0;
+  overflow-y: auto;
+}
+

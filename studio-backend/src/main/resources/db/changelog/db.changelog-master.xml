@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <!-- MAIN TABLE CREATION -->
+    <include file="001-create-training-progress-table.xml" relativeToChangelogFile="true"/>
+    <include file="002-create-job-analysis-session-table.xml" relativeToChangelogFile="true"/>
+    <include file="003-create-app-user-table.xml" relativeToChangelogFile="true"/>
+
+    <!-- UPDATES -->
+    <include file="004-add-status-lastactivity-training-progress.xml" relativeToChangelogFile="true"/>
+
+    <!-- TRAINING_TASK RELATED CHANGES -->
+    <include file="changes/001-create-training-task-h2.xml" relativeToChangelogFile="true"/>
+    <include file="changes/002-add-score-updatedat.xml" relativeToChangelogFile="true"/>
+    <include file="changes/006-create-softskill_training_task.xml" relativeToChangelogFile="true"/>
+    <include file="changes/006-create-workstyle-session.xml" relativeToChangelogFile="true"/>
+    <include file="changes/007-seed-test-data.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-create-roadmap-task-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-add-training-task-feedback-skill.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-create-user-profile-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-create-cv-summary-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-extend-job-analysis-session-results.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-06-extend-roadmap-task-ordering.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-09-rename-user-profile-columns.xml" relativeToChangelogFile="true"/>
+    <include file="changes/test-user-seed-2025-12-09.yaml" relativeToChangelogFile="true"/>
+    <include file="changes/interview_sessions.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-14-add-interview-session-progress.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-14-add-session-uuid-interview-session.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-14-interview-session-state-v1.xml" relativeToChangelogFile="true"/>
+    <include file="changes/company_profiles.xml" relativeToChangelogFile="true"/>
+    <include file="changes/behavioral_stories.xml" relativeToChangelogFile="true"/>
+    <include file="changes/user_memory_entries.xml" relativeToChangelogFile="true"/>
+    <include file="skill-matrix/skill-matrix-tables.xml" relativeToChangelogFile="true"/>
+    <include file="db.changelog-soft-skills-001.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-11-soft-skill-merger-tables.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-12-soft-skill-merged-profile-v2.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-13-soft-skill-dimension-catalog.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-13-soft-skill-dimension-add-label.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-14-soft-skill-dimension-drop-display-name.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-13-training-task-status.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-15-add-overall-fit-prev.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-15-add-current-question-columns.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-15-add-asked-question-ids.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-16-add-candidate-summary-and-events.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-22-audit-payload-text.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-23-career-marketplace.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-21-add-interview-profile-json.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-26-career-transition-pivot.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

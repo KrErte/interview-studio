@@ -1,0 +1,46 @@
+<div class="fit-indicator flex items-start gap-2 text-[11px]">
+  <!-- Non-compact: header-style indicator -->
+  <ng-container *ngIf="!compact">
+    <div class="space-y-1">
+      <ng-container *ngIf="isExplorationPhase; else fitReady">
+        <div class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-900/80 px-3 py-1 text-slate-200">
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-500"></span>
+          <span class="font-medium">Tutvume sinuga</span>
+        </div>
+        <p class="text-[10px] text-slate-400">
+          Sobivuse arvutamiseks vajame veel mõnda vastust.
+        </p>
+      </ng-container>
+
+      <ng-template #fitReady>
+        <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500 bg-slate-900 px-3 py-1 text-emerald-300">
+          <span class="text-slate-400">Sobivus:</span>
+          <span class="text-sm font-semibold leading-none">
+            {{ overallDisplay }}%
+          </span>
+          <span
+            *ngIf="showTrend"
+            class="inline-flex items-center gap-1 text-[10px] text-slate-300"
+            title="Trend põhineb viimastel vastustel."
+          >
+            <span>{{ trendSymbol }}</span>
+            <span>{{ trendText }}</span>
+          </span>
+        </div>
+      </ng-template>
+
+      <div *ngIf="showFocusDimension" class="inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] text-slate-400">
+        <span class="h-1 w-1 rounded-full bg-sky-400"></span>
+        <span>Fookus: {{ focusDimension }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Compact: subtle focus pill under the question -->
+  <ng-container *ngIf="compact">
+    <div *ngIf="showFocusDimension" class="inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10px] text-slate-400">
+      <span class="h-1 w-1 rounded-full bg-sky-400"></span>
+      <span>Fookus: {{ focusDimension }}</span>
+    </div>
+  </ng-container>
+</div>

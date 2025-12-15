@@ -1,0 +1,55 @@
+<div class="space-y-4">
+  <div class="space-y-1">
+    <p class="text-xs uppercase tracking-wide text-emerald-300">Step 4</p>
+    <h2 class="text-lg font-semibold text-slate-100">Training</h2>
+    <p class="text-sm text-slate-400">Track your progress and continue your plan.</p>
+  </div>
+
+  <div *ngIf="loading" class="flex items-center gap-2 text-xs text-slate-400">
+    <span class="h-3 w-3 animate-spin rounded-full border-2 border-slate-700 border-t-slate-300"></span>
+    Loading training data…
+  </div>
+
+  <div
+    *ngIf="!loading && !training"
+    class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+  >
+    No training plan yet. Start a plan from your roadmap or match results.
+  </div>
+
+  <div *ngIf="training" class="space-y-3 rounded-xl border border-slate-800 bg-slate-950/70 p-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm font-semibold text-slate-100">
+          Progress
+        </p>
+        <p class="text-xs text-slate-400">
+          {{ completed }} / {{ total }} tasks
+        </p>
+      </div>
+      <p class="text-xl font-semibold text-emerald-300">
+        {{ progressPercent | number: '1.0-0' }}%
+      </p>
+    </div>
+
+    <div class="h-2 w-full overflow-hidden rounded-full bg-slate-800">
+      <div
+        class="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500"
+        [style.width.%]="progressPercent"
+      ></div>
+    </div>
+
+    <p class="text-[11px] text-slate-300" *ngIf="training?.nextTaskTitle">
+      Next: {{ training?.nextTaskTitle }}
+    </p>
+
+    <button
+      type="button"
+      class="inline-flex items-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm hover:bg-emerald-400"
+    >
+      Continue training
+    </button>
+  </div>
+</div>
+
+

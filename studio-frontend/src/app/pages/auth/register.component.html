@@ -1,0 +1,183 @@
+<app-auth-layout>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+
+    class="space-y-6"
+  >
+    <!-- Title -->
+    <div class="text-center space-y-2">
+      <h1 class="text-2xl font-semibold text-white">Create account</h1>
+      <p class="text-sm text-slate-400">
+        Start your AI-powered interview journey in minutes.
+      </p>
+    </div>
+
+    <!-- Full name -->
+    <div class="space-y-1">
+      <label
+        for="fullName"
+        class="block text-sm font-medium text-slate-200"
+      >
+        Full name
+      </label>
+      <div class="relative mt-1">
+        <input
+          id="fullName"
+          type="text"
+          autocomplete="name"
+          formControlName="fullName"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 pl-10 text-sm text-white placeholder:text-slate-400 shadow-inner outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/60"
+          [ngClass]="{
+            'border-red-400/60':
+              form.controls['fullName'].touched &&
+              form.controls['fullName'].invalid
+          }"
+        />
+        <span
+          class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs"
+        >
+          👤
+        </span>
+      </div>
+      <p
+        *ngIf="form.controls['fullName'].touched && form.controls['fullName'].invalid"
+        class="mt-1 text-sm text-red-300"
+      >
+        Full name is required.
+      </p>
+    </div>
+
+    <!-- Email -->
+    <div class="space-y-1">
+      <label
+        for="email"
+        class="block text-sm font-medium text-slate-200"
+      >
+        Email
+      </label>
+      <div class="relative mt-1">
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 pl-10 text-sm text-white placeholder:text-slate-400 shadow-inner outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/60"
+          [ngClass]="{
+            'border-red-400/60':
+              form.controls['email'].touched &&
+              form.controls['email'].invalid
+          }"
+        />
+        <span
+          class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs"
+        >
+          ✉️
+        </span>
+      </div>
+      <p
+        *ngIf="form.controls['email'].touched && form.controls['email'].invalid"
+        class="mt-1 text-sm text-red-300"
+      >
+        Please enter a valid email.
+      </p>
+    </div>
+
+    <!-- Password -->
+    <div class="space-y-1">
+      <label
+        for="password"
+        class="block text-sm font-medium text-slate-200"
+      >
+        Password
+      </label>
+      <div class="relative mt-1">
+        <input
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          formControlName="password"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 pl-10 pr-10 text-sm text-white placeholder:text-slate-400 shadow-inner outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/60"
+          [ngClass]="{
+            'border-red-400/60':
+              form.controls['password'].touched &&
+              form.controls['password'].invalid
+          }"
+        />
+        <span
+          class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs"
+        >
+          🔒
+        </span>
+      </div>
+      <p
+        *ngIf="form.controls['password'].touched && form.controls['password'].invalid"
+        class="mt-1 text-sm text-red-300"
+      >
+        Password is required.
+      </p>
+    </div>
+
+    <!-- Confirm password -->
+    <div class="space-y-1">
+      <label
+        for="confirmPassword"
+        class="block text-sm font-medium text-slate-200"
+      >
+        Confirm password
+      </label>
+      <div class="relative mt-1">
+        <input
+          id="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          formControlName="confirmPassword"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 pl-10 pr-10 text-sm text-white placeholder:text-slate-400 shadow-inner outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/60"
+          [ngClass]="{
+            'border-red-400/60':
+              form.controls['confirmPassword'].touched &&
+              (form.controls['confirmPassword'].invalid ||
+                form.hasError('passwordMismatch'))
+          }"
+        />
+        <span
+          class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400 text-xs"
+        >
+          ✅
+        </span>
+      </div>
+      <p
+        *ngIf="form.controls['confirmPassword'].touched && form.controls['confirmPassword'].invalid"
+        class="mt-1 text-sm text-red-300"
+      >
+        Please confirm your password.
+      </p>
+      <p
+        *ngIf="form.hasError('passwordMismatch') && form.controls['confirmPassword'].touched"
+        class="mt-1 text-sm text-red-300"
+      >
+        Passwords do not match.
+      </p>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="w-full rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="form.invalid"
+    >
+      Create account
+    </button>
+
+    <!-- Link to login -->
+    <p class="text-center text-sm text-slate-400">
+      Already have an account?
+      <a
+        routerLink="/auth/login"
+        class="text-emerald-400 hover:text-emerald-300 underline-offset-4 hover:underline"
+      >
+        Sign in
+      </a>
+    </p>
+  </form>
+</app-auth-layout>
