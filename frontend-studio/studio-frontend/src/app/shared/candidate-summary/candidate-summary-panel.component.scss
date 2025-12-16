@@ -1,0 +1,19 @@
+.candidate-summary-evidence {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+}
+
+.candidate-summary-evidence::-webkit-scrollbar {
+  width: 6px;
+}
+
+.candidate-summary-evidence::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.candidate-summary-evidence::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.7); /* slate-400 */
+  border-radius: 9999px;
+}
+
+

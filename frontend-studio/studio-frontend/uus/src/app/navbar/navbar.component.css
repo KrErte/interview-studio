@@ -1,0 +1,17 @@
+.nav-link {
+  color: #cbd5f5;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.nav-link:hover {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.08);
+}
+
+.nav-link.active {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.12);
+}

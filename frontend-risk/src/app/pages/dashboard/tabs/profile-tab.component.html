@@ -1,0 +1,41 @@
+<div class="space-y-4">
+  <div class="space-y-1">
+    <p class="text-xs uppercase tracking-wide text-emerald-300">Step 5</p>
+    <h2 class="text-lg font-semibold text-slate-100">Profile</h2>
+    <p class="text-sm text-slate-400">Review your skill and CV summaries.</p>
+  </div>
+
+  <div *ngIf="loading" class="flex items-center gap-2 text-xs text-slate-400">
+    <span class="h-3 w-3 animate-spin rounded-full border-2 border-slate-700 border-t-slate-300"></span>
+    Loading profile…
+  </div>
+
+  <div
+    *ngIf="!loading && !hasContent"
+    class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+  >
+    No profile yet. Upload a CV or run a match to generate your profile insights.
+  </div>
+
+  <div class="space-y-3" *ngIf="hasContent">
+    <div *ngIf="profileSummary" class="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Skill profile</p>
+      <p class="text-sm text-slate-100 mt-1">{{ profileSummary }}</p>
+    </div>
+
+    <div *ngIf="cvSummary" class="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">CV summary</p>
+      <p class="text-sm text-slate-100 mt-1">{{ cvSummary }}</p>
+    </div>
+
+    <div *ngIf="skillProfileSummary" class="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Key skills</p>
+      <p class="text-sm text-slate-100 mt-1">{{ skillProfileSummary }}</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+

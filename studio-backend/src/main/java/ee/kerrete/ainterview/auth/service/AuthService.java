@@ -150,6 +150,7 @@ public class AuthService {
         return AuthResponse.builder()
             .token(accessToken)           // Backward compatibility
             .accessToken(accessToken)
+            .type("Bearer")
             .refreshToken(refreshToken)
             .email(user.getEmail())
             .fullName(user.getFullName())

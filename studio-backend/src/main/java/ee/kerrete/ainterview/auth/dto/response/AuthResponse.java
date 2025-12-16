@@ -18,6 +18,9 @@ public record AuthResponse(
     /** Access token - new field name */
     String accessToken,
 
+    /** Token type (e.g. Bearer) */
+    String type,
+
     /** Refresh token for obtaining new access tokens */
     String refreshToken,
 
@@ -39,6 +42,7 @@ public record AuthResponse(
     public static AuthResponseBuilder builderWithToken(String accessToken) {
         return AuthResponse.builder()
             .token(accessToken)
-            .accessToken(accessToken);
+            .accessToken(accessToken)
+            .type("Bearer");
     }
 }

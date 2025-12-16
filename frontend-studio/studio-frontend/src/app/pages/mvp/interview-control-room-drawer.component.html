@@ -1,0 +1,424 @@
+<ng-container *ngIf="state$ | async as state">
+  <div
+    *ngIf="state.isDrawerOpen"
+    class="fixed inset-0 z-40 flex justify-end bg-black/40"
+    (click)="close()"
+  >
+    <div
+      class="control-room-drawer flex h-full w-full max-w-[520px] max-h-[90vh] flex-col overflow-hidden border-l border-slate-800 bg-slate-950/95 text-slate-100 shadow-2xl"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-center justify-between border-b border-slate-800 px-4 py-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-400">
+            Global Control Room
+          </p>
+          <p class="text-xs text-slate-400">
+            Inspect raw interview traffic for this session.
+          </p>
+        </div>
+        <button
+          type="button"
+          (click)="close()"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-900 text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="control-room-drawer__body flex-1 min-h-0 space-y-4 overflow-y-auto px-4 py-4 text-xs">
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+            Session summary
+          </h3>
+          <div class="space-y-1 text-[11px] text-slate-300">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Session ID</span>
+              <span class="truncate text-slate-100">
+                {{ state.sessionInfo?.sessionId || '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Session UUID</span>
+              <span class="truncate text-emerald-300">
+                {{ state.sessionInfo?.sessionUuid || '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Email</span>
+              <span class="truncate text-slate-100">
+                {{ state.sessionInfo?.email || '—' }}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- CV-derived interview profile for interviewer view only -->
+        <section
+          *ngIf="cvProfile$ | async as cv"
+          class="rounded-lg border border-slate-800 bg-slate-900/80 p-3"
+        >
+          <div class="mb-2 flex items-center justify-between gap-2">
+            <h3 class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              CV overview
+            </h3>
+            <span
+              *ngIf="cv.cvFilename"
+              class="truncate rounded-full bg-slate-950/80 px-3 py-1 text-[10px] text-slate-300"
+            >
+              {{ cv.cvFilename }}
+            </span>
+          </div>
+
+          <p class="mb-2 text-[11px] text-slate-500">
+            CV-derived context to guide probing. Candidate never sees this view; keep language neutral.
+          </p>
+
+          <div class="grid gap-3 md:grid-cols-2 text-[11px]">
+            <div class="space-y-1">
+              <p class="font-semibold text-slate-200">Summary</p>
+              <ul class="space-y-0.5 text-slate-300">
+                <li *ngFor="let s of cv.interviewerSummary">
+                  • {{ s }}
+                </li>
+                <li *ngIf="!cv.interviewerSummary?.length" class="text-slate-500">
+                  No summary bullets yet.
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-1">
+              <p class="font-semibold text-slate-200">Probe priorities</p>
+              <ul class="space-y-0.5 text-slate-300">
+                <li *ngFor="let s of cv.interviewerProbePriorities">
+                  • {{ s }}
+                </li>
+                <li *ngIf="!cv.interviewerProbePriorities?.length" class="text-slate-500">
+                  Use CV to identify where a deeper dive is useful.
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-1">
+              <p class="font-semibold text-slate-200">Risk hypotheses (soft)</p>
+              <ul class="space-y-0.5 text-slate-300">
+                <li *ngFor="let s of cv.interviewerRiskHypotheses">
+                  • {{ s }}
+                </li>
+                <li *ngIf="!cv.interviewerRiskHypotheses?.length" class="text-slate-500">
+                  Treat any concerns as tentative until explored in the interview.
+                </li>
+              </ul>
+            </div>
+
+            <div class="space-y-1">
+              <p class="font-semibold text-slate-200">Claimed vs demonstrated</p>
+              <ul class="space-y-0.5 text-slate-300">
+                <li *ngFor="let s of cv.interviewerClaimsVsDemonstrated">
+                  • {{ s }}
+                </li>
+                <li *ngIf="!cv.interviewerClaimsVsDemonstrated?.length" class="text-slate-500">
+                  Track where CV claims still need concrete evidence.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              Last request
+            </h3>
+            <button
+              type="button"
+              (click)="copyJson(state.lastRequest)"
+              class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+            >
+              Copy JSON
+            </button>
+          </div>
+          <pre
+            class="max-h-48 overflow-auto rounded-md bg-slate-950/80 p-2 font-mono text-[11px] text-slate-100"
+          >{{ formatJson(state.lastRequest) }}</pre>
+        </section>
+
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              Last response
+            </h3>
+            <button
+              type="button"
+              (click)="copyJson(state.lastResponse)"
+              class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+            >
+              Copy JSON
+            </button>
+          </div>
+          <pre
+            class="max-h-48 overflow-auto rounded-md bg-slate-950/80 p-2 font-mono text-[11px] text-slate-100"
+          >{{ formatJson(state.lastResponse) }}</pre>
+        </section>
+
+        <section
+          *ngIf="state.lastResponse as resp"
+          class="rounded-lg border border-slate-800 bg-slate-900/80 p-3"
+        >
+          <h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+            Decision & progress
+          </h3>
+          <div class="space-y-1 text-[11px] text-slate-300">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Decision</span>
+              <span class="truncate text-emerald-300">
+                {{ resp.decision || '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Question #</span>
+              <span class="truncate text-slate-100">
+                {{ resp.progress?.questionCount ?? '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Current dimension</span>
+              <span class="truncate text-slate-100">
+                {{ resp.progress?.currentDimension || '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Last1 avg</span>
+              <span class="truncate text-slate-100">
+                {{ resp.progress?.last1Average ?? '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Last3 avg</span>
+              <span class="truncate text-slate-100">
+                {{ resp.progress?.last3Average ?? '—' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400">Complete</span>
+              <span class="truncate text-slate-100">
+                {{ resp.sessionComplete ? 'yes' : 'no' }}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              Postman body (next-question)
+            </h3>
+            <button
+              type="button"
+              (click)="copy(buildPostmanBody(state))"
+              class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+              [disabled]="!state.sessionInfo?.sessionUuid"
+            >
+              Copy JSON
+            </button>
+          </div>
+          <pre
+            class="max-h-40 overflow-auto rounded-md bg-slate-950/80 p-2 font-mono text-[11px] text-slate-100"
+          >{{ buildPostmanBody(state) }}</pre>
+        </section>
+
+        <!-- OBSERVER LOG: dev-only internal log view -->
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <button
+            type="button"
+            (click)="toggleObserver()"
+            class="flex w-full items-center justify-between text-left focus:outline-none"
+            [attr.aria-expanded]="observerOpen"
+          >
+            <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              OBSERVER LOG
+            </span>
+            <span class="text-xs text-slate-400">
+              {{ observerOpen ? '▾' : '▸' }}
+            </span>
+          </button>
+          <p *ngIf="!observerOpen" class="mt-1 text-[11px] text-slate-500">
+            Click to open.
+          </p>
+          <div *ngIf="observerOpen" class="mt-2">
+            <app-observer-log-panel
+              [sessionUuid]="state.sessionInfo?.sessionUuid || null"
+            ></app-observer-log-panel>
+          </div>
+        </section>
+
+        <section class="rounded-lg border border-slate-800 bg-slate-900/80 p-3">
+          <div class="mb-2 flex items-center justify-between gap-2">
+            <h3 class="text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+              Audit timeline
+            </h3>
+            <button
+              type="button"
+              class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+              (click)="loadAudit(state.sessionInfo?.sessionUuid || null)"
+              [disabled]="!state.sessionInfo?.sessionUuid"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <p *ngIf="!state.sessionInfo?.sessionUuid" class="text-[11px] text-slate-500">
+            No session UUID yet. Start an interview to see audit events.
+          </p>
+
+          <div *ngIf="state.sessionInfo?.sessionUuid">
+            <div class="mb-2 flex flex-wrap items-center gap-2 text-[11px]">
+              <span class="mr-1 text-slate-400">Filter:</span>
+
+              <button
+                type="button"
+                class="rounded-full px-2.5 py-0.5"
+                [ngClass]="{
+                  'bg-emerald-500/20 text-emerald-200 border border-emerald-400/60':
+                    auditFilterType === 'ALL',
+                  'bg-slate-800 text-slate-200 border border-slate-600':
+                    auditFilterType !== 'ALL'
+                }"
+                (click)="setAuditFilterType('ALL')"
+              >
+                All
+              </button>
+
+              <button
+                type="button"
+                class="rounded-full px-2.5 py-0.5"
+                [ngClass]="{
+                  'bg-emerald-500/20 text-emerald-200 border border-emerald-400/60':
+                    auditFilterType === 'ANSWER_RECORDED',
+                  'bg-slate-800 text-slate-200 border border-slate-600':
+                    auditFilterType !== 'ANSWER_RECORDED'
+                }"
+                (click)="setAuditFilterType('ANSWER_RECORDED')"
+              >
+                Answer recorded
+              </button>
+
+              <button
+                type="button"
+                class="rounded-full px-2.5 py-0.5"
+                [ngClass]="{
+                  'bg-emerald-500/20 text-emerald-200 border border-emerald-400/60':
+                    auditFilterType === 'SUMMARY_UPDATED',
+                  'bg-slate-800 text-slate-200 border border-slate-600':
+                    auditFilterType !== 'SUMMARY_UPDATED'
+                }"
+                (click)="setAuditFilterType('SUMMARY_UPDATED')"
+              >
+                Summary updated
+              </button>
+
+              <button
+                type="button"
+                class="rounded-full px-2.5 py-0.5"
+                [ngClass]="{
+                  'bg-emerald-500/20 text-emerald-200 border border-emerald-400/60':
+                    auditFilterType === 'DECISION_MADE',
+                  'bg-slate-800 text-slate-200 border border-slate-600':
+                    auditFilterType !== 'DECISION_MADE'
+                }"
+                (click)="setAuditFilterType('DECISION_MADE')"
+              >
+                Decision made
+              </button>
+
+              <input
+                type="text"
+                class="ml-auto w-32 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-[11px] text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+                placeholder="Search…"
+                (input)="auditSearch = $any($event.target).value"
+              />
+            </div>
+
+            <div *ngIf="auditLoading" class="py-2 text-[11px] text-slate-400">
+              Loading audit events…
+            </div>
+            <div *ngIf="auditError" class="py-2 text-[11px] text-rose-300">
+              {{ auditError }}
+            </div>
+
+            <div
+              *ngIf="!auditLoading && !auditError && filteredAuditEvents.length === 0"
+              class="py-2 text-[11px] text-slate-500"
+            >
+              No audit events yet.
+            </div>
+
+            <ol
+              *ngIf="filteredAuditEvents.length > 0"
+              class="mt-1 max-h-56 space-y-2 overflow-y-auto pr-1 text-[11px]"
+            >
+              <li
+                *ngFor="let ev of filteredAuditEvents"
+                class="flex gap-2 rounded-md bg-slate-950/80 p-2"
+              >
+                <div class="mt-0.5 shrink-0 text-[10px] text-slate-500">
+                  {{ ev.ts | date: 'HH:mm:ss' }}
+                </div>
+                <div class="flex-1 space-y-0.5">
+                  <div class="flex flex-wrap items-center gap-1.5">
+                    <span
+                      class="rounded-full bg-slate-800 px-2 py-0.5 text-[9px] uppercase tracking-wide text-slate-200"
+                    >
+                      {{ ev.type }}
+                    </span>
+                    <span class="text-[11px] text-slate-100">
+                      {{ ev.label || ev.message || 'Event' }}
+                    </span>
+                  </div>
+
+                  <details class="mt-0.5">
+                    <summary class="cursor-pointer text-[10px] text-slate-400">
+                      Payload
+                    </summary>
+                    <div class="mt-1 space-y-1">
+                      <ng-container *ngIf="ev.hasPayloadContent; else noPayload">
+                        <div class="flex items-center justify-end">
+                          <button
+                            type="button"
+                            class="rounded-full border border-slate-700 bg-slate-900 px-2 py-0.5 text-[10px] text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+                            (click)="copy(ev.payloadPretty || '')"
+                          >
+                            Copy payload
+                          </button>
+                        </div>
+                        <pre
+                          class="max-h-40 overflow-auto rounded bg-slate-950/80 p-2 font-mono text-[10px] text-slate-100"
+                        >{{ ev.payloadPretty }}</pre>
+                      </ng-container>
+                      <ng-template #noPayload>
+                        <p class="text-[10px] italic text-slate-500">
+                          No payload for this event.
+                        </p>
+                      </ng-template>
+                    </div>
+                  </details>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section *ngIf="state.lastError" class="rounded-lg border border-rose-500/40 bg-rose-900/30 p-3">
+          <h3 class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-rose-200">
+            Last error
+          </h3>
+          <pre
+            class="max-h-32 overflow-auto rounded-md bg-rose-950/60 p-2 font-mono text-[11px] text-rose-100"
+          >{{ formatJson(state.lastError) }}</pre>
+        </section>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+

@@ -1,0 +1,63 @@
+<nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
+    <div class="flex items-center gap-3">
+      <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-300">
+        <span class="text-lg font-semibold">AI</span>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-slate-100">Interview Studio</p>
+        <p class="text-[11px] text-slate-500">Unified candidate workspace</p>
+      </div>
+    </div>
+
+    <div class="flex flex-1 items-center justify-end gap-1">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="nav-active"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="nav-link"
+      >
+        Dashboard
+      </a>
+      <a
+        routerLink="/interview-studio"
+        routerLinkActive="nav-active"
+        class="nav-link"
+      >
+        Interview Studio
+      </a>
+      <a
+        routerLink="/training"
+        routerLinkActive="nav-active"
+        class="nav-link"
+      >
+        Training
+      </a>
+      <a
+        routerLink="/profile"
+        routerLinkActive="nav-active"
+        class="nav-link"
+      >
+        Profile
+      </a>
+
+      <div class="flex flex-1"></div>
+
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" class="nav-pill">Login</a>
+        <a routerLink="/register" class="nav-pill border border-emerald-400/60 text-emerald-200">
+          Register
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="auth.isLoggedIn()">
+        <span class="nav-user">
+          {{ auth.getCurrentUserName() || auth.getCurrentUserEmail() }}
+        </span>
+        <button class="nav-pill border border-rose-400/60 text-rose-100" (click)="logout()">
+          Logout
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</nav>

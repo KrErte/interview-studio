@@ -1,0 +1,83 @@
+<div class="space-y-2">
+  <div class="flex items-center justify-between gap-2">
+    <div class="text-sm font-semibold text-slate-100">
+      OBSERVER LOG
+      <span class="text-xs text-slate-500">(live)</span>
+    </div>
+    <button
+      type="button"
+      class="text-[11px] text-slate-400 hover:text-slate-200"
+      (click)="clear()"
+      [disabled]="loading"
+    >
+      Clear
+    </button>
+  </div>
+
+  <p class="text-[11px] text-slate-500">
+    Session: <span class="font-mono text-slate-200">{{ sessionUuid || '—' }}</span>
+  </p>
+
+  <div *ngIf="loading" class="flex items-center gap-2 text-xs text-slate-400">
+    <span class="h-3 w-3 animate-spin rounded-full border-2 border-slate-700 border-t-slate-300"></span>
+    Loading observer events…
+  </div>
+
+  <p *ngIf="error" class="text-[11px] text-rose-300">
+    {{ error }}
+  </p>
+
+  <div
+    *ngIf="!loading && !hasEntries"
+    class="rounded-md border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+  >
+    <p>No observer events yet</p>
+    <p>Veel pole sündmusi</p>
+  </div>
+
+  <div *ngIf="hasEntries" class="space-y-2 max-h-64 overflow-auto pr-1 text-xs">
+    <div
+      *ngFor="let e of logs"
+      class="rounded-lg border border-slate-800 bg-slate-950/70 p-2 space-y-1"
+    >
+      <div class="flex items-center justify-between gap-2 text-[11px]">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500">{{ e.ts | date:'HH:mm:ss' }}</span>
+          <span class="rounded-full bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-200">
+            {{ e.type }}
+          </span>
+          <span class="text-[10px] text-slate-500">{{ e.level }}</span>
+        </div>
+      </div>
+      <div class="text-slate-100">
+        {{ e.message }}
+      </div>
+      <div class="flex flex-wrap gap-1 text-[10px] text-slate-200">
+        <span
+          *ngIf="metaValue(e, 'decision')"
+          class="rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 text-emerald-100"
+        >
+          decision: {{ metaValue(e, 'decision') }}
+        </span>
+        <span
+          *ngIf="metaValue(e, 'reason')"
+          class="rounded-full border border-amber-500/50 bg-amber-500/10 px-2 py-0.5 text-amber-100"
+        >
+          reason: {{ metaValue(e, 'reason') }}
+        </span>
+        <span
+          *ngIf="metaValue(e, 'style')"
+          class="rounded-full border border-sky-500/50 bg-sky-500/10 px-2 py-0.5 text-sky-100"
+        >
+          style: {{ metaValue(e, 'style') }}
+        </span>
+        <span
+          *ngIf="metaValue(e, 'dimension')"
+          class="rounded-full border border-violet-500/50 bg-violet-500/10 px-2 py-0.5 text-violet-100"
+        >
+          dimension: {{ metaValue(e, 'dimension') }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

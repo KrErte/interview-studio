@@ -1,0 +1,157 @@
+<div
+  class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 text-sm text-slate-100 space-y-3"
+>
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-emerald-300">
+        Candidate Summary
+      </p>
+      <p class="text-[11px] text-slate-400">
+        Neutral, running narrative based on answers so far.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[11px] text-slate-200 hover:border-emerald-400 hover:text-emerald-200"
+      (click)="copySummary()"
+    >
+      Copy summary
+    </button>
+  </div>
+
+  <ng-container *ngIf="summary$ | async as summary; else emptyState">
+    <div class="mt-1 text-sm text-slate-100 whitespace-pre-line">
+      {{ summary.narrative || 'Not enough data yet to form a summary.' }}
+    </div>
+
+    <div class="mt-3 grid gap-3 md:grid-cols-2">
+      <div class="space-y-1">
+        <p class="text-[11px] uppercase tracking-wide text-emerald-300">
+          Strengths
+        </p>
+        <ng-container *ngIf="summary.strengths?.length; else noStrengths">
+          <div class="flex flex-wrap gap-1.5 text-[11px]">
+            <span
+              *ngFor="let s of summary.strengths"
+              class="rounded-full bg-emerald-500/10 px-2.5 py-1 text-emerald-200 border border-emerald-500/40"
+            >
+              {{ s }}
+            </span>
+          </div>
+        </ng-container>
+        <ng-template #noStrengths>
+          <p class="text-[11px] text-slate-500">
+            Not enough data yet.
+          </p>
+        </ng-template>
+      </div>
+
+      <div class="space-y-1">
+        <p class="text-[11px] uppercase tracking-wide text-amber-300">
+          Risks
+        </p>
+        <ng-container *ngIf="summary.risks?.length; else noRisks">
+          <div class="flex flex-wrap gap-1.5 text-[11px]">
+            <span
+              *ngFor="let r of summary.risks"
+              class="rounded-full bg-amber-500/10 px-2.5 py-1 text-amber-200 border border-amber-500/40"
+            >
+              {{ r }}
+            </span>
+          </div>
+        </ng-container>
+        <ng-template #noRisks>
+          <p class="text-[11px] text-slate-500">
+            Not enough data yet.
+          </p>
+        </ng-template>
+      </div>
+    </div>
+
+    <div *ngIf="summary.signals?.length" class="mt-2 space-y-1">
+      <p class="text-[11px] uppercase tracking-wide text-sky-300">
+        Signals
+      </p>
+      <div class="flex flex-wrap gap-1.5 text-[11px]">
+        <span
+          *ngFor="let sig of summary.signals"
+          class="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5"
+          [ngClass]="{
+            'border-emerald-500/60 bg-emerald-500/10 text-emerald-100': sig.confidence === 'HIGH',
+            'border-sky-500/60 bg-sky-500/10 text-sky-100': sig.confidence === 'MEDIUM',
+            'border-slate-600 bg-slate-800 text-slate-100': sig.confidence === 'LOW'
+          }"
+        >
+          <span class="font-semibold text-[9px] uppercase tracking-wide">
+            {{ sig.confidence }}
+          </span>
+          <span>{{ sig.label }}</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-2 border-t border-slate-800 pt-2">
+      <button
+        type="button"
+        class="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200"
+        (click)="toggleEvidence()"
+      >
+        <span class="text-xs">{{ evidenceOpen ? '▾' : '▸' }}</span>
+        <span>Evidence (last 3 answers)</span>
+      </button>
+
+      <div
+        *ngIf="evidenceOpen"
+        class="candidate-summary-evidence mt-2 space-y-2 rounded-lg border border-slate-800 bg-slate-950/70 p-2 text-[11px]"
+      >
+        <ng-container *ngIf="summary.evidenceLast3?.length; else noEvidence">
+          <div
+            *ngFor="let ev of summary.evidenceLast3"
+            class="space-y-1 rounded-md bg-slate-900/70 p-2"
+          >
+            <p class="text-[10px] uppercase tracking-wide text-slate-400">
+              Question
+            </p>
+            <p class="text-slate-100">
+              {{ ev.q }}
+            </p>
+            <p class="mt-1 text-[10px] uppercase tracking-wide text-slate-400">
+              Answer snippet
+            </p>
+            <p class="text-slate-200">
+              {{ ev.a }}
+            </p>
+          </div>
+        </ng-container>
+        <ng-template #noEvidence>
+          <p class="text-[11px] text-slate-500">
+            No recent answers yet.
+          </p>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+      <span>
+        Updated:
+        <span class="text-slate-300">
+          {{ summary.updatedAt | date: 'short' }}
+        </span>
+      </span>
+      <span>
+        Answers so far:
+        <span class="text-slate-300">{{ summary.answeredCount }}</span>
+      </span>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <p class="mt-1 text-sm text-slate-400">
+      Not enough data yet. Start answering questions to see a neutral running
+      summary here.
+    </p>
+  </ng-template>
+</div>
+
+

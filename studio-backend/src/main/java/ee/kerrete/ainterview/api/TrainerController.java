@@ -2,7 +2,9 @@ package ee.kerrete.ainterview.api;
 
 import ee.kerrete.ainterview.dto.EvaluateAnswerRequest;
 import ee.kerrete.ainterview.dto.EvaluateAnswerResponse;
+import ee.kerrete.ainterview.dto.AiHealthStatusDto;
 import ee.kerrete.ainterview.service.AIExampleAnswerService;
+import ee.kerrete.ainterview.service.AiHealthCheckService;
 import ee.kerrete.ainterview.service.EvaluationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class TrainerController {
 
     private final EvaluationService evaluationService;
     private final AIExampleAnswerService aiExampleAnswerService;
+    private final AiHealthCheckService aiHealthCheckService;
 
     /**
      * Hinda kasutaja STAR vastust.
@@ -57,5 +60,10 @@ public class TrainerController {
             return ResponseEntity.status(500)
                     .body("AI näidisvastuse genereerimine ebaõnnestus: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/status")
+    public AiHealthStatusDto trainerStatus(@RequestParam(name = "deep", defaultValue = "false") boolean deep) {
+        return aiHealthCheckService.check(deep);
     }
 }

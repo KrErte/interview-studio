@@ -66,10 +66,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        extractBearerToken(request)
-            .flatMap(jwtService::parseToken)
-            .filter(this::isAccessToken)
-            .ifPresent(claims -> authenticateFromClaims(claims, request));
+        Optional<String> bearerToken = extractBearerToken(request);
+        if (bearerToken.isPresent()) {
+            bearerToken
+                .flatMap(jwtService::parseToken)
+                .filter(this::isAccessToken)
+                .ifPresent(claims -> authenticateFromClaims(claims, request));
+        }
 
         filterChain.doFilter(request, response);
     }

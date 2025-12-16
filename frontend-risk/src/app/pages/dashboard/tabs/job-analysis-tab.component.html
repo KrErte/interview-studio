@@ -1,0 +1,48 @@
+<div class="space-y-4">
+  <div class="space-y-1">
+    <p class="text-xs uppercase tracking-wide text-emerald-300">Step 3</p>
+    <h2 class="text-lg font-semibold text-slate-100">Job analyses</h2>
+    <p class="text-sm text-slate-400">
+      Review analyses from your recent matches and interviews.
+    </p>
+  </div>
+
+  <div *ngIf="loading" class="flex items-center gap-2 text-xs text-slate-400">
+    <span class="h-3 w-3 animate-spin rounded-full border-2 border-slate-700 border-t-slate-300"></span>
+    Loading analyses…
+  </div>
+
+  <div
+    *ngIf="!loading && !analyses?.length"
+    class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+  >
+    No job analyses yet. Run a match to see analyses here.
+  </div>
+
+  <div class="grid gap-3 md:grid-cols-2" *ngIf="analyses?.length">
+    <div
+      *ngFor="let a of analyses; trackBy: trackById"
+      class="rounded-lg border border-slate-800 bg-slate-900/70 p-3 space-y-1"
+    >
+      <div class="flex items-center justify-between">
+        <p class="text-sm font-semibold text-slate-100">
+          {{ a.role || 'Role analysis' }}
+        </p>
+        <p class="text-lg font-semibold text-emerald-300">
+          {{ a.scorePercent ?? '—' }}<span class="text-sm" *ngIf="a.scorePercent != null">%</span>
+        </p>
+      </div>
+      <p class="text-[11px] text-slate-500" *ngIf="a.createdAt">
+        {{ a.createdAt | date: 'yyyy-MM-dd HH:mm' }}
+      </p>
+      <p class="text-[11px] text-slate-300" *ngIf="a.summary">
+        {{ a.summary }}
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
+

@@ -1,0 +1,126 @@
+<div class="space-y-5">
+  <div class="space-y-1">
+    <p class="text-xs uppercase tracking-wide text-emerald-300">Step 2</p>
+    <h2 class="text-lg font-semibold text-slate-100">Run a match</h2>
+    <p class="text-sm text-slate-400">
+      Provide the role and optionally a job description to get a quick fit estimate.
+    </p>
+  </div>
+
+  <div class="space-y-3 rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+    <div class="space-y-2">
+      <label class="text-xs font-medium text-slate-300">Target role</label>
+      <input
+        type="text"
+        [(ngModel)]="targetRole"
+        class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+        placeholder="e.g. Senior Frontend Engineer"
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-xs font-medium text-slate-300">Job description (optional)</label>
+      <textarea
+        rows="4"
+        [(ngModel)]="jobDescription"
+        class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-500/60"
+        placeholder="Paste a short description to improve the match quality"
+      ></textarea>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        class="inline-flex items-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-sm hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="submit()"
+        [disabled]="loading || !targetRole.trim()"
+      >
+        <span *ngIf="!loading">Run Match</span>
+        <span *ngIf="loading" class="flex items-center gap-2">
+          <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-900 border-t-emerald-300"></span>
+          Running…
+        </span>
+      </button>
+      <p class="text-xs text-slate-500">We’ll use your latest CV for context.</p>
+    </div>
+
+    <p *ngIf="error" class="text-xs text-rose-300">{{ error }}</p>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-100">Match results</h3>
+        <span class="text-[11px] text-slate-500">{{ results?.length || 0 }} result(s)</span>
+      </div>
+
+      <div
+        *ngIf="!results?.length"
+        class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+      >
+        No matches yet. Run a match to see results here.
+      </div>
+
+      <div class="space-y-2" *ngIf="results?.length">
+        <div
+          *ngFor="let r of results; trackBy: trackById"
+          class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
+        >
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-semibold text-slate-100">
+              {{ r.role || 'Role' }}
+            </p>
+            <p class="text-lg font-semibold text-emerald-300">
+              {{ r.scorePercent ?? r.summary ?? '—' }}
+              <span *ngIf="r.scorePercent != null" class="text-sm">%</span>
+            </p>
+          </div>
+          <p class="text-[11px] text-slate-400" *ngIf="r.summary">{{ r.summary }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-100">Recent sessions</h3>
+        <span class="text-[11px] text-slate-500">{{ sessions?.length || 0 }} session(s)</span>
+      </div>
+
+      <div
+        *ngIf="!sessions?.length"
+        class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
+      >
+        No recent match sessions yet.
+      </div>
+
+      <div class="space-y-2" *ngIf="sessions?.length">
+        <div
+          *ngFor="let s of sessions; trackBy: trackBySessionId"
+          class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
+        >
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-semibold text-slate-100">
+                {{ s.role || 'Session' }}
+              </p>
+              <p class="text-[11px] text-slate-500" *ngIf="s.createdAt">
+                {{ s.createdAt | date: 'yyyy-MM-dd HH:mm' }}
+              </p>
+            </div>
+            <p class="text-lg font-semibold text-emerald-300">
+              {{ s.scorePercent ?? '—' }}<span class="text-sm" *ngIf="s.scorePercent != null">%</span>
+            </p>
+          </div>
+          <p class="text-[11px] text-slate-400" *ngIf="s.summary">
+            {{ s.summary }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

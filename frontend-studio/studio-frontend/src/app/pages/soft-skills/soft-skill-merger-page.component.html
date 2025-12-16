@@ -1,0 +1,418 @@
+<div class="min-h-screen bg-slate-950 text-slate-100">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <header class="space-y-2">
+      <p class="text-xs uppercase tracking-[0.2em] text-emerald-300">Soft Skills</p>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class="text-3xl font-semibold">Soft Skill Merger</h1>
+          <p class="text-sm text-slate-400 max-w-3xl">
+            Paste the AI (Claude) JSON output, hit merge, and review the unified profile in seconds.
+            Everything runs through the backend `/api/soft-skills/merge` with auth applied.
+          </p>
+        </div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">
+          <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse"></span>
+          MVP v0.1
+        </div>
+      </div>
+    </header>
+
+    <div class="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+      <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-lg shadow-emerald-500/5">
+        <form class="space-y-4" [formGroup]="form" (ngSubmit)="merge()">
+          <div class="grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
+            <label class="space-y-1 text-xs text-slate-300">
+              <span class="flex items-center justify-between">
+                <span>Email override (optional)</span>
+                <span class="text-[11px] text-slate-500">Used if JSON is missing it</span>
+              </span>
+              <input
+                type="email"
+                formControlName="emailOverride"
+                class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none ring-emerald-500/40 focus:border-emerald-400 focus:ring-2"
+                placeholder="candidate@example.com"
+              />
+            </label>
+            <label class="flex items-center gap-2 text-xs text-slate-300">
+              <input
+                type="checkbox"
+                formControlName="saveMerged"
+                class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
+              />
+              <span>Persist merged profile server-side</span>
+            </label>
+          </div>
+
+          <label class="space-y-2 text-xs text-slate-300">
+            <div class="flex items-center justify-between">
+              <span>Paste Claude JSON output *</span>
+              <button
+                type="button"
+                class="text-[11px] font-semibold text-emerald-300 hover:text-emerald-200"
+                (click)="onPasteSample()"
+              >
+                Paste example
+              </button>
+            </div>
+            <textarea
+              rows="14"
+              spellcheck="false"
+              formControlName="jsonInput"
+              class="soft-skill-textarea w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-3 text-sm text-slate-100 outline-none ring-emerald-500/30 focus:border-emerald-400 focus:ring-2"
+              placeholder='{ "email": "...", "sources": [ { "sourceType": "...", "content": "..." } ] }'
+            ></textarea>
+          </label>
+
+          <div class="flex flex-col gap-3 border-t border-slate-800 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="text-xs text-slate-400">
+              JSON must include <code class="text-emerald-200">email</code> and a non-empty
+              <code class="text-emerald-200">sources[]</code> array with <code class="text-emerald-200">content</code>.
+            </div>
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-5 py-2 text-sm font-semibold text-slate-900 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="!canSubmit"
+            >
+              <span *ngIf="!loading">Merge Soft Skills</span>
+              <span *ngIf="loading" class="flex items-center gap-2">
+                <span class="h-4 w-4 animate-spin rounded-full border-2 border-emerald-900 border-t-emerald-200"></span>
+                Merging…
+              </span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="rounded-2xl border border-slate-800 bg-slate-900/50 p-4 space-y-4" [formGroup]="form">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <label class="space-y-1 text-xs text-slate-300 w-full">
+            <span class="flex items-center justify-between">
+              <span>Interviewer style</span>
+              <span class="text-[11px] text-slate-500">Tailors questions &amp; JSON helper</span>
+            </span>
+            <select
+              formControlName="interviewerStyle"
+              class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none ring-emerald-500/40 focus:border-emerald-400 focus:ring-2"
+            >
+              <option value="MIXED">Mixed</option>
+              <option value="HR">HR</option>
+              <option value="TECHNICAL">Technical</option>
+            </select>
+          </label>
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-100 hover:border-emerald-300 hover:bg-emerald-500/15"
+            (click)="insertSkeleton()"
+          >
+            Insert JSON skeleton
+          </button>
+        </div>
+
+        <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <p class="text-sm font-semibold text-slate-100">Questions &amp; answer hints</p>
+              <p class="text-xs text-slate-400">Style-specific prompts to guide your notes.</p>
+            </div>
+            <span class="rounded-full bg-slate-800 px-3 py-1 text-[11px] text-emerald-200 font-semibold">
+              {{ currentStyle | titlecase }}
+            </span>
+          </div>
+
+          <div class="space-y-3">
+            <div
+              *ngFor="let item of currentPreset; let i = index"
+              class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
+            >
+              <p class="text-sm font-semibold text-slate-100">Q{{ i + 1 }}. {{ item.title }}</p>
+              <p class="text-xs text-slate-400 mt-1">Hint: {{ item.hint }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-[11px] text-slate-300 border-t border-slate-800 pt-3">
+          <div class="flex items-start gap-2">
+            <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+            <span>Backend endpoint: <code class="text-emerald-200">POST /api/soft-skills/merge</code>.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+            <span>Sources without content are ignored; “Persist” saves the merged record.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+            <span>Outputs include summary, strengths, risks, styles, growth areas, and scores.</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="space-y-2" *ngIf="errorMessage || successMessage">
+      <div
+        *ngIf="errorMessage"
+        class="rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100"
+      >
+        {{ errorMessage }}
+      </div>
+      <div
+        *ngIf="successMessage"
+        class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100"
+      >
+        {{ successMessage }}
+      </div>
+    </div>
+
+    <div
+      *ngIf="loading"
+      class="flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-sm text-slate-200"
+    >
+      <span class="h-4 w-4 animate-spin rounded-full border-2 border-emerald-900 border-t-emerald-300"></span>
+      Sending request to the soft skill merger…
+    </div>
+
+    <div
+      *ngIf="parsedRequest"
+      class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300"
+    >
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="rounded-full bg-slate-800 px-3 py-1 text-[11px] font-semibold text-slate-200">
+          {{ parsedRequest.email }}
+        </span>
+        <span class="rounded-full bg-slate-800 px-3 py-1 text-[11px] text-slate-300">
+          {{ parsedRequest.sources.length }} source{{ parsedRequest.sources.length === 1 ? '' : 's' }}
+        </span>
+        <span class="rounded-full bg-slate-800 px-3 py-1 text-[11px] text-slate-300">
+          Save merged: {{ parsedRequest.saveMerged ? 'yes' : 'no' }}
+        </span>
+        <span *ngIf="parsedRequest.jobContext" class="rounded-full bg-slate-800 px-3 py-1 text-[11px] text-slate-300">
+          Job: {{ parsedRequest.jobContext }}
+        </span>
+      </div>
+    </div>
+
+    <section class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 space-y-5">
+      <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-100">Merged profile</h2>
+          <p class="text-xs text-slate-400">
+            {{ lastResponseMeta ? ('Generated ' + (lastResponseMeta.createdAt | date:'medium')) : 'Run a merge to view the combined profile.' }}
+          </p>
+        </div>
+        <div *ngIf="lastResponseMeta" class="flex items-center gap-2 text-[11px] text-slate-400">
+          <span class="inline-flex items-center rounded-full bg-slate-800 px-3 py-1">
+            {{ lastResponseMeta.saved ? 'Persisted' : 'Not persisted' }}
+          </span>
+          <span *ngIf="lastResponseMeta.savedProfileId" class="inline-flex items-center rounded-full bg-slate-800 px-3 py-1">
+            ID: {{ lastResponseMeta.savedProfileId }}
+          </span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="mergedProfile; else noProfile">
+        <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm leading-relaxed text-slate-100">
+          {{ mergedProfile.summary || 'No summary provided.' }}
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-2">
+          <article class="glass-card p-4 space-y-3">
+            <div class="flex items-center gap-2 text-emerald-300">
+              <span class="text-lg">✔</span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide">Strengths</h3>
+            </div>
+            <ng-container *ngIf="mergedProfile.strengths?.length; else noStrengths">
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let s of mergedProfile.strengths"
+                  class="pill pill-emerald"
+                >
+                  {{ s }}
+                </span>
+              </div>
+            </ng-container>
+            <ng-template #noStrengths>
+              <p class="text-xs text-slate-500">No strengths provided.</p>
+            </ng-template>
+          </article>
+
+          <article class="glass-card p-4 space-y-3">
+            <div class="flex items-center gap-2 text-amber-300">
+              <span class="text-lg">!</span>
+              <h3 class="text-sm font-semibold uppercase tracking-wide">Risks</h3>
+            </div>
+            <ng-container *ngIf="mergedProfile.risks?.length; else noRisks">
+              <ul class="space-y-2 text-sm text-slate-200">
+                <li *ngFor="let r of mergedProfile.risks" class="flex items-start gap-2">
+                  <span class="mt-0.5 h-1.5 w-1.5 rounded-full bg-amber-300"></span>
+                  <span>{{ r }}</span>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #noRisks>
+              <p class="text-xs text-slate-500">No risks highlighted.</p>
+            </ng-template>
+          </article>
+
+          <article class="glass-card p-4 space-y-3">
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-amber-300">Growth areas</h3>
+            <ng-container *ngIf="mergedProfile.growthAreas?.length; else noGrowth">
+              <div class="flex flex-wrap gap-2">
+                <span class="pill pill-amber" *ngFor="let g of mergedProfile.growthAreas">
+                  {{ g }}
+                </span>
+              </div>
+            </ng-container>
+            <ng-template #noGrowth>
+              <p class="text-xs text-slate-500">No growth areas identified.</p>
+            </ng-template>
+          </article>
+
+          <div class="space-y-4">
+            <article class="glass-card p-4 space-y-2">
+              <h3 class="text-xs font-semibold uppercase tracking-wide text-sky-300">Communication style</h3>
+              <p class="text-sm leading-relaxed text-slate-200 whitespace-pre-line">
+                {{ mergedProfile.communicationStyle || 'Not provided.' }}
+              </p>
+            </article>
+            <article class="glass-card p-4 space-y-2">
+              <h3 class="text-xs font-semibold uppercase tracking-wide text-indigo-300">Collaboration style</h3>
+              <p class="text-sm leading-relaxed text-slate-200 whitespace-pre-line">
+                {{ mergedProfile.collaborationStyle || 'Not provided.' }}
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-slate-100">Dimension scores</h3>
+            <span class="text-[11px] text-slate-400">{{ mergedProfile.dimensionScoresMerged?.length || 0 }} items</span>
+          </div>
+          <div
+            *ngIf="mergedProfile.dimensionScoresMerged?.length; else noDimensions"
+            class="grid gap-3 md:grid-cols-2"
+          >
+            <div
+              *ngFor="let dim of mergedProfile.dimensionScoresMerged; trackBy: trackByDimension"
+              class="glass-card p-4 space-y-3"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="space-y-1">
+                  <p class="text-sm font-semibold text-slate-100">
+                    {{ humanLabel(dim.dimension || '') }}
+                  </p>
+                  <p class="text-xs text-slate-500">
+                    Confidence {{ confidencePct(dim.confidence) }}%
+                  </p>
+                  <p class="text-[11px] text-slate-400" *ngIf="dimensionMeta(dim.dimension || '')">
+                    {{ dimensionMeta(dim.dimension || '')?.definition }}
+                  </p>
+                  <p class="text-[11px] text-amber-300" *ngIf="!dimensionMeta(dim.dimension || '')">
+                    No metadata found for "{{ dim.dimension }}".
+                  </p>
+                </div>
+                <div class="text-right">
+                  <div class="text-2xl font-semibold text-emerald-200">
+                    {{ dim.mergedScore ?? '—' }}/5
+                  </div>
+                  <span
+                    class="mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                    [ngClass]="{
+                      'bg-emerald-500/15 text-emerald-200 border border-emerald-500/40': confidenceTone(dim.confidence) === 'high',
+                      'bg-amber-500/15 text-amber-200 border border-amber-500/40': confidenceTone(dim.confidence) === 'medium',
+                      'bg-rose-500/15 text-rose-200 border border-rose-500/40': confidenceTone(dim.confidence) === 'low'
+                    }"
+                  >
+                    {{ confidenceTone(dim.confidence) | titlecase }} confidence
+                  </span>
+                </div>
+              </div>
+              <p *ngIf="dim.rationale" class="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+                {{ dim.rationale }}
+              </p>
+              <button
+                type="button"
+                class="text-[11px] text-emerald-300 hover:text-emerald-200 flex items-center gap-1"
+                (click)="toggleDim(dim.dimension || '')"
+              >
+                <span class="text-lg leading-none">{{ isExpanded(dim.dimension || '') ? '−' : '+' }}</span>
+                <span>Details</span>
+              </button>
+              <div *ngIf="isExpanded(dim.dimension || '') && dimensionMeta(dim.dimension || '') as meta" class="space-y-2 text-xs text-slate-300">
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-emerald-300">What high performance looks like</p>
+                  <ul class="list-disc list-inside space-y-1">
+                    <li *ngFor="let item of meta.highSignals">{{ item }}</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-amber-300">Red flags</p>
+                  <ul class="list-disc list-inside space-y-1">
+                    <li *ngFor="let item of meta.lowSignals">{{ item }}</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-slate-300">Interview signals</p>
+                  <ul class="list-disc list-inside space-y-1">
+                    <li *ngFor="let item of meta.interviewSignals">{{ item }}</li>
+                  </ul>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-sky-300">Coaching ideas</p>
+                  <ul class="list-disc list-inside space-y-1">
+                    <li *ngFor="let item of meta.coachingIdeas">{{ item }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noDimensions>
+            <div class="rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 text-sm text-slate-300">
+              No dimension scores returned by the merger.
+            </div>
+          </ng-template>
+        </div>
+
+        <div *ngIf="mergedProfile.meta" class="glass-card p-4 space-y-3">
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold border"
+              [ngClass]="{
+                'bg-emerald-500/15 text-emerald-200 border-emerald-500/40': confidenceTone(mergedProfile.meta?.overallConfidence) === 'high',
+                'bg-amber-500/15 text-amber-200 border-amber-500/40': confidenceTone(mergedProfile.meta?.overallConfidence) === 'medium',
+                'bg-rose-500/15 text-rose-200 border-rose-500/40': confidenceTone(mergedProfile.meta?.overallConfidence) === 'low'
+              }"
+            >
+              Overall confidence: {{ confidencePct(mergedProfile.meta?.overallConfidence) }}%
+            </span>
+          </div>
+
+          <div *ngIf="mergedProfile.meta?.mainDisagreements?.length" class="space-y-1">
+            <p class="text-xs uppercase tracking-wide text-slate-400">Main disagreements</p>
+            <ul class="space-y-1 text-sm text-slate-200">
+              <li *ngFor="let d of mergedProfile.meta?.mainDisagreements" class="flex items-start gap-2">
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-amber-300"></span>
+                <span>{{ d }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <div *ngIf="mergedProfile.meta?.notesForCoach?.length" class="space-y-1">
+            <p class="text-xs uppercase tracking-wide text-slate-400">Notes for coach</p>
+            <ul class="space-y-1 text-sm text-slate-200">
+              <li *ngFor="let note of mergedProfile.meta?.notesForCoach" class="flex items-start gap-2">
+                <span class="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-300"></span>
+                <span>{{ note }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noProfile>
+        <div class="rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-4 text-sm text-slate-300">
+          Paste the AI JSON and run a merge to see the unified profile.
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</div>

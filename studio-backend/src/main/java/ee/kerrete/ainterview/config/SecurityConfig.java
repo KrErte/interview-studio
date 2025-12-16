@@ -100,8 +100,11 @@ public class SecurityConfig {
 
                 auth
                     .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/trainer/status").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/risk/**").permitAll()
                     .requestMatchers("/api/candidate/**").authenticated()
                     .requestMatchers("/api/studio/**").authenticated()
+                    .requestMatchers("/api/risk/**").authenticated()
                     .anyRequest().authenticated();
             })
 
@@ -137,12 +140,13 @@ public class SecurityConfig {
             "http://localhost:4200",
             "http://localhost:4202",
             "http://localhost:4203",
+            "http://127.0.0.1:4200",
             "http://127.0.0.1:4202",
             "http://127.0.0.1:4203"
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "X-Requested-With"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

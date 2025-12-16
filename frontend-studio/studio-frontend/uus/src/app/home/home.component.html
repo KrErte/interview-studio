@@ -1,0 +1,21 @@
+<section class="hero">
+  <img src="assets/mimg.png" class="bg-ai">
+
+  <h1>Your AI interview coach.</h1>
+  <p>Your personal AI mentor that reads your CV, spots gaps, and trains you like a real lead engineer.</p>
+
+  <div class="buttons">
+    <a routerLink="/candidate/job-match" class="btn-primary">Improve my CV for a job</a>
+    <a routerLink="/candidate/roadmap" class="btn-secondary">View my roadmap</a>
+    <a routerLink="/interviewer" class="btn-ghost">Interviewer view</a>
+  </div>
+
+  <div style="margin-top: 3rem">
+    <button (click)="pingBackend()" [disabled]="loading">
+      {{ loading ? 'Pinging...' : 'Ping backend' }}
+    </button>
+    <span *ngIf="pingResult" style="margin-left:15px; color: green;">{{ pingResult }}</span>
+    <span *ngIf="pingError" style="margin-left:15px; color: red;">{{ pingError }}</span>
+  </div>
+
+</section>

@@ -111,8 +111,8 @@ export class InterviewControlRoomDrawerComponent {
 
     return events.filter((e) => {
       const haystack = `${e.type || ''} ${e.label || ''} ${e.message || ''} ${JSON.stringify(
-        e.payload ?? ''
-      )}`.toLowerCase();
+          e.payload ?? ''
+        )}`.toLowerCase();
       return haystack.includes(q);
     });
   }
