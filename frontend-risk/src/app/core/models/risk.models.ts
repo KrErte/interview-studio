@@ -57,6 +57,7 @@ export interface RiskFlowStartResponse {
   sessionId: string | null | undefined;
   firstQuestion?: RiskQuestion | null;
   totalQuestions?: number;
+  status?: string;
 }
 
 export interface RiskFlowAnswerRequest {
@@ -85,6 +86,7 @@ export interface RiskFlowNextResponse {
   done?: boolean;
   index?: number;
   totalPlanned?: number;
+  status?: string;
 }
 
 export interface RiskFlowEvaluateRequest {
@@ -99,6 +101,15 @@ export interface RiskFlowEvaluateResponse {
   finalConfidence: number;
   riskLevel: RiskLevel;
   signals: RiskSignal[];
+  summary?: string;
+}
+
+export interface RiskFlowSummaryResponse {
+  sessionId: string;
+  finalScore: number;
+  finalConfidence: number;
+  riskLevel: RiskLevel;
+  signals?: RiskSignal[];
   summary?: string;
 }
 

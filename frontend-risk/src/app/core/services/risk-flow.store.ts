@@ -23,10 +23,12 @@ export interface RiskFlowState {
   isComplete: boolean;
   finalResult: RiskFlowEvaluateResponse | null;
   error: string | null;
+  flowStatus: 'idle' | 'loading' | 'question' | 'final';
   loadingStart: boolean;
   loadingQuestion: boolean;
   loadingAnswer: boolean;
   loadingEvaluate: boolean;
+  loadingSummary: boolean;
 }
 
 const initialState: RiskFlowState = {
@@ -37,10 +39,12 @@ const initialState: RiskFlowState = {
   isComplete: false,
   finalResult: null,
   error: null,
+  flowStatus: 'idle',
   loadingStart: false,
   loadingQuestion: false,
   loadingAnswer: false,
-  loadingEvaluate: false
+  loadingEvaluate: false,
+  loadingSummary: false
 };
 
 @Injectable({ providedIn: 'root' })
@@ -58,7 +62,8 @@ export class RiskFlowStore {
     this.patchState({
       ...initialState,
       loadingStart: true,
-      error: null
+      error: null,
+      flowStatus: 'loading'
     });
 
     return this.riskApi.start(payload).pipe(
@@ -79,13 +84,19 @@ export class RiskFlowStore {
           isComplete: false,
           finalResult: null,
           error: null,
+          flowStatus: res.status === 'EVALUATED' ? 'final' : res.firstQuestion ? 'question' : 'loading',
           loadingStart: false,
           loadingQuestion: false,
           loadingAnswer: false,
-          loadingEvaluate: false
+          loadingEvaluate: false,
+          loadingSummary: false
         };
 
         this.patchState(nextState);
+        if (res.status === 'EVALUATED') {
+          this.fetchSummary(res.sessionId).subscribe();
+          return;
+        }
         if (!res.firstQuestion) {
           this.fetchNextQuestion(res.sessionId).subscribe();
         }
@@ -131,10 +142,13 @@ export class RiskFlowStore {
           isComplete: !!res.isComplete,
           currentQuestion,
           loadingAnswer: false,
-          error: null
+          error: null,
+          flowStatus: currentQuestion ? 'question' : res.isComplete ? 'loading' : this.snapshot.flowStatus
         });
         if (!currentQuestion && !res.isComplete) {
           this.fetchNextQuestion(this.snapshot.sessionId as string).subscribe();
+        } else if (res.isComplete) {
+          this.fetchSummary(this.snapshot.sessionId as string).subscribe();
         }
       }),
       map((_res): RiskFlowState => this.snapshot),
@@ -169,7 +183,8 @@ export class RiskFlowStore {
           finalResult: res,
           currentQuestion: null,
           loadingEvaluate: false,
-          error: null
+          error: null,
+          flowStatus: 'final'
         });
       }),
       map((_res): RiskFlowState => this.snapshot),
@@ -190,21 +205,24 @@ export class RiskFlowStore {
     if (!sessionId) {
       return of(this.setErrorState('No active session'));
     }
-    this.patchState({ ...this.snapshot, loadingQuestion: true });
+    this.patchState({ ...this.snapshot, loadingQuestion: true, flowStatus: 'loading' });
     return this.riskApi.next({ sessionId }).pipe(
       tap((res: RiskFlowNextResponse) => {
         const totalQuestions = res.totalPlanned ?? this.snapshot.totalQuestions;
         const isDone = !!res.done;
+        const isEvaluated = res.status === 'EVALUATED';
 
-        if (isDone) {
+        if (isDone || isEvaluated) {
           this.patchState({
             ...this.snapshot,
             isComplete: true,
             currentQuestion: null,
             totalQuestions,
             loadingQuestion: false,
-            error: null
+            error: null,
+            flowStatus: 'final'
           });
+          this.fetchSummary(sessionId).subscribe();
           return;
         }
 
@@ -223,7 +241,8 @@ export class RiskFlowStore {
             currentQuestion: null,
             totalQuestions,
             loadingQuestion: false,
-            error: 'No questions available.'
+            error: 'No questions available.',
+            flowStatus: 'question'
           });
           return;
         }
@@ -233,7 +252,8 @@ export class RiskFlowStore {
           currentQuestion: nextQuestion,
           totalQuestions,
           loadingQuestion: false,
-          error: null
+          error: null,
+          flowStatus: 'question'
         });
       }),
       map((): RiskFlowState => this.snapshot),
@@ -241,6 +261,45 @@ export class RiskFlowStore {
       finalize(() => {
         if (this.snapshot.loadingQuestion) {
           this.patchState({ ...this.snapshot, loadingQuestion: false });
+        }
+      })
+    );
+  }
+
+  private fetchSummary(sessionId: string): Observable<RiskFlowState> {
+    if (!sessionId) {
+      return of(this.setErrorState('No active session'));
+    }
+    this.patchState({ ...this.snapshot, loadingSummary: true, flowStatus: 'loading' });
+    return this.riskApi.summary(sessionId).pipe(
+      tap((res) => {
+        const nextState: RiskFlowState = {
+          ...this.snapshot,
+          sessionId: res.sessionId || sessionId,
+          finalResult: {
+            sessionId: res.sessionId || sessionId,
+            isComplete: true,
+            finalScore: res.finalScore,
+            finalConfidence: res.finalConfidence,
+            riskLevel: res.riskLevel,
+            signals: res.signals || [],
+            summary: res.summary
+          },
+          isComplete: true,
+          currentQuestion: null,
+          loadingSummary: false,
+          loadingEvaluate: false,
+          loadingQuestion: false,
+          flowStatus: 'final',
+          error: null
+        };
+        this.patchState(nextState);
+      }),
+      map((): RiskFlowState => this.snapshot),
+      catchError((err): Observable<RiskFlowState> => of(this.handleFlowError(err))),
+      finalize(() => {
+        if (this.snapshot.loadingSummary) {
+          this.patchState({ ...this.snapshot, loadingSummary: false });
         }
       })
     );

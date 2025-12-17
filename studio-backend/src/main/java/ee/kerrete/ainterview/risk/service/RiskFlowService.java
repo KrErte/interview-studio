@@ -8,6 +8,7 @@ import ee.kerrete.ainterview.risk.dto.RiskFlowAnswerRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowAnswerResponse;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateResponse;
+import ee.kerrete.ainterview.risk.dto.RiskFlowSummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -132,6 +133,32 @@ public class RiskFlowService {
                 .build();
     }
 
+    public RiskFlowSummaryResponse summary(String email, String flowIdStr) {
+        UUID flowId = parseUuid(flowIdStr, "flowId");
+        FlowState state = flows.get(flowId);
+        if (state == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flow not found");
+        }
+        if (!email.equals(state.email)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Flow does not belong to user");
+        }
+        int answered = state.answers.size();
+        int total = state.questions.size();
+        int riskScore = Math.min(100, 50 + answered * 5);
+        double confidence = Math.min(1.0, 0.6 + answered * 0.05);
+        String riskLevel = riskScore >= 70 ? "HIGH" : riskScore >= 50 ? "MEDIUM" : "LOW";
+
+        return RiskFlowSummaryResponse.builder()
+                .flowId(flowId.toString())
+                .riskScore(riskScore)
+                .confidence(confidence)
+                .riskLevel(riskLevel)
+                .answered(answered)
+                .total(total)
+                .status(answered >= total && total > 0 ? "EVALUATED" : "IN_PROGRESS")
+                .build();
+    }
+
     private UUID resolveFlowId(RiskFlowNextRequest request) {
         return resolveFlowId(request.getFlowId(), request.getSessionId());
     }
@@ -142,6 +169,14 @@ public class RiskFlowService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "flowId is required");
         }
         return resolved;
+    }
+
+    private UUID parseUuid(String value, String fieldName) {
+        try {
+            return UUID.fromString(value);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, fieldName + " is invalid");
+        }
     }
 
     private static class FlowState {

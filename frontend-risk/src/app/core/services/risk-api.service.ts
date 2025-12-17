@@ -10,6 +10,7 @@ import {
   RiskFlowStartResponse,
   RiskFlowNextRequest,
   RiskFlowNextResponse,
+  RiskFlowSummaryResponse,
   RiskSummary
 } from '../models/risk.models';
 
@@ -31,6 +32,10 @@ export class RiskApiService {
 
   evaluate(payload: RiskFlowEvaluateRequest): Observable<RiskFlowEvaluateResponse> {
     return this.api.post<RiskFlowEvaluateResponse>('/risk/flow/evaluate', payload);
+  }
+
+  summary(sessionId: string): Observable<RiskFlowSummaryResponse> {
+    return this.api.get<RiskFlowSummaryResponse>(`/risk/flow/${sessionId}/summary`);
   }
 
   // Kept for backwards compatibility; not used by the new flow.

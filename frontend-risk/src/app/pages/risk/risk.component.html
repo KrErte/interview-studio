@@ -28,7 +28,7 @@
 
       <p class="mt-3 text-xs text-rose-400" *ngIf="state.error">{{ state.error }}</p>
 
-      <div class="mt-6 space-y-4" *ngIf="!state.isComplete; else resultTpl">
+      <div class="mt-6 space-y-4" *ngIf="state.flowStatus !== 'final'; else resultTpl">
         <div
           *ngIf="state.currentQuestion; else waitingQuestion"
           class="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-5"
@@ -197,7 +197,7 @@
 
         <ng-template #waitingQuestion>
           <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300">
-            {{ state.loadingStart ? 'Starting flow...' : 'Waiting for the first question...' }}
+            {{ state.loadingStart || state.loadingQuestion ? 'Loading next question...' : 'Waiting for the first question...' }}
           </div>
         </ng-template>
       </div>
@@ -207,7 +207,7 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-xs uppercase tracking-wide text-emerald-300 font-semibold">Final evaluation</p>
-              <p class="text-sm text-slate-400">Complete the flow to see your score and signals.</p>
+              <p class="text-sm text-slate-400">Your assessment summary.</p>
             </div>
             <span
               class="rounded-full px-3 py-1 text-xs font-semibold"
@@ -260,15 +260,15 @@
           <ng-template #waitingEvaluation>
             <div class="space-y-3">
               <p class="text-sm text-slate-300">
-                {{ state.loadingEvaluate ? 'Finalizing evaluation...' : 'Evaluation not yet run.' }}
+                {{ state.loadingSummary || state.loadingEvaluate ? 'Finalizing evaluation...' : 'Evaluation not yet run.' }}
               </p>
               <button
                 type="button"
                 class="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 disabled:opacity-60"
                 (click)="evaluate(state)"
-                [disabled]="state.loadingEvaluate"
+                [disabled]="state.loadingEvaluate || state.loadingSummary"
               >
-                {{ state.loadingEvaluate ? 'Evaluating...' : 'Run evaluation' }}
+                {{ state.loadingEvaluate || state.loadingSummary ? 'Evaluating...' : 'Run evaluation' }}
               </button>
             </div>
           </ng-template>

@@ -8,6 +8,7 @@ import ee.kerrete.ainterview.risk.dto.RiskFlowAnswerRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowAnswerResponse;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateResponse;
+import ee.kerrete.ainterview.risk.dto.RiskFlowSummaryResponse;
 import ee.kerrete.ainterview.risk.service.RiskFlowService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,6 +97,22 @@ public class RiskFlowController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
         }
         RiskFlowEvaluateResponse response = riskFlowService.evaluate(email, req);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(
+        value = "/{flowId}/summary",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<RiskFlowSummaryResponse> summary(
+            @PathVariable("flowId") String flowId,
+            Authentication auth
+    ) {
+        String email = auth != null ? auth.getName() : null;
+        if (!StringUtils.hasText(email)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
+        }
+        RiskFlowSummaryResponse response = riskFlowService.summary(email, flowId);
         return ResponseEntity.ok(response);
     }
 }
