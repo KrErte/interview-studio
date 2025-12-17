@@ -1,41 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface RiskSummary {
-  riskScore: number;
-  band: string;
-  message: string;
-  confidence?: number;
-  missingSignals?: string[];
-}
-
-export interface RiskQuestion {
-  signalKey: string;
-  label: string;
-  question: string;
-  index?: number;
-  total?: number;
-}
+import { ApiClient } from '../api/api-client.service';
+import {
+  RiskFlowAnswerRequest,
+  RiskFlowAnswerResponse,
+  RiskFlowEvaluateRequest,
+  RiskFlowEvaluateResponse,
+  RiskFlowStartRequest,
+  RiskFlowStartResponse,
+  RiskFlowNextRequest,
+  RiskFlowNextResponse,
+  RiskSummary
+} from '../models/risk.models';
 
 @Injectable({ providedIn: 'root' })
 export class RiskApiService {
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiClient) {}
 
+  start(payload: RiskFlowStartRequest = {}): Observable<RiskFlowStartResponse> {
+    return this.api.post<RiskFlowStartResponse>('/risk/flow/start', payload);
+  }
+
+  next(payload: RiskFlowNextRequest): Observable<RiskFlowNextResponse> {
+    return this.api.post<RiskFlowNextResponse>('/risk/flow/next', payload);
+  }
+
+  answer(payload: RiskFlowAnswerRequest): Observable<RiskFlowAnswerResponse> {
+    return this.api.post<RiskFlowAnswerResponse>('/risk/flow/answer', payload);
+  }
+
+  evaluate(payload: RiskFlowEvaluateRequest): Observable<RiskFlowEvaluateResponse> {
+    return this.api.post<RiskFlowEvaluateResponse>('/risk/flow/evaluate', payload);
+  }
+
+  // Kept for backwards compatibility; not used by the new flow.
   getSummary(): Observable<RiskSummary> {
-    return this.http.get<RiskSummary>('/api/risk/summary');
-  }
-
-  getNextQuestion(): Observable<RiskQuestion> {
-    return this.http.get<RiskQuestion>('/api/trainer/soft-question');
-  }
-
-  submitAnswer(signalKey: string, answer: string): Observable<void> {
-    return this.http.post<void>('/api/trainer/soft-question', { signalKey, answer });
-  }
-
-  skipQuestion(signalKey?: string): Observable<void> {
-    return this.http.post<void>('/api/trainer/soft-question/skip', { signalKey });
+    return this.api.get<RiskSummary>('/risk/summary');
   }
 }
 

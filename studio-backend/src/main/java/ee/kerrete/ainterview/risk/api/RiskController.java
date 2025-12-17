@@ -2,22 +2,28 @@ package ee.kerrete.ainterview.risk.api;
 
 import ee.kerrete.ainterview.interview.dto.InterviewProfileDto;
 import ee.kerrete.ainterview.interview.service.InterviewProfileService;
+import ee.kerrete.ainterview.model.TrainingTask;
+import ee.kerrete.ainterview.repository.TrainingTaskRepository;
 import ee.kerrete.ainterview.risk.dto.AnalyzeRequest;
 import ee.kerrete.ainterview.risk.dto.AnalyzeResponse;
 import ee.kerrete.ainterview.risk.dto.RefineRequest;
 import ee.kerrete.ainterview.risk.dto.RefineResponse;
 import ee.kerrete.ainterview.risk.service.ReplaceabilityRiskService;
 import lombok.RequiredArgsConstructor;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/risk")
@@ -26,6 +32,7 @@ public class RiskController {
 
     private final ReplaceabilityRiskService service;
     private final InterviewProfileService interviewProfileService;
+    private final TrainingTaskRepository trainingTaskRepository;
 
     @PostMapping("/analyze")
     public AnalyzeResponse analyze(@RequestBody AnalyzeRequest request) {
@@ -74,6 +81,46 @@ public class RiskController {
         return new RiskSummaryResponse(riskScore, band, message, confidence, dedupe(missingSignals));
     }
 
+    @PostMapping("/re-evaluate")
+    public ResponseEntity<RiskSummaryResponse> reEvaluate(
+            @RequestBody(required = false) ReEvaluateRequest req
+    ) {
+        String email = req != null ? trim(req.getEmail()) : null;
+        String taskKey = req != null ? trim(req.getTaskKey()) : null;
+        if (!StringUtils.hasText(email) || !StringUtils.hasText(taskKey)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email and taskKey are required");
+        }
+
+        TrainingTask task = trainingTaskRepository.findByEmailAndTaskKey(email, taskKey)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Training session not found for email and taskKey"));
+
+        List<String> answers = readAnswers(task);
+        int riskScore = 37;
+        String band = "MEDIUM";
+        String message = "Session-based risk snapshot";
+
+        List<String> missingSignals = new ArrayList<>();
+        if (req != null && req.getSessionUuid() != null) {
+            InterviewProfileDto profile = loadProfile(req.getSessionUuid());
+            if (profile != null) {
+                missingSignals.addAll(safe(profile.getInterviewerProbePriorities()));
+            } else {
+                missingSignals.add("profile_not_found");
+            }
+        }
+        if (answers.isEmpty()) {
+            missingSignals.add("answers_missing");
+        }
+
+        if (missingSignals.isEmpty()) {
+            missingSignals.add("insufficient_signals");
+        }
+
+        double confidence = computeConfidence(missingSignals.size());
+
+        return ResponseEntity.ok(new RiskSummaryResponse(riskScore, band, message, confidence, dedupe(missingSignals)));
+    }
+
     private InterviewProfileDto loadProfile(UUID sessionUuid) {
         try {
             return interviewProfileService.loadProfile(sessionUuid);
@@ -95,7 +142,48 @@ public class RiskController {
         return Math.max(0.2, Math.min(1.0, c));
     }
 
+    private List<String> readAnswers(TrainingTask task) {
+        if (task == null || !StringUtils.hasText(task.getAnswer())) {
+            return List.of();
+        }
+        return List.of(task.getAnswer().trim());
+    }
+
     public record RiskSummaryResponse(int riskScore, String band, String message, double confidence, List<String> missingSignals) {}
 
     public record QuestionsResponse(List<String> questions) {}
+
+    public static class ReEvaluateRequest {
+        private String email;
+        private String taskKey;
+        private UUID sessionUuid;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getTaskKey() {
+            return taskKey;
+        }
+
+        public void setTaskKey(String taskKey) {
+            this.taskKey = taskKey;
+        }
+
+        public UUID getSessionUuid() {
+            return sessionUuid;
+        }
+
+        public void setSessionUuid(UUID sessionUuid) {
+            this.sessionUuid = sessionUuid;
+        }
+    }
+
+    private String trim(String value) {
+        return value == null ? null : value.trim();
+    }
 }
