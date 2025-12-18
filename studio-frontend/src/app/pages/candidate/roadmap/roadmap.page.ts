@@ -9,6 +9,11 @@ import { SkillPlanService } from '../../../services/skill-plan.service';
 import { AuthService } from '../../../services/auth.service';
 import { RoadmapService, RoadmapTask } from '../../../services/roadmap.service';
 import { TrainingProgressResponse, TrainingProgressService } from '../../../services/training-progress.service';
+import {
+  generateRoadmapMarkdown,
+  downloadMarkdown,
+  RoadmapExportData
+} from '../../../utils/roadmap-markdown-export';
 
 interface RoadmapDayView extends SkillPlanDay {
   completed?: boolean;
@@ -101,6 +106,28 @@ export class RoadmapPageComponent implements OnInit {
 
   goToJobMatch(): void {
     this.router.navigate(['/candidate/job-match']);
+  }
+
+  exportToMarkdown(): void {
+    if (!this.roadmap.length) {
+      return;
+    }
+
+    const exportData: RoadmapExportData = {
+      title: this.overallGoal || 'Skill Development Roadmap',
+      roadmapKey: 'skill-roadmap',
+      tasks: this.roadmap.map(day => ({
+        taskKey: day.taskKey,
+        title: day.title,
+        description: day.description,
+        completed: day.completed ?? false,
+        dayNumber: day.dayNumber
+      }))
+    };
+
+    const markdown = generateRoadmapMarkdown(exportData);
+    const date = new Date().toISOString().split('T')[0];
+    downloadMarkdown(markdown, `skill-roadmap-${date}.md`);
   }
 
   private fetchRoadmap(email: string): void {
