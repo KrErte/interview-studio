@@ -76,6 +76,11 @@ export class PivotRolesPageComponent implements OnInit {
     });
   }
 
+  onTrackProgress(): void {
+    // Navigate to roadmap/progress tracking page
+    this.router.navigate(['/candidate/roadmap']);
+  }
+
   isVisibilityMode(mode: MarketplaceVisibilityMode): boolean {
     return this.visibilityDraftMode === mode;
   }
