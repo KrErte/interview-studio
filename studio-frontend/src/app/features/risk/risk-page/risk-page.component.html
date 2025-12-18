@@ -1,0 +1,87 @@
+<div class="risk-page flex flex-col min-h-screen p-6 bg-gray-50">
+  <!-- Header -->
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Risk Board</h1>
+  </header>
+
+  <!-- Error Display -->
+  <div *ngIf="error$ | async as error" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+    {{ error }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading$ | async" class="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded">
+    Loading...
+  </div>
+
+  <!-- Confidence Bar Section -->
+  <section class="mb-8 p-6 bg-white rounded-lg shadow">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Risk Assessment</h2>
+
+    <div class="mb-4">
+      <div class="flex justify-between mb-1">
+        <span class="text-sm font-medium text-gray-700">Risk Score</span>
+        <span class="text-sm font-medium text-gray-700">{{ (score$ | async) ?? 0 }}%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div
+          class="bg-blue-600 h-4 rounded-full transition-all duration-300"
+          [style.width.%]="(score$ | async) ?? 0">
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <div class="flex justify-between mb-1">
+        <span class="text-sm font-medium text-gray-700">Confidence</span>
+        <span class="text-sm font-medium text-gray-700">{{ (confidence$ | async) ?? 0 }}%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div
+          class="bg-green-500 h-4 rounded-full transition-all duration-300"
+          [style.width.%]="(confidence$ | async) ?? 0">
+        </div>
+      </div>
+    </div>
+
+    <button
+      (click)="onImproveAccuracy()"
+      class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+      Improve Accuracy
+    </button>
+  </section>
+
+  <!-- Q&A Section Anchor -->
+  <section id="qa-section" class="mb-8 p-6 bg-white rounded-lg shadow">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Q&A Section</h2>
+    <p class="text-gray-500">Question and answer flow will appear here.</p>
+  </section>
+
+  <!-- Signals Panel -->
+  <section class="mb-8 p-6 bg-white rounded-lg shadow">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Signals</h2>
+    <div *ngIf="(signals$ | async)?.length; else noSignals">
+      <ul class="space-y-2">
+        <li *ngFor="let signal of signals$ | async" class="p-3 bg-gray-100 rounded">
+          {{ signal?.name ?? signal }}
+        </li>
+      </ul>
+    </div>
+    <ng-template #noSignals>
+      <p class="text-gray-500">No signals available yet.</p>
+    </ng-template>
+  </section>
+
+  <!-- Roadmap Panel -->
+  <section class="mb-8 p-6 bg-white rounded-lg shadow">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Roadmap</h2>
+    <div *ngIf="roadmap$ | async as roadmap; else noRoadmap">
+      <div class="p-3 bg-gray-100 rounded">
+        <pre class="text-sm text-gray-700 whitespace-pre-wrap">{{ roadmap | json }}</pre>
+      </div>
+    </div>
+    <ng-template #noRoadmap>
+      <p class="text-gray-500">No roadmap available yet.</p>
+    </ng-template>
+  </section>
+</div>

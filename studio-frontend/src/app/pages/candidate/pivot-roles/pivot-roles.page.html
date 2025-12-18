@@ -85,6 +85,17 @@
         <p *ngIf="scoreError" class="mt-2 text-xs text-red-600">
           {{ scoreError }}
         </p>
+        <!-- CTA: Track progress -->
+        <div class="mt-4 pt-3 border-t border-emerald-200">
+          <button
+            type="button"
+            class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700 transition-colors"
+            (click)="onTrackProgress()"
+          >
+            <span>Jälgi oma progressi</span>
+            <span class="text-emerald-200">→</span>
+          </button>
+        </div>
       </div>
 
       <!-- Pivot role matches -->
