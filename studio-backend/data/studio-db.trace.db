@@ -1,7 +1,7 @@
-2025-12-16 18:36:41.588588+02:00 jdbc[3]: exception
+2025-12-18 17:58:42.873006+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DATABASECHANGELOGLOCK" not found; SQL statement:
 SELECT COUNT(*) FROM PUBLIC.DATABASECHANGELOGLOCK [42102-224]
-2025-12-16 18:36:41.817244+02:00 jdbc[3]: exception
+2025-12-18 17:58:43.115008+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "T.TRAINING_STATUS" not found; SQL statement:
 select t.training_status from PUBLIC.training_progress t where 0=1 [42122-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
@@ -93,7 +93,7 @@ select t.training_status from PUBLIC.training_progress t where 0=1 [42122-224]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-2025-12-16 18:36:41.835318+02:00 jdbc[3]: exception
+2025-12-18 17:58:43.135006+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "T.SCORE_UPDATED_AT" not found; SQL statement:
 select t.score_updated_at from PUBLIC.training_task t where 0=1 [42122-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
@@ -185,7 +185,7 @@ select t.score_updated_at from PUBLIC.training_task t where 0=1 [42122-224]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-2025-12-16 18:36:41.861319+02:00 jdbc[3]: exception
+2025-12-18 17:58:43.162008+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "T.SKILL_KEY" not found; SQL statement:
 select t.skill_key from PUBLIC.training_task t where 0=1 [42122-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
@@ -278,7 +278,7 @@ select t.skill_key from PUBLIC.training_task t where 0=1 [42122-224]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-2025-12-16 18:36:41.992320+02:00 jdbc[3]: exception
+2025-12-18 17:58:43.297006+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "T.LABEL" not found; SQL statement:
 select t.label from PUBLIC.soft_skill_dimension t where 0=1 [42122-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
@@ -370,7 +370,7 @@ select t.label from PUBLIC.soft_skill_dimension t where 0=1 [42122-224]
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
 	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-2025-12-16 18:36:42.035320+02:00 jdbc[3]: exception
+2025-12-18 17:58:43.344007+02:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "T.INTERVIEW_PROFILE_JSON" not found; SQL statement:
 select t.interview_profile_json from PUBLIC.interview_session t where 0=1 [42122-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)

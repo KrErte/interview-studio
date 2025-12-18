@@ -2,15 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
+import { RiskApiService } from '../../../core/services/risk-api.service';
+import { RoadmapDuration, RoadmapItem, RoadmapResponse } from '../../../core/models/risk.models';
 import { Subject, takeUntil } from 'rxjs';
-
-type PlanDuration = '7d' | '30d' | '90d';
-
-interface PlanBlock {
-  title: string;
-  summary: string;
-  tasks: string[];
-}
 
 @Component({
   selector: 'app-futureproof-roadmap-page',
@@ -20,65 +14,25 @@ interface PlanBlock {
   styleUrls: ['./futureproof-roadmap.page.scss']
 })
 export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
-  planDuration: PlanDuration = '7d';
-
-  planBlocks: Record<PlanDuration, PlanBlock[]> = {
-    '7d': [
-      {
-        title: 'Päevad 1-2',
-        summary: 'Koonda CV ja intervjuu signaalid ühte profiili.',
-        tasks: ['Lae CV ja märgi praegune roll', 'Märgi 3 peamist tugevust', 'Seadista nähtavus']
-      },
-      {
-        title: 'Päevad 3-5',
-        summary: 'Testi uusi töövooge ja mõõda valmidust.',
-        tasks: ['Katseta 2 uut tööriista', 'Dokumenteeri mõõdikud', 'Lisa õppimismärkmed']
-      },
-      {
-        title: 'Päev 6-7',
-        summary: 'Vali üks pöördepositsioon ja lukusta mini-tegevuskava.',
-        tasks: ['Vali positsioon', 'Genereeri lühike tegevuskava', 'Jaga persona teatriga tagasisideks']
-      }
-    ],
-    '30d': [
-      {
-        title: 'Nädal 1',
-        summary: 'Süsteemne profiili uuendus ja intervjuu signaalid.',
-        tasks: ['Täienda CV signaalid', 'Harjuta 2 mootorit', 'Kaardista lüngad']
-      },
-      {
-        title: 'Nädalad 2-3',
-        summary: 'Sügav õppimine ja mõõtmine.',
-        tasks: ['Täida 3 mikroprojekti', 'Mõõda tulemusi', 'Tee kordusanalüüs']
-      },
-      {
-        title: 'Nädal 4',
-        summary: 'Valmisoleku lukustamine ja nähtavus.',
-        tasks: ['Värskenda nähtavust', 'Saada 2 taotlust', 'Kinnita tegevuskava järgmiseks kuuks']
-      }
-    ],
-    '90d': [
-      {
-        title: 'Kuu 1',
-        summary: 'Vundament ja tööriistad.',
-        tasks: ['CV ja portfoolio', 'Automatiseerimise praktilised harjutused', 'Valdkonna benchmark']
-      },
-      {
-        title: 'Kuu 2',
-        summary: 'Rakendus ja sügavus.',
-        tasks: ['3 päris-kasutusjuhtu', 'Jõudlusmõõdikud', 'Tiimikoostöö simulatsioon']
-      },
-      {
-        title: 'Kuu 3',
-        summary: 'Turuvalmidus.',
-        tasks: ['Persona teatrist tagasiside', 'Nähtavuse kampaania', 'Intervjuu dress rehearsal']
-      }
-    ]
-  };
+  durations: RoadmapDuration[] = [
+    RoadmapDuration.SEVEN_DAYS,
+    RoadmapDuration.THIRTY_DAYS,
+    RoadmapDuration.NINETY_DAYS
+  ];
+  duration = RoadmapDuration.SEVEN_DAYS;
+  roadmap: RoadmapResponse | null = null;
+  loading = false;
+  generating = false;
+  error: string | null = null;
+  sessionId: string | null = null;
 
   private destroy$ = new Subject<void>();
 
-  constructor(private router: Router, private navContext: NavContextService) {}
+  constructor(
+    private router: Router,
+    private navContext: NavContextService,
+    private riskApi: RiskApiService
+  ) {}
 
   ngOnInit(): void {
     this.navContext.setFutureproofNav([
@@ -97,6 +51,13 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
         }
         this.router.navigateByUrl(`/futureproof?step=${key}`);
       });
+
+    this.sessionId = sessionStorage.getItem('fp_session');
+    if (!this.sessionId) {
+      this.redirectToStart();
+      return;
+    }
+    this.loadRoadmap();
   }
 
   ngOnDestroy(): void {
@@ -105,16 +66,76 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  isPlanDuration(duration: PlanDuration): boolean {
-    return this.planDuration === duration;
+  isPlanDuration(duration: RoadmapDuration): boolean {
+    return this.duration === duration;
   }
 
-  selectPlanDuration(duration: PlanDuration): void {
-    this.planDuration = duration;
+  selectPlanDuration(duration: RoadmapDuration): void {
+    if (this.duration === duration) {
+      return;
+    }
+    this.duration = duration;
+    this.loadRoadmap();
   }
 
   backToOverview(): void {
     this.router.navigateByUrl('/futureproof');
+  }
+
+  backToAssessment(): void {
+    if (this.sessionId) {
+      this.router.navigate(['/futureproof/assessment'], { queryParams: { sessionId: this.sessionId } });
+    }
+  }
+
+  get items(): RoadmapItem[] {
+    return this.roadmap?.items ?? [];
+  }
+
+  get summary(): string {
+    return this.roadmap?.summary ?? '';
+  }
+
+  loadRoadmap(): void {
+    this.loading = true;
+    this.generating = true;
+    this.error = null;
+
+    const sid = this.sessionId;
+    if (!sid) {
+      this.loading = false;
+      this.error = 'Seanssi ei leitud. Alusta profiili täitmisest, et jõuda tegevuskavani.';
+      this.redirectToStart();
+      return;
+    }
+
+    this.riskApi
+      .generateRoadmap({
+        sessionId: sid,
+        duration: this.duration
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.roadmap = res;
+          this.loading = false;
+          this.generating = false;
+          try {
+            localStorage.setItem('futureproofCompleted', 'true');
+          } catch {
+            // ignore storage errors
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.generating = false;
+          this.error = err?.error?.message || 'Tegevuskava laadimine ebaõnnestus. Proovi uuesti.';
+        }
+      });
+  }
+
+  private redirectToStart(): void {
+    this.router.navigateByUrl('/futureproof/overview');
   }
 }
 

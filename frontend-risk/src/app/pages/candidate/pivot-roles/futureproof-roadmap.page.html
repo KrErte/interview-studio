@@ -22,64 +22,163 @@
         <button
           type="button"
           class="rounded-full px-3 py-1 text-xs font-semibold"
-          [ngClass]="isPlanDuration('7d') ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
-          (click)="selectPlanDuration('7d')"
+          [ngClass]="isPlanDuration(7) ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
+          (click)="selectPlanDuration(7)"
         >
           7
         </button>
         <button
           type="button"
           class="rounded-full px-3 py-1 text-xs font-semibold"
-          [ngClass]="isPlanDuration('30d') ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
-          (click)="selectPlanDuration('30d')"
+          [ngClass]="isPlanDuration(30) ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
+          (click)="selectPlanDuration(30)"
         >
           30
         </button>
         <button
           type="button"
           class="rounded-full px-3 py-1 text-xs font-semibold"
-          [ngClass]="isPlanDuration('90d') ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
-          (click)="selectPlanDuration('90d')"
+          [ngClass]="isPlanDuration(90) ? 'bg-emerald-500 text-slate-900' : 'bg-slate-900 text-slate-200 border border-slate-700'"
+          (click)="selectPlanDuration(90)"
         >
           90
         </button>
       </div>
     </div>
+    <div class="mt-3">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 disabled:opacity-70"
+        (click)="loadRoadmap()"
+        [disabled]="generating || loading"
+      >
+        <span *ngIf="!generating">Genereeri tegevuskava</span>
+        <span *ngIf="generating" class="flex items-center gap-2">
+          <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700"></span>
+          Genereerin...
+        </span>
+      </button>
+    </div>
   </header>
 
-  <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 md:p-5 shadow-lg">
-    <div class="grid gap-3 md:grid-cols-3 text-sm text-slate-200">
-      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Plaan</p>
-        <p class="text-lg font-semibold text-slate-50">
-          {{ planDuration === '7d' ? '7 päeva plaan' : planDuration === '30d' ? '30 päeva plaan' : '90 päeva plaan' }}
-        </p>
-      </div>
-      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Turupositsioon</p>
-        <p class="text-lg font-semibold text-emerald-300">+8% paranemine</p>
-      </div>
-      <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Ajakulu</p>
-        <p class="text-lg font-semibold text-slate-50">~12 tundi</p>
+  <div *ngIf="loading" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5">
+    <div class="flex items-center gap-3 text-sm text-slate-300">
+      <span class="h-4 w-4 animate-spin rounded-full border-2 border-slate-700 border-t-emerald-400"></span>
+      Laen tegevuskava...
+    </div>
+  </div>
+
+  <div *ngIf="error" class="rounded-2xl border border-rose-500/40 bg-rose-950/50 p-4 text-sm text-rose-100">
+    <div class="space-y-3">
+      <p>{{ error }}</p>
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
+          (click)="backToOverview()"
+        >
+          Alusta profiili täitmisest →
+        </button>
+        <button
+          *ngIf="sessionId"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200"
+          (click)="backToAssessment()"
+        >
+          Tagasi analüüsi
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="grid gap-4 md:grid-cols-2">
-    <div
-      *ngFor="let block of planBlocks[planDuration]"
-      class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg"
+  <div
+    *ngIf="!loading && !error && !roadmap"
+    class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-sm text-slate-300"
+  >
+    <p>Tegevuskava ei ole veel saadaval.</p>
+    <button
+      type="button"
+      class="mt-3 inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
+      (click)="loadRoadmap()"
+      [disabled]="generating || loading"
     >
-      <p class="text-xs uppercase tracking-wide text-slate-400">{{ block.title }}</p>
-      <h2 class="text-lg font-semibold text-slate-50">{{ block.summary }}</h2>
-      <ul class="mt-3 space-y-2 text-sm text-slate-300">
-        <li *ngFor="let task of block.tasks" class="flex items-start gap-2">
-          <span class="mt-[6px] h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span>{{ task }}</span>
-        </li>
-      </ul>
+      Genereeri uus tegevuskava
+    </button>
+    <div class="mt-2 flex gap-2">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200"
+        (click)="backToOverview()"
+      >
+        Alusta profiili täitmisest →
+      </button>
+      <button
+        *ngIf="sessionId"
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200"
+        (click)="backToAssessment()"
+      >
+        Tagasi analüüsi
+      </button>
     </div>
   </div>
-</section>
 
+  <ng-container *ngIf="!loading && !error && roadmap">
+    <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 md:p-5 shadow-lg">
+      <div class="grid gap-3 md:grid-cols-3 text-sm text-slate-200">
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Plaan</p>
+          <p class="text-lg font-semibold text-slate-50">
+            {{ duration === 7 ? '7 päeva plaan' : duration === 30 ? '30 päeva plaan' : '90 päeva plaan' }}
+          </p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Kokkuvõte</p>
+          <p class="text-sm text-slate-300">{{ summary || 'Kokkuvõte lisandub peagi.' }}</p>
+        </div>
+        <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Seanss</p>
+          <p class="text-xs text-slate-400 break-all">{{ roadmap?.sessionId }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div
+        *ngFor="let block of items"
+        class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg"
+      >
+        <p class="text-xs uppercase tracking-wide text-slate-400">
+          <ng-container *ngIf="block.day">Päev {{ block.day }}</ng-container>
+          <ng-container *ngIf="block.week">Nädal {{ block.week }}</ng-container>
+        </p>
+        <h2 class="text-lg font-semibold text-slate-50">{{ block.title }}</h2>
+        <p class="text-sm text-slate-300 mt-1">{{ block.description }}</p>
+        <ul class="mt-3 space-y-2 text-sm text-slate-300">
+          <li *ngFor="let task of block.tasks" class="flex items-start gap-2">
+            <span class="mt-[6px] h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span>{{ task }}</span>
+          </li>
+        </ul>
+        <div class="mt-3 space-y-2" *ngIf="block.checkpoints?.length">
+          <p class="text-xs uppercase tracking-wide text-slate-400">Kontrollpunktid</p>
+          <div
+            *ngFor="let cp of block.checkpoints"
+            class="rounded-lg border border-slate-800 bg-slate-900/70 p-3 text-sm text-slate-200"
+          >
+            <div class="flex items-center justify-between">
+              <p class="font-semibold">{{ cp.title }}</p>
+              <span
+                class="text-[11px] rounded-full px-2 py-0.5 border"
+                [ngClass]="cp.completed ? 'border-emerald-400 text-emerald-300' : 'border-slate-600 text-slate-400'"
+              >
+                {{ cp.completed ? 'Valmis' : 'Tegemata' }}
+              </span>
+            </div>
+            <p class="mt-1 text-xs text-slate-400">{{ cp.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

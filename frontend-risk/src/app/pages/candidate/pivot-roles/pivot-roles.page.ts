@@ -206,6 +206,14 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     this.insightView = view;
   }
 
+  goToQuestions(): void {
+    this.router.navigateByUrl('/futureproof/questions');
+  }
+
+  goToAssessment(): void {
+    this.router.navigateByUrl('/futureproof/assessment');
+  }
+
   goToRoadmap(): void {
     this.router.navigateByUrl('/futureproof/roadmap');
   }
@@ -223,7 +231,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   startFlow(): void {
-    this.goToStep(2);
+    this.goToQuestions();
   }
 
   analyzeReadiness(): void {
@@ -293,7 +301,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   goToDashboard(): void {
-    this.router.navigateByUrl('/futureproof');
+    this.router.navigateByUrl('/futureproof/overview');
   }
 
   private applyNavCommand(key: FutureproofNavKey, fromQuery: boolean = false): void {
