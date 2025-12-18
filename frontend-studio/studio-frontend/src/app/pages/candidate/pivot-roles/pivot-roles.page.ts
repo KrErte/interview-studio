@@ -32,6 +32,10 @@ export class PivotRolesPageComponent implements OnInit {
   loadingScore = false;
   scoreError: string | null = null;
 
+  // Benchmark data for field comparison
+  benchmarkPercentile = 15;   // "Top X%" - computed from backend or derived from score
+  benchmarkFieldAverage = 58; // Field average score for comparison
+
   visibility: MarketplaceVisibilitySettings | null = null;
   visibilityDraftMode: MarketplaceVisibilityMode = 'OFF';
   visibilityDraftThreshold = 70;
