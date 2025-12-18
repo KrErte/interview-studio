@@ -15,39 +15,48 @@
         </div>
       </div>
 
-      <!-- Future-Proof score widget -->
+      <!-- Future-Proof score widget (Sinu tulevikukindlus) -->
       <div
         class="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-white p-5 shadow-sm"
       >
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p class="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-              Future-proof score
+              Sinu tulevikukindlus
             </p>
             <div class="mt-1 flex items-baseline gap-2">
               <span class="text-3xl font-semibold text-emerald-900">
-                {{ futureScore?.overall ?? '—' }}<span class="text-lg">%</span>
+                {{ futureScore?.overall ?? '—' }}<span class="text-lg">/100</span>
               </span>
-              <span class="text-xs text-emerald-700">
-                Based on soft skills, adaptability, and learning signals
-              </span>
+            </div>
+            <!-- Benchmark: percentile + field average -->
+            <div class="mt-2 space-y-1">
+              <p class="text-sm font-medium text-emerald-800">
+                Top {{ benchmarkPercentile }}% sinu valdkonnas
+              </p>
+              <p class="text-[11px] text-emerald-700/80">
+                Võrdlus on tehtud sarnase rolli, kogemustaseme ja tehnilise profiiliga arendajatega.
+              </p>
+              <p class="text-xs text-emerald-700">
+                Valdkonna keskmine: {{ benchmarkFieldAverage }}
+              </p>
             </div>
           </div>
           <div class="flex items-start gap-3 text-xs text-emerald-900">
             <div class="space-y-1">
-              <p class="font-semibold">Automation risk</p>
+              <p class="font-semibold">Automatiseerimisrisk</p>
               <p class="text-[11px] text-emerald-800/80">
                 {{ futureScore?.automationRisk ?? '—' }} / 100
               </p>
             </div>
             <div class="space-y-1">
-              <p class="font-semibold">Adaptability</p>
+              <p class="font-semibold">Kohanemisvõime</p>
               <p class="text-[11px] text-emerald-800/80">
                 {{ futureScore?.adaptability ?? '—' }} / 100
               </p>
             </div>
             <div class="space-y-1">
-              <p class="font-semibold">Learning velocity</p>
+              <p class="font-semibold">Õppimiskiirus</p>
               <p class="text-[11px] text-emerald-800/80">
                 {{ futureScore?.learningVelocity ?? '—' }} / 100
               </p>
@@ -56,22 +65,22 @@
         </div>
         <div class="mt-3 flex items-center justify-between text-xs text-emerald-800/80">
           <p>
-            Higher scores suggest you can pivot more easily across changing roles and markets.
+            Kõrgem skoor tähendab, et sul on lihtsam kohaneda muutuvate rollide ja turgudega.
           </p>
           <button
             type="button"
             class="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1 text-[11px] font-medium text-emerald-800 hover:bg-emerald-100"
-            [attr.title]="futureScore?.explanation || 'We combine your interview signals, CV, and training history into a forward-looking score.'"
+            [attr.title]="futureScore?.explanation || 'Kombineerime sinu intervjuu signaale, CV-d ja treeningajalugu tulevikku vaatavaks skooriks.'"
           >
             <span class="h-4 w-4 rounded-full border border-emerald-500 text-center text-[10px] leading-4">
               ?
             </span>
-            <span>How is this calculated?</span>
+            <span>Kuidas see arvutatakse?</span>
           </button>
         </div>
         <div *ngIf="loadingScore" class="mt-2 flex items-center gap-2 text-xs text-emerald-800/80">
           <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-300 border-t-emerald-700"></span>
-          Computing your latest score…
+          Arvutan sinu viimast skoori…
         </div>
         <p *ngIf="scoreError" class="mt-2 text-xs text-red-600">
           {{ scoreError }}
