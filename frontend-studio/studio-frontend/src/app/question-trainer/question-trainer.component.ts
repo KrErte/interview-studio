@@ -28,16 +28,16 @@ export class QuestionTrainerComponent {
 
   nextItems: SoftSkillRoadmapItem[] = [
     {
-      id: 'initiative',
-      title: 'Tehnilise initsiatiivi vedamine',
-      subtitle: 'Senior · leadership · next',
-      level: 'Senior',
+      id: 'ai-pair-programming',
+      title: 'AI pair-programming praktika Spring Boot projektis',
+      subtitle: 'Mid · AI tools · 2h nädalas, 4 nädalat · next',
+      level: 'Mid',
       status: 'NEXT',
-      tags: ['leadership', 'ownership'],
+      tags: ['ai-tools', 'productivity', 'spring-boot'],
       questions: [
-        'Kirjelda olukorda, kus võtsid ise tehnilise initsiatiivi projekti vedamisel.',
-        'Kuidas sa hindasid riske ja kaasasid teised tiimiliikmed?',
-        'Mis oli tulemuseks ja mida sa sellest kogemusest õppisid?'
+        'Kirjelda, kuidas kasutad praegu AI tööriistu (nt Copilot, Claude) oma Spring Boot projektides. Mis töötab hästi ja mis mitte?',
+        'Vali üks korduv ülesanne (nt boilerplate kood, testide kirjutamine) ja proovi seda AI abiga automatiseerida. Mis muutus?',
+        'Kuidas tagad, et AI-genereeritud kood järgib sinu tiimi code style'i ja turvanõudeid?'
       ],
       currentQuestionIndex: 0
     }
@@ -247,17 +247,19 @@ export class QuestionTrainerComponent {
     }
   }
 
-  // Helper – “miks see skill oluline on” tekst fookuskaardil
+  // Helper – "miks see skill oluline on" tekst fookuskaardil
   getImpactText(item: SoftSkillRoadmapItem | null): string {
     if (!item) {
       return '';
     }
 
     switch (item.id) {
+      case 'ai-pair-programming':
+        return 'Miks see loeb: AI-tööriistade oskuslik kasutamine vähendab rutiinset tööd kuni 30% ja võimaldab keskenduda arhitektuursetele otsustele. Hinnanguline mõju: +25% produktiivsus boilerplate ülesannetes.';
       case 'communication':
-        return 'Tugev kommunikatsioon product-tiimiga vähendab misalignment’i ja kiirendab otsuseid.';
+        return 'Tugev kommunikatsioon product-tiimiga vähendab misalignment'i ja kiirendab otsuseid.';
       case 'initiative':
-        return 'Tehnilise initsiatiivi vedamine näitab senior-level ownership’it ja strateegilist mõtlemist.';
+        return 'Tehnilise initsiatiivi vedamine näitab senior-level ownership'it ja strateegilist mõtlemist.';
       case 'conflict':
         return 'Konfliktijuhtimine on võtmeoskus tiimi usalduse ja koostöö säilitamiseks.';
       case 'ownership':
