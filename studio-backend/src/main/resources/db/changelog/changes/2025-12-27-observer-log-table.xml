@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2025-12-27-observer-log-table" author="backend-agent">
+        <createTable tableName="observer_log">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="session_uuid" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamptz" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stage" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="risk_before" type="int"/>
+            <column name="risk_after" type="int"/>
+            <column name="confidence_before" type="int"/>
+            <column name="confidence_after" type="int"/>
+            <column name="signals_json" type="text"/>
+            <column name="weaknesses_json" type="text"/>
+            <column name="rationale_summary" type="text"/>
+        </createTable>
+
+        <createIndex tableName="observer_log" indexName="idx_observer_log_session_created">
+            <column name="session_uuid"/>
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
+

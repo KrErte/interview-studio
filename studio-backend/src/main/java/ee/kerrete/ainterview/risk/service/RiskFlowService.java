@@ -9,6 +9,10 @@ import ee.kerrete.ainterview.risk.dto.RiskFlowAnswerResponse;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowEvaluateResponse;
 import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.kerrete.ainterview.dto.ObserverLogCreateCommand;
+import ee.kerrete.ainterview.model.ObserverStage;
+import ee.kerrete.ainterview.service.ObserverLogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RiskFlowService {
 
     private final RiskQuestionBank questionBank;
+    private final ObserverLogService observerLogService;
+    private final ObjectMapper objectMapper;
 
     private final Map<UUID, FlowState> flows = new ConcurrentHashMap<>();
 
@@ -107,12 +113,49 @@ public class RiskFlowService {
         String ans = request.getAnswer() == null ? "" : request.getAnswer().trim();
         state.answers.add(new AnswerEntry(qId, ans, Instant.now().toString()));
 
+        if (request.getSessionId() != null) {
+            observerLogService.record(ObserverLogCreateCommand.builder()
+                    .sessionUuid(request.getSessionId())
+                    .stage(resolveClarifyingStage(state.answers.size()))
+                    .signalsJson(buildSignalsJson(state.answers))
+                    .rationaleSummary(buildRationaleSummary(ans))
+                    .build());
+        }
+
         return RiskFlowAnswerResponse.builder()
                 .flowId(flowId.toString())
                 .questionId(qId)
                 .status("RECEIVED")
                 .receivedAt(Instant.now().toString())
                 .build();
+    }
+
+    private ObserverStage resolveClarifyingStage(int count) {
+        return switch (count) {
+            case 1 -> ObserverStage.CLARIFYING_Q1;
+            case 2 -> ObserverStage.CLARIFYING_Q2;
+            case 3 -> ObserverStage.CLARIFYING_Q3;
+            default -> ObserverStage.CLARIFYING_Q1;
+        };
+    }
+
+    private String buildSignalsJson(List<AnswerEntry> answers) {
+        try {
+            return objectMapper.writeValueAsString(answers);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String buildRationaleSummary(String answer) {
+        if (answer == null || answer.isBlank()) {
+            return "Clarifying response recorded.";
+        }
+        String trimmed = answer.trim();
+        if (trimmed.length() > 300) {
+            trimmed = trimmed.substring(0, 300) + "...";
+        }
+        return "Clarifying response recorded to refine risk understanding: " + trimmed;
     }
 
     public RiskFlowEvaluateResponse evaluate(String email, RiskFlowEvaluateRequest request) {

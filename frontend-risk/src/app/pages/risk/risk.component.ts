@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -22,6 +23,10 @@ import { SnapshotCardComponent } from './components/snapshot-card.component';
 import { RoadmapPanelComponent } from './components/roadmap-panel.component';
 import { CvUploadPanelComponent } from '../../shared/cv-upload/cv-upload-panel.component';
 import { InterviewProfileDto } from '../../core/models/interview-session.model';
+import { PersonaTheaterContainerComponent } from '../../features/persona-theater/persona-theater-container.component';
+import { ObserverLogPanelComponent } from '../../features/observer-log/observer-log-panel.component';
+import { Persona } from '../../features/persona-theater/persona.model';
+import { PersonaContext } from '../../features/persona-theater/persona-context.service';
 
 type FlowStep = 1 | 2 | 3 | 4;
 
@@ -40,7 +45,9 @@ interface ErrorState {
     InlineQnAComponent,
     SnapshotCardComponent,
     RoadmapPanelComponent,
-    CvUploadPanelComponent
+    CvUploadPanelComponent,
+    PersonaTheaterContainerComponent,
+    ObserverLogPanelComponent
   ],
   templateUrl: './risk.component.html',
   styleUrls: ['./risk.component.scss']
@@ -84,34 +91,46 @@ export class RiskComponent implements OnInit, OnDestroy {
   // Loading states
   startingAssessment: boolean = false;
 
-  private destroy$ = new Subject<void>();
+  // UI state
+  showObserverLog = false;
+  toastMessage: string | null = null;
 
-  constructor(private riskApi: RiskApiService) {}
+  private querySessionUuid: string | null = null;
+  private destroy$ = new Subject<void>();
+  private toastTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(
+    private riskApi: RiskApiService,
+    private route: ActivatedRoute,
+    private personaContext: PersonaContext
+  ) {}
 
   ngOnInit(): void {
-    // Component initialized
+    this.querySessionUuid = this.route.snapshot.queryParamMap.get('sessionUuid');
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
   }
 
   // ============ STEP 1: INPUTS ============
 
   onCvUploaded(profile: InterviewProfileDto): void {
     this.cvUploaded = true;
-    this.cvFileId = profile.sessionId || null;
+    this.cvFileId = null;
+    if (profile.sessionUuid) {
+      this.querySessionUuid = profile.sessionUuid;
+    }
 
-    // Pre-fill experience data if available from CV
-    if (profile.yearsOfExperience) {
-      this.experienceInput.yearsOfExperience = profile.yearsOfExperience;
+    if (profile.experienceYearsEstimate !== null && profile.experienceYearsEstimate !== undefined) {
+      this.experienceInput.yearsOfExperience = profile.experienceYearsEstimate;
     }
-    if (profile.currentRole) {
-      this.experienceInput.currentRole = profile.currentRole;
-    }
-    if (profile.industry) {
-      this.experienceInput.industry = profile.industry;
+    if (profile.roleFocus) {
+      this.experienceInput.currentRole = profile.roleFocus;
     }
 
     this.clearError();
@@ -144,6 +163,8 @@ export class RiskComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.sessionId = response.sessionId;
+          // keep the session uuid available for observer log view
+          this.querySessionUuid = response.sessionId;
           this.currentStep = 2;
           this.startingAssessment = false;
 
@@ -347,6 +368,13 @@ export class RiskComponent implements OnInit, OnDestroy {
     this.questionIndex = 0;
     this.assessment = null;
     this.roadmap = null;
+    this.showObserverLog = false;
+    this.personaContext.resetPersona();
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+      this.toastTimeout = null;
+      this.toastMessage = null;
+    }
     this.clearError();
   }
 
@@ -356,6 +384,32 @@ export class RiskComponent implements OnInit, OnDestroy {
 
   clearError(): void {
     this.error = null;
+  }
+
+  get activeSessionUuid(): string | null {
+    return this.sessionId || this.querySessionUuid;
+  }
+
+  onPersonaChanged(persona: Persona | null): void {
+    if (persona) {
+      this.showToast(`Viewing as ${persona.name}`);
+    } else {
+      this.showToast('Balanced view');
+    }
+  }
+
+  toggleObserverLog(): void {
+    this.showObserverLog = !this.showObserverLog;
+  }
+
+  private showToast(message: string): void {
+    this.toastMessage = message;
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+    this.toastTimeout = setTimeout(() => {
+      this.toastMessage = null;
+    }, 2400);
   }
 
   retryLastAction(): void {

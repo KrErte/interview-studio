@@ -47,17 +47,17 @@ import { AssessmentResult, RiskLevel, AssessmentWeakness, RiskSignal } from '../
             <div class="flex items-baseline justify-between">
               <span class="text-slate-400 text-sm font-medium">Confidence</span>
               <span class="text-3xl font-bold text-emerald-400">
-                {{ assessment?.confidence }}%
+                {{ confidenceValue }}%
               </span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
               <div
                 class="h-full bg-emerald-500 transition-all duration-500"
-                [style.width.%]="assessment?.confidence">
+                [style.width.%]="confidenceValue">
               </div>
             </div>
             <p class="text-slate-500 text-xs">
-              Based on {{ assessment?.confidence >= 80 ? 'comprehensive' : assessment?.confidence >= 70 ? 'good' : 'partial' }} data analysis
+              Based on {{ confidenceValue >= 80 ? 'comprehensive' : confidenceValue >= 70 ? 'good' : 'partial' }} data analysis
             </p>
           </div>
         </div>
@@ -170,6 +170,10 @@ export class SnapshotCardComponent {
 
   get topWeaknesses(): AssessmentWeakness[] {
     return this.assessment?.weaknesses?.slice(0, 3) || [];
+  }
+
+  get confidenceValue(): number {
+    return this.assessment?.confidence ?? 0;
   }
 
   get riskColorClass(): string {

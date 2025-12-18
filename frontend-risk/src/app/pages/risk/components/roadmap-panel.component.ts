@@ -33,8 +33,8 @@ import { RoadmapResponse, RoadmapDuration, RoadmapItem, RoadmapCheckpoint } from
         </div>
 
         <!-- Summary -->
-        <p *ngIf="roadmap?.summary" class="text-slate-300 text-sm leading-relaxed">
-          {{ roadmap.summary }}
+        <p *ngIf="roadmap?.summary as summary" class="text-slate-300 text-sm leading-relaxed">
+          {{ summary }}
         </p>
       </div>
 

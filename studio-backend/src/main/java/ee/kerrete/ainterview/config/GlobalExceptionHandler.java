@@ -1,6 +1,7 @@
 package ee.kerrete.ainterview.config;
 
 import lombok.extern.slf4j.Slf4j;
+import ee.kerrete.ainterview.config.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +29,29 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex,
+                                                                HttpServletRequest request) {
+        log.warn("Bad request: {}", ex.getMessage());
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(errorBody("BAD_REQUEST", ex.getMessage(), request));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
+                                                                  HttpServletRequest request) {
+        String expected = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "value";
+        String message = "Invalid parameter '" + ex.getName() + "'. Expected " + expected + ".";
+        log.warn("Type mismatch: {}", message);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(errorBody("BAD_REQUEST", message, request));
+    }
+
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException ex) {
+    public ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException ex,
+                                                                             HttpServletRequest request) {
         HttpStatusCode status = ex.getStatusCode();
         String message = ex.getReason();
 
@@ -44,13 +67,16 @@ public class GlobalExceptionHandler {
             };
         }
 
+        String error = status instanceof HttpStatus httpStatus ? httpStatus.name() : "ERROR";
+
         return ResponseEntity
             .status(status)
-            .body(Map.of("message", message));
+            .body(errorBody(error, message, request));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex,
+                                                                HttpServletRequest request) {
         String message = ex.getBindingResult().getFieldErrors().stream()
             .map(fieldError -> fieldError.getDefaultMessage() != null
                 ? fieldError.getDefaultMessage()
@@ -59,13 +85,13 @@ public class GlobalExceptionHandler {
         log.warn("Validation failed: {}", message);
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(Map.of("message", message));
+            .body(errorBody("BAD_REQUEST", message, request));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                                  HttpServletRequest request,
-                                                                  Principal principal) {
+    public ResponseEntity<Map<String, String>> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+                                                                        HttpServletRequest request,
+                                                                        Principal principal) {
         log.warn(
             "Method not allowed: method={}, uri={}, queryString={}, remoteAddr={}, principal={}",
             request.getMethod(),
@@ -75,24 +101,26 @@ public class GlobalExceptionHandler {
             principal != null ? principal.getName() : "none"
         );
 
-        ErrorResponse body = new ErrorResponse(
-            "METHOD_NOT_ALLOWED",
-            ex.getMessage(),
-            request.getRequestURI(),
-            request.getMethod(),
-            OffsetDateTime.now(ZoneOffset.UTC).toString()
-        );
-
         return ResponseEntity
             .status(HttpStatus.METHOD_NOT_ALLOWED)
-            .body(body);
+            .body(errorBody("METHOD_NOT_ALLOWED", ex.getMessage(), request));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
+    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex,
+                                                                       HttpServletRequest request) {
         log.error("Unexpected exception", ex);
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(Map.of("message", "Unexpected error"));
+            .body(errorBody("INTERNAL_SERVER_ERROR", "Unexpected error", request));
+    }
+
+    private Map<String, String> errorBody(String error, String message, HttpServletRequest request) {
+        return Map.of(
+            "error", error,
+            "message", message,
+            "path", request.getRequestURI(),
+            "timestamp", OffsetDateTime.now(ZoneOffset.UTC).toString()
+        );
     }
 }
