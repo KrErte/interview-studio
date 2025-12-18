@@ -2,18 +2,25 @@ package ee.kerrete.ainterview.risk.service;
 
 import ee.kerrete.ainterview.risk.dto.RiskFlowNextRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowStartRequest;
+import ee.kerrete.ainterview.service.ObserverLogService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RiskFlowServiceTest {
 
     private RiskFlowService service;
+    private ObserverLogService observerLogService;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        service = new RiskFlowService(new RiskQuestionBank());
+        observerLogService = Mockito.mock(ObserverLogService.class);
+        objectMapper = new ObjectMapper();
+        service = new RiskFlowService(new RiskQuestionBank(), observerLogService, objectMapper);
     }
 
     @Test

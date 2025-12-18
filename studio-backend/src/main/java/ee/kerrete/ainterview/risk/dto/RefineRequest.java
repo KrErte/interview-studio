@@ -1,5 +1,6 @@
 package ee.kerrete.ainterview.risk.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import java.util.List;
 public class RefineRequest {
     private String analysisId;
     private List<Answer> answers;
+    @JsonAlias("sessionUuid")
+    private String sessionId;
 
     @Data
     public static class Answer {

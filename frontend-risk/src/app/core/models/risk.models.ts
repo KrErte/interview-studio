@@ -111,3 +111,98 @@ export interface RiskSummary {
   missingSignals?: string[];
 }
 
+// Experience input data for Step 1
+export interface ExperienceInput {
+  yearsOfExperience: number;
+  currentRole: string;
+  seniority: 'Junior' | 'Mid' | 'Senior' | 'Lead';
+  industry: string;
+  stack: string;
+}
+
+// Assessment data for Step 3
+export interface AssessmentWeakness {
+  title: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high';
+}
+
+export interface AssessmentResult {
+  riskPercent: number;
+  riskBand: RiskLevel;
+  confidence: number;
+  weaknesses: AssessmentWeakness[];
+  signals: RiskSignal[];
+}
+
+// Roadmap data for Step 4
+export enum RoadmapDuration {
+  SEVEN_DAYS = 7,
+  THIRTY_DAYS = 30,
+  NINETY_DAYS = 90
+}
+
+export interface RoadmapCheckpoint {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  dueDate?: string;
+}
+
+export interface RoadmapItem {
+  id: string;
+  day?: number;
+  week?: number;
+  title: string;
+  description: string;
+  tasks: string[];
+  checkpoints: RoadmapCheckpoint[];
+}
+
+export interface RoadmapResponse {
+  sessionId: string;
+  duration: RoadmapDuration;
+  items: RoadmapItem[];
+  summary: string;
+}
+
+// Start assessment request with profile data
+export interface StartAssessmentRequest {
+  cvFileId?: string;
+  experience: ExperienceInput;
+}
+
+export interface StartAssessmentResponse {
+  sessionId: string;
+  message: string;
+}
+
+// Get next question response
+export interface GetNextQuestionResponse {
+  sessionId: string;
+  question: RiskQuestion;
+  index: number;
+  total: number;
+}
+
+// Submit/skip answer request
+export interface SubmitAnswerRequest {
+  sessionId: string;
+  questionId: string;
+  answer: string;
+  skipped?: boolean;
+}
+
+export interface SubmitAnswerResponse {
+  sessionId: string;
+  success: boolean;
+  confidenceImpact?: number;
+}
+
+// Generate roadmap request
+export interface GenerateRoadmapRequest {
+  sessionId: string;
+  duration: RoadmapDuration;
+}
+

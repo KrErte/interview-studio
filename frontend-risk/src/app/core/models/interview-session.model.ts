@@ -88,6 +88,12 @@ export interface InterviewProfileDto {
   interviewerProbePriorities: string[];
   interviewerRiskHypotheses: string[];
   interviewerClaimsVsDemonstrated: string[];
+  claimedSkills?: { name: string; confidenceHint: string }[];
+  experienceYearsEstimate?: number | null;
+  roleFocus?: string | null;
+  strengthHypotheses?: string[];
+  riskHypotheses?: string[];
+  probePriorities?: string[];
 }
 
 export interface InterviewFitSnapshot {

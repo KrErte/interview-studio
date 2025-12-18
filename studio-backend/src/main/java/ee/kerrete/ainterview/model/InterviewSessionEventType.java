@@ -8,7 +8,8 @@ public enum InterviewSessionEventType {
     CV_UPLOADED,
     CV_PARSED,
     INTERVIEW_PROFILE_CREATED,
-    CV_REFERENCE_USED
+    CV_REFERENCE_USED,
+    ROADMAP_EXPORTED
 }
 
 

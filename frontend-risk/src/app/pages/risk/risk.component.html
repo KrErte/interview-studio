@@ -1,280 +1,258 @@
-<div class="flex min-h-[70vh] items-center justify-center">
-  <div class="w-full max-w-3xl rounded-2xl border border-slate-800 bg-slate-900/70 p-6 text-slate-50 shadow-xl shadow-emerald-500/10">
-    <div class="flex items-center justify-between gap-3">
-      <div>
-        <p class="text-xs uppercase text-emerald-300 font-semibold mb-1">AI Risk Flow</p>
-        <h1 class="text-2xl font-bold">Sessioned Q&A</h1>
-        <p class="text-sm text-slate-400">Start a flow, answer questions, see your risk signals.</p>
+<div class="min-h-screen bg-slate-950">
+  <app-stepper-header [currentStep]="currentStep" [totalSteps]="4"></app-stepper-header>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="mb-6 flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-950/60 p-4 shadow-sm shadow-emerald-500/10 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <p class="text-sm font-semibold text-slate-100">Risk Session</p>
+        <span *ngIf="activeSessionUuid" class="rounded-full bg-slate-900 px-3 py-1 text-xs text-slate-400">
+          UUID: {{ activeSessionUuid }}
+        </span>
+        <span *ngIf="!activeSessionUuid" class="text-xs text-slate-500">Start or load a session to enable observer log.</span>
       </div>
-      <button
-        type="button"
-        class="rounded-md border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-100 hover:border-emerald-400"
-        (click)="restart()"
-      >
-        Restart flow
-      </button>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="rounded-lg border border-slate-700 px-4 py-2 text-xs font-semibold text-slate-100 transition hover:border-emerald-400 hover:text-emerald-200"
+          (click)="toggleObserverLog()"
+        >
+          Observer Log
+        </button>
+      </div>
     </div>
 
-    <ng-container *ngIf="state$ | async as state">
-      <div class="mt-4 flex items-center gap-3 text-xs text-slate-400">
-        <span class="rounded-full bg-slate-800 px-3 py-1">
-          Session: {{ state.sessionId || '—' }}
-        </span>
-        <span class="rounded-full bg-slate-800 px-3 py-1">
-          Answered: {{ state.answeredQuestionIds.length }}{{ state.totalQuestions ? ' / ' + state.totalQuestions : '' }}
-        </span>
-        <span class="rounded-full bg-slate-800 px-3 py-1" *ngIf="state.isComplete">Complete</span>
-      </div>
+    <div class="grid gap-6 lg:grid-cols-[240px_1fr]">
+      <app-persona-theater (personaChanged)="onPersonaChanged($event)"></app-persona-theater>
 
-      <p class="mt-3 text-xs text-rose-400" *ngIf="state.error">{{ state.error }}</p>
-
-      <div class="mt-6 space-y-4" *ngIf="!state.isComplete; else resultTpl">
+      <div>
         <div
-          *ngIf="state.currentQuestion; else waitingQuestion"
-          class="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-5"
+          *ngIf="error"
+          class="mb-6 flex items-start justify-between rounded-lg border border-rose-500/30 bg-rose-500/10 p-4"
         >
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-xs uppercase tracking-wide text-emerald-300 font-semibold">Question</p>
-              <p class="text-sm text-slate-400">
-                {{ state.answeredQuestionIds.length + 1 }}{{ state.totalQuestions ? ' of ' + state.totalQuestions : '' }}
-              </p>
-            </div>
-            <span class="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-emerald-200">
-              {{ state.currentQuestion.type }}
-            </span>
-          </div>
-
-          <div class="space-y-2">
-            <p class="text-base font-semibold text-slate-100">
-              {{ state.currentQuestion.text || state.currentQuestion.label || 'Question' }}
-            </p>
-            <p class="text-sm text-slate-400" *ngIf="state.currentQuestion.placeholder">
-              {{ state.currentQuestion.placeholder }}
-            </p>
-          </div>
-
-          <div [ngSwitch]="state.currentQuestion.type">
-            <select
-              *ngSwitchCase="QuestionType.SINGLE_CHOICE"
-              class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none"
-              [(ngModel)]="answer"
-            >
-              <option value="">Select an option</option>
-              <option *ngFor="let opt of state.currentQuestion.options" [value]="opt.value">{{ opt.label }}</option>
-            </select>
-
-            <div *ngSwitchCase="'select'" class="space-y-2">
-              <select
-                class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none"
-                [(ngModel)]="answer"
-              >
-                <option value="">Select an option</option>
-                <option *ngFor="let opt of state.currentQuestion.options" [value]="opt.value">{{ opt.label }}</option>
-              </select>
-            </div>
-
-            <div *ngSwitchCase="QuestionType.MULTI_CHOICE" class="space-y-2">
-              <label
-                class="flex items-center gap-2 rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 hover:border-emerald-400"
-                *ngFor="let opt of state.currentQuestion.options"
-              >
-                <input
-                  type="checkbox"
-                  [value]="opt.value"
-                  [checked]="isMultiSelected(opt.value)"
-                  (change)="toggleMulti(opt.value, $any($event.target).checked)"
-                  class="h-4 w-4 accent-emerald-400"
-                />
-                {{ opt.label }}
-              </label>
-            </div>
-
-            <div *ngSwitchCase="'multi-select'" class="space-y-2">
-              <label
-                class="flex items-center gap-2 rounded-md border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-200 hover:border-emerald-400"
-                *ngFor="let opt of state.currentQuestion.options"
-              >
-                <input
-                  type="checkbox"
-                  [value]="opt.value"
-                  [checked]="isMultiSelected(opt.value)"
-                  (change)="toggleMulti(opt.value, $any($event.target).checked)"
-                  class="h-4 w-4 accent-emerald-400"
-                />
-                {{ opt.label }}
-              </label>
-            </div>
-
-            <div *ngSwitchCase="QuestionType.BOOLEAN" class="flex gap-3">
-              <button
-                type="button"
-                class="rounded-lg border px-3 py-2 text-sm font-semibold"
-                [class.border-emerald-500]="answer === true"
-                (click)="setBoolean(true)"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                class="rounded-lg border px-3 py-2 text-sm font-semibold"
-                [class.border-emerald-500]="answer === false"
-                (click)="setBoolean(false)"
-              >
-                No
-              </button>
-            </div>
-
-            <div *ngSwitchCase="'boolean'" class="flex gap-3">
-              <button
-                type="button"
-                class="rounded-lg border px-3 py-2 text-sm font-semibold"
-                [class.border-emerald-500]="answer === true"
-                (click)="setBoolean(true)"
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                class="rounded-lg border px-3 py-2 text-sm font-semibold"
-                [class.border-emerald-500]="answer === false"
-                (click)="setBoolean(false)"
-              >
-                No
-              </button>
-            </div>
-
-            <div *ngSwitchCase="QuestionType.SCALE" class="space-y-2">
-              <input
-                type="range"
-                class="w-full accent-emerald-400"
-                [min]="state.currentQuestion.min || 0"
-                [max]="state.currentQuestion.max || 10"
-                [(ngModel)]="answer"
+          <div class="flex flex-1 items-start space-x-3">
+            <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-rose-500" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
               />
-              <div class="text-sm text-emerald-200">Selected: {{ answer }}</div>
+            </svg>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-rose-400">{{ error.message }}</p>
+              <button
+                *ngIf="error.canRetry"
+                (click)="retryLastAction()"
+                class="mt-2 text-xs font-medium text-rose-300 underline hover:text-rose-200"
+              >
+                Try Again
+              </button>
             </div>
-
-            <div *ngSwitchCase="'scale'" class="space-y-2">
-              <input
-                type="range"
-                class="w-full accent-emerald-400"
-                [min]="state.currentQuestion.min || 0"
-                [max]="state.currentQuestion.max || 10"
-                [(ngModel)]="answer"
+          </div>
+          <button (click)="clearError()" class="ml-2 text-rose-400 hover:text-rose-300">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
               />
-              <div class="text-sm text-emerald-200">Selected: {{ answer }}</div>
-            </div>
-
-            <textarea
-              *ngSwitchDefault
-              [(ngModel)]="answer"
-              rows="4"
-              class="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none"
-              placeholder="Type your answer..."
-            ></textarea>
-          </div>
-
-          <div class="flex flex-wrap gap-3">
-            <button
-              type="button"
-              class="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 disabled:opacity-60"
-              (click)="submitAnswer(state)"
-              [disabled]="!canSubmit(state)"
-            >
-              {{ state.loadingAnswer ? 'Submitting...' : 'Submit answer' }}
-            </button>
-            <button
-              type="button"
-              class="rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 disabled:opacity-60"
-              (click)="skipQuestion(state)"
-              [disabled]="state.loadingAnswer || state.loadingEvaluate"
-            >
-              Skip
-            </button>
-          </div>
+            </svg>
+          </button>
         </div>
 
-        <ng-template #waitingQuestion>
-          <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-sm text-slate-300">
-            {{ state.loadingStart ? 'Starting flow...' : 'Waiting for the first question...' }}
-          </div>
-        </ng-template>
-      </div>
-
-      <ng-template #resultTpl>
-        <div class="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs uppercase tracking-wide text-emerald-300 font-semibold">Final evaluation</p>
-              <p class="text-sm text-slate-400">Complete the flow to see your score and signals.</p>
-            </div>
-            <span
-              class="rounded-full px-3 py-1 text-xs font-semibold"
-              [ngClass]="{
-                'bg-emerald-900/60 text-emerald-200': state.finalResult?.riskLevel === RiskLevel.LOW,
-                'bg-amber-900/60 text-amber-200': state.finalResult?.riskLevel === RiskLevel.MEDIUM,
-                'bg-rose-900/60 text-rose-200': state.finalResult?.riskLevel === RiskLevel.HIGH
-              }"
-            >
-              {{ state.finalResult?.riskLevel || '—' }}
-            </span>
+        <div *ngIf="currentStep === 1" class="space-y-6">
+          <div class="mb-8 text-center">
+            <h1 class="mb-2 text-3xl font-bold text-slate-100">AI Career Risk Assessment</h1>
+            <p class="text-slate-400">
+              Upload your CV and share your experience to receive a personalized risk analysis
+            </p>
           </div>
 
-          <ng-container *ngIf="state.finalResult; else waitingEvaluation">
-            <div class="grid gap-3 md:grid-cols-3">
-              <div class="rounded-lg border border-slate-800 bg-slate-950/70 p-4">
-                <p class="text-xs uppercase text-slate-400">Final score</p>
-                <p class="text-4xl font-bold text-emerald-300">{{ state.finalResult.finalScore }}</p>
-              </div>
-              <div class="rounded-lg border border-slate-800 bg-slate-950/70 p-4">
-                <p class="text-xs uppercase text-slate-400">Confidence</p>
-                <p class="text-4xl font-bold text-slate-50">{{ state.finalResult.finalConfidence }}%</p>
-              </div>
-              <div class="rounded-lg border border-slate-800 bg-slate-950/70 p-4">
-                <p class="text-xs uppercase text-slate-400">Risk level</p>
-                <p class="text-2xl font-semibold text-slate-100">{{ state.finalResult.riskLevel }}</p>
-              </div>
+          <div class="grid gap-6 md:grid-cols-2">
+            <div class="md:col-span-2">
+              <app-cv-upload-panel [required]="true" (profileLoaded)="onCvUploaded($event)"></app-cv-upload-panel>
             </div>
 
-            <div *ngIf="state.finalResult.signals?.length" class="space-y-2">
-              <p class="text-xs uppercase text-slate-400">Signals</p>
-              <div class="grid gap-3 md:grid-cols-2">
-                <div
-                  *ngFor="let signal of state.finalResult.signals"
-                  class="rounded-lg border border-slate-800 bg-slate-950/70 p-3"
-                >
-                  <div class="flex items-center justify-between">
-                    <p class="text-sm font-semibold text-slate-100">{{ signal.label }}</p>
-                    <span class="text-xs text-emerald-300 font-semibold">{{ signal.score }}</span>
-                  </div>
-                  <p class="text-xs text-slate-400 mt-1" *ngIf="signal.description">{{ signal.description }}</p>
-                  <p class="text-xs text-slate-400 mt-1" *ngIf="signal.confidence !== undefined">
-                    Confidence: {{ signal.confidence }}%
-                  </p>
+            <div class="rounded-lg border border-slate-800 bg-slate-900 p-6">
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-emerald-400">Work Experience</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-300">
+                    Years of Experience <span class="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    [(ngModel)]="experienceInput.yearsOfExperience"
+                    min="0"
+                    max="50"
+                    class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-300">
+                    Current Role <span class="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    [(ngModel)]="experienceInput.currentRole"
+                    placeholder="e.g., Senior Frontend Developer"
+                    class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-300">Seniority Level</label>
+                  <select
+                    [(ngModel)]="experienceInput.seniority"
+                    class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-2.5 text-slate-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option *ngFor="let level of seniorityOptions" [value]="level">
+                      {{ level }}
+                    </option>
+                  </select>
                 </div>
               </div>
             </div>
-          </ng-container>
 
-          <ng-template #waitingEvaluation>
-            <div class="space-y-3">
-              <p class="text-sm text-slate-300">
-                {{ state.loadingEvaluate ? 'Finalizing evaluation...' : 'Evaluation not yet run.' }}
-              </p>
-              <button
-                type="button"
-                class="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 disabled:opacity-60"
-                (click)="evaluate(state)"
-                [disabled]="state.loadingEvaluate"
-              >
-                {{ state.loadingEvaluate ? 'Evaluating...' : 'Run evaluation' }}
-              </button>
+            <div class="rounded-lg border border-slate-800 bg-slate-900 p-6">
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-emerald-400">Technical Profile</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-300">Industry</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="experienceInput.industry"
+                    placeholder="e.g., FinTech, Healthcare, E-commerce"
+                    class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-300">Tech Stack</label>
+                  <textarea
+                    [(ngModel)]="experienceInput.stack"
+                    rows="4"
+                    placeholder="e.g., React, TypeScript, Node.js, PostgreSQL, AWS"
+                    class="w-full resize-none rounded-lg border border-slate-700 bg-slate-950 px-4 py-2.5 text-slate-100 placeholder-slate-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  ></textarea>
+                  <p class="mt-2 text-xs text-slate-500">Comma-separated technologies, frameworks, and tools</p>
+                </div>
+              </div>
             </div>
-          </ng-template>
-        </div>
-      </ng-template>
-    </ng-container>
-  </div>
-</div>
+          </div>
 
+          <div class="flex justify-center pt-6">
+            <button
+              (click)="calculateRisk()"
+              [disabled]="!canCalculateRisk() || startingAssessment"
+              class="flex items-center space-x-3 rounded-lg bg-emerald-500 px-10 py-3.5 text-lg font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-emerald-500"
+            >
+              <span *ngIf="!startingAssessment">Calculate Risk</span>
+              <span *ngIf="startingAssessment" class="flex items-center space-x-2">
+                <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>Starting Assessment...</span>
+              </span>
+              <svg
+                *ngIf="!startingAssessment"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="currentStep === 2" class="py-8">
+          <app-inline-qna
+            [question]="currentQuestion"
+            [currentIndex]="questionIndex"
+            [totalQuestions]="totalQuestions"
+            [loading]="loadingQuestion"
+            [submitting]="submittingAnswer"
+            (submitAnswer)="onSubmitAnswer($event)"
+            (skipQuestion)="onSkipQuestion()"
+          >
+          </app-inline-qna>
+        </div>
+
+        <div *ngIf="currentStep === 3" class="py-8">
+          <div *ngIf="loadingAssessment" class="py-20 text-center">
+            <div class="inline-block h-16 w-16 animate-spin rounded-full border-b-2 border-emerald-500"></div>
+            <p class="mt-6 text-lg text-slate-400">Analyzing your profile...</p>
+            <p class="mt-2 text-sm text-slate-500">This may take a few moments</p>
+          </div>
+
+          <div *ngIf="!loadingAssessment && assessment">
+            <div class="mb-8 text-center">
+              <h2 class="mb-2 text-2xl font-bold text-slate-100">Your Risk Assessment</h2>
+              <p class="text-slate-400">Based on your profile and answers</p>
+            </div>
+
+            <app-snapshot-card
+              [assessment]="assessment"
+              [loading]="loadingRoadmap"
+              (generateRoadmap)="onGenerateRoadmap()"
+            >
+            </app-snapshot-card>
+          </div>
+        </div>
+
+        <div *ngIf="currentStep === 4" class="py-8">
+          <div class="mb-8 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-slate-100">Your Personalized Roadmap</h2>
+            <p class="text-slate-400">A structured plan to improve your market position</p>
+          </div>
+
+          <app-roadmap-panel
+            [roadmap]="roadmap"
+            [loading]="loadingRoadmap"
+            [selectedDuration]="selectedRoadmapDuration"
+            (durationChange)="onRoadmapDurationChange($event)"
+            (restartFlow)="restartFlow()"
+          >
+          </app-roadmap-panel>
+        </div>
+
+        <div *ngIf="currentStep > 1" class="mt-12 border-t border-slate-800 pt-8 text-center">
+          <button
+            (click)="restartFlow()"
+            class="mx-auto flex items-center space-x-2 px-6 py-2.5 font-medium text-slate-400 transition-colors hover:text-slate-300"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            <span>Start New Assessment</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="toastMessage"
+    class="fixed bottom-6 right-6 z-50 rounded-lg border border-emerald-500/40 bg-slate-950/90 px-4 py-3 text-sm text-emerald-50 shadow-lg shadow-emerald-500/20"
+  >
+    {{ toastMessage }}
+  </div>
+
+  <app-observer-log-panel
+    *ngIf="showObserverLog"
+    [sessionUuid]="activeSessionUuid"
+    (close)="showObserverLog = false"
+  ></app-observer-log-panel>
+</div>
