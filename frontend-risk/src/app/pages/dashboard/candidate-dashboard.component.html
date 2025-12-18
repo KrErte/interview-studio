@@ -3,17 +3,25 @@
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div>
         <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300">
-          Candidate
+          Kandidaat
         </p>
-        <h1 class="text-3xl font-bold text-slate-50">Your Career Dashboard</h1>
+        <h1 class="text-3xl font-bold text-slate-50">Tulevikukindel töölaud</h1>
         <p class="text-sm text-slate-400">
-          Manage your CV, run matches, and review analyses.
+          Profiil, analüüs ja tegevuskava ühes kohas.
         </p>
       </div>
     </div>
 
     <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-2">
       <div class="flex flex-wrap gap-1">
+        <a
+          routerLink="./futureproof"
+          routerLinkActive="tab-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="tab-link"
+        >
+          Tulevikukindlus
+        </a>
         <a
           routerLink="./upload-cv"
           routerLinkActive="tab-active"

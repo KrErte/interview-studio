@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -64,7 +64,7 @@ type LoginForm = {
     </div>
   `
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loading = false;
   error = '';
 
@@ -89,6 +89,12 @@ export class LoginComponent {
     return this.form.controls.password;
   }
 
+  ngOnInit(): void {
+    if (this.auth.isAuthenticated()) {
+      this.router.navigateByUrl('/futureproof');
+    }
+  }
+
   submit(): void {
     this.error = '';
     if (this.form.invalid) {
@@ -102,7 +108,7 @@ export class LoginComponent {
     this.auth.login(email, password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigateByUrl('/risk');
+        this.router.navigateByUrl('/futureproof');
       },
       error: (err) => {
         this.loading = false;
