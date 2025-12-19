@@ -1,19 +1,19 @@
 package ee.kerrete.ainterview.risk.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 public class RiskFlowNextRequest {
     /**
-     * Primary identifier for the flow/session.
+     * Primary identifier for the flow/session. Accepts UUID string or mock-session-*.
      */
-    private UUID flowId;
+    private String flowId;
 
     /**
      * Alias for flowId to support existing FE naming.
      */
-    private UUID sessionId;
+    @JsonAlias({"sessionUuid", "sessionId"})
+    private String sessionId;
 }
 

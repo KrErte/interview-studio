@@ -6,6 +6,7 @@ import {
   RiskAssessmentResult,
   RiskQuestion
 } from './risk.model';
+import { AssessmentDepth, PersonaType } from '../../risk/models/depth.model';
 
 export interface RiskAssessmentPayload {
   cvId?: string;
@@ -17,6 +18,8 @@ export interface RiskAssessmentPayload {
     country?: string;
   };
   answers?: Record<string, string | string[] | number | boolean>;
+  depth?: AssessmentDepth;
+  persona?: PersonaType;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,8 +32,8 @@ export class RiskApiService {
     return this.api.post<CvUploadResponse>('/candidate/cv/upload', formData);
   }
 
-  fetchQuestions(currentAnswers: Record<string, any>): Observable<RiskQuestion[]> {
-    return this.api.post<RiskQuestion[]>('/risk/questions', { answers: currentAnswers });
+  fetchQuestions(currentAnswers: Record<string, any>, depth?: AssessmentDepth): Observable<RiskQuestion[]> {
+    return this.api.post<RiskQuestion[]>('/risk/questions', { answers: currentAnswers, depth });
   }
 
   assess(payload: RiskAssessmentPayload): Observable<RiskAssessmentResult> {

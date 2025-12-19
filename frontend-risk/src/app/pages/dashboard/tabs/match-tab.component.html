@@ -51,17 +51,17 @@
     <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-slate-100">Match results</h3>
-        <span class="text-[11px] text-slate-500">{{ results?.length || 0 }} result(s)</span>
+        <span class="text-[11px] text-slate-500">{{ results.length || 0 }} result(s)</span>
       </div>
 
       <div
-        *ngIf="!results?.length"
+        *ngIf="!results.length"
         class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
       >
         No matches yet. Run a match to see results here.
       </div>
 
-      <div class="space-y-2" *ngIf="results?.length">
+      <div class="space-y-2" *ngIf="results.length">
         <div
           *ngFor="let r of results; trackBy: trackById"
           class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
@@ -83,17 +83,17 @@
     <div class="rounded-xl border border-slate-800 bg-slate-950/70 p-4 space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-slate-100">Recent sessions</h3>
-        <span class="text-[11px] text-slate-500">{{ sessions?.length || 0 }} session(s)</span>
+        <span class="text-[11px] text-slate-500">{{ sessions.length || 0 }} session(s)</span>
       </div>
 
       <div
-        *ngIf="!sessions?.length"
+        *ngIf="!sessions.length"
         class="rounded-lg border border-dashed border-slate-800 bg-slate-950/60 px-3 py-2 text-[11px] text-slate-400"
       >
         No recent match sessions yet.
       </div>
 
-      <div class="space-y-2" *ngIf="sessions?.length">
+      <div class="space-y-2" *ngIf="sessions.length">
         <div
           *ngFor="let s of sessions; trackBy: trackBySessionId"
           class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"

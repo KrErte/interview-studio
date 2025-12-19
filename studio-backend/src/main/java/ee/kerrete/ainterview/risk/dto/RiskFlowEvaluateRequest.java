@@ -1,14 +1,17 @@
 package ee.kerrete.ainterview.risk.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Data
 public class RiskFlowEvaluateRequest {
-    private UUID flowId;
-    private UUID sessionId;
+    private String flowId;
+
+    @JsonAlias({"sessionUuid", "sessionId"})
+    private String sessionId;
+
     private Map<String, Object> payload;
 }
 

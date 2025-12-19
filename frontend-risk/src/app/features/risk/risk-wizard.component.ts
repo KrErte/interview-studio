@@ -1,10 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RiskApiService, RiskAssessmentPayload } from './risk-api.service';
 import { RiskQuestion, RiskWizardState } from './risk.model';
 import { RiskStateService } from './risk-state.service';
+import { DepthSelectorComponent } from '../../risk/components/depth-selector/depth-selector.component';
+import { DepthBadgeComponent } from '../../risk/components/depth-badge/depth-badge.component';
+import { DepthPreferenceService } from '../../risk/services/depth-preference.service';
+import { DepthConfig } from '../../risk/models/depth.model';
 
 type ExperienceFormControls = {
   years: FormControl<number | null>;
@@ -17,7 +21,7 @@ type ExperienceForm = FormGroup<ExperienceFormControls>;
 @Component({
   selector: 'app-risk-wizard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DepthSelectorComponent, DepthBadgeComponent],
   styleUrls: ['./risk-wizard.component.scss'],
   template: `
     <div class="space-y-6">
@@ -39,7 +43,10 @@ type ExperienceForm = FormGroup<ExperienceFormControls>;
           [class.border-slate-800]="currentStep !== i"
         >
           <p class="text-xs uppercase text-slate-400">Step {{ i + 1 }}</p>
-          <p class="font-semibold text-slate-100">{{ step }}</p>
+          <div class="flex items-center gap-2">
+            <p class="font-semibold text-slate-100">{{ step }}</p>
+            <app-depth-badge *ngIf="i === 0 && inputsCompleted"></app-depth-badge>
+          </div>
         </div>
       </div>
 
@@ -60,6 +67,10 @@ type ExperienceForm = FormGroup<ExperienceFormControls>;
             <div class="flex items-center gap-2 mt-4">
               <input type="checkbox" class="h-4 w-4" [checked]="useLatest" (change)="toggleUseLatest($event)" id="useLatest" />
               <label for="useLatest" class="text-sm text-slate-300">Use latest uploaded CV (if available)</label>
+            </div>
+
+            <div class="mt-6">
+              <app-depth-selector></app-depth-selector>
             </div>
 
             <div class="flex gap-3 mt-6">
@@ -240,7 +251,8 @@ export class RiskWizardComponent implements OnInit {
     private fb: FormBuilder,
     private riskApi: RiskApiService,
     private state: RiskStateService,
-    private router: Router
+    private router: Router,
+    private depthPreference: DepthPreferenceService
   ) {
     const experienceControls: ExperienceFormControls = {
       years: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
@@ -250,6 +262,10 @@ export class RiskWizardComponent implements OnInit {
     };
     this.experienceForm = this.fb.group(experienceControls);
     this.answersForm = this.fb.group({});
+    effect(() => {
+      this.depthPreference.depth();
+      this.questions = this.applyDepthLimit(this.questions);
+    });
   }
 
   ngOnInit(): void {
@@ -342,6 +358,14 @@ export class RiskWizardComponent implements OnInit {
     return this.questions.filter((q) => !!this.getAnswerValue(q.id)).length;
   }
 
+  get inputsCompleted(): boolean {
+    return this.currentStep > 0;
+  }
+
+  private get depthConfig(): DepthConfig {
+    return this.depthPreference.config();
+  }
+
   getAnswerControl(questionId: string): FormControl<any> {
     if (!this.answersForm.contains(questionId)) {
       this.answersForm.addControl(questionId, this.fb.control(''));
@@ -388,6 +412,7 @@ export class RiskWizardComponent implements OnInit {
     this.error = '';
     this.loading = true;
 
+    const preference = this.depthPreference.preference();
     const payload: RiskAssessmentPayload = {
       cvId: this.cvId,
       useLatestCv: this.useLatest,
@@ -397,7 +422,9 @@ export class RiskWizardComponent implements OnInit {
         industry: this.experienceForm.value.industry || '',
         country: this.experienceForm.value.country || ''
       },
-      answers: this.answersForm.getRawValue()
+      answers: this.answersForm.getRawValue(),
+      depth: preference.depth,
+      persona: preference.persona
     };
 
     this.riskApi.assess(payload).subscribe({
@@ -430,13 +457,15 @@ export class RiskWizardComponent implements OnInit {
 
   private loadQuestions(): void {
     const existing = this.state.snapshot.answers || {};
-    this.riskApi.fetchQuestions(existing).subscribe({
+    const depthPref = this.depthPreference.preference();
+    this.riskApi.fetchQuestions(existing, depthPref.depth).subscribe({
       next: (qs) => {
-        this.questions = qs?.length ? qs : this.defaultQuestions();
+        const source = qs?.length ? qs : this.defaultQuestions();
+        this.questions = this.applyDepthLimit(source);
         this.applyAnswers(existing);
       },
       error: () => {
-        this.questions = this.defaultQuestions();
+        this.questions = this.applyDepthLimit(this.defaultQuestions());
         this.applyAnswers(existing);
       }
     });
@@ -476,8 +505,73 @@ export class RiskWizardComponent implements OnInit {
         type: 'text',
         placeholder: 'e.g., data analysis, prompt design',
         required: false
+      },
+      {
+        id: 'riskManagement',
+        label: 'How often do you run risk reviews for your work?',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'never', label: 'Never' },
+          { value: 'sometimes', label: 'Sometimes' },
+          { value: 'regularly', label: 'Regularly' }
+        ]
+      },
+      {
+        id: 'collaborationStyle',
+        label: 'Which collaboration style fits you best?',
+        type: 'select',
+        required: false,
+        options: [
+          { value: 'solo', label: 'Independent' },
+          { value: 'paired', label: 'Pair / small team' },
+          { value: 'cross', label: 'Cross-functional' }
+        ]
+      },
+      {
+        id: 'deliveryCadence',
+        label: 'What is your typical delivery cadence?',
+        type: 'select',
+        required: false,
+        options: [
+          { value: 'weekly', label: 'Weekly iterations' },
+          { value: 'biweekly', label: 'Bi-weekly' },
+          { value: 'monthly', label: 'Monthly' },
+          { value: 'adHoc', label: 'Ad-hoc' }
+        ]
+      },
+      {
+        id: 'learningHours',
+        label: 'How many hours per week do you dedicate to learning?',
+        type: 'scale',
+        min: 0,
+        max: 10,
+        required: false
       }
     ];
+  }
+
+  private applyDepthLimit(questions: RiskQuestion[]): RiskQuestion[] {
+    if (!questions?.length) {
+      return [];
+    }
+    const cfg = this.depthConfig;
+    const maxCount = cfg.questionCountMax ?? cfg.questionCount;
+    const limited = questions.slice(0, maxCount);
+    if (limited.length >= cfg.questionCount) {
+      return limited;
+    }
+    const defaults = this.defaultQuestions();
+    const merged = [...limited];
+    for (const q of defaults) {
+      if (merged.length >= cfg.questionCount) {
+        break;
+      }
+      if (!merged.find((existing) => existing.id === q.id)) {
+        merged.push(q);
+      }
+    }
+    return merged;
   }
 
   private applyAnswers(existing: Record<string, any>): void {

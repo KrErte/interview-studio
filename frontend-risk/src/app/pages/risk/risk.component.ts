@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -23,12 +23,17 @@ import { SnapshotCardComponent } from './components/snapshot-card.component';
 import { RoadmapPanelComponent } from './components/roadmap-panel.component';
 import { CvUploadPanelComponent } from '../../shared/cv-upload/cv-upload-panel.component';
 import { InterviewProfileDto } from '../../core/models/interview-session.model';
-import { PersonaTheaterContainerComponent } from '../../features/persona-theater/persona-theater-container.component';
 import { ObserverLogPanelComponent } from '../../features/observer-log/observer-log-panel.component';
-import { Persona } from '../../features/persona-theater/persona.model';
 import { PersonaContext } from '../../features/persona-theater/persona-context.service';
+import { DepthSelectorComponent } from '../../risk/components/depth-selector/depth-selector.component';
+import { DepthPreferenceService } from '../../risk/services/depth-preference.service';
+import { AssessmentDepth, DEPTH_CONFIGS, DepthConfig } from '../../risk/models/depth.model';
+import { buildMockProfile, MockProfile } from '../../shared/mock/mock-data';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 type FlowStep = 1 | 2 | 3 | 4;
+const STEP_ASSESSMENT: FlowStep = 3;
 
 interface ErrorState {
   message: string;
@@ -46,8 +51,8 @@ interface ErrorState {
     SnapshotCardComponent,
     RoadmapPanelComponent,
     CvUploadPanelComponent,
-    PersonaTheaterContainerComponent,
-    ObserverLogPanelComponent
+    ObserverLogPanelComponent,
+    DepthSelectorComponent
   ],
   templateUrl: './risk.component.html',
   styleUrls: ['./risk.component.scss']
@@ -75,15 +80,21 @@ export class RiskComponent implements OnInit, OnDestroy {
   totalQuestions: number = 3;
   loadingQuestion: boolean = false;
   submittingAnswer: boolean = false;
+  answersCompleted: number = 0;
+  minAnswersRequired: number = 3;
+  minConfidenceRequired: number = 10;
 
   // Step 3: Assessment
   assessment: AssessmentResult | null = null;
   loadingAssessment: boolean = false;
+  assessmentError: string | null = null;
+  assessmentReady = false;
 
   // Step 4: Roadmap
   roadmap: RoadmapResponse | null = null;
   selectedRoadmapDuration: RoadmapDuration = RoadmapDuration.SEVEN_DAYS;
   loadingRoadmap: boolean = false;
+  roadmapError: string | null = null;
 
   // Error handling
   error: ErrorState | null = null;
@@ -94,6 +105,8 @@ export class RiskComponent implements OnInit, OnDestroy {
   // UI state
   showObserverLog = false;
   toastMessage: string | null = null;
+  mockCvSelected = false;
+  mockProfile: MockProfile | null = null;
 
   private querySessionUuid: string | null = null;
   private destroy$ = new Subject<void>();
@@ -102,11 +115,19 @@ export class RiskComponent implements OnInit, OnDestroy {
   constructor(
     private riskApi: RiskApiService,
     private route: ActivatedRoute,
-    private personaContext: PersonaContext
-  ) {}
+    private personaContext: PersonaContext,
+    private depthPreference: DepthPreferenceService,
+    private router: Router
+  ) {
+    effect(() => {
+      // react to depth changes: update question targets and roadmap availability
+      this.totalQuestions = this.depthConfig.questionCount;
+    });
+  }
 
   ngOnInit(): void {
     this.querySessionUuid = this.route.snapshot.queryParamMap.get('sessionUuid');
+    this.totalQuestions = this.depthConfig.questionCount;
   }
 
   ngOnDestroy(): void {
@@ -153,9 +174,14 @@ export class RiskComponent implements OnInit, OnDestroy {
     this.startingAssessment = true;
     this.clearError();
 
+    const preference = this.depthPreference.preference();
     const request: StartAssessmentRequest = {
       cvFileId: this.cvFileId || undefined,
-      experience: this.experienceInput
+      experience: this.experienceInput,
+      depth: preference.depth,
+      persona: preference.persona,
+      includeRoadmap: this.depthConfig.includeRoadmap,
+      mockCv: this.mockCvSelected
     };
 
     this.riskApi.startAssessment(request)
@@ -167,7 +193,7 @@ export class RiskComponent implements OnInit, OnDestroy {
           this.querySessionUuid = response.sessionId;
           this.currentStep = 2;
           this.startingAssessment = false;
-
+          this.totalQuestions = this.depthConfig.questionCount;
           // Load first question
           this.loadNextQuestion();
         },
@@ -193,16 +219,25 @@ export class RiskComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: GetNextQuestionResponse) => {
-          this.currentQuestion = response.question;
+          const mapped =
+            typeof response.question === 'string'
+              ? {
+                  id: response.questionId || `question-${Date.now()}`,
+                  text: response.question,
+                  title: response.question
+                }
+              : response.question;
+          this.currentQuestion = mapped as RiskQuestion | null;
           this.questionIndex = response.index;
-          this.totalQuestions = response.total;
+          this.totalQuestions = response.totalPlanned || response.total || this.depthConfig.questionCount;
+          this.answersCompleted = Math.max(0, this.questionIndex - 1);
           this.loadingQuestion = false;
         },
         error: (err) => {
           this.loadingQuestion = false;
 
           // If no more questions, move to assessment
-          if (this.questionIndex >= 3) {
+          if (this.questionIndex >= this.totalQuestions) {
             this.currentStep = 3;
             this.loadAssessment();
           } else {
@@ -233,6 +268,7 @@ export class RiskComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.submittingAnswer = false;
+          this.answersCompleted = Math.max(this.answersCompleted + 1, this.questionIndex);
 
           // Check if we've completed all questions
           if (this.questionIndex >= this.totalQuestions) {
@@ -264,6 +300,7 @@ export class RiskComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.submittingAnswer = false;
+          this.answersCompleted = Math.max(this.answersCompleted + 1, this.questionIndex);
 
           // Check if we've completed all questions
           if (this.questionIndex >= this.totalQuestions) {
@@ -290,6 +327,7 @@ export class RiskComponent implements OnInit, OnDestroy {
     }
 
     this.loadingAssessment = true;
+    this.assessmentError = null;
     this.clearError();
 
     this.riskApi.getAssessment(this.sessionId)
@@ -298,9 +336,16 @@ export class RiskComponent implements OnInit, OnDestroy {
         next: (result) => {
           this.assessment = result;
           this.loadingAssessment = false;
+          this.assessmentReady = !!result.assessmentReady;
+          this.answersCompleted = result.answersCount ?? this.answersCompleted;
+          this.minAnswersRequired = result.minAnswersRequired ?? this.minAnswersRequired;
+          if (this.assessmentReady) {
+            this.currentStep = this.clampStep(this.currentStep, STEP_ASSESSMENT);
+          }
         },
         error: (err) => {
           this.loadingAssessment = false;
+          this.assessmentError = 'Failed to load assessment. Please try again.';
           this.setError('Failed to load assessment. Please try again.', true);
           console.error('Load assessment error:', err);
         }
@@ -309,26 +354,43 @@ export class RiskComponent implements OnInit, OnDestroy {
 
   onGenerateRoadmap(): void {
     if (!this.sessionId) {
+      this.showToast('Start an assessment to generate a roadmap.');
       return;
     }
 
     this.currentStep = 4;
-    this.generateRoadmap(this.selectedRoadmapDuration);
+    this.generateRoadmap(this.selectedRoadmapDuration, false);
+  }
+
+  onGenerateLimitedRoadmap(): void {
+    if (!this.sessionId) {
+      this.showToast('Start an assessment to generate a roadmap.');
+      return;
+    }
+    this.currentStep = 4;
+    this.generateRoadmap(this.selectedRoadmapDuration, true);
+  }
+
+  goToQuestions(): void {
+    this.currentStep = 2;
+    this.router.navigateByUrl('/futureproof/questions');
   }
 
   // ============ STEP 4: ROADMAP ============
 
-  generateRoadmap(duration: RoadmapDuration): void {
+  generateRoadmap(duration: RoadmapDuration, limited: boolean = false): void {
     if (!this.sessionId) {
       return;
     }
 
     this.loadingRoadmap = true;
+    this.roadmapError = null;
     this.clearError();
 
     this.riskApi.generateRoadmap({
       sessionId: this.sessionId,
-      duration
+      duration,
+      limited
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -339,6 +401,7 @@ export class RiskComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.loadingRoadmap = false;
+          this.roadmapError = 'Failed to generate roadmap. Please try again.';
           this.setError('Failed to generate roadmap. Please try again.', true);
           console.error('Generate roadmap error:', err);
         }
@@ -390,26 +453,8 @@ export class RiskComponent implements OnInit, OnDestroy {
     return this.sessionId || this.querySessionUuid;
   }
 
-  onPersonaChanged(persona: Persona | null): void {
-    if (persona) {
-      this.showToast(`Viewing as ${persona.name}`);
-    } else {
-      this.showToast('Balanced view');
-    }
-  }
-
   toggleObserverLog(): void {
     this.showObserverLog = !this.showObserverLog;
-  }
-
-  private showToast(message: string): void {
-    this.toastMessage = message;
-    if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
-    }
-    this.toastTimeout = setTimeout(() => {
-      this.toastMessage = null;
-    }, 2400);
   }
 
   retryLastAction(): void {
@@ -429,5 +474,42 @@ export class RiskComponent implements OnInit, OnDestroy {
     } else if (this.currentStep === 4 && this.loadingRoadmap) {
       this.generateRoadmap(this.selectedRoadmapDuration);
     }
+  }
+
+  get depthConfig(): DepthConfig {
+    return DEPTH_CONFIGS[this.depthPreference.depth()];
+  }
+
+  private showToast(message: string): void {
+    this.toastMessage = message;
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+    this.toastTimeout = setTimeout(() => {
+      this.toastMessage = null;
+    }, 2400);
+  }
+
+  private clampStep(step: FlowStep, min: FlowStep): FlowStep {
+    return step < min ? min : step;
+  }
+
+  generateMockData(): void {
+    this.mockProfile = buildMockProfile();
+    this.experienceInput = {
+      yearsOfExperience: this.mockProfile.years,
+      currentRole: this.mockProfile.role,
+      seniority: this.mockProfile.seniority,
+      industry: this.mockProfile.industry,
+      stack: this.mockProfile.stack
+    };
+    this.cvUploaded = true;
+    this.cvFileId = 'mock-cv';
+    this.mockCvSelected = true;
+    this.showToast('Mock data applied for demo/testing.');
+  }
+
+  get showMockTools(): boolean {
+    return !!environment.enableMockTools;
   }
 }

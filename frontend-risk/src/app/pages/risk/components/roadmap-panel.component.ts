@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoadmapResponse, RoadmapDuration, RoadmapItem, RoadmapCheckpoint } from '../../../core/models/risk.models';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-roadmap-panel',
@@ -13,6 +14,24 @@ import { RoadmapResponse, RoadmapDuration, RoadmapItem, RoadmapCheckpoint } from
         <h3 class="text-emerald-400 text-sm font-semibold tracking-wide uppercase mb-4">
           Improvement Roadmap
         </h3>
+
+        <div *ngIf="showMockTools" class="flex flex-wrap items-center gap-2 justify-between mb-3 text-xs text-slate-500">
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              (click)="generateMockRoadmap()"
+              class="inline-flex items-center gap-1 rounded border border-emerald-500/60 px-3 py-1.5 font-semibold text-emerald-200 hover:border-emerald-400 hover:text-emerald-100">
+              Generate mock roadmap
+            </button>
+            <button
+              type="button"
+              (click)="generateMockData.emit()"
+              class="inline-flex items-center gap-1 rounded border border-slate-700 px-3 py-1.5 font-semibold text-slate-200 hover:border-slate-500">
+              Generate mock data
+            </button>
+          </div>
+          <span>For demo/testing only</span>
+        </div>
 
         <!-- Duration Selector -->
         <div class="flex items-center space-x-3 mb-4">
@@ -154,12 +173,17 @@ export class RoadmapPanelComponent {
 
   @Output() durationChange = new EventEmitter<RoadmapDuration>();
   @Output() restartFlow = new EventEmitter<void>();
+  @Output() generateMockData = new EventEmitter<void>();
 
   durationOptions = [
     { label: '7 Days', value: RoadmapDuration.SEVEN_DAYS },
     { label: '30 Days', value: RoadmapDuration.THIRTY_DAYS },
     { label: '90 Days', value: RoadmapDuration.NINETY_DAYS }
   ];
+
+  get showMockTools(): boolean {
+    return !!environment.enableMockTools;
+  }
 
   selectDuration(duration: RoadmapDuration): void {
     if (duration !== this.selectedDuration && !this.loading) {
@@ -188,5 +212,63 @@ export class RoadmapPanelComponent {
 
     const completed = item.checkpoints.filter(c => c.completed).length;
     return Math.round((completed / item.checkpoints.length) * 100);
+  }
+
+  generateMockRoadmap(): void {
+    if (this.loading) {
+      return;
+    }
+    this.roadmap = {
+      sessionId: 'mock-session',
+      duration: this.selectedDuration,
+      summary: 'Mock roadmap for demo: focused plan to improve delivery, collaboration, and system reliability.',
+      items: [
+        {
+          id: 'mock-w1',
+          week: 1,
+          title: 'Stabilize and Align',
+          description: 'Align objectives, stabilize releases, and clarify ownership.',
+          tasks: [
+            'Run a release health review with the team',
+            'Define ownership for critical services',
+            'Document SLIs/SLOs for the top 2 services'
+          ],
+          checkpoints: [
+            { id: 'cp1', title: 'Ownership mapped', description: 'Clear owners per service', completed: false },
+            { id: 'cp2', title: 'SLIs drafted', description: 'Baseline metrics captured', completed: false }
+          ]
+        },
+        {
+          id: 'mock-w2',
+          week: 2,
+          title: 'Performance & Observability',
+          description: 'Improve performance and observability for customer-facing flows.',
+          tasks: [
+            'Add tracing to checkout flow',
+            'Reduce P95 latency by 15%',
+            'Ship an alert for error budget burn'
+          ],
+          checkpoints: [
+            { id: 'cp3', title: 'Tracing deployed', description: 'Key spans instrumented', completed: false },
+            { id: 'cp4', title: 'Latency improved', description: 'P95 down by target', completed: false }
+          ]
+        },
+        {
+          id: 'mock-w3',
+          week: 3,
+          title: 'Delivery Excellence',
+          description: 'Tighten delivery and quality practices.',
+          tasks: [
+            'Introduce lightweight ADRs for new work',
+            'Set up canary deploy for one service',
+            'Run a postmortem for last incident'
+          ],
+          checkpoints: [
+            { id: 'cp5', title: 'ADR template adopted', description: 'Team using ADRs', completed: false },
+            { id: 'cp6', title: 'Canary live', description: 'Canary path in prod', completed: false }
+          ]
+        }
+      ]
+    };
   }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssessmentResult, RiskLevel, AssessmentWeakness, RiskSignal } from '../../../core/models/risk.models';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-snapshot-card',
@@ -145,8 +146,9 @@ import { AssessmentResult, RiskLevel, AssessmentWeakness, RiskSignal } from '../
       <!-- Action Button -->
       <div class="flex justify-center pt-4">
         <button
-          (click)="generateRoadmap.emit()"
-          [disabled]="loading"
+          type="button"
+          (click)="handleGenerateClick()"
+          [disabled]="loading || disableRoadmap || !enableRoadmap"
           class="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
           <span *ngIf="!loading">Generate Roadmap to Improve</span>
           <span *ngIf="loading" class="flex items-center space-x-2">
@@ -158,6 +160,50 @@ import { AssessmentResult, RiskLevel, AssessmentWeakness, RiskSignal } from '../
           </span>
         </button>
       </div>
+
+      <div *ngIf="roadmapPrecision === 'LOW'" class="mt-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-xs text-amber-100">
+        This roadmap is based on partial signals. Answering a few more questions will improve precision.
+      </div>
+
+      <!-- Gating banner -->
+      <div *ngIf="showGate" class="mt-3 rounded-lg border border-amber-500/50 bg-amber-500/10 p-4 text-sm text-amber-100 space-y-3">
+        <div class="font-semibold text-amber-200">Roadmap needs more signals</div>
+        <p class="text-amber-100/90">
+          Low confidence detected. You can still generate a limited roadmap focused on improving signals.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            (click)="navigateToQuestions.emit()"
+            class="rounded border border-amber-400 px-3 py-1.5 text-xs font-semibold text-amber-50 hover:border-amber-200">
+            Answer questions
+          </button>
+          <button
+            type="button"
+            (click)="generateLimitedRoadmap.emit()"
+            class="rounded border border-emerald-400 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:border-emerald-200">
+            Generate limited roadmap
+          </button>
+          <button
+            type="button"
+            (click)="showGate = false"
+            class="rounded border border-slate-600 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:border-slate-400">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Dev-only debug -->
+      <div *ngIf="showDebug" class="mt-3 rounded-lg border border-slate-800 bg-slate-900/60 p-3 text-[11px] text-slate-400 space-y-1">
+        <div class="font-semibold text-slate-200">DEV debug</div>
+        <div>answersCount: {{ answersCount }}</div>
+        <div>minAnswersRequired: {{ minAnswersRequired }}</div>
+        <div>confidence: {{ confidence }}</div>
+        <div>minConfidenceRequired: {{ minConfidenceRequired }}</div>
+        <div>roadmapAllowedByDepth: {{ roadmapAllowedByDepth }}</div>
+        <div>assessmentReady: {{ assessmentReady }}</div>
+        <div>isLoading: {{ loading }}</div>
+      </div>
     </div>
   `,
   styles: []
@@ -165,15 +211,32 @@ import { AssessmentResult, RiskLevel, AssessmentWeakness, RiskSignal } from '../
 export class SnapshotCardComponent {
   @Input() assessment: AssessmentResult | null = null;
   @Input() loading: boolean = false;
+  @Input() disableRoadmap: boolean = false;
+  @Input() enableRoadmap: boolean = true;
+  @Input() roadmapAllowedByDepth: boolean = true;
+  @Input() answersCount: number = 0;
+  @Input() minAnswersRequired: number = 3;
+  @Input() confidence: number = 0;
+  @Input() minConfidenceRequired: number = 10;
+  @Input() assessmentReady: boolean = true;
+  @Input() showDebug: boolean = !!environment.enableMockTools;
+  @Input() roadmapPrecision?: string;
 
   @Output() generateRoadmap = new EventEmitter<void>();
+  @Output() generateLimitedRoadmap = new EventEmitter<void>();
+  @Output() navigateToQuestions = new EventEmitter<void>();
+
+  showGate = false;
+  gateReason: 'depth' | 'confidence' | null = null;
 
   get topWeaknesses(): AssessmentWeakness[] {
     return this.assessment?.weaknesses?.slice(0, 3) || [];
   }
 
   get confidenceValue(): number {
-    return this.assessment?.confidence ?? 0;
+    const raw = this.assessment?.confidence ?? 0;
+    const percent = raw <= 1 ? raw * 100 : raw;
+    return Math.round(percent * 10) / 10;
   }
 
   get riskColorClass(): string {
@@ -234,5 +297,22 @@ export class SnapshotCardComponent {
       default:
         return '';
     }
+  }
+
+  get canGenerate(): boolean {
+    if (!this.assessmentReady) return false;
+    return true;
+  }
+
+  handleGenerateClick(): void {
+    if (this.loading || this.disableRoadmap || !this.enableRoadmap) {
+      return;
+    }
+    if (this.canGenerate) {
+      this.generateRoadmap.emit();
+      return;
+    }
+    this.gateReason = !this.assessmentReady ? 'confidence' : null;
+    this.showGate = true;
   }
 }

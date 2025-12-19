@@ -2,23 +2,16 @@ package ee.kerrete.ainterview.support;
 
 import ee.kerrete.ainterview.config.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 @Component
 public class SessionIdParser {
 
-    private final Environment environment;
-    private final boolean riskMockEnabled;
-
-    public SessionIdParser(Environment environment,
-                           @Value("${risk.mock.enabled:false}") boolean riskMockEnabled) {
-        this.environment = environment;
-        this.riskMockEnabled = riskMockEnabled;
+    public SessionIdParser(@Value("${risk.mock.enabled:false}") boolean riskMockEnabled) {
+        // riskMockEnabled kept for backward-compatibility with existing config; currently unused
     }
 
     public SessionIdentifier parseRequired(String raw) {
@@ -37,25 +30,17 @@ public class SessionIdParser {
 
     private SessionIdentifier parseInternal(String raw) {
         if (isMock(raw)) {
-            if (mockAllowed()) {
-                return SessionIdentifier.mock(raw);
-            }
-            throw new BadRequestException("Invalid sessionId. Expected UUID.");
+            return SessionIdentifier.mock(raw);
         }
         try {
             return SessionIdentifier.uuid(UUID.fromString(raw), raw);
         } catch (IllegalArgumentException ex) {
-            throw new BadRequestException("Invalid sessionId. Expected UUID.");
+            throw new BadRequestException("Invalid sessionId. Expected UUID or mock-session-<digits>.");
         }
     }
 
     private boolean isMock(String raw) {
-        return raw != null && raw.startsWith("mock-session-");
-    }
-
-    private boolean mockAllowed() {
-        return riskMockEnabled || Arrays.stream(environment.getActiveProfiles())
-            .anyMatch(p -> "dev".equalsIgnoreCase(p));
+        return raw != null && raw.matches("^mock-session-\\d+$");
     }
 
     public record SessionIdentifier(UUID uuid, boolean mock, boolean present, String raw) {

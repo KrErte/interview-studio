@@ -24,9 +24,10 @@ import {
   QuestionType,
   RoadmapDuration
 } from '../models/risk.models';
+import { AssessmentDepth, DEPTH_CONFIGS } from '../../risk/models/depth.model';
 
 // Mock mode flag - set to false when backend endpoints are ready
-const USE_MOCKS = true;
+const USE_MOCKS = false;
 
 @Injectable({ providedIn: 'root' })
 export class RiskApiService {
@@ -35,6 +36,8 @@ export class RiskApiService {
   private mockQuestionIndex: number = 0;
   private mockSkippedCount: number = 0;
   private mockAnswers: Map<string, string> = new Map();
+  private mockTotalQuestions: number = 3;
+  private mockIncludeRoadmap = true;
 
   constructor(private api: ApiClient) {}
 
@@ -142,6 +145,10 @@ export class RiskApiService {
     this.mockQuestionIndex = 0;
     this.mockSkippedCount = 0;
     this.mockAnswers.clear();
+    const depth = (request.depth as AssessmentDepth) || AssessmentDepth.QUICK;
+    const cfg = DEPTH_CONFIGS[depth] ?? DEPTH_CONFIGS[AssessmentDepth.QUICK];
+    this.mockTotalQuestions = cfg.questionCountMax ?? cfg.questionCount;
+    this.mockIncludeRoadmap = cfg.includeRoadmap;
 
     return of<StartAssessmentResponse>({
       sessionId: this.mockSessionId,
@@ -177,16 +184,17 @@ export class RiskApiService {
       }
     ];
 
-    if (this.mockQuestionIndex >= 3) {
+    const total = Math.max(1, this.mockTotalQuestions || 3);
+    if (this.mockQuestionIndex >= total) {
       return throwError(() => new Error('No more questions'));
     }
 
-    const question = questions[this.mockQuestionIndex];
+    const question = questions[this.mockQuestionIndex % questions.length];
     return of<GetNextQuestionResponse>({
       sessionId,
       question,
       index: this.mockQuestionIndex + 1,
-      total: 3
+      total
     }).pipe(delay(600));
   }
 

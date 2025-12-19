@@ -3,6 +3,7 @@ package ee.kerrete.ainterview.risk.service;
 import ee.kerrete.ainterview.risk.dto.RiskFlowNextRequest;
 import ee.kerrete.ainterview.risk.dto.RiskFlowStartRequest;
 import ee.kerrete.ainterview.service.ObserverLogService;
+import ee.kerrete.ainterview.support.SessionIdParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class RiskFlowServiceTest {
     void setUp() {
         observerLogService = Mockito.mock(ObserverLogService.class);
         objectMapper = new ObjectMapper();
-        service = new RiskFlowService(new RiskQuestionBank(), observerLogService, objectMapper);
+        service = new RiskFlowService(new RiskQuestionBank(), observerLogService, objectMapper, new SessionIdParser(true));
     }
 
     @Test
@@ -29,7 +30,7 @@ class RiskFlowServiceTest {
         var start = service.start("user@example.com", startReq);
 
         var nextReq = new RiskFlowNextRequest();
-        nextReq.setFlowId(start.getFlowId());
+        nextReq.setFlowId(start.getFlowId().toString());
         var next = service.next("user@example.com", nextReq);
 
         assertThat(next.isDone()).isFalse();
@@ -42,7 +43,7 @@ class RiskFlowServiceTest {
     void nextAdvancesUntilDone() {
         var start = service.start("user@example.com", new RiskFlowStartRequest());
         var req = new RiskFlowNextRequest();
-        req.setFlowId(start.getFlowId());
+        req.setFlowId(start.getFlowId().toString());
 
         int steps = 0;
         boolean done = false;

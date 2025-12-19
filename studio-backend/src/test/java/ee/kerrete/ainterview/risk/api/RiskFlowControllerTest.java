@@ -99,7 +99,7 @@ class RiskFlowControllerTest {
     @Test
     void nextReturnsQuestion() throws Exception {
         RiskFlowNextRequest req = new RiskFlowNextRequest();
-        req.setFlowId(UUID.fromString("00000000-0000-0000-0000-000000000123"));
+        req.setFlowId("00000000-0000-0000-0000-000000000123");
 
         RiskFlowNextResponse resp = RiskFlowNextResponse.builder()
                 .flowId(req.getFlowId().toString())
@@ -126,7 +126,7 @@ class RiskFlowControllerTest {
     @Test
     void answerAcceptsPayload() throws Exception {
         RiskFlowAnswerRequest req = new RiskFlowAnswerRequest();
-        req.setFlowId(UUID.fromString("00000000-0000-0000-0000-000000000123"));
+        req.setFlowId("00000000-0000-0000-0000-000000000123");
         req.setQuestionId("q1");
         req.setAnswer("Because impact matters");
 
@@ -152,7 +152,7 @@ class RiskFlowControllerTest {
     @Test
     void answerWithTrailingDotIsNormalized() throws Exception {
         RiskFlowAnswerRequest req = new RiskFlowAnswerRequest();
-        req.setFlowId(UUID.fromString("00000000-0000-0000-0000-000000000123"));
+        req.setFlowId("00000000-0000-0000-0000-000000000123");
         req.setQuestionId("q1");
         req.setAnswer("Because impact matters");
 
@@ -177,7 +177,7 @@ class RiskFlowControllerTest {
     @Test
     void evaluateEndpointExists() throws Exception {
         RiskFlowEvaluateRequest req = new RiskFlowEvaluateRequest();
-        req.setFlowId(UUID.fromString("00000000-0000-0000-0000-000000000789"));
+        req.setFlowId("00000000-0000-0000-0000-000000000789");
 
         RiskFlowEvaluateResponse resp = RiskFlowEvaluateResponse.builder()
                 .flowId(req.getFlowId().toString())

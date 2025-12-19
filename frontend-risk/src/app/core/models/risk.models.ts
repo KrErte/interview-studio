@@ -80,7 +80,7 @@ export interface RiskFlowNextRequest {
 
 export interface RiskFlowNextResponse {
   sessionId: string;
-  question?: string | null;
+  question?: RiskQuestion | string | null;
   questionId?: string | null;
   done?: boolean;
   index?: number;
@@ -133,6 +133,11 @@ export interface AssessmentResult {
   confidence: number;
   weaknesses: AssessmentWeakness[];
   signals: RiskSignal[];
+  assessmentReady?: boolean;
+  answersCount?: number;
+  minAnswersRequired?: number;
+  roadmapAllowedByDepth?: boolean;
+  roadmapBlockReason?: string;
 }
 
 // Roadmap data for Step 4
@@ -171,6 +176,10 @@ export interface RoadmapResponse {
 export interface StartAssessmentRequest {
   cvFileId?: string;
   experience: ExperienceInput;
+  depth?: string;
+  persona?: string;
+  includeRoadmap?: boolean;
+  mockCv?: boolean;
 }
 
 export interface StartAssessmentResponse {
@@ -181,9 +190,11 @@ export interface StartAssessmentResponse {
 // Get next question response
 export interface GetNextQuestionResponse {
   sessionId: string;
-  question: RiskQuestion;
+  question: RiskQuestion | string;
+  questionId?: string | null;
   index: number;
   total: number;
+  totalPlanned?: number;
 }
 
 // Submit/skip answer request
@@ -204,5 +215,6 @@ export interface SubmitAnswerResponse {
 export interface GenerateRoadmapRequest {
   sessionId: string;
   duration: RoadmapDuration;
+  limited?: boolean;
 }
 

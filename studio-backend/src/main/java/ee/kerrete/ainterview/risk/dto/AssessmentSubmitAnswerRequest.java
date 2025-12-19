@@ -1,16 +1,17 @@
 package ee.kerrete.ainterview.risk.dto;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RiskFlowAnswerRequest {
-    private String flowId;
+public class AssessmentSubmitAnswerRequest {
 
-    @JsonAlias({"sessionUuid", "sessionId"})
+    @NotBlank
     private String sessionId;
 
+    @NotBlank
     private String questionId;
+
     private String answer;
 }
 

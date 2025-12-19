@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RiskQuestion } from '../../../core/models/risk.models';
+import { buildMockAnswer, buildMockProfile } from '../../../shared/mock/mock-data';
+import { environment } from '../../../../environments/environment';
 
 export interface QnASubmitEvent {
   answer: string;
@@ -43,10 +45,10 @@ export interface QnASubmitEvent {
         <!-- Question Title -->
         <div>
           <h4 class="text-slate-100 text-lg font-medium mb-2">
-            {{ question.title || question.text }}
+            {{ resolveQuestionTitle(question) }}
           </h4>
-          <p *ngIf="question.title && question.text" class="text-slate-400 text-sm">
-            {{ question.text }}
+          <p *ngIf="hasSecondaryText(question)" class="text-slate-400 text-sm">
+            {{ resolveQuestionText(question) }}
           </p>
         </div>
 
@@ -59,6 +61,21 @@ export interface QnASubmitEvent {
             rows="6"
             class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed resize-none">
           </textarea>
+          <div *ngIf="showMockTools" class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <button
+              type="button"
+              (click)="fillMockAnswer()"
+              class="inline-flex items-center gap-1 rounded border border-emerald-500/60 px-2 py-1 font-semibold text-emerald-200 hover:border-emerald-400 hover:text-emerald-100">
+              Generate mock answer
+            </button>
+            <button
+              type="button"
+              (click)="clearAnswer()"
+              class="inline-flex items-center gap-1 rounded border border-slate-700 px-2 py-1 font-semibold text-slate-200 hover:border-slate-500">
+              Clear
+            </button>
+            <span>For demo/testing only</span>
+          </div>
           <p class="text-slate-500 text-xs mt-2">
             Minimum 20 characters recommended for better assessment accuracy
           </p>
@@ -126,6 +143,60 @@ export class InlineQnAComponent {
 
   get canSubmit(): boolean {
     return this.answer.trim().length > 0;
+  }
+
+  get showMockTools(): boolean {
+    return !!environment.enableMockTools;
+  }
+
+  resolveQuestionTitle(question: RiskQuestion): string {
+    if (!question) {
+      return '';
+    }
+    if (typeof question === 'string') {
+      return question;
+    }
+    if ((question as any).question) {
+      return (question as any).question as string;
+    }
+    if (question.title) {
+      return question.title;
+    }
+    return question.text || '';
+  }
+
+  resolveQuestionText(question: RiskQuestion): string {
+    if (!question) {
+      return '';
+    }
+    if (typeof question === 'string') {
+      return question;
+    }
+    if (question.text) {
+      return question.text;
+    }
+    if ((question as any).question) {
+      return (question as any).question as string;
+    }
+    return '';
+  }
+
+  hasSecondaryText(question: RiskQuestion): boolean {
+    if (!question) return false;
+    if (typeof question === 'string') return false;
+    if (question.title && question.text) return true;
+    return false;
+  }
+
+  fillMockAnswer(): void {
+    const profile = buildMockProfile();
+    const qText = this.resolveQuestionText(this.question as RiskQuestion);
+    this.answer = buildMockAnswer(qText || 'Describe your experience.', profile);
+  }
+
+  clearAnswer(): void {
+    this.answer = '';
+    this.showSkipWarning = false;
   }
 
   onSubmit(): void {
