@@ -51,5 +51,6 @@
     <include file="changes/2025-12-21-add-interview-profile-json.xml" relativeToChangelogFile="true"/>
     <include file="changes/2025-12-26-career-transition-pivot.xml" relativeToChangelogFile="true"/>
     <include file="changes/2025-12-27-observer-log-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/2025-12-22-evidence-entries.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
