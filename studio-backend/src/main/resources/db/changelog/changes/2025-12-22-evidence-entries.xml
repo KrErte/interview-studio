@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <!--
+        Evidence Entries table for Evidence Decay / Retention mechanics.
+        - Tracks user evidence with freshness decay
+        - Evidence "freshness" is based on last_anchored_at timestamp
+        - No deletion by decay; only computed weight
+    -->
+    <changeSet id="2025-12-22-evidence-entries-table" author="claude-agent">
+
+        <createTable tableName="evidence_entries">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_anchored_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anchor_count" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detected_category" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="extracted_verbs" type="CLOB">
+                <!-- JSON array stored as text for H2 compatibility -->
+                <constraints nullable="true"/>
+            </column>
+            <column name="extracted_entities" type="CLOB">
+                <!-- JSON array stored as text for H2 compatibility -->
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="evidence_entries" indexName="idx_evidence_entries_email">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex tableName="evidence_entries" indexName="idx_evidence_entries_last_anchored">
+            <column name="last_anchored_at"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex tableName="evidence_entries" indexName="idx_evidence_entries_last_anchored"/>
+            <dropIndex tableName="evidence_entries" indexName="idx_evidence_entries_email"/>
+            <dropTable tableName="evidence_entries"/>
+        </rollback>
+    </changeSet>
+
+    <!--
+        Evidence Audit Snapshots for Silent Quarterly Audits.
+        - Captures point-in-time snapshots of user evidence health
+        - Used for retention analytics without gamification
+    -->
+    <changeSet id="2025-12-22-evidence-audit-snapshots-table" author="claude-agent">
+
+        <createTable tableName="evidence_audit_snapshots">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="exposure_score" type="NUMERIC(10,4)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="evidence_count" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="simulated_score_without_oldest_3" type="NUMERIC(10,4)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="notes" type="CLOB">
+                <!-- JSON object stored as text for H2 compatibility -->
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="evidence_audit_snapshots" indexName="idx_evidence_audit_email">
+            <column name="email"/>
+        </createIndex>
+
+        <createIndex tableName="evidence_audit_snapshots" indexName="idx_evidence_audit_created">
+            <column name="created_at"/>
+        </createIndex>
+
+        <rollback>
+            <dropIndex tableName="evidence_audit_snapshots" indexName="idx_evidence_audit_created"/>
+            <dropIndex tableName="evidence_audit_snapshots" indexName="idx_evidence_audit_email"/>
+            <dropTable tableName="evidence_audit_snapshots"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
