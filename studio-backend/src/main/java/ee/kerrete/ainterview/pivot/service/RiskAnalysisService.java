@@ -50,6 +50,43 @@ public class RiskAnalysisService {
                 .build();
     }
 
+    // Public API methods for individual endpoints
+    public List<ThreatVectorDto> getThreatVectors(String sessionId, String role) {
+        return generateThreatVectors(role);
+    }
+
+    public List<SkillCellDto> getSkillMatrix(String sessionId, String role) {
+        return generateSkillMatrix(role);
+    }
+
+    public List<VitalSignDto> getVitalSigns(String sessionId) {
+        return generateVitalSigns("Software Engineer"); // Default role
+    }
+
+    public List<AIMilestoneDto> getAIMilestones(String sessionId) {
+        return generateAIMilestones("Software Engineer");
+    }
+
+    public List<ScenarioDto> getScenarios(String sessionId) {
+        return generateScenarios("Software Engineer");
+    }
+
+    public List<SkillDecayDto> getSkillDecay(String sessionId, String role) {
+        return generateSkillDecay(role);
+    }
+
+    public List<MarketSignalDto> getMarketSignals(String sessionId, String role) {
+        return generateMarketSignals(role);
+    }
+
+    public List<MarketMetricDto> getMarketMetrics(String sessionId) {
+        return generateMarketMetrics();
+    }
+
+    public List<DisruptedRoleDto> getDisruptedRoles(String sessionId) {
+        return generateDisruptedRoles();
+    }
+
     /**
      * Generate threat vectors using real GitHub AI trends + O*NET data
      */
