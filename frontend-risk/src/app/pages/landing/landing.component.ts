@@ -304,10 +304,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   startAssessment(): void {
-    if (this.auth.isAuthenticated()) {
-      this.router.navigateByUrl('/futureproof');
-      return;
-    }
-    this.router.navigateByUrl('/login');
+    // Allow anyone to start assessment - require registration to see results
+    this.router.navigateByUrl('/futureproof/overview');
   }
 }

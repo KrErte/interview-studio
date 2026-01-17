@@ -10,6 +10,7 @@ import { PivotRolesPageComponent } from './pages/candidate/pivot-roles/pivot-rol
 import { FutureproofRoadmapPageComponent } from './pages/candidate/pivot-roles/futureproof-roadmap.page';
 
 export const routes: Routes = [
+  // Public pages (landing, auth)
   {
     path: '',
     component: PublicShellComponent,
@@ -19,34 +20,35 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent }
     ]
   },
+  // Assessment flow - NO auth required (public can do assessment)
   {
-    path: '',
+    path: 'futureproof',
     component: AppShellComponent,
-    canActivate: [authGuard],
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'overview' },
+      { path: 'overview', component: PivotRolesPageComponent },
       {
-        path: 'futureproof',
-        children: [
-          { path: '', pathMatch: 'full', redirectTo: 'overview' },
-          { path: 'overview', component: PivotRolesPageComponent },
-          {
-            path: 'questions',
-            loadComponent: () =>
-              import('./pages/candidate/pivot-roles/futureproof-questions.page').then(
-                (m) => m.FutureproofQuestionsPageComponent
-              )
-          },
-          {
-            path: 'assessment',
-            loadComponent: () =>
-              import('./pages/candidate/pivot-roles/futureproof-assessment.page').then(
-                (m) => m.FutureproofAssessmentPageComponent
-              )
-          },
-          { path: 'roadmap', component: FutureproofRoadmapPageComponent }
-        ]
+        path: 'questions',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/futureproof-questions.page').then(
+            (m) => m.FutureproofQuestionsPageComponent
+          )
       },
-      { path: '**', component: NotFoundComponent }
+      {
+        path: 'assessment',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/futureproof-assessment.page').then(
+            (m) => m.FutureproofAssessmentPageComponent
+          )
+      },
+      // Roadmap requires auth - this is where we gate registration
+      {
+        path: 'roadmap',
+        component: FutureproofRoadmapPageComponent,
+        canActivate: [authGuard]
+      }
     ]
-  }
+  },
+  // 404
+  { path: '**', component: NotFoundComponent }
 ];

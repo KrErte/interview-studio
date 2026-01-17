@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
+import { AuthService } from '../../../core/auth/auth-api.service';
 import { AssessmentResult, RiskLevel } from '../../../core/models/risk.models';
 import { Subject, takeUntil } from 'rxjs';
 import { DisruptionTimelineComponent, DisruptionPoint } from './disruption-timeline.component';
@@ -10,7 +11,7 @@ import { DisruptionTimelineComponent, DisruptionPoint } from './disruption-timel
 @Component({
   selector: 'app-futureproof-assessment-page',
   standalone: true,
-  imports: [CommonModule, DisruptionTimelineComponent],
+  imports: [CommonModule, DisruptionTimelineComponent, RouterLink],
   templateUrl: './futureproof-assessment.page.html'
 })
 export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
@@ -20,6 +21,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   sessionId: string | null = null;
   showDetails = false;
   selectedTimelineRisk: { year: number; risk: number } | null = null;
+  showRegisterPrompt = false;
 
   private destroy$ = new Subject<void>();
 
@@ -27,7 +29,8 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private navContext: NavContextService,
-    private riskApi: RiskApiService
+    private riskApi: RiskApiService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -54,9 +57,9 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
   get riskBandLabel(): string {
     if (!this.assessment) return '—';
-    if (this.assessment.riskBand === RiskLevel.LOW) return 'Madal';
-    if (this.assessment.riskBand === RiskLevel.MEDIUM) return 'Keskmine';
-    return 'Kõrge';
+    if (this.assessment.riskBand === RiskLevel.LOW) return 'Low';
+    if (this.assessment.riskBand === RiskLevel.MEDIUM) return 'Medium';
+    return 'High';
   }
 
   get confidencePercent(): number {
@@ -68,7 +71,30 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   goToRoadmap(): void {
-    this.router.navigateByUrl('/futureproof/roadmap');
+    if (this.auth.isAuthenticated()) {
+      this.router.navigateByUrl('/futureproof/roadmap');
+    } else {
+      this.showRegisterPrompt = true;
+    }
+  }
+
+  closeRegisterPrompt(): void {
+    this.showRegisterPrompt = false;
+  }
+
+  goToRegister(): void {
+    // Save session to localStorage so it persists after registration
+    if (this.sessionId) {
+      localStorage.setItem('pending_assessment_session', this.sessionId);
+    }
+    this.router.navigateByUrl('/register');
+  }
+
+  goToLogin(): void {
+    if (this.sessionId) {
+      localStorage.setItem('pending_assessment_session', this.sessionId);
+    }
+    this.router.navigateByUrl('/login');
   }
 
   goToQuestions(): void {
