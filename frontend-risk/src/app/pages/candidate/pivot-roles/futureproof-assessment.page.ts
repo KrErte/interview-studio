@@ -4,13 +4,25 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
 import { AuthService } from '../../../core/auth/auth-api.service';
-import { AssessmentResult, RiskLevel } from '../../../core/models/risk.models';
-import { Subject, takeUntil } from 'rxjs';
+import {
+  AssessmentResult,
+  RiskLevel,
+  ThreatVector,
+  SkillCell,
+  VitalSign,
+  AIMilestone,
+  Scenario,
+  SkillDecay,
+  MarketSignal,
+  MarketMetric,
+  DisruptedRole
+} from '../../../core/models/risk.models';
+import { Subject, takeUntil, forkJoin } from 'rxjs';
 import { DisruptionTimelineComponent, DisruptionPoint } from './disruption-timeline.component';
-import { ThreatRadarComponent, ThreatVector } from './threat-radar.component';
-import { SkillVulnerabilityMatrixComponent, SkillCell } from './skill-vulnerability-matrix.component';
-import { CareerVitalsComponent, VitalSign } from './career-vitals.component';
-import { AIEncroachmentTimelineComponent, AIMilestone } from './ai-encroachment-timeline.component';
+import { ThreatRadarComponent } from './threat-radar.component';
+import { SkillVulnerabilityMatrixComponent } from './skill-vulnerability-matrix.component';
+import { CareerVitalsComponent } from './career-vitals.component';
+import { AIEncroachmentTimelineComponent } from './ai-encroachment-timeline.component';
 import { ScenarioSimulatorComponent } from './scenario-simulator.component';
 import { SkillDecayClockComponent } from './skill-decay-clock.component';
 import { MarketPulseComponent } from './market-pulse.component';
@@ -45,187 +57,17 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  // Mock data for unique visualizations
-  threatVectors: ThreatVector[] = [
-    {
-      id: 'code-gen',
-      label: 'Code Generation',
-      severity: 78,
-      category: 'automation',
-      eta: '6 months',
-      description: 'AI models now generate production-quality code for standard patterns'
-    },
-    {
-      id: 'data-analysis',
-      label: 'Data Analysis',
-      severity: 65,
-      category: 'automation',
-      eta: '1 year',
-      description: 'Automated insights generation replacing manual analysis workflows'
-    },
-    {
-      id: 'offshore',
-      label: 'Global Talent Pool',
-      severity: 52,
-      category: 'outsourcing',
-      eta: '18 months',
-      description: 'Remote-first culture enabling access to global specialists at lower cost'
-    },
-    {
-      id: 'no-code',
-      label: 'No-Code Platforms',
-      severity: 45,
-      category: 'obsolescence',
-      eta: '2 years',
-      description: 'Business users now build applications without traditional coding'
-    },
-    {
-      id: 'ai-natives',
-      label: 'AI-Native Workforce',
-      severity: 38,
-      category: 'competition',
-      eta: '3 years',
-      description: 'New graduates entering with native AI collaboration skills'
-    }
-  ];
-
-  skillCells: SkillCell[] = [
-    { skill: 'Python', currentLevel: 85, aiCapability: 90, demandTrend: 'stable', category: 'Programming' },
-    { skill: 'JavaScript', currentLevel: 80, aiCapability: 88, demandTrend: 'stable', category: 'Programming' },
-    { skill: 'SQL', currentLevel: 75, aiCapability: 95, demandTrend: 'declining', category: 'Programming' },
-    { skill: 'API Design', currentLevel: 70, aiCapability: 60, demandTrend: 'rising', category: 'Architecture' },
-    { skill: 'System Design', currentLevel: 65, aiCapability: 40, demandTrend: 'rising', category: 'Architecture' },
-    { skill: 'Documentation', currentLevel: 60, aiCapability: 85, demandTrend: 'declining', category: 'Communication' },
-    { skill: 'Code Review', currentLevel: 75, aiCapability: 70, demandTrend: 'stable', category: 'Communication' },
-    { skill: 'Stakeholder Mgmt', currentLevel: 55, aiCapability: 15, demandTrend: 'rising', category: 'Leadership' },
-    { skill: 'Team Mentoring', currentLevel: 50, aiCapability: 10, demandTrend: 'rising', category: 'Leadership' },
-    { skill: 'Testing', currentLevel: 70, aiCapability: 82, demandTrend: 'declining', category: 'Quality' },
-    { skill: 'Debugging', currentLevel: 80, aiCapability: 75, demandTrend: 'stable', category: 'Quality' },
-    { skill: 'Performance Opt.', currentLevel: 60, aiCapability: 55, demandTrend: 'stable', category: 'Quality' }
-  ];
-
-  vitalSigns: VitalSign[] = [
-    {
-      id: 'market-demand',
-      label: 'Market Demand',
-      value: 72,
-      unit: 'idx',
-      min: 0,
-      max: 100,
-      optimalMin: 60,
-      optimalMax: 100,
-      trend: 'down',
-      history: [85, 82, 80, 78, 76, 75, 74, 73, 72, 72, 72, 72]
-    },
-    {
-      id: 'skill-currency',
-      label: 'Skill Currency',
-      value: 68,
-      unit: '%',
-      min: 0,
-      max: 100,
-      optimalMin: 75,
-      optimalMax: 100,
-      trend: 'down',
-      history: [88, 85, 82, 79, 76, 74, 72, 70, 69, 68, 68, 68]
-    },
-    {
-      id: 'ai-collaboration',
-      label: 'AI Collaboration',
-      value: 45,
-      unit: '%',
-      min: 0,
-      max: 100,
-      optimalMin: 60,
-      optimalMax: 100,
-      trend: 'up',
-      history: [20, 25, 28, 32, 35, 38, 40, 42, 43, 44, 45, 45]
-    },
-    {
-      id: 'adaptability',
-      label: 'Adaptability Score',
-      value: 82,
-      unit: 'pts',
-      min: 0,
-      max: 100,
-      optimalMin: 70,
-      optimalMax: 100,
-      trend: 'stable',
-      history: [80, 81, 80, 82, 81, 82, 83, 82, 81, 82, 82, 82]
-    },
-    {
-      id: 'learning-velocity',
-      label: 'Learning Velocity',
-      value: 56,
-      unit: 'u/mo',
-      min: 0,
-      max: 100,
-      optimalMin: 50,
-      optimalMax: 100,
-      trend: 'up',
-      history: [40, 42, 44, 46, 48, 50, 51, 52, 54, 55, 56, 56]
-    },
-    {
-      id: 'network-strength',
-      label: 'Network Strength',
-      value: 38,
-      unit: 'conn',
-      min: 0,
-      max: 100,
-      optimalMin: 50,
-      optimalMax: 100,
-      trend: 'stable',
-      history: [35, 36, 36, 37, 37, 37, 38, 38, 38, 38, 38, 38]
-    }
-  ];
-
-  aiMilestones: AIMilestone[] = [
-    {
-      year: 2024,
-      capability: 'Automated Code Suggestions',
-      description: 'AI provides real-time code completions and suggestions',
-      impact: 'medium',
-      probability: 100,
-      status: 'past',
-      affectedTasks: ['Basic coding', 'Boilerplate generation', 'Simple refactoring']
-    },
-    {
-      year: 2025,
-      capability: 'Autonomous Bug Fixing',
-      description: 'AI identifies and fixes common bugs without human intervention',
-      impact: 'high',
-      probability: 85,
-      status: 'imminent',
-      affectedTasks: ['Debugging', 'Error resolution', 'Test maintenance', 'Patch generation']
-    },
-    {
-      year: 2026,
-      capability: 'Full Feature Implementation',
-      description: 'AI builds complete features from natural language specifications',
-      impact: 'critical',
-      probability: 70,
-      status: 'projected',
-      affectedTasks: ['Feature development', 'CRUD operations', 'API development', 'UI implementation']
-    },
-    {
-      year: 2027,
-      capability: 'Architecture Design',
-      description: 'AI proposes and validates system architectures autonomously',
-      impact: 'high',
-      probability: 55,
-      status: 'projected',
-      affectedTasks: ['System design', 'Tech stack decisions', 'Scalability planning']
-    },
-    {
-      year: 2029,
-      capability: 'Strategic Technical Leadership',
-      description: 'AI provides strategic technology recommendations at executive level',
-      impact: 'medium',
-      probability: 35,
-      status: 'projected',
-      affectedTasks: ['Roadmap planning', 'Resource allocation', 'Vendor evaluation']
-    }
-  ];
+  // Data loaded from backend API
+  threatVectors: ThreatVector[] = [];
+  skillCells: SkillCell[] = [];
+  vitalSigns: VitalSign[] = [];
+  aiMilestones: AIMilestone[] = [];
+  scenarios: Scenario[] = [];
+  skillDecay: SkillDecay[] = [];
+  marketSignals: MarketSignal[] = [];
+  marketMetrics: MarketMetric[] = [];
+  disruptedRoles: DisruptedRole[] = [];
+  analysisLoading = false;
 
   constructor(
     private router: Router,
@@ -408,10 +250,38 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
           this.assessment = res;
           this.loading = false;
           this.setInitialTimelineSelection();
+          this.loadRiskAnalysis(sessionId);
         },
         error: (err) => {
           this.loading = false;
           this.error = err?.error?.message || 'Failed to load analysis. Please try again.';
+        }
+      });
+  }
+
+  private loadRiskAnalysis(sessionId: string): void {
+    this.analysisLoading = true;
+    const role = this.currentRole;
+
+    this.riskApi
+      .getRiskAnalysis(sessionId, role)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.threatVectors = data.threatVectors || [];
+          this.skillCells = data.skillMatrix || [];
+          this.vitalSigns = data.vitalSigns || [];
+          this.aiMilestones = data.aiMilestones || [];
+          this.scenarios = data.scenarios || [];
+          this.skillDecay = data.skillDecay || [];
+          this.marketSignals = data.marketSignals || [];
+          this.marketMetrics = data.marketMetrics || [];
+          this.disruptedRoles = data.disruptedRoles || [];
+          this.analysisLoading = false;
+        },
+        error: () => {
+          // If API fails, keep empty arrays (or could use fallback mock data)
+          this.analysisLoading = false;
         }
       });
   }

@@ -22,11 +22,21 @@ import {
   AssessmentResult,
   RiskLevel,
   QuestionType,
-  RoadmapDuration
+  RoadmapDuration,
+  RiskAnalysisResponse,
+  ThreatVector,
+  SkillCell,
+  VitalSign,
+  AIMilestone,
+  Scenario,
+  SkillDecay,
+  MarketSignal,
+  MarketMetric,
+  DisruptedRole
 } from '../models/risk.models';
 
 // Mock mode flag - set to false when backend endpoints are ready
-const USE_MOCKS = true;
+const USE_MOCKS = false;
 
 @Injectable({ providedIn: 'root' })
 export class RiskApiService {
@@ -133,6 +143,78 @@ export class RiskApiService {
     }
     return this.api.post<RoadmapResponse>('/risk/assessment/roadmap', request)
       .pipe(catchError(() => this.mockGenerateRoadmap(request)));
+  }
+
+  // ============ RISK ANALYSIS METHODS ============
+
+  /**
+   * Get complete risk analysis for a session
+   */
+  getRiskAnalysis(sessionId: string, role: string = 'Software Engineer'): Observable<RiskAnalysisResponse> {
+    return this.api.get<RiskAnalysisResponse>(`/risk-analysis/${sessionId}?role=${encodeURIComponent(role)}`);
+  }
+
+  /**
+   * Get threat vectors for a session
+   */
+  getThreatVectors(sessionId: string, role: string = 'Software Engineer'): Observable<ThreatVector[]> {
+    return this.api.get<ThreatVector[]>(`/risk-analysis/${sessionId}/threats?role=${encodeURIComponent(role)}`);
+  }
+
+  /**
+   * Get skill vulnerability matrix
+   */
+  getSkillMatrix(sessionId: string, role: string = 'Software Engineer'): Observable<SkillCell[]> {
+    return this.api.get<SkillCell[]>(`/risk-analysis/${sessionId}/skills?role=${encodeURIComponent(role)}`);
+  }
+
+  /**
+   * Get career vital signs
+   */
+  getVitalSigns(sessionId: string): Observable<VitalSign[]> {
+    return this.api.get<VitalSign[]>(`/risk-analysis/${sessionId}/vitals`);
+  }
+
+  /**
+   * Get AI encroachment timeline
+   */
+  getAIMilestones(sessionId: string): Observable<AIMilestone[]> {
+    return this.api.get<AIMilestone[]>(`/risk-analysis/${sessionId}/ai-timeline`);
+  }
+
+  /**
+   * Get what-if scenarios
+   */
+  getScenarios(sessionId: string): Observable<Scenario[]> {
+    return this.api.get<Scenario[]>(`/risk-analysis/${sessionId}/scenarios`);
+  }
+
+  /**
+   * Get skill decay information
+   */
+  getSkillDecay(sessionId: string, role: string = 'Software Engineer'): Observable<SkillDecay[]> {
+    return this.api.get<SkillDecay[]>(`/risk-analysis/${sessionId}/skill-decay?role=${encodeURIComponent(role)}`);
+  }
+
+  /**
+   * Get market signals
+   */
+  getMarketSignals(sessionId: string, role: string = 'Software Engineer'): Observable<MarketSignal[]> {
+    return this.api.get<MarketSignal[]>(`/risk-analysis/${sessionId}/market-signals?role=${encodeURIComponent(role)}`);
+  }
+
+  /**
+   * Get market metrics
+   */
+  getMarketMetrics(sessionId: string): Observable<MarketMetric[]> {
+    return this.api.get<MarketMetric[]>(`/risk-analysis/${sessionId}/market-metrics`);
+  }
+
+  /**
+   * Get disrupted role case studies
+   */
+  getDisruptedRoles(sessionId: string): Observable<DisruptedRole[]> {
+    return this.api.get<DisruptedRole[]>(`/risk-analysis/${sessionId}/disrupted-roles`);
   }
 
   // ============ MOCK IMPLEMENTATIONS ============
