@@ -27,8 +27,8 @@ export class AuthService {
     );
   }
 
-  register(email: string, password: string) {
-    return this.api.post<AuthResponse>('/auth/register', { email, password }).pipe(
+  register(email: string, password: string, fullName?: string) {
+    return this.api.post<AuthResponse>('/auth/register', { email, password, fullName: fullName || 'User' }).pipe(
       tap((res) => this.persist(res)),
       map(() => void 0)
     );
