@@ -114,26 +114,47 @@
 
   <!-- Main assessment content -->
   <div *ngIf="assessment" class="space-y-6">
-    <!-- Tab navigation -->
-    <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800">
-      <button
-        *ngFor="let tab of [
-          { id: 'overview', label: 'Overview', icon: '◉' },
-          { id: 'threats', label: 'Threat Radar', icon: '◎' },
-          { id: 'skills', label: 'Skill Matrix', icon: '▦' },
-          { id: 'vitals', label: 'Career Vitals', icon: '♡' },
-          { id: 'timeline', label: 'AI Timeline', icon: '⚡' }
-        ]"
-        type="button"
-        class="flex-1 min-w-[120px] px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
-        [ngClass]="activeTab === tab.id
-          ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 border border-emerald-500/30'
-          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'"
-        (click)="setActiveTab(tab.id)"
-      >
-        <span class="mr-1.5">{{ tab.icon }}</span>
-        {{ tab.label }}
-      </button>
+    <!-- Tab navigation - Two rows for more tabs -->
+    <div class="space-y-2">
+      <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800">
+        <button
+          *ngFor="let tab of [
+            { id: 'overview', label: 'Overview', icon: '◉' },
+            { id: 'simulator', label: 'What-If', icon: '🔮' },
+            { id: 'pulse', label: 'Market Pulse', icon: '📡' },
+            { id: 'decay', label: 'Skill Decay', icon: '⏱' },
+            { id: 'autopsy', label: 'Case Studies', icon: '🔍' }
+          ]"
+          type="button"
+          class="flex-1 min-w-[100px] px-3 py-2 rounded-lg text-xs font-medium transition-all"
+          [ngClass]="activeTab === tab.id
+            ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 border border-emerald-500/30'
+            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'"
+          (click)="setActiveTab(tab.id)"
+        >
+          <span class="mr-1">{{ tab.icon }}</span>
+          {{ tab.label }}
+        </button>
+      </div>
+      <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-900/50 border border-slate-800/50">
+        <button
+          *ngFor="let tab of [
+            { id: 'threats', label: 'Threat Radar', icon: '◎' },
+            { id: 'skills', label: 'Skill Matrix', icon: '▦' },
+            { id: 'vitals', label: 'Career Vitals', icon: '♡' },
+            { id: 'timeline', label: 'AI Timeline', icon: '⚡' }
+          ]"
+          type="button"
+          class="flex-1 min-w-[100px] px-3 py-2 rounded-lg text-xs font-medium transition-all"
+          [ngClass]="activeTab === tab.id
+            ? 'bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-violet-300 border border-violet-500/30'
+            : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'"
+          (click)="setActiveTab(tab.id)"
+        >
+          <span class="mr-1">{{ tab.icon }}</span>
+          {{ tab.label }}
+        </button>
+      </div>
     </div>
 
     <!-- Overview Tab -->
@@ -293,6 +314,29 @@
         [role]="currentRole"
         (onViewRoadmap)="goToRoadmap()"
       ></app-ai-encroachment-timeline>
+    </div>
+
+    <!-- What-If Simulator Tab -->
+    <div *ngIf="activeTab === 'simulator'" class="animate-fadeIn">
+      <app-scenario-simulator
+        [currentRisk]="assessment.riskPercent"
+        [currentSalary]="95"
+      ></app-scenario-simulator>
+    </div>
+
+    <!-- Skill Decay Clock Tab -->
+    <div *ngIf="activeTab === 'decay'" class="animate-fadeIn">
+      <app-skill-decay-clock></app-skill-decay-clock>
+    </div>
+
+    <!-- Market Pulse Tab -->
+    <div *ngIf="activeTab === 'pulse'" class="animate-fadeIn">
+      <app-market-pulse [userRole]="currentRole"></app-market-pulse>
+    </div>
+
+    <!-- Disruption Autopsy Tab -->
+    <div *ngIf="activeTab === 'autopsy'" class="animate-fadeIn">
+      <app-disruption-autopsy></app-disruption-autopsy>
     </div>
 
     <!-- Bottom CTA -->
