@@ -1,264 +1,394 @@
-<section class="space-y-6 max-w-4xl mx-auto px-4">
-  <header class="space-y-2">
-    <p class="text-xs uppercase tracking-wide text-slate-400">Analysis</p>
-    <h1 class="text-3xl font-bold text-slate-50">Your Disruption Assessment</h1>
-    <p class="text-sm text-slate-400">
-      Summary of your assessment: risk percentage, confidence level, and key areas for development.
-    </p>
+<section class="space-y-6 max-w-6xl mx-auto px-4 pb-8">
+  <!-- Hero header with gradient -->
+  <header class="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-6 md:p-8">
+    <!-- Animated grid background -->
+    <div class="absolute inset-0 opacity-20">
+      <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="assessment-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="rgba(16, 185, 129, 0.3)" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#assessment-grid)" />
+      </svg>
+    </div>
+
+    <div class="relative z-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span class="text-xs uppercase tracking-widest text-emerald-400 font-semibold">Live Analysis</span>
+          </div>
+          <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Career Disruption Index</h1>
+          <p class="text-slate-400 max-w-xl">
+            Real-time assessment of your career vulnerability to AI automation, market shifts, and technological disruption.
+          </p>
+        </div>
+
+        <!-- Overall score display -->
+        <div *ngIf="assessment" class="flex-shrink-0 text-center md:text-right">
+          <div class="inline-block p-6 rounded-2xl bg-slate-950/50 border border-slate-700">
+            <div class="text-5xl font-mono font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              {{ assessment.riskPercent }}<span class="text-2xl">%</span>
+            </div>
+            <div class="text-xs uppercase tracking-wide text-slate-400 mt-1">Disruption Risk</div>
+            <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                 [ngClass]="{
+                   'bg-emerald-500/20 text-emerald-300': riskBandLabel === 'Low',
+                   'bg-amber-500/20 text-amber-300': riskBandLabel === 'Medium',
+                   'bg-rose-500/20 text-rose-300': riskBandLabel === 'High'
+                 }">
+              <span class="w-1.5 h-1.5 rounded-full"
+                    [ngClass]="{
+                      'bg-emerald-400': riskBandLabel === 'Low',
+                      'bg-amber-400': riskBandLabel === 'Medium',
+                      'bg-rose-400': riskBandLabel === 'High'
+                    }"></span>
+              {{ riskBandLabel }} Risk
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <div *ngIf="loading" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5">
-    <div class="flex items-center gap-3 text-sm text-slate-300">
-      <span class="h-4 w-4 animate-spin rounded-full border-2 border-slate-700 border-t-emerald-400"></span>
-      Loading analysis...
-    </div>
-  </div>
-
-  <div *ngIf="error" class="rounded-2xl border border-rose-500/40 bg-rose-950/50 p-4 text-sm text-rose-100">
-    <div class="flex items-center justify-between gap-3">
-      <p>{{ error }}</p>
-      <button
-        type="button"
-        class="rounded-lg border border-rose-400 px-3 py-1 text-xs font-semibold text-rose-100 hover:border-rose-300"
-        (click)="retry()"
-      >
-        Retry
-      </button>
-    </div>
-  </div>
-
-  <div
-    *ngIf="!loading && !error && !assessment"
-    class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-sm text-slate-300"
-  >
-    <p>No assessment found. Start the questionnaire to generate your analysis.</p>
-    <div class="mt-3">
-      <button
-        type="button"
-        class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
-        (click)="goToQuestions()"
-      >
-        Start Questionnaire
-      </button>
-    </div>
-  </div>
-
-<div *ngIf="assessment" class="space-y-4">
-  <app-disruption-timeline
-    [currentRole]="currentRole"
-    [timeline]="timelinePoints"
-  ></app-disruption-timeline>
-
-  <div *ngIf="ctaVisible" class="mt-3">
-    <button
-      type="button"
-      [ngClass]="ctaPrimary
-        ? 'inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400'
-        : 'inline-flex items-center gap-2 rounded-lg border border-emerald-400 px-4 py-2 text-sm font-semibold text-emerald-200 hover:border-emerald-300 hover:text-emerald-100'"
-      (click)="goToRoadmap()"
-    >
-      What to do before {{ ctaYear }}?
-    </button>
-  </div>
-
-  <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
-    <div class="grid gap-4 md:grid-cols-2">
-      <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Risk Percentage</p>
-        <div class="flex items-baseline gap-3">
-          <p class="text-4xl font-bold text-emerald-400">
-            {{ assessment.riskPercent }}<span class="text-lg">%</span>
-          </p>
-          <span class="rounded-full bg-slate-800 px-3 py-1 text-xs font-semibold text-emerald-200">
-            {{ riskBandLabel }}
-          </span>
-        </div>
-        <p class="mt-2 text-xs text-slate-400">Overview of your readiness level.</p>
+  <!-- Loading state -->
+  <div *ngIf="loading" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-8">
+    <div class="flex flex-col items-center justify-center gap-4">
+      <div class="relative w-16 h-16">
+        <div class="absolute inset-0 rounded-full border-4 border-slate-700"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
       </div>
-      <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Confidence</p>
-        <div class="mt-2 h-2 w-full rounded-full bg-slate-800">
-          <div
-            class="h-2 rounded-full bg-emerald-500 transition-all"
-            [style.width.%]="confidencePercent"
-          ></div>
-        </div>
-        <div class="mt-2 flex items-center justify-between text-sm text-slate-100">
-          <span class="font-semibold">{{ confidencePercent }}%</span>
-          <span class="text-xs text-slate-400">Higher is better</span>
-        </div>
+      <div class="text-center">
+        <p class="text-slate-200 font-medium">Analyzing your career data...</p>
+        <p class="text-xs text-slate-500 mt-1">Scanning threat vectors and skill vulnerabilities</p>
       </div>
     </div>
   </div>
 
-  <div class="flex flex-wrap gap-3">
-    <button
-      type="button"
-      class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
-      (click)="goToRoadmap()"
-    >
-      Generate Action Plan
-    </button>
-  </div>
-
-  <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-    <button
-      type="button"
-      class="flex w-full items-center justify-between rounded-lg border border-slate-800 bg-slate-950/50 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200"
-      (click)="toggleDetails()"
-      [attr.aria-expanded]="showDetails"
-    >
-      <span>{{ showDetails ? 'Hide detailed analysis' : 'View detailed analysis' }}</span>
-      <span aria-hidden="true" class="text-base">{{ showDetails ? '−' : '+' }}</span>
-    </button>
-
-    <div *ngIf="showDetails" class="mt-4 space-y-4">
-      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-slate-50">Top Pivot Roles</h2>
-          <span class="text-xs text-slate-400">Top 3</span>
-        </div>
-        <div class="mt-3 space-y-2" *ngIf="topPivotRoles.length; else noRoles">
-          <div
-            *ngFor="let role of topPivotRoles"
-            class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-2 text-sm text-slate-100"
-          >
-            <span class="font-semibold">{{ role }}</span>
-            <span class="text-xs text-emerald-300">Match</span>
-          </div>
-        </div>
-        <ng-template #noRoles>
-          <p class="text-sm text-slate-400">No pivot roles yet. Add your CV and answer the questions.</p>
-        </ng-template>
+  <!-- Error state -->
+  <div *ngIf="error" class="rounded-2xl border border-rose-500/40 bg-rose-950/50 p-6">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
       </div>
-
-      <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Overview</p>
-        <p class="text-sm text-slate-300">
-          The assessment uses your answers and CV signals to calculate your readiness profile.
-        </p>
-      </div>
-
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-slate-50">Key Weaknesses</h2>
-            <span class="text-xs text-slate-400">Top 3</span>
-          </div>
-          <div class="mt-3 space-y-3" *ngIf="assessment.weaknesses?.length; else noWeaknesses">
-            <div
-              *ngFor="let w of assessment.weaknesses | slice:0:3"
-              class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
-            >
-              <p class="text-sm font-semibold text-slate-100">{{ w.title }}</p>
-              <p class="text-xs text-slate-400 mt-1">{{ w.description }}</p>
-              <p class="mt-1 text-[11px] text-amber-300">Severity: {{ w.severity }}</p>
-            </div>
-          </div>
-          <ng-template #noWeaknesses>
-            <p class="text-sm text-slate-400 mt-2">No weaknesses detected.</p>
-          </ng-template>
-        </div>
-
-        <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-slate-50">Signals</h2>
-            <span class="text-xs text-slate-400">Top 3</span>
-          </div>
-          <div class="mt-3 space-y-3" *ngIf="assessment.signals?.length; else noSignals">
-            <div
-              *ngFor="let s of assessment.signals | slice:0:3"
-              class="rounded-lg border border-slate-800 bg-slate-900/70 p-3"
-            >
-              <div class="flex items-center justify-between">
-                <p class="text-sm font-semibold text-slate-100">{{ s.label }}</p>
-                <span class="text-xs text-emerald-300 font-semibold">{{ s.score }} / 100</span>
-              </div>
-              <p class="text-xs text-slate-400 mt-1">{{ s.description }}</p>
-            </div>
-          </div>
-          <ng-template #noSignals>
-            <p class="text-sm text-slate-400 mt-2">No signals found.</p>
-          </ng-template>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-sm text-slate-300">
-        <p class="text-slate-200 font-semibold">What's next</p>
+      <div class="flex-1">
+        <h3 class="text-rose-100 font-semibold">Analysis Failed</h3>
+        <p class="text-rose-200/70 text-sm mt-1">{{ error }}</p>
         <button
           type="button"
-          class="text-xs font-semibold text-emerald-300 hover:text-emerald-200"
-          (click)="goToQuestions()"
+          class="mt-3 px-4 py-2 rounded-lg border border-rose-400/50 text-sm font-medium text-rose-100 hover:bg-rose-500/10 transition-colors"
+          (click)="retry()"
         >
-          Update your answers →
+          Retry Analysis
         </button>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- No assessment state -->
+  <div *ngIf="!loading && !error && !assessment" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-8 text-center">
+    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+    </div>
+    <h3 class="text-xl font-bold text-white mb-2">Start Your Assessment</h3>
+    <p class="text-slate-400 max-w-md mx-auto mb-6">
+      Complete the questionnaire to generate your personalized career disruption analysis.
+    </p>
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all"
+      (click)="goToQuestions()"
+    >
+      Begin Assessment
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Main assessment content -->
+  <div *ngIf="assessment" class="space-y-6">
+    <!-- Tab navigation -->
+    <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800">
+      <button
+        *ngFor="let tab of [
+          { id: 'overview', label: 'Overview', icon: '◉' },
+          { id: 'threats', label: 'Threat Radar', icon: '◎' },
+          { id: 'skills', label: 'Skill Matrix', icon: '▦' },
+          { id: 'vitals', label: 'Career Vitals', icon: '♡' },
+          { id: 'timeline', label: 'AI Timeline', icon: '⚡' }
+        ]"
+        type="button"
+        class="flex-1 min-w-[120px] px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
+        [ngClass]="activeTab === tab.id
+          ? 'bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 text-emerald-300 border border-emerald-500/30'
+          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'"
+        (click)="setActiveTab(tab.id)"
+      >
+        <span class="mr-1.5">{{ tab.icon }}</span>
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div *ngIf="activeTab === 'overview'" class="space-y-6 animate-fadeIn">
+      <!-- Quick stats grid -->
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs uppercase tracking-wide text-slate-400">Disruption Risk</span>
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">◉</span>
+          </div>
+          <div class="text-4xl font-mono font-bold text-emerald-400">{{ assessment.riskPercent }}%</div>
+          <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all" [style.width.%]="assessment.riskPercent"></div>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs uppercase tracking-wide text-slate-400">Analysis Confidence</span>
+            <span class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">◎</span>
+          </div>
+          <div class="text-4xl font-mono font-bold text-cyan-400">{{ confidencePercent }}%</div>
+          <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-cyan-500 rounded-full transition-all" [style.width.%]="confidencePercent"></div>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs uppercase tracking-wide text-slate-400">Time to Adapt</span>
+            <span class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">⏱</span>
+          </div>
+          <div class="text-4xl font-mono font-bold text-amber-400">18<span class="text-lg">mo</span></div>
+          <p class="text-xs text-slate-400 mt-2">Recommended preparation window</p>
+        </div>
+      </div>
+
+      <!-- Disruption Timeline -->
+      <app-disruption-timeline
+        [currentRole]="currentRole"
+        [timeline]="timelinePoints"
+      ></app-disruption-timeline>
+
+      <!-- CTA Button -->
+      <div *ngIf="ctaVisible" class="flex justify-center">
+        <button
+          type="button"
+          class="group inline-flex items-center gap-3 px-8 py-4 rounded-xl text-base font-bold transition-all"
+          [ngClass]="ctaPrimary
+            ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02]'
+            : 'border border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10'"
+          (click)="goToRoadmap()"
+        >
+          <span>What should I do before {{ ctaYear }}?</span>
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Detailed analysis toggle -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 overflow-hidden">
+        <button
+          type="button"
+          class="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-slate-800/50 transition-colors"
+          (click)="toggleDetails()"
+          [attr.aria-expanded]="showDetails"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center text-violet-400">⊕</div>
+            <span class="font-semibold text-slate-100">{{ showDetails ? 'Hide Detailed Breakdown' : 'View Detailed Breakdown' }}</span>
+          </div>
+          <svg class="w-5 h-5 text-slate-400 transition-transform" [class.rotate-180]="showDetails" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="showDetails" class="px-5 pb-5 space-y-4 animate-fadeIn">
+          <!-- Pivot Roles -->
+          <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-white">Recommended Pivot Roles</h3>
+              <span class="text-xs text-slate-400">Based on your profile</span>
+            </div>
+            <div class="space-y-2" *ngIf="topPivotRoles.length; else noRoles">
+              <div *ngFor="let role of topPivotRoles; let i = index" class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                <div class="flex items-center gap-3">
+                  <span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400">{{ i + 1 }}</span>
+                  <span class="font-medium text-slate-200">{{ role }}</span>
+                </div>
+                <span class="text-xs text-emerald-400 font-medium">High Match</span>
+              </div>
+            </div>
+            <ng-template #noRoles>
+              <p class="text-sm text-slate-400">Complete your profile to receive role recommendations.</p>
+            </ng-template>
+          </div>
+
+          <!-- Weaknesses & Signals Grid -->
+          <div class="grid gap-4 md:grid-cols-2">
+            <!-- Weaknesses -->
+            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <h3 class="font-semibold text-white mb-4">Key Vulnerabilities</h3>
+              <div class="space-y-3" *ngIf="assessment.weaknesses?.length; else noWeaknesses">
+                <div *ngFor="let w of assessment.weaknesses | slice:0:3" class="p-3 rounded-lg bg-rose-500/5 border border-rose-500/20">
+                  <p class="font-medium text-slate-200">{{ w.title }}</p>
+                  <p class="text-xs text-slate-400 mt-1">{{ w.description }}</p>
+                  <span class="inline-block mt-2 px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/20 text-rose-300">{{ w.severity }}</span>
+                </div>
+              </div>
+              <ng-template #noWeaknesses>
+                <p class="text-sm text-slate-400">No critical vulnerabilities detected.</p>
+              </ng-template>
+            </div>
+
+            <!-- Signals -->
+            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <h3 class="font-semibold text-white mb-4">Positive Signals</h3>
+              <div class="space-y-3" *ngIf="assessment.signals?.length; else noSignals">
+                <div *ngFor="let s of assessment.signals | slice:0:3" class="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+                  <div class="flex items-center justify-between">
+                    <p class="font-medium text-slate-200">{{ s.label }}</p>
+                    <span class="text-sm font-mono font-bold text-emerald-400">{{ s.score }}/100</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">{{ s.description }}</p>
+                </div>
+              </div>
+              <ng-template #noSignals>
+                <p class="text-sm text-slate-400">Complete assessment to see signals.</p>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Threats Tab -->
+    <div *ngIf="activeTab === 'threats'" class="animate-fadeIn">
+      <app-threat-radar [threats]="threatVectors"></app-threat-radar>
+    </div>
+
+    <!-- Skills Tab -->
+    <div *ngIf="activeTab === 'skills'" class="animate-fadeIn">
+      <app-skill-vulnerability-matrix [skills]="skillCells"></app-skill-vulnerability-matrix>
+    </div>
+
+    <!-- Vitals Tab -->
+    <div *ngIf="activeTab === 'vitals'" class="animate-fadeIn">
+      <app-career-vitals [vitals]="vitalSigns"></app-career-vitals>
+    </div>
+
+    <!-- Timeline Tab -->
+    <div *ngIf="activeTab === 'timeline'" class="animate-fadeIn">
+      <app-ai-encroachment-timeline
+        [milestones]="aiMilestones"
+        [role]="currentRole"
+        (onViewRoadmap)="goToRoadmap()"
+      ></app-ai-encroachment-timeline>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="flex flex-wrap items-center justify-between gap-4 p-5 rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 to-slate-900/50">
+      <div>
+        <h3 class="font-semibold text-white">Ready to take action?</h3>
+        <p class="text-sm text-slate-400">Get your personalized adaptation roadmap</p>
+      </div>
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
+        (click)="goToRoadmap()"
+      >
+        Generate Action Plan
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </section>
 
 <!-- Registration Prompt Modal -->
 <div *ngIf="showRegisterPrompt" class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <!-- Backdrop -->
-  <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" (click)="closeRegisterPrompt()"></div>
+  <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" (click)="closeRegisterPrompt()"></div>
 
   <!-- Modal -->
-  <div class="relative w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+  <div class="relative w-full max-w-lg rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-8 shadow-2xl">
     <!-- Close button -->
     <button
       type="button"
-      class="absolute top-4 right-4 text-slate-500 hover:text-slate-300"
+      class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center transition-colors"
       (click)="closeRegisterPrompt()"
     >
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
     <!-- Content -->
     <div class="text-center">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-4">
-        <svg class="w-8 h-8 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <!-- Icon -->
+      <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30">
+        <svg class="w-10 h-10 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       </div>
 
-      <h3 class="text-xl font-bold text-white mb-2">Your Analysis is Ready!</h3>
-      <p class="text-slate-400 text-sm mb-6">
-        Create a free account to unlock your personalized action plan and save your results.
+      <h3 class="text-2xl font-bold text-white mb-3">Unlock Your Roadmap</h3>
+      <p class="text-slate-400 mb-6">
+        Create a free account to access your personalized action plan and track your progress.
       </p>
 
       <!-- Assessment Preview -->
-      <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700 mb-6 text-left">
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-slate-400">Your Risk Score</span>
-          <span class="text-2xl font-bold text-emerald-400">{{ assessment?.riskPercent || 0 }}%</span>
+      <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700 mb-6 text-left">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-slate-400">Your Disruption Score</span>
+          <span class="text-3xl font-mono font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            {{ assessment?.riskPercent || 0 }}%
+          </span>
         </div>
-        <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-          <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full" [style.width.%]="assessment?.riskPercent || 0"></div>
+        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+          <div
+            class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
+            [style.width.%]="assessment?.riskPercent || 0"
+          ></div>
         </div>
+        <p class="text-xs text-slate-500 mt-2">Your analysis is ready. Sign up to see your action plan.</p>
       </div>
 
       <!-- Benefits -->
-      <div class="text-left mb-6 space-y-2">
-        <div class="flex items-center gap-2 text-sm text-slate-300">
-          <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          <span>Personalized 90-day action plan</span>
+      <div class="text-left mb-6 space-y-3">
+        <div class="flex items-center gap-3 text-sm text-slate-300">
+          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <span>90-day personalized adaptation roadmap</span>
         </div>
-        <div class="flex items-center gap-2 text-sm text-slate-300">
-          <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          <span>Specific skill recommendations</span>
+        <div class="flex items-center gap-3 text-sm text-slate-300">
+          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <span>Priority skill recommendations with learning paths</span>
         </div>
-        <div class="flex items-center gap-2 text-sm text-slate-300">
-          <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          <span>Save and track your progress</span>
+        <div class="flex items-center gap-3 text-sm text-slate-300">
+          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <span>Track progress and update your risk profile</span>
         </div>
       </div>
 
@@ -266,7 +396,7 @@
       <div class="space-y-3">
         <button
           type="button"
-          class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
+          class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
           (click)="goToRegister()"
         >
           Create Free Account
@@ -282,3 +412,13 @@
     </div>
   </div>
 </div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>
