@@ -2,14 +2,17 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /app
 
+# Install bash and dos2unix for gradlew compatibility
+RUN apk add --no-cache bash dos2unix
+
 # Copy gradle files
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 
-# Make gradlew executable
-RUN chmod +x gradlew
+# Fix line endings (Windows CRLF -> Unix LF) and make executable
+RUN dos2unix gradlew && chmod +x gradlew
 
 # Download dependencies (cached layer)
 RUN ./gradlew dependencies --no-daemon || true
