@@ -1,0 +1,109 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<aside class="sidebar" [class.sidebar--collapsed]="collapsed">
+  <!-- Logo -->
+  <div class="sidebar__header">
+    <div class="sidebar__logo">
+      <span class="sidebar__logo-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </span>
+      <span class="sidebar__logo-text" *ngIf="!collapsed">
+        <span class="sidebar__logo-title">TASKEXPOSURE</span>
+        <span class="sidebar__logo-version">v1.0</span>
+      </span>
+    </div>
+    <button class="sidebar__toggle" (click)="onToggleCollapse()" [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path *ngIf="!collapsed" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/>
+        <path *ngIf="collapsed" d="M13 5l7 7-7 7M6 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar__nav">
+    <div class="sidebar__section">
+      <span class="sidebar__section-label" *ngIf="!collapsed">Assessment Flow</span>
+    </div>
+
+    <ul class="sidebar__list">
+      @for (item of navItems; track item.id) {
+        <li class="sidebar__item">
+          <button
+            class="sidebar__link"
+            [class.sidebar__link--active]="isStepActive(item.id)"
+            [class.sidebar__link--completed]="isStepCompleted(item.id)"
+            [class.sidebar__link--disabled]="item.disabled"
+            (click)="onNavigate(item.id)"
+            [disabled]="item.disabled"
+          >
+            <span class="sidebar__step">
+              @if (isStepCompleted(item.id)) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              } @else {
+                {{ getStepNumber(item.id) }}
+              }
+            </span>
+            <span class="sidebar__label" *ngIf="!collapsed">{{ item.label }}</span>
+            <span class="sidebar__badge" *ngIf="item.badge && !collapsed">{{ item.badge }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <!-- Tools Section -->
+    <div class="sidebar__section sidebar__section--tools">
+      <span class="sidebar__section-label" *ngIf="!collapsed">Tools</span>
+    </div>
+
+    <ul class="sidebar__list sidebar__list--tools">
+      @for (item of toolItems; track item.id) {
+        <li class="sidebar__item">
+          <button
+            class="sidebar__link sidebar__link--tool"
+            [class.sidebar__link--active]="isStepActive(item.id)"
+            (click)="onNavigate(item.id)"
+          >
+            <span class="sidebar__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                <path d="M14 2v6h6"/>
+                <path d="M12 18v-6"/>
+                <path d="M9 15h6"/>
+              </svg>
+            </span>
+            <span class="sidebar__label" *ngIf="!collapsed">{{ item.label }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- Footer -->
+  <div class="sidebar__footer">
+    <div class="sidebar__status">
+      <span class="sidebar__status-dot"></span>
+      <span class="sidebar__status-text" *ngIf="!collapsed">System Online</span>
+    </div>
+  </div>
+</aside>

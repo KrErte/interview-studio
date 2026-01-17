@@ -1,0 +1,312 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// 3.5 Score Screen - "The Mirror Moment"
+// Deliver the exposure score with emotional intelligence.
+// Frame numbers as starting points, not verdicts.
+
+.risk-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &__gauge-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  &__band-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    // New four-band system
+    &--protected {
+      color: var(--color-low-risk);
+      background-color: rgba(74, 222, 128, 0.15);
+    }
+
+    &--mixed {
+      color: var(--color-medium-risk);
+      background-color: rgba(251, 191, 36, 0.15);
+    }
+
+    &--exposed {
+      color: #f97316; // orange
+      background-color: rgba(249, 115, 22, 0.15);
+    }
+
+    &--critical {
+      color: var(--color-high-risk);
+      background-color: rgba(248, 113, 113, 0.15);
+    }
+
+    // Legacy classes for backwards compatibility
+    &--low {
+      color: var(--color-low-risk);
+      background-color: rgba(74, 222, 128, 0.15);
+    }
+
+    &--moderate {
+      color: var(--color-medium-risk);
+      background-color: rgba(251, 191, 36, 0.15);
+    }
+
+    &--high {
+      color: var(--color-high-risk);
+      background-color: rgba(248, 113, 113, 0.15);
+    }
+  }
+
+  &__context {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+    max-width: 500px;
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__headline {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 2rem 0;
+    color: var(--color-text);
+  }
+
+  &__meaning {
+    margin: 0 0 1.5rem 0;
+    padding: 1.5rem;
+    text-align: left;
+    border-radius: 12px;
+
+    // Band-specific styling
+    &--protected {
+      border-left: 3px solid var(--color-low-risk);
+    }
+
+    &--mixed {
+      border-left: 3px solid var(--color-medium-risk);
+    }
+
+    &--exposed {
+      border-left: 3px solid #f97316;
+    }
+
+    &--critical {
+      border-left: 3px solid var(--color-high-risk);
+    }
+  }
+
+  &__meaning-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    color: var(--color-text);
+  }
+
+  &__meaning-action {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  // Killer sentence - "This isn't a verdict. It's a lens."
+  &__killer-sentence {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+    color: var(--color-accent);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--color-accent);
+    background-color: rgba(96, 165, 250, 0.05);
+    text-align: left;
+  }
+
+  &__disclaimer {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+    color: var(--color-text-secondary);
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--color-accent);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__cta-arrow {
+    transition: transform 0.2s ease;
+
+    .risk-score__cta:hover & {
+      transform: translateX(4px);
+    }
+  }
+
+  &__upgrade-section {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  // Risk Reduction Potential teaser - the "agency" moment
+  &__reduction-teaser {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  &__reduction-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__reduction-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(74, 222, 128, 0.15);
+    border-radius: 8px;
+    color: var(--color-low-risk);
+  }
+
+  &__reduction-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__reduction-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-low-risk);
+  }
+
+  &__reduction-value {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    line-height: 1.5;
+
+    strong {
+      color: var(--color-text);
+    }
+  }
+
+  &__reduction-numbers {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  &__reduction-from {
+    font-weight: 600;
+    color: var(--color-medium-risk);
+  }
+
+  &__reduction-arrow {
+    color: var(--color-text-secondary);
+  }
+
+  &__reduction-to {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-low-risk);
+  }
+
+  &__reduction-locked {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    svg {
+      opacity: 0.7;
+    }
+  }
+
+  // Percentage color classes for gauge
+  &__percentage {
+    &--protected {
+      color: var(--color-low-risk);
+    }
+
+    &--mixed {
+      color: var(--color-medium-risk);
+    }
+
+    &--exposed {
+      color: #f97316;
+    }
+
+    &--critical {
+      color: var(--color-high-risk);
+    }
+  }
+}

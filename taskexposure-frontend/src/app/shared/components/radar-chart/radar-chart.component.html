@@ -1,0 +1,69 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="radar-chart">
+  <svg [attr.viewBox]="'0 0 ' + size + ' ' + size" class="radar-chart__svg">
+    <!-- Grid circles -->
+    <g class="radar-chart__grid">
+      <polygon
+        *ngFor="let gridLine of gridLines; let i = index"
+        [attr.points]="gridLine"
+        class="radar-chart__grid-polygon"
+        [style.opacity]="0.15 + (i * 0.15)"
+      />
+    </g>
+
+    <!-- Axis lines -->
+    <g class="radar-chart__axes">
+      <path
+        *ngFor="let point of data; let i = index"
+        [attr.d]="getAxisLine(i)"
+        class="radar-chart__axis"
+      />
+    </g>
+
+    <!-- Data polygon -->
+    <polygon
+      *ngIf="polygonPoints"
+      [attr.points]="polygonPoints"
+      class="radar-chart__data"
+    />
+
+    <!-- Data points -->
+    <g class="radar-chart__points">
+      <circle
+        *ngFor="let dp of dataPoints"
+        [attr.cx]="dp.cx"
+        [attr.cy]="dp.cy"
+        r="5"
+        class="radar-chart__point"
+      />
+    </g>
+  </svg>
+
+  <!-- Labels -->
+  <div class="radar-chart__labels">
+    <div
+      *ngFor="let pos of labelPositions"
+      class="radar-chart__label"
+      [style.left.px]="pos.x"
+      [style.top.px]="pos.y"
+    >
+      <span class="radar-chart__label-text">{{ pos.label }}</span>
+      <span class="radar-chart__label-value">{{ pos.value }}%</span>
+    </div>
+  </div>
+</div>

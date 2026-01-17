@@ -1,0 +1,177 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.manual-input {
+  &__headline {
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 0.75rem 0;
+    color: var(--color-text);
+  }
+
+  &__subheadline {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+    color: var(--color-text-secondary);
+  }
+
+  &__instructions {
+    margin: 0 0 1.5rem 0;
+
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 0 0 0.25rem 0;
+      color: var(--color-text);
+    }
+  }
+
+  &__example {
+    margin: 0 0 2rem 0;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border-left: 3px solid var(--color-border);
+  }
+
+  &__example-bad {
+    font-size: 0.9375rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+  }
+
+  &__example-arrow {
+    font-size: 0.75rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__example-good {
+    font-size: 0.9375rem;
+    margin: 0;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  &__task-list {
+    margin: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__task {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  &__task-text {
+    font-size: 1rem;
+    color: var(--color-text);
+    flex: 1;
+    padding-right: 1rem;
+  }
+
+  &__task-remove {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      color: var(--color-high-risk);
+    }
+  }
+
+  &__input-area {
+    margin: 0 0 1.5rem 0;
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    resize: vertical;
+    margin-bottom: 0.75rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &__add-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    background-color: transparent;
+    border: 1px solid var(--color-accent);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-surface);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__counter {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 2rem 0;
+  }
+
+  &__cta {
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--color-accent);
+    border: none;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-accent-hover);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

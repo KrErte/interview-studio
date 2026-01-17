@@ -1,0 +1,543 @@
+{
+  "common": {
+    "continue": "Jätka",
+    "next": "Järgmine",
+    "back": "Tagasi",
+    "close": "Sulge",
+    "loading": "Laadimine...",
+    "error": "Tekkis viga"
+  },
+  "start": {
+    "badge": "Tehisintellekti mõju hindamine",
+    "headline": "Sinu ametinimetus ei ütle midagi sinu töö kohta. Vaatame, mida sa tegelikult teed.",
+    "subheadline": "Tehisintellekt ei automatiseeri töökohti—see automatiseerib ülesandeid. Mõnda sinu tööd teeb juba tehisintellekt. Mõnda ei suuda. Vahe pole sinu ametinimetuses. See peitub konkreetsetes tegevustes, mis täidavad sinu päevi.",
+    "body": "See võtab 10 minutit. Kirjelda 3–5 oma põhiülesannet. Me analüüsime neid oluliste mustrite osas—mitte selleks, et sind hirmutada, vaid näitamaks, kus peitub sinu võimendus.",
+    "killerSentence": "Me ei ennusta. Me selgitame.",
+    "timeEstimate": "10 minutit",
+    "requirements": "Kirjelda 3-5 põhiülesannet oma tegelikust tööst",
+    "sectionTitle": "Mida sa saad",
+    "deliverables": {
+      "analysis": "Ülesannete tasandi mõjuanalüüs",
+      "archetype": "Sinu tajutud tuleviku rolli arhetüüp",
+      "roadmap": "Personaalne tegevuskava"
+    },
+    "differentiators": {
+      "taskLevel": {
+        "title": "Ülesannete tasandi analüüs",
+        "description": "Põhineb sellel, mida sa tegelikult teed, mitte ametinimetustel"
+      },
+      "signalExtraction": {
+        "title": "Signaalianalüüs",
+        "description": "Me loeme mustreid sinu tööst, mitte valdkonna statistikast"
+      },
+      "agencyAffirming": {
+        "title": "Tegutsemisvõime kinnitamine",
+        "description": "Näitab, kus peitub sinu võimendus, mitte mida karta"
+      }
+    },
+    "cta": {
+      "primary": "Näita mulle, millega tegelen",
+      "variant1": "Alusta hindamist",
+      "variant2": "Alusta analüüsi"
+    }
+  },
+  "inputMethod": {
+    "headline": "Vali, kuidas soovid oma tööinfot jagada",
+    "body": "Mida täpsem on sinu sisend, seda täpsem on hindamine.",
+    "cv": {
+      "title": "Laadi üles oma CV",
+      "description": "Kiirem seadistus, kuid võib vajada täpsustamist",
+      "disabled": "Varsti tulekul"
+    },
+    "manual": {
+      "title": "Kirjelda ülesandeid käsitsi",
+      "description": "Võtab rohkem aega, kuid annab täpsemad tulemused"
+    },
+    "cta": {
+      "primary": "Jätka"
+    }
+  },
+  "manualInput": {
+    "headline": "Kirjelda mulle tüüpilist töönädalat. Mis tegelikult sinu aega võtab?",
+    "subheadline": "Ära loetle vastutusi. Kirjelda tegevusi.",
+    "killerSentence": "Detailid paljastavad tõe. Ole konkreetne.",
+    "instructions": {
+      "line1": "Mõtle, kuidas sa oma aega igal nädalal kasutad.",
+      "line2": "Keskendu tegevustele, mitte ametinimetustele või vastutustele."
+    },
+    "example": {
+      "bad": "\"Projektijuhtimine\"",
+      "good": "\"Juhin iganädalasi koosolekuid, jälitan inseneridelt uuendusi ja otsustan, millal probleeme eskaleerida\""
+    },
+    "transformation": {
+      "example1": {
+        "vague": "Projektijuhtimine",
+        "rich": "Juhin iganädalasi koosolekuid, jälitan inseneridelt uuendusi ja otsustan, millal probleeme eskaleerida"
+      },
+      "example2": {
+        "vague": "Andmeanalüüs",
+        "rich": "Kogun müügiandmeid, koostan risttabeleid ja kirjutan narratiivseid kokkuvõtteid mittetehnilistele kolleegidele"
+      }
+    },
+    "placeholder": "Kirjelda konkreetset ülesannet või tegevust... (nt \"Kulutan 3 tundi nädalas inseneridelt uuenduste jälitamiseks, kes ei vasta Slackis\")",
+    "counter": "{{current}} / {{min}}-{{max}} ülesannet lisatud",
+    "labels": {
+      "addTask": "Lisa ülesanne",
+      "remove": "Eemalda"
+    },
+    "cta": {
+      "primary": "Analüüsi neid ülesandeid",
+      "variant1": "Jätka analüüsiga",
+      "variant2": "Edasi"
+    }
+  },
+  "questions": {
+    "headline": "Mõned täpsustavad küsimused",
+    "subheadline": "Sarnaselt kõlavatel ülesannetel võivad olla väga erinevad mõjuprofiilid. Need küsimused aitavad meil neid eristada.",
+    "killerSentence": "Nendel küsimustel pole valesid vastuseid—ainult ausad.",
+    "progressLabel": "Küsimus {{current}} / {{total}}",
+    "labels": {
+      "next": "Järgmine küsimus",
+      "finish": "Vaata analüüsi"
+    },
+    "contextDependency": {
+      "prompt": "Mõtle viimase 5 tööpäeva peale. Mitut sinu lõpetatud ülesannet suudaks pädev uus töötaja teha esimesel päeval—ligipääsuga sinu failidele, aga ilma üleandmiseta sinult?",
+      "options": {
+        "almostAll": "Peaaegu kõiki",
+        "aboutHalf": "Umbes pooli",
+        "veryFew": "Väga väheseid",
+        "almostNone": "Peaaegu mitte ühtegi"
+      },
+      "signalUnlocked": "Institutsionaalse teadmuse sõltuvus"
+    },
+    "accountabilityScope": {
+      "prompt": "Kui sinu valdkonnas läheb midagi valesti, kes selgitab juhtkonnale, miks—sina või keegi teine?",
+      "options": {
+        "someoneElse": "Keegi teine",
+        "contribute": "Ma panustan",
+        "usuallyLead": "Tavaliselt mina juhatan",
+        "accountable": "Mina vastutan tulemuste eest"
+      },
+      "signalUnlocked": "Vastutuse kaal"
+    },
+    "environmentalPressure": {
+      "prompt": "Kas oled viimase 12 kuu jooksul tööl märganud midagi järgnevast?",
+      "options": {
+        "toolReplacement": "Tööriist teeb nüüd midagi, mida ma varem käsitsi tegin",
+        "reviewAiOutput": "Mul on palutud 'tehisintellekti väljundit üle vaadata' nullist loomise asemel",
+        "justifyHuman": "Mul on tulnud põhjendada, miks ülesanne vajab inimest automatiseerimise asemel"
+      },
+      "signalUnlocked": "Tegelik asendamise kiirus"
+    },
+    "cta": {
+      "primary": "Jätka"
+    }
+  },
+  "analysis": {
+    "headline": "Analüüsime sinu tööprofiili",
+    "subheadline": "Me loeme sinu tööd, mitte ei otsi sinu ametit.",
+    "killerSentence": "Me ei otsi sinu ametit. Me loeme sinu tööd.",
+    "processingSteps": {
+      "step1": "Kaardistame sinu ülesandeid tehisintellekti võimekuse valdkondadega...",
+      "step2": "Analüüsime otsustusmustreid ja hinnanguvajadusi...",
+      "step3": "Tuvastame sinu kõrgeima mõjuga tegevused...",
+      "step4": "Koostame sinu personaalset mõjuprofiili..."
+    },
+    "cta": {
+      "primary": "Vaata tulemusi"
+    }
+  },
+  "justification": {
+    "headline": "Analüüs valmis",
+    "subheadline": "Enne skoori näitamist on siin sinu hinnangu põhjendus.",
+    "capabilities": {
+      "title": "Kus tehisintellekti süsteemid toimivad hästi",
+      "description": "Need võimekused kattuvad osaliselt sinu kirjeldatud tööga:"
+    },
+    "limitations": {
+      "title": "Kus tehisintellekti süsteemid komistavad",
+      "description": "Need sinu töö aspektid jäävad automatiseerimiseks keeruliseks:"
+    },
+    "signalStrength": {
+      "title": "Hinnangu usaldusväärsus",
+      "label": "Signaali tugevus",
+      "explanation": {
+        "low": "Piiratud sisend muudab selle hinnangu vähem täpseks. Kaalu rohkemate ülesannete detailide lisamist täpsema analüüsi saamiseks.",
+        "moderate": "Piisav detail mõistliku hinnangu jaoks. Täiendav konkreetsus parandaks täpsust.",
+        "high": "Tugev sisendi kvaliteet. See hinnang peegeldab üksikasjalikku arusaama sinu tööst."
+      },
+      "learnMore": {
+        "title": "Kuidas signaali tugevust arvutatakse?",
+        "content": {
+          "line1": "Signaali tugevus näitab, kui palju infot meil töötamiseks on.",
+          "line2": "See arvestab: esitatud ülesannete arvu, kirjelduste konkreetsust ja täpsustavate vastuste järjepidevust.",
+          "line3": "Madal signaal ei tähenda kõrget ega madalat mõju. See tähendab, et hinnangul on laiemad usalduspiirid.",
+          "line4": "Signaali tugevust saab parandada rohkemate ülesannete või detailsemate kirjelduste lisamisega."
+        }
+      }
+    },
+    "cta": {
+      "primary": "Vaata oma skoori",
+      "variant1": "Vaata tulemusi",
+      "variant2": "Näita mu skoori"
+    }
+  },
+  "score": {
+    "headline": "Sinu tehisintellekti mõjuskoor",
+    "headlineTemplate": "Sinu praegusel tööl on {{score}}% ülesannete mõju tehisintellektile",
+    "killerSentence": "See pole kohtuotsus. See on vaatenurk.",
+    "band": {
+      "protected": {
+        "label": "Kaitstud",
+        "range": "<30%",
+        "meaning": "Sinu tööl on tugevad inimbarjäärid. Enamik sellest, mida teed, nõuab hinnangut, suhteid või vastutust, mida tehisintellekt ei suuda jäljendada.",
+        "action": "Sinu töö on hästi positsioneeritud. Vaata jaotust, et mõista miks."
+      },
+      "mixed": {
+        "label": "Segatud",
+        "range": "30-50%",
+        "meaning": "Sinu töö on automatiseeritavate ja ainult inimestele omaste ülesannete segu. Sinu võimalus: nihuta aega esimeselt teisele.",
+        "action": "On konkreetsed muudatused, mida saad teha tasakaalu nihutamiseks."
+      },
+      "exposed": {
+        "label": "Avatud",
+        "range": "50-70%",
+        "meaning": "Märkimisväärne osa sinu tööst järgib mustreid, millega tehisintellekt hästi hakkama saab. See pole kriis—see on signaal.",
+        "action": "Tegevuskava näitab, kuidas ümber positsioneeruda."
+      },
+      "critical": {
+        "label": "Kriitiline",
+        "range": ">70%",
+        "meaning": "Suurem osa sinu kirjeldatud tööst langeb sinna, kus tehisintellekt on juba võimekas. See nõuab aktiivset tähelepanu—mitte paanikat.",
+        "action": "Hea uudis: sihitud muudatused võivad seda mõju märkimisväärselt vähendada."
+      }
+    },
+    "reductionTeaser": {
+      "label": "Vähendamise potentsiaal",
+      "template": "{{changes}} sihitud muudatusega võib sinu mõju nihkuda",
+      "locked": "Vaata täisraportist, millised muudatused"
+    },
+    "disclaimer": "See on ülesannete mõjuhinnang, mitte töökaotuse prognoos. Mõju näitab kattuvust tehisintellekti võimekusega, mitte asendamise ajakava.",
+    "cta": {
+      "primary": "Vaata ülesannete jaotust",
+      "variant1": "Vaata jaotust",
+      "variant2": "Mõista seda skoori"
+    }
+  },
+  "breakdown": {
+    "headline": "Sinu töö pole üks asi. See on palju asju.",
+    "subheadline": "Iga ülesanne on määratud tuleviku rolli kategooriasse—mitte lihtsalt riskitasemetesse, vaid kuidas ülesanne eksisteerib 2-5 aasta pärast.",
+    "killerSentence": "Sinu töö pole üks asi. See on palju asju—mõned stabiilsed, mõned muutuvad.",
+    "sectionTitle": "Ülesannete analüüs",
+    "chartTitle": "Signaaliprofiil",
+    "chartCaption": "Kõrgemad väärtused näitavad suuremat kattuvust tehisintellekti võimekusega. Madalam on parem.",
+    "exposureLabels": {
+      "high": "Automatiseeritud",
+      "medium": "TI-toega",
+      "low": "Inimbarjäär"
+    },
+    "exposureDescriptors": {
+      "high": "Tehisintellekt teeb seda juba usaldusväärselt. Delegeeri tehisintellektile kohe.",
+      "medium": "Tehisintellekt teeb raske töö, sina pakud järelevalvet. Õpi orkestreerima.",
+      "low": "Nõuab usaldust, vastutust või ebaselgust, mida tehisintellekt ei suuda käsitleda. Laienda seda."
+    },
+    "taskCategories": {
+      "automated": {
+        "label": "AUTOMATISEERITUD",
+        "meaning": "Tehisintellekt teeb seda juba usaldusväärselt. Ülesanne kaob tõenäoliselt 1-3 aasta jooksul.",
+        "action": "Delegeeri tehisintellektile kohe. Vabasta aeg kõrgema väärtusega tööks."
+      },
+      "aiAssisted": {
+        "label": "TI-TOEGA",
+        "meaning": "Tehisintellekt teeb raske töö, vajalik on inimese järelevalve. Roll nihkub loojast toimetajaks.",
+        "action": "Õpi tehisintellekti orkestreerima. Nihuta väärtus täitmiselt hinnangule."
+      },
+      "humanMoat": {
+        "label": "INIMBARJÄÄR",
+        "meaning": "Nõuab usaldust, vastutust või ebaselgust, mida tehisintellekt ei suuda käsitleda. Kaitstud 5+ aastat.",
+        "action": "Laienda ja süvenda. Tee sellest suurem osa oma tööst."
+      }
+    },
+    "signalLabels": {
+      "routineDensity": "Rutiini tihedus",
+      "decisionAmbiguity": "Otsuste ebaselgus",
+      "trustDependency": "Usalduse sõltuvus",
+      "orchestration": "Orkestreerimine",
+      "accountability": "Vastutus"
+    },
+    "cta": {
+      "primary": "Vaata oma tegevuskava",
+      "variant1": "Vaata tegevusi",
+      "variant2": "Mida saan teha?"
+    }
+  },
+  "roadmap": {
+    "headline": "Sinu mõju pole fikseeritud. Siin on, kuidas see nihkub.",
+    "subheadline": "Need soovitused on spetsiifilised sinu ülesannete profiilile. Igaüks neist nihutab tööd valdkondadesse, kus inimese hinnang jääb oluliseks.",
+    "killerSentence": "Eesmärk pole tehisintellektist ette joosta. Eesmärk on töötada seal, kuhu tehisintellekt ei saa järgneda.",
+    "actionPrefix": "Tegevus",
+    "impactLabel": "Oodatav mõju",
+    "progressLabels": {
+      "actionsCommitted": "tegevust lubatud",
+      "potentialShift": "potentsiaalne nihe"
+    },
+    "progressHints": {
+      "empty": "Märgi tegevused, mille võtad ette",
+      "partial": "{{count}} tegevus lubatud. Jätka.",
+      "partialPlural": "{{count}} tegevust lubatud. Jätka.",
+      "complete": "Kõik tegevused lubatud. Valmis oma tööd muutma."
+    },
+    "actionCategories": {
+      "delegateToAi": {
+        "title": "Delegeeri tehisintellektile",
+        "description": "\"Automatiseeritud\" kategooria ülesanded, mida ikka veel käsitsi teed. Lõpeta nende tegemine või kasuta tehisintellekti tööriistu nende kokku surumiseks."
+      },
+      "elevateRole": {
+        "title": "Tõsta oma rolli",
+        "description": "\"TI-toega\" ülesanded, kus saad liikuda täitjast orkestraatoriks."
+      },
+      "amplifyMoat": {
+        "title": "Võimenda oma barjääri",
+        "description": "\"Inimbarjääri\" ülesanded, mida peaksid teadlikult laiendama või süvendama."
+      }
+    },
+    "difficultyLabels": {
+      "easy": "Kiire võit",
+      "medium": "Mõõdukas pingutus",
+      "hard": "Pikaajaline"
+    },
+    "cta": {
+      "primary": "Vaata kokkuvõtet",
+      "variant1": "Lõpeta hindamine",
+      "variant2": "Valmis"
+    }
+  },
+  "summary": {
+    "headline": "Hindamine lõpetatud",
+    "subheadline": "Sinu tulemused on valmis.",
+    "killerSentence": "Teadmisest ei piisa. Mida teed teisiti?",
+    "sections": {
+      "score": "Üldine mõju",
+      "highExposure": "Kõrgeima mõjuga ülesanded",
+      "lowExposure": "Tugevaimad inimbarjäärid",
+      "topAction": "Prioriteetne tegevus",
+      "archetype": "Sinu tajutud tuleviku roll",
+      "committedActions": "Tegevused, mille oled lubanud"
+    },
+    "download": "Lae raport alla",
+    "nextSteps": "Vaata üle soovitatud tegevused ja kaalu, kuidas need sinu praegusele rollile kohalduvad.",
+    "returnPrompt": "Sellised hindamised on kõige kasulikumad, kui neid korratakse iga 3-6 kuu tagant. Sinu töö muutub. Nii peaks ka sinu strateegia.",
+    "cta": {
+      "primary": "Lae alla täisraport",
+      "variant1": "Salvesta raport",
+      "variant2": "Ekspordi tulemused"
+    }
+  },
+  "scenario": {
+    "headline": "Kaks teed edasi",
+    "subheadline": "Muutus tuleb mõlemal juhul. Ainus küsimus on, kas sina juhid seda.",
+    "killerSentence": "Muutus tuleb mõlemal juhul. Ainus küsimus on, kas sina juhid seda.",
+    "doNothing": {
+      "title": "KUI SA EI TEE MIDAGI",
+      "timeframes": {
+        "months6": "Praegune töö jätkub, aga tajutav väärtus langeb, kui teised võtavad tehisintellekti tööriistad kasutusele.",
+        "months12": "Ülesanded, mida teed käsitsi, muutuvad ootusteks, mida tehisintellekt lahendab. Rohkem tööd, vähem eristumist.",
+        "months24": "Kui restruktureerimine toimub, näeb sinu roll välja nagu lisakulu. Võistled nendega, kes kohanesid."
+      }
+    },
+    "ifYouAct": {
+      "title": "KUI SA TEGUTSED",
+      "timeframes": {
+        "months6": "Võtad kasutusele tehisintellekti tööriistad automatiseeritavateks ülesanneteks, vabastades aega kõrgema hinnangu tööks.",
+        "months12": "Tuntud hinnangu ja orkestreerimise, mitte täitmise poolest. Mõjuskoor langeb.",
+        "months24": "Kui restruktureerimine toimub, oled positsioneeritud töös, mida tehisintellekt ei saa asendada. Nihe kiirendas sind."
+      }
+    },
+    "timeLabels": {
+      "months6": "6 kuud",
+      "months12": "12 kuud",
+      "months24": "24 kuud"
+    },
+    "supportingCopy": "Enamik professionaale kohaneb lõpuks. Need, kes kohanevad esimesena, ei jää ainult ellu—nad saavad võimenduse. Aken ei sulgu, aga see kitseneb."
+  },
+  "archetype": {
+    "aiOrchestrator": {
+      "name": "TI Orkestraator",
+      "signalProfile": "Kõrge orkestreerimine, mõõdukas rutiin",
+      "futurePosition": "Juhib tehisintellekti süsteeme, kvaliteedikontroll, erandjuhtude käsitlemine",
+      "description": "Koordineerid keerulisi töövooge ja haldad tehisintellekti väljundeid. Sinu väärtus peitub teadmises, millal usaldada automatiseerimist ja millal sekkuda."
+    },
+    "judgmentSpecialist": {
+      "name": "Hinnanguekspert",
+      "signalProfile": "Kõrge ebaselgus, kõrge vastutus, kõrge uudsus",
+      "futurePosition": "Teeb otsuseid, mida tehisintellekt ei suuda, käsitleb ebaselgeid olukordi",
+      "description": "Käsitled olukordi, kus õige vastus pole selge. Sinu kogemus ja instinkt juhivad otsuseid, mida algoritmid ei suuda teha."
+    },
+    "relationshipAnchor": {
+      "name": "Suhete ankur",
+      "signalProfile": "Kõrge usalduse sõltuvus, mõõdukas orkestreerimine",
+      "futurePosition": "Organisatsiooni inimlik nägu, usalduspõhised suhtlused",
+      "description": "Oled inimlik ühendus digitaalses maailmas. Kliendid ja kolleegid usaldavad sind, sest suhteid ei saa automatiseerida."
+    },
+    "hybridProfessional": {
+      "name": "Hübriidprofessionaal",
+      "signalProfile": "Tasakaalustatud signaalid dimensioonide lõikes",
+      "futurePosition": "TI-toega ja ainult inimestele omase töö segu",
+      "description": "Sinu töö ulatub mitmesse valdkonda. Mõned ülesanded nihkuvad tehisintellektile, teised jäävad sulle. Paindlikkus on sinu eelis."
+    },
+    "transitionCandidate": {
+      "name": "Ülemineku kandidaat",
+      "signalProfile": "Kõrge rutiin, madal ebaselgus, madal vastutus",
+      "futurePosition": "Töö on kergesti automatiseeritav—vajalik on aktiivne ümberpositsioneerumine",
+      "description": "Suur osa sinu praegusest tööst järgib ennustatavaid mustreid. Allolev tegevuskava keskendub ümberpositsioneerumisele kõrgema hinnangu tegevuste suunas."
+    }
+  },
+  "taskCategory": {
+    "automated": {
+      "label": "Automatiseeritud",
+      "meaning": "Tehisintellekt teeb seda juba usaldusväärselt. Ülesanne kaob tõenäoliselt 1-3 aasta jooksul.",
+      "userAction": "Delegeeri tehisintellektile kohe. Vabasta aeg kõrgema väärtusega tööks."
+    },
+    "aiAssisted": {
+      "label": "TI-toega",
+      "meaning": "Tehisintellekt teeb raske töö, vajalik on inimese järelevalve. Roll nihkub loojast toimetajaks.",
+      "userAction": "Õpi tehisintellekti orkestreerima. Nihuta väärtus täitmiselt hinnangule."
+    },
+    "humanMoat": {
+      "label": "Inimbarjäär",
+      "meaning": "Nõuab usaldust, vastutust või ebaselgust, mida tehisintellekt ei suuda käsitleda. Kaitstud 5+ aastat.",
+      "userAction": "Laienda ja süvenda. Tee sellest suurem osa oma tööst."
+    }
+  },
+  "upgrade": {
+    "headline": "Ava täisraport",
+    "features": {
+      "detailed": "Detailne ülesannete analüüs",
+      "personalized": "Personaalne tegevuskava",
+      "reduction": "Mõju vähendamise strateegiad"
+    },
+    "cta": {
+      "upgrade": "Täienda kohe",
+      "continueFree": "Jätka tasuta versiooniga"
+    }
+  },
+  "evidenceLog": {
+    "title": "Tõendite logi",
+    "subtitle": "Koht kohanemishetkede salvestamiseks. Ei survet, ei triipe—lihtsalt vaikne kirje sellest, mis sinu töös muutub.",
+    "nav": "Tõendite logi",
+    "quickAdd": {
+      "title": "Jäädvusta hetk",
+      "placeholder": "Millist kohanemist märkasid? (5-120 tähemärki)",
+      "save": "Salvesta",
+      "moreOptions": "Rohkem valikuid",
+      "lessOptions": "Vähem valikuid"
+    },
+    "form": {
+      "title": "Pealkiri",
+      "notes": "Märkmed",
+      "notesPlaceholder": "Lisa täiendav kontekst või mõtisklused...",
+      "tags": "Sildid",
+      "tagsPlaceholder": "Kirjuta ja vajuta Enter lisamiseks",
+      "tagsHint": "Kuni 5 silti, igaüks 2-24 tähemärki",
+      "impact": "Mõju"
+    },
+    "validation": {
+      "titleRequired": "Pealkiri on kohustuslik",
+      "titleMinLength": "Pealkiri peab olema vähemalt 5 tähemärki",
+      "titleMaxLength": "Pealkiri peab olema kuni 120 tähemärki",
+      "notesMaxLength": "Märkmed peavad olema kuni 1000 tähemärki"
+    },
+    "impact": {
+      "low": "Madal",
+      "medium": "Keskmine",
+      "high": "Kõrge"
+    },
+    "filters": {
+      "searchPlaceholder": "Otsi kirjeid...",
+      "impactAll": "Kõik mõjud",
+      "timeAll": "Kogu aeg",
+      "last7Days": "Viimased 7 päeva",
+      "last30Days": "Viimased 30 päeva",
+      "tags": "Sildid",
+      "clearAll": "Tühista filtrid",
+      "statusAll": "Kõik staatused"
+    },
+    "status": {
+      "fresh": "Värske",
+      "stale": "Vananev",
+      "old": "Vana",
+      "archive": "Arhiiv"
+    },
+    "decay": {
+      "weight": "Tugevus",
+      "age": "{{days}} päeva vana"
+    },
+    "audit": {
+      "title": "Tõendite tervis",
+      "averageWeight": "Keskmine tugevus",
+      "needsAttention": "Vajab tähelepanu",
+      "byStatus": "Staatuse järgi"
+    },
+    "entry": {
+      "showMore": "Näita rohkem",
+      "showLess": "Näita vähem"
+    },
+    "actions": {
+      "edit": "Muuda",
+      "delete": "Kustuta",
+      "reanchor": "Ankurda uuesti"
+    },
+    "edit": {
+      "title": "Muuda kirjet",
+      "save": "Salvesta muudatused"
+    },
+    "delete": {
+      "title": "Kustuta kirje",
+      "confirmation": "Kas oled kindel, et soovid selle kirje kustutada? Seda toimingut ei saa tagasi võtta.",
+      "confirm": "Kustuta"
+    },
+    "empty": {
+      "title": "Kirjeid veel pole",
+      "description": "Alusta oma kohanemishetkede jäädvustamist. Pole õiget ega valet—lihtsalt pane kirja, mida märkad.",
+      "noResults": "Sobivaid kirjeid ei leitud",
+      "tryDifferentFilters": "Proovi filtreid kohandada, et näha rohkem kirjeid."
+    },
+    "insights": {
+      "title": "See kuu",
+      "totalEntries": "Kirjeid kokku (30 päeva)",
+      "topTags": "Populaarsemad sildid",
+      "byImpact": "Mõju järgi"
+    },
+    "messages": {
+      "saved": "Kirje salvestatud",
+      "updated": "Kirje uuendatud",
+      "deleted": "Kirje kustutatud",
+      "anchored": "Kirje uuesti ankurdatud"
+    },
+    "errors": {
+      "loadFailed": "Kirjete laadimine ebaõnnestus",
+      "saveFailed": "Kirje salvestamine ebaõnnestus",
+      "updateFailed": "Kirje uuendamine ebaõnnestus",
+      "deleteFailed": "Kirje kustutamine ebaõnnestus",
+      "anchorFailed": "Kirje uuesti ankurdamine ebaõnnestus"
+    }
+  },
+  "simulator": {
+    "title": "Mis siis, kui...",
+    "tabs": {
+      "skill": "Õpi oskus",
+      "aiCapability": "TI areng"
+    },
+    "currentExposure": "Sinu praegune mõju:",
+    "selectSkill": "Vali oskus simuleerimiseks:",
+    "selectAiCapability": "Vali TI võimekuse areng:",
+    "simulating": "Arvutan mõju...",
+    "resultTitle": "SIMULEERITUD TULEMUS",
+    "result": {
+      "ifLearn": "Kui õpid {{name}}...",
+      "ifAiGains": "Kui TI omandab {{name}}...",
+      "affectedTasks": "Mõjutatud ülesanded:"
+    },
+    "disclaimer": "See on simulatsioon, mis põhineb valdkonna mustritel"
+  }
+}

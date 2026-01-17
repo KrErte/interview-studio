@@ -1,0 +1,94 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- 3.5 Score Screen - "The Mirror Moment" -->
+<div class="risk-score">
+  <div class="risk-score__gauge-section">
+    <app-animated-gauge
+      [targetScore]="score"
+      [animationDuration]="2000"
+      (animationComplete)="onAnimationComplete()">
+    </app-animated-gauge>
+
+    <div class="risk-score__band-label" [ngClass]="bandColorClass" [class.risk-score__band-label--visible]="showContext">
+      {{ scoreMeaning.label }}
+    </div>
+  </div>
+
+  <div class="risk-score__context" [class.risk-score__context--visible]="showContext">
+    <h1 class="risk-score__headline">{{ copy.headline }}</h1>
+
+    <div class="glass-card risk-score__meaning" [ngClass]="'risk-score__meaning--' + exposureBand">
+      <p class="risk-score__meaning-text">{{ scoreMeaning.meaning }}</p>
+      <p class="risk-score__meaning-action">{{ scoreMeaning.action }}</p>
+    </div>
+
+    <!-- Killer Sentence -->
+    <p class="risk-score__killer-sentence" *ngIf="copy.killerSentence">
+      {{ copy.killerSentence }}
+    </p>
+
+    <!-- Risk Reduction Potential teaser (non-premium only) -->
+    @if (!premium.isPremium) {
+      <div class="risk-score__reduction-teaser">
+        <div class="risk-score__reduction-content">
+          <div class="risk-score__reduction-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 6l-9.5 9.5-5-5L1 18"/>
+              <path d="M17 6h6v6"/>
+            </svg>
+          </div>
+          <div class="risk-score__reduction-text">
+            <span class="risk-score__reduction-label">Reduction potential</span>
+            <span class="risk-score__reduction-value">
+              With <strong>{{ changesNeeded }} targeted changes</strong>, your exposure could shift
+              <span class="risk-score__reduction-numbers">
+                <span class="risk-score__reduction-from">{{ score }}%</span>
+                <span class="risk-score__reduction-arrow">&rarr;</span>
+                <span class="risk-score__reduction-to">~{{ potentialReducedScore }}%</span>
+              </span>
+            </span>
+          </div>
+        </div>
+        <div class="risk-score__reduction-locked">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          See which changes in full report
+        </div>
+      </div>
+    }
+
+    <p class="risk-score__disclaimer">{{ copy.disclaimer }}</p>
+
+    <!-- Show upgrade CTA for non-premium users -->
+    @if (!premium.isPremium) {
+      <div class="risk-score__upgrade-section">
+        <app-upgrade-cta
+          variant="inline"
+          (upgrade)="onUpgrade()"
+          (continueFree)="onContinue()"
+        ></app-upgrade-cta>
+      </div>
+    } @else {
+      <button type="button" class="risk-score__cta" (click)="onContinue()">
+        {{ copy.cta.primary }}
+        <span class="risk-score__cta-arrow">&rarr;</span>
+      </button>
+    }
+  </div>
+</div>

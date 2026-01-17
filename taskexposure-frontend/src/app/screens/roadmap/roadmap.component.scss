@@ -1,0 +1,391 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.roadmap {
+  &__headline {
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 0.75rem 0;
+    color: var(--color-text);
+  }
+
+  &__subheadline {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    color: var(--color-text-secondary);
+  }
+
+  // Killer sentence
+  &__killer-sentence {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 2rem 0;
+    color: var(--color-accent);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--color-accent);
+    background-color: rgba(96, 165, 250, 0.05);
+  }
+
+  // Progress Dashboard
+  &__progress-dashboard {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  &__progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  &__progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__progress-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'SF Mono', monospace;
+    color: var(--color-text);
+  }
+
+  &__progress-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+  }
+
+  &__impact-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  &__impact-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'SF Mono', monospace;
+    color: var(--color-low-risk);
+  }
+
+  &__impact-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+  }
+
+  &__progress-bar-container {
+    height: 8px;
+    background-color: var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-low-risk));
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+  }
+
+  &__progress-hint {
+    font-size: 0.8125rem;
+    margin: 0.75rem 0 0 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+
+    &--success {
+      color: var(--color-low-risk);
+    }
+  }
+
+  // Actions
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0 0 2rem 0;
+  }
+
+  &__action {
+    position: relative;
+    padding: 1.5rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &--completed {
+      border-color: var(--color-low-risk) !important;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.15) !important;
+    }
+
+    &--celebrating {
+      animation: celebrate-card 0.5s ease-out;
+    }
+  }
+
+  @keyframes celebrate-card {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  // Celebration confetti
+  &__celebration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  &__confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: confetti 1s ease-out forwards;
+
+    &--1 {
+      background: var(--color-low-risk);
+      left: 20%;
+      animation-delay: 0s;
+    }
+    &--2 {
+      background: var(--color-accent);
+      left: 40%;
+      animation-delay: 0.1s;
+    }
+    &--3 {
+      background: var(--color-medium-risk);
+      left: 60%;
+      animation-delay: 0.2s;
+    }
+    &--4 {
+      background: var(--color-low-risk);
+      left: 80%;
+      animation-delay: 0.3s;
+    }
+  }
+
+  @keyframes confetti {
+    0% {
+      top: 50%;
+      opacity: 1;
+      transform: scale(0);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      top: -20px;
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  &__action-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__checkbox {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: transparent;
+    border: 2px solid var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    &:hover {
+      border-color: var(--color-accent);
+    }
+
+    &--checked {
+      background-color: var(--color-low-risk);
+      border-color: var(--color-low-risk);
+      color: #ffffff;
+    }
+  }
+
+  &__action-info {
+    flex: 1;
+  }
+
+  &__action-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__action-number {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+  }
+
+  // Action categories (from Persona Engine spec)
+  &__action-category {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+
+    &--rose {
+      background-color: rgba(248, 113, 113, 0.15);
+      color: var(--color-high-risk);
+    }
+
+    &--amber {
+      background-color: rgba(251, 191, 36, 0.15);
+      color: var(--color-medium-risk);
+    }
+
+    &--emerald {
+      background-color: rgba(74, 222, 128, 0.15);
+      color: var(--color-low-risk);
+    }
+  }
+
+  &__difficulty {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+
+    &--easy {
+      background-color: rgba(74, 222, 128, 0.15);
+      color: var(--color-low-risk);
+    }
+
+    &--medium {
+      background-color: rgba(251, 191, 36, 0.15);
+      color: var(--color-medium-risk);
+    }
+
+    &--hard {
+      background-color: rgba(96, 165, 250, 0.15);
+      color: var(--color-accent);
+    }
+  }
+
+  &__action-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--color-text);
+
+    .roadmap__action--completed & {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+  }
+
+  &__action-impact-badge {
+    flex-shrink: 0;
+    padding: 0.5rem 0.75rem;
+    background-color: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 4px;
+  }
+
+  &__impact-number {
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: 'SF Mono', monospace;
+    color: var(--color-low-risk);
+  }
+
+  &__action-explanation {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    padding-left: 2.5rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__action-impact {
+    font-size: 0.875rem;
+    margin: 0;
+    margin-left: 2.5rem;
+    padding: 0.75rem;
+    background-color: rgba(74, 222, 128, 0.1);
+    color: var(--color-text-secondary);
+  }
+
+  &__action-impact-label {
+    font-weight: 500;
+    color: var(--color-low-risk);
+  }
+
+  // CTA
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: var(--color-accent);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-accent-hover);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__cta-arrow {
+    transition: transform 0.2s ease;
+
+    .roadmap__cta:hover & {
+      transform: translateX(4px);
+    }
+  }
+}

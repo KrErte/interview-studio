@@ -1,0 +1,78 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="data-table">
+  <table class="data-table__table">
+    <thead class="data-table__head">
+      <tr>
+        @for (column of columns; track column.key) {
+          <th
+            class="data-table__th"
+            [style.width]="column.width || 'auto'"
+          >
+            {{ column.label }}
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody class="data-table__body">
+      @if (rows.length === 0) {
+        <tr class="data-table__row data-table__row--empty">
+          <td [attr.colspan]="columns.length" class="data-table__td data-table__td--empty">
+            {{ emptyMessage }}
+          </td>
+        </tr>
+      } @else {
+        @for (row of rows; track row.id) {
+          <tr
+            class="data-table__row"
+            [class.data-table__row--selected]="selectedRowId === row.id"
+            (click)="onRowClick(row)"
+          >
+            @for (column of columns; track column.key) {
+              <td class="data-table__td">
+                @switch (column.type) {
+                  @case ('badge') {
+                    <span class="status-badge" [ngClass]="getBadgeClass(getCellValue(row, column))">
+                      {{ getCellValue(row, column) }}
+                    </span>
+                  }
+                  @case ('score') {
+                    <span class="data-table__score" [ngClass]="'data-table__score--' + getScoreColor(getCellValue(row, column))">
+                      {{ getCellValue(row, column) }}
+                    </span>
+                  }
+                  @case ('score-bar') {
+                    <div class="data-table__score-bar">
+                      <app-score-bar
+                        [value]="$any(getCellValue(row, column))"
+                        [segments]="5"
+                        [color]="getScoreColor(getCellValue(row, column))"
+                      ></app-score-bar>
+                    </div>
+                  }
+                  @default {
+                    {{ getCellValue(row, column) }}
+                  }
+                }
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>

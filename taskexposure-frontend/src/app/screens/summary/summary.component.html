@@ -1,0 +1,171 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- 3.8 Summary Screen - "The Commitment" -->
+<div class="summary">
+  <header class="summary__header">
+    <h1 class="summary__headline">{{ copy.headline }}</h1>
+    <p class="summary__subheadline">{{ copy.subheadline }}</p>
+  </header>
+
+  <!-- Killer Sentence -->
+  <p class="summary__killer-sentence" *ngIf="copy.killerSentence">
+    {{ copy.killerSentence }}
+  </p>
+
+  <!-- KPI Grid -->
+  <section class="summary__kpis">
+    <app-kpi-grid [items]="kpiItems" [columns]="3"></app-kpi-grid>
+  </section>
+
+  <!-- Persona Archetype Display -->
+  <section class="summary__archetype">
+    <div class="glass-card summary__archetype-card" [ngClass]="'glass-card--' + personaArchetype.color">
+      <h2 class="summary__section-title">{{ copy.sections.archetype }}</h2>
+      <div class="summary__archetype-content">
+        <span class="summary__archetype-name">{{ personaArchetype.name }}</span>
+        <p class="summary__archetype-signal">{{ personaArchetype.signalProfile }}</p>
+        <p class="summary__archetype-position">{{ personaArchetype.futurePosition }}</p>
+        <p class="summary__archetype-desc">{{ personaArchetype.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Task Breakdown -->
+  <div class="summary__breakdown">
+    <div class="summary__column" *ngIf="highExposureTasks.length > 0">
+      <div class="glass-card glass-card--rose summary__card">
+        <h2 class="summary__section-title">{{ copy.sections.highExposure }}</h2>
+        <ul class="summary__list">
+          <li *ngFor="let task of highExposureTasks">
+            <span class="status-badge status-badge--error">Automated</span>
+            {{ task.description }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="summary__column" *ngIf="lowExposureTasks.length > 0">
+      <div class="glass-card glass-card--emerald summary__card">
+        <h2 class="summary__section-title">{{ copy.sections.lowExposure }}</h2>
+        <ul class="summary__list">
+          <li *ngFor="let task of lowExposureTasks">
+            <span class="status-badge status-badge--success">Human Moat</span>
+            {{ task.description }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Committed Actions -->
+  <div class="summary__committed" *ngIf="committedActions.length > 0">
+    <div class="glass-card glass-card--purple summary__card">
+      <h2 class="summary__section-title">{{ copy.sections.committedActions }}</h2>
+      <ul class="summary__committed-list">
+        <li *ngFor="let action of committedActions; let i = index">
+          <span class="summary__committed-number">{{ i + 1 }}</span>
+          <span class="summary__committed-text">{{ action.description }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Priority Action (fallback if no committed actions) -->
+  <div class="summary__priority" *ngIf="committedActions.length === 0 && topAction">
+    <div class="glass-card glass-card--accent summary__card">
+      <h2 class="summary__section-title">{{ copy.sections.topAction }}</h2>
+      <p class="summary__action-title">{{ topAction.title || topAction.description }}</p>
+      <p class="summary__action-desc">{{ topAction.explanation || topAction.mechanism }}</p>
+    </div>
+  </div>
+
+  <!-- What-If Simulator -->
+  <section class="summary__simulator">
+    <app-simulator
+      [sessionId]="sessionId ?? undefined"
+      [currentExposure]="riskScore"
+      [tasks]="tasks"
+    ></app-simulator>
+  </section>
+
+  <!-- "If You Do Nothing vs If You Act" Scenario View -->
+  <section class="summary__scenario">
+    <button
+      type="button"
+      class="summary__scenario-toggle"
+      (click)="toggleScenario()"
+    >
+      {{ scenarioCopy.headline }}
+      <span class="summary__toggle-icon">{{ showScenario ? '−' : '+' }}</span>
+    </button>
+
+    <div class="summary__scenario-content" *ngIf="showScenario">
+      <p class="summary__scenario-subheadline">{{ scenarioCopy.subheadline }}</p>
+
+      <div class="summary__scenario-grid">
+        <!-- If You Do Nothing -->
+        <div class="glass-card glass-card--rose summary__scenario-path summary__scenario-path--nothing">
+          <h3 class="summary__scenario-path-title">{{ scenarioCopy.doNothing.title }}</h3>
+          <ul class="summary__scenario-timeline">
+            <li>
+              <span class="summary__timeline-marker">6 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.doNothing.timeframes.months6 }}</span>
+            </li>
+            <li>
+              <span class="summary__timeline-marker">12 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.doNothing.timeframes.months12 }}</span>
+            </li>
+            <li>
+              <span class="summary__timeline-marker">24 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.doNothing.timeframes.months24 }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- If You Act -->
+        <div class="glass-card glass-card--emerald summary__scenario-path summary__scenario-path--act">
+          <h3 class="summary__scenario-path-title">{{ scenarioCopy.ifYouAct.title }}</h3>
+          <ul class="summary__scenario-timeline">
+            <li>
+              <span class="summary__timeline-marker">6 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.ifYouAct.timeframes.months6 }}</span>
+            </li>
+            <li>
+              <span class="summary__timeline-marker">12 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.ifYouAct.timeframes.months12 }}</span>
+            </li>
+            <li>
+              <span class="summary__timeline-marker">24 months</span>
+              <span class="summary__timeline-text">{{ scenarioCopy.ifYouAct.timeframes.months24 }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="summary__scenario-support">{{ scenarioCopy.supportingCopy }}</p>
+    </div>
+  </section>
+
+  <p class="summary__next-steps">{{ copy.nextSteps }}</p>
+  <p class="summary__return-prompt">{{ copy.returnPrompt }}</p>
+
+  <div class="summary__options">
+    <button type="button" class="summary__download" (click)="downloadReport()">
+      {{ copy.cta.primary }}
+    </button>
+  </div>
+</div>

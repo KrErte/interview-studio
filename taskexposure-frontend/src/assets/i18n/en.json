@@ -1,0 +1,543 @@
+{
+  "common": {
+    "continue": "Continue",
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "start": {
+    "badge": "AI Exposure Assessment",
+    "headline": "Your job title says nothing about your work. Let's look at what you actually do.",
+    "subheadline": "AI doesn't automate jobs—it automates tasks. Some of what you do is already being done by AI. Some of it can't be. The difference isn't your title. It's the specific activities that fill your days.",
+    "body": "This takes 10 minutes. You'll describe 3–5 of your core tasks. We'll analyze them for patterns that matter—not to scare you, but to show you where your leverage is.",
+    "killerSentence": "We don't predict. We clarify.",
+    "timeEstimate": "10 minutes",
+    "requirements": "Describe 3-5 core tasks from your actual work",
+    "sectionTitle": "What you will receive",
+    "deliverables": {
+      "analysis": "Task-level exposure analysis",
+      "archetype": "Your perceived future role archetype",
+      "roadmap": "Personalized action roadmap"
+    },
+    "differentiators": {
+      "taskLevel": {
+        "title": "Task-Level Analysis",
+        "description": "Based on what you actually do, not job titles"
+      },
+      "signalExtraction": {
+        "title": "Signal Extraction",
+        "description": "We read patterns in your work, not industry statistics"
+      },
+      "agencyAffirming": {
+        "title": "Agency-Affirming",
+        "description": "Shows you where your leverage is, not what to fear"
+      }
+    },
+    "cta": {
+      "primary": "Show me what I'm working with",
+      "variant1": "Begin assessment",
+      "variant2": "Start my analysis"
+    }
+  },
+  "inputMethod": {
+    "headline": "Choose how to provide your work information",
+    "body": "The more specific your input, the more accurate your assessment.",
+    "cv": {
+      "title": "Upload your CV",
+      "description": "Faster setup, but may need refinement",
+      "disabled": "Coming soon"
+    },
+    "manual": {
+      "title": "Describe your tasks manually",
+      "description": "Takes longer, but produces more accurate results"
+    },
+    "cta": {
+      "primary": "Continue"
+    }
+  },
+  "manualInput": {
+    "headline": "Walk me through a typical week. What actually takes your time?",
+    "subheadline": "Don't list responsibilities. Describe activities.",
+    "killerSentence": "The details reveal the truth. Be specific.",
+    "instructions": {
+      "line1": "Think about how you spend your time each week.",
+      "line2": "Focus on activities, not titles or responsibilities."
+    },
+    "example": {
+      "bad": "\"Project management\"",
+      "good": "\"I run weekly standups, chase engineers for updates, and decide when to escalate blockers\""
+    },
+    "transformation": {
+      "example1": {
+        "vague": "Project management",
+        "rich": "I run weekly standups, chase engineers for updates, and decide when to escalate blockers"
+      },
+      "example2": {
+        "vague": "Data analysis",
+        "rich": "I pull sales data, build pivot tables, and write narrative summaries for non-technical stakeholders"
+      }
+    },
+    "placeholder": "Describe a specific task or activity... (e.g., \"I spend 3 hours weekly chasing updates from engineers who don't respond to Slack\")",
+    "counter": "{{current}} of {{min}}-{{max}} tasks added",
+    "labels": {
+      "addTask": "Add task",
+      "remove": "Remove"
+    },
+    "cta": {
+      "primary": "Analyze these tasks",
+      "variant1": "Continue to analysis",
+      "variant2": "Proceed"
+    }
+  },
+  "questions": {
+    "headline": "A few clarifying questions",
+    "subheadline": "Similar-sounding tasks can have very different exposure profiles. These questions help us distinguish between them.",
+    "killerSentence": "These questions have no wrong answers—only honest ones.",
+    "progressLabel": "Question {{current}} of {{total}}",
+    "labels": {
+      "next": "Next question",
+      "finish": "See analysis"
+    },
+    "contextDependency": {
+      "prompt": "Think about your last 5 working days. How many of your completed tasks could a competent new hire do on day one—with access to your files, but no handover from you?",
+      "options": {
+        "almostAll": "Almost all of them",
+        "aboutHalf": "About half",
+        "veryFew": "Very few",
+        "almostNone": "Almost none"
+      },
+      "signalUnlocked": "Institutional knowledge dependency"
+    },
+    "accountabilityScope": {
+      "prompt": "When something goes wrong in your area, who explains why to leadership—you, or someone else?",
+      "options": {
+        "someoneElse": "Someone else",
+        "contribute": "I contribute",
+        "usuallyLead": "I usually lead",
+        "accountable": "I'm accountable for outcomes"
+      },
+      "signalUnlocked": "Accountability weight"
+    },
+    "environmentalPressure": {
+      "prompt": "In the past 12 months, have you noticed any of these at work?",
+      "options": {
+        "toolReplacement": "A tool now does something I used to do manually",
+        "reviewAiOutput": "I've been asked to 'review AI output' instead of creating from scratch",
+        "justifyHuman": "I've had to justify why a task needs a human instead of automation"
+      },
+      "signalUnlocked": "Real-world displacement velocity"
+    },
+    "cta": {
+      "primary": "Continue"
+    }
+  },
+  "analysis": {
+    "headline": "Analyzing your work profile",
+    "subheadline": "We're reading your work, not looking up your job.",
+    "killerSentence": "We're not looking up your job. We're reading your work.",
+    "processingSteps": {
+      "step1": "Mapping your tasks to AI capability domains...",
+      "step2": "Analyzing decision patterns and judgment requirements...",
+      "step3": "Identifying your highest-leverage activities...",
+      "step4": "Building your personalized exposure profile..."
+    },
+    "cta": {
+      "primary": "View your results"
+    }
+  },
+  "justification": {
+    "headline": "Analysis complete",
+    "subheadline": "Before showing your score, here is the reasoning behind your assessment.",
+    "capabilities": {
+      "title": "Where AI systems perform well",
+      "description": "These capabilities overlap with parts of your described work:"
+    },
+    "limitations": {
+      "title": "Where AI systems struggle",
+      "description": "These aspects of your work remain difficult to automate:"
+    },
+    "signalStrength": {
+      "title": "Assessment confidence",
+      "label": "Signal strength",
+      "explanation": {
+        "low": "Limited input makes this assessment less precise. Consider adding more task details for a refined analysis.",
+        "moderate": "Sufficient detail for a reasonable assessment. Additional specificity would improve precision.",
+        "high": "Strong input quality. This assessment reflects a detailed understanding of your work."
+      },
+      "learnMore": {
+        "title": "How is signal strength calculated?",
+        "content": {
+          "line1": "Signal strength reflects how much information we have to work with.",
+          "line2": "It considers: number of tasks provided, specificity of descriptions, and consistency of clarifying answers.",
+          "line3": "A low signal does not mean high or low exposure. It means the assessment has wider confidence intervals.",
+          "line4": "You can improve signal strength by providing more tasks or more detailed descriptions."
+        }
+      }
+    },
+    "cta": {
+      "primary": "View your score",
+      "variant1": "See your results",
+      "variant2": "Show my score"
+    }
+  },
+  "score": {
+    "headline": "Your AI exposure score",
+    "headlineTemplate": "Your current work has {{score}}% task exposure to AI",
+    "killerSentence": "This isn't a verdict. It's a lens.",
+    "band": {
+      "protected": {
+        "label": "Protected",
+        "range": "<30%",
+        "meaning": "Your work has strong human moats. Most of what you do requires judgment, relationships, or accountability that AI cannot replicate.",
+        "action": "Your work is well-positioned. See the breakdown to understand why."
+      },
+      "mixed": {
+        "label": "Mixed",
+        "range": "30-50%",
+        "meaning": "Your work is a mix of automatable and human-exclusive tasks. Your opportunity: move time from the first to the second.",
+        "action": "There are specific changes you can make to shift the balance."
+      },
+      "exposed": {
+        "label": "Exposed",
+        "range": "50-70%",
+        "meaning": "A significant portion of your work follows patterns AI handles well. This isn't a crisis—it's a signal.",
+        "action": "The roadmap will show you how to reposition."
+      },
+      "critical": {
+        "label": "Critical",
+        "range": ">70%",
+        "meaning": "Most of your described work falls where AI is already capable. This requires active attention—not panic.",
+        "action": "The good news: targeted changes can significantly reduce this exposure."
+      }
+    },
+    "reductionTeaser": {
+      "label": "Reduction potential",
+      "template": "With {{changes}} targeted changes, your exposure could shift",
+      "locked": "See which changes in full report"
+    },
+    "disclaimer": "This is a task exposure assessment, not a job loss prediction. Exposure indicates overlap with AI capabilities, not replacement timeline.",
+    "cta": {
+      "primary": "See task breakdown",
+      "variant1": "View breakdown",
+      "variant2": "Understand this score"
+    }
+  },
+  "breakdown": {
+    "headline": "Your work isn't one thing. It's many things.",
+    "subheadline": "Each task is assigned to a future-role category—not just risk levels, but how the task will exist in 2-5 years.",
+    "killerSentence": "Your work isn't one thing. It's many things—some stable, some shifting.",
+    "sectionTitle": "Task-by-Task Analysis",
+    "chartTitle": "Signal Profile",
+    "chartCaption": "Higher values indicate greater overlap with AI capabilities. Lower is better.",
+    "exposureLabels": {
+      "high": "Automated",
+      "medium": "AI-Assisted",
+      "low": "Human Moat"
+    },
+    "exposureDescriptors": {
+      "high": "AI already does this reliably. Delegate to AI now.",
+      "medium": "AI does heavy lifting, you provide oversight. Learn to orchestrate.",
+      "low": "Requires trust, accountability, or ambiguity AI cannot handle. Expand this."
+    },
+    "taskCategories": {
+      "automated": {
+        "label": "AUTOMATED",
+        "meaning": "AI already does this reliably. Task likely disappears within 1-3 years.",
+        "action": "Delegate to AI now. Reclaim time for higher-value work."
+      },
+      "aiAssisted": {
+        "label": "AI-ASSISTED",
+        "meaning": "AI does heavy lifting, human oversight needed. Role shifts from creator to editor.",
+        "action": "Learn to orchestrate AI. Move value from execution to judgment."
+      },
+      "humanMoat": {
+        "label": "HUMAN MOAT",
+        "meaning": "Requires trust, accountability, or ambiguity AI cannot handle. Protected 5+ years.",
+        "action": "Expand and deepen. Make this larger share of your work."
+      }
+    },
+    "signalLabels": {
+      "routineDensity": "Routine Density",
+      "decisionAmbiguity": "Decision Ambiguity",
+      "trustDependency": "Trust Dependency",
+      "orchestration": "Orchestration",
+      "accountability": "Accountability"
+    },
+    "cta": {
+      "primary": "See your roadmap",
+      "variant1": "View actions",
+      "variant2": "What can I do?"
+    }
+  },
+  "roadmap": {
+    "headline": "Your exposure isn't fixed. Here's how it shifts.",
+    "subheadline": "These recommendations are specific to your task profile. Each one shifts work toward areas where human judgment remains essential.",
+    "killerSentence": "The goal isn't to outrun AI. It's to work where AI can't follow.",
+    "actionPrefix": "Action",
+    "impactLabel": "Expected impact",
+    "progressLabels": {
+      "actionsCommitted": "actions committed",
+      "potentialShift": "potential shift"
+    },
+    "progressHints": {
+      "empty": "Check off actions you commit to taking",
+      "partial": "{{count}} action committed. Keep going.",
+      "partialPlural": "{{count}} actions committed. Keep going.",
+      "complete": "All actions committed. Ready to transform your work."
+    },
+    "actionCategories": {
+      "delegateToAi": {
+        "title": "Delegate to AI",
+        "description": "Tasks in \"Automated\" category you still do manually. Stop doing them, or use AI tooling to compress them."
+      },
+      "elevateRole": {
+        "title": "Elevate Your Role",
+        "description": "Tasks in \"AI-Assisted\" where you can move from executor to orchestrator."
+      },
+      "amplifyMoat": {
+        "title": "Amplify Your Moat",
+        "description": "Tasks in \"Human Moat\" you should deliberately expand or deepen."
+      }
+    },
+    "difficultyLabels": {
+      "easy": "Quick win",
+      "medium": "Moderate effort",
+      "hard": "Long-term"
+    },
+    "cta": {
+      "primary": "View summary",
+      "variant1": "Finish assessment",
+      "variant2": "Complete"
+    }
+  },
+  "summary": {
+    "headline": "Assessment complete",
+    "subheadline": "Your results are ready.",
+    "killerSentence": "Knowing isn't enough. What will you do differently?",
+    "sections": {
+      "score": "Overall exposure",
+      "highExposure": "Highest exposure tasks",
+      "lowExposure": "Strongest human moats",
+      "topAction": "Priority action",
+      "archetype": "Your perceived future role",
+      "committedActions": "Actions you've committed to"
+    },
+    "download": "Download report",
+    "nextSteps": "Review the recommended actions and consider how they apply to your current role.",
+    "returnPrompt": "Assessments like this are most useful when revisited every 3-6 months. Your work changes. So should your strategy.",
+    "cta": {
+      "primary": "Download full report",
+      "variant1": "Save report",
+      "variant2": "Export results"
+    }
+  },
+  "scenario": {
+    "headline": "Two paths forward",
+    "subheadline": "The change is coming either way. The only question is whether you're steering it.",
+    "killerSentence": "The change is coming either way. The only question is whether you're steering it.",
+    "doNothing": {
+      "title": "IF YOU DO NOTHING",
+      "timeframes": {
+        "months6": "Current work continues, but perceived value declines as others adopt AI tools.",
+        "months12": "Tasks you do manually become expectations AI handles. More work, less differentiation.",
+        "months24": "When restructuring happens, your role looks like overhead. Competing with those who adapted."
+      }
+    },
+    "ifYouAct": {
+      "title": "IF YOU ACT",
+      "timeframes": {
+        "months6": "You adopt AI tools for automatable tasks, freeing time for higher-judgment work.",
+        "months12": "Known for judgment and orchestration, not execution. Exposure score decreases.",
+        "months24": "When restructuring happens, positioned in work AI cannot replace. The shift accelerated you."
+      }
+    },
+    "timeLabels": {
+      "months6": "6 months",
+      "months12": "12 months",
+      "months24": "24 months"
+    },
+    "supportingCopy": "Most professionals adapt eventually. The ones who adapt first don't just survive—they gain leverage. The window isn't closing, but it is narrowing."
+  },
+  "archetype": {
+    "aiOrchestrator": {
+      "name": "AI Orchestrator",
+      "signalProfile": "High orchestration, moderate routine",
+      "futurePosition": "Directs AI systems, quality control, exception handling",
+      "description": "You coordinate complex workflows and manage AI outputs. Your value lies in knowing when to trust automation and when to intervene."
+    },
+    "judgmentSpecialist": {
+      "name": "Judgment Specialist",
+      "signalProfile": "High ambiguity, high accountability, high novelty",
+      "futurePosition": "Makes calls AI cannot, handles ambiguous situations",
+      "description": "You handle situations where the right answer is unclear. Your experience and instincts guide decisions that algorithms cannot make."
+    },
+    "relationshipAnchor": {
+      "name": "Relationship Anchor",
+      "signalProfile": "High trust dependency, moderate orchestration",
+      "futurePosition": "Human face of organization, trust-based interactions",
+      "description": "You are the human connection in a digital world. Clients and colleagues trust you because relationships cannot be automated."
+    },
+    "hybridProfessional": {
+      "name": "Hybrid Professional",
+      "signalProfile": "Balanced signals across dimensions",
+      "futurePosition": "Mix of AI-assisted and human-exclusive work",
+      "description": "Your work spans multiple domains. Some tasks will shift to AI, others will remain yours. Flexibility is your advantage."
+    },
+    "transitionCandidate": {
+      "name": "Transition Candidate",
+      "signalProfile": "High routine, low ambiguity, low accountability",
+      "futurePosition": "Work highly automatable—active repositioning needed",
+      "description": "Much of your current work follows predictable patterns. The roadmap below focuses on repositioning toward higher-judgment activities."
+    }
+  },
+  "taskCategory": {
+    "automated": {
+      "label": "Automated",
+      "meaning": "AI already does this reliably. Task likely disappears within 1-3 years.",
+      "userAction": "Delegate to AI now. Reclaim time for higher-value work."
+    },
+    "aiAssisted": {
+      "label": "AI-Assisted",
+      "meaning": "AI does heavy lifting, human oversight needed. Role shifts from creator to editor.",
+      "userAction": "Learn to orchestrate AI. Move value from execution to judgment."
+    },
+    "humanMoat": {
+      "label": "Human Moat",
+      "meaning": "Requires trust, accountability, or ambiguity AI cannot handle. Protected 5+ years.",
+      "userAction": "Expand and deepen. Make this larger share of your work."
+    }
+  },
+  "upgrade": {
+    "headline": "Unlock Full Report",
+    "features": {
+      "detailed": "Detailed task-by-task analysis",
+      "personalized": "Personalized action roadmap",
+      "reduction": "Exposure reduction strategies"
+    },
+    "cta": {
+      "upgrade": "Upgrade Now",
+      "continueFree": "Continue with free version"
+    }
+  },
+  "evidenceLog": {
+    "title": "Evidence Log",
+    "subtitle": "A place to record moments of adaptation. No pressure, no streaks—just a quiet record of what's changing in your work.",
+    "nav": "Evidence Log",
+    "quickAdd": {
+      "title": "Capture a moment",
+      "placeholder": "What adaptation did you notice? (5-120 characters)",
+      "save": "Save",
+      "moreOptions": "More options",
+      "lessOptions": "Less options"
+    },
+    "form": {
+      "title": "Title",
+      "notes": "Notes",
+      "notesPlaceholder": "Add any additional context or reflections...",
+      "tags": "Tags",
+      "tagsPlaceholder": "Type and press Enter to add",
+      "tagsHint": "Up to 5 tags, each 2-24 characters",
+      "impact": "Impact"
+    },
+    "validation": {
+      "titleRequired": "Title is required",
+      "titleMinLength": "Title must be at least 5 characters",
+      "titleMaxLength": "Title must be 120 characters or less",
+      "notesMaxLength": "Notes must be 1000 characters or less"
+    },
+    "impact": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "filters": {
+      "searchPlaceholder": "Search entries...",
+      "impactAll": "All impacts",
+      "timeAll": "All time",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "tags": "Tags",
+      "clearAll": "Clear filters",
+      "statusAll": "All statuses"
+    },
+    "status": {
+      "fresh": "Fresh",
+      "stale": "Stale",
+      "old": "Old",
+      "archive": "Archive"
+    },
+    "decay": {
+      "weight": "Strength",
+      "age": "{{days}} days old"
+    },
+    "audit": {
+      "title": "Evidence Health",
+      "averageWeight": "Average strength",
+      "needsAttention": "Needs attention",
+      "byStatus": "By status"
+    },
+    "entry": {
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "reanchor": "Re-anchor"
+    },
+    "edit": {
+      "title": "Edit entry",
+      "save": "Save changes"
+    },
+    "delete": {
+      "title": "Delete entry",
+      "confirmation": "Are you sure you want to delete this entry? This action cannot be undone.",
+      "confirm": "Delete"
+    },
+    "empty": {
+      "title": "No entries yet",
+      "description": "Start capturing your moments of adaptation. There's no right or wrong—just record what you notice.",
+      "noResults": "No matching entries",
+      "tryDifferentFilters": "Try adjusting your filters to see more entries."
+    },
+    "insights": {
+      "title": "This month",
+      "totalEntries": "Total entries (30 days)",
+      "topTags": "Top tags",
+      "byImpact": "By impact"
+    },
+    "messages": {
+      "saved": "Entry saved",
+      "updated": "Entry updated",
+      "deleted": "Entry deleted",
+      "anchored": "Entry re-anchored"
+    },
+    "errors": {
+      "loadFailed": "Failed to load entries",
+      "saveFailed": "Failed to save entry",
+      "updateFailed": "Failed to update entry",
+      "deleteFailed": "Failed to delete entry",
+      "anchorFailed": "Failed to re-anchor entry"
+    }
+  },
+  "simulator": {
+    "title": "What if...",
+    "tabs": {
+      "skill": "Learn a Skill",
+      "aiCapability": "AI Advances"
+    },
+    "currentExposure": "Your current exposure:",
+    "selectSkill": "Select a skill to simulate:",
+    "selectAiCapability": "Select an AI capability advancement:",
+    "simulating": "Calculating impact...",
+    "resultTitle": "SIMULATED RESULT",
+    "result": {
+      "ifLearn": "If you learn {{name}}...",
+      "ifAiGains": "If AI gains {{name}}...",
+      "affectedTasks": "Affected tasks:"
+    },
+    "disclaimer": "This is a simulation based on industry patterns"
+  }
+}
