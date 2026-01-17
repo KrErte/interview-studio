@@ -1,0 +1,323 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 22, 29, 0.95) 0%,
+    rgba(16, 16, 21, 0.98) 100%
+  );
+  border-right: 1px solid var(--color-border);
+  z-index: 100;
+  transition: width 0.3s ease;
+
+  &--collapsed {
+    width: var(--sidebar-collapsed-width);
+
+    .sidebar__header {
+      padding: 1.25rem 0.75rem;
+      justify-content: center;
+    }
+
+    .sidebar__toggle {
+      position: static;
+      margin-left: 0;
+    }
+
+    .sidebar__link {
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .sidebar__step {
+      margin-right: 0;
+    }
+
+    .sidebar__icon {
+      margin-right: 0;
+    }
+
+    .sidebar__section {
+      height: 1rem;
+    }
+
+    .sidebar__footer {
+      justify-content: center;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-purple) 100%);
+    border-radius: 10px;
+    color: white;
+  }
+
+  &__logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__logo-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+  }
+
+  &__logo-version {
+    font-size: 0.625rem;
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    background: var(--color-accent-glow);
+    color: var(--color-accent);
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 0.25rem;
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+  }
+
+  &__section {
+    padding: 0.5rem 1rem;
+  }
+
+  &__section-label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    margin: 0.25rem 0.5rem;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:hover:not(&--disabled) {
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    &--active {
+      background: var(--color-accent-glow);
+      color: var(--color-accent);
+
+      .sidebar__step {
+        background: var(--color-accent);
+        color: white;
+        border-color: var(--color-accent);
+      }
+    }
+
+    &--completed {
+      .sidebar__step {
+        background: var(--color-emerald);
+        color: white;
+        border-color: var(--color-emerald);
+      }
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  &__label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 0.375rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    background: var(--color-rose);
+    color: white;
+    border-radius: 10px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  &__section--tools {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 1rem;
+  }
+
+  &__list--tools {
+    .sidebar__link--tool {
+      &.sidebar__link--active {
+        background: var(--color-accent-glow);
+        color: var(--color-accent);
+
+        .sidebar__icon {
+          color: var(--color-accent);
+        }
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--color-emerald);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-emerald);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  &__status-text {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px var(--color-emerald);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--color-emerald);
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+
+    &--open {
+      transform: translateX(0);
+    }
+  }
+}

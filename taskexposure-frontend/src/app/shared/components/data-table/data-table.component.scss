@@ -1,0 +1,108 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.data-table {
+  width: 100%;
+  overflow-x: auto;
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  &__head {
+    background: var(--color-surface);
+  }
+
+  &__th {
+    padding: 0.875rem 1rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  &__body {
+    background: transparent;
+  }
+
+  &__row {
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--color-surface);
+    }
+
+    &--selected {
+      background: var(--color-accent-glow);
+      border-left: 3px solid var(--color-accent);
+
+      &:hover {
+        background: var(--color-accent-glow);
+      }
+    }
+
+    &--empty {
+      cursor: default;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+
+  &__td {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border-subtle);
+    vertical-align: middle;
+
+    &--empty {
+      text-align: center;
+      color: var(--color-text-secondary);
+      padding: 2rem 1rem;
+    }
+  }
+
+  &__score {
+    font-family: 'SF Mono', monospace;
+    font-weight: 600;
+
+    &--low {
+      color: var(--color-low-risk);
+    }
+
+    &--medium {
+      color: var(--color-medium-risk);
+    }
+
+    &--high {
+      color: var(--color-high-risk);
+    }
+  }
+
+  &__score-bar {
+    min-width: 80px;
+    max-width: 120px;
+  }
+}

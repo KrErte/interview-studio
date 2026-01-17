@@ -1,0 +1,135 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- 3.6 Breakdown Screen - "The Anatomy" -->
+<div class="risk-breakdown">
+  <header class="risk-breakdown__header">
+    <h1 class="risk-breakdown__headline">{{ copy.headline }}</h1>
+    <p class="risk-breakdown__subheadline">{{ copy.subheadline }}</p>
+  </header>
+
+  <!-- Task Category Summary Cards (New Framework) -->
+  <div class="risk-breakdown__summary">
+    <!-- Automated (high exposure) -->
+    <div class="glass-card glass-card--rose risk-breakdown__summary-card">
+      <span class="risk-breakdown__summary-count risk-breakdown__summary-count--high">{{ categorySummary.automated }}</span>
+      <span class="risk-breakdown__summary-label">{{ copy.taskCategories.automated.label }}</span>
+      <p class="risk-breakdown__summary-desc">{{ copy.taskCategories.automated.action }}</p>
+      <app-score-bar [value]="categorySummary.automated" [max]="tasks.length || 1" [segments]="5" color="high"></app-score-bar>
+    </div>
+
+    <!-- AI-Assisted (medium exposure) -->
+    <div class="glass-card glass-card--amber risk-breakdown__summary-card">
+      <span class="risk-breakdown__summary-count risk-breakdown__summary-count--medium">{{ categorySummary.aiAssisted }}</span>
+      <span class="risk-breakdown__summary-label">{{ copy.taskCategories.aiAssisted.label }}</span>
+      <p class="risk-breakdown__summary-desc">{{ copy.taskCategories.aiAssisted.action }}</p>
+      <app-score-bar [value]="categorySummary.aiAssisted" [max]="tasks.length || 1" [segments]="5" color="medium"></app-score-bar>
+    </div>
+
+    <!-- Human Moat (low exposure) -->
+    <div class="glass-card glass-card--emerald risk-breakdown__summary-card">
+      <span class="risk-breakdown__summary-count risk-breakdown__summary-count--low">{{ categorySummary.humanMoat }}</span>
+      <span class="risk-breakdown__summary-label">{{ copy.taskCategories.humanMoat.label }}</span>
+      <p class="risk-breakdown__summary-desc">{{ copy.taskCategories.humanMoat.action }}</p>
+      <app-score-bar [value]="categorySummary.humanMoat" [max]="tasks.length || 1" [segments]="5" color="low"></app-score-bar>
+    </div>
+  </div>
+
+  <!-- Killer Sentence -->
+  <p class="risk-breakdown__killer-sentence" *ngIf="copy.killerSentence">
+    {{ copy.killerSentence }}
+  </p>
+
+  <!-- Signal Profile Radar Chart -->
+  <div class="glass-card risk-breakdown__chart-section" *ngIf="tasks.length >= 3">
+    <h2 class="risk-breakdown__section-title">Signal Profile</h2>
+    <app-radar-chart [data]="radarData" [size]="250"></app-radar-chart>
+    <p class="risk-breakdown__chart-caption">
+      Higher values indicate greater overlap with AI capabilities. Lower is better.
+    </p>
+  </div>
+
+  <!-- Task Cards -->
+  <h2 class="risk-breakdown__section-title">Task-by-Task Analysis</h2>
+  <div class="risk-breakdown__tasks">
+    <div
+      class="glass-card risk-breakdown__task"
+      [ngClass]="getExposureClass(task.exposure)"
+      [class.risk-breakdown__task--expanded]="expandedTaskIndex === i"
+      *ngFor="let task of tasks; let i = index"
+      (click)="toggleTaskExpanded(i)"
+    >
+      <div class="risk-breakdown__task-header">
+        <div class="risk-breakdown__task-info">
+          <span class="risk-breakdown__task-number">#{{ i + 1 }}</span>
+          <span class="risk-breakdown__task-description">{{ task.description }}</span>
+        </div>
+        <div class="risk-breakdown__task-meta">
+          <span class="status-badge" [ngClass]="{
+            'status-badge--error': task.exposure === 'high',
+            'status-badge--warning': task.exposure === 'medium',
+            'status-badge--success': task.exposure === 'low'
+          }">
+            {{ getExposureLabel(task.exposure) }}
+          </span>
+          <span class="risk-breakdown__expand-icon">
+            {{ expandedTaskIndex === i ? '−' : '+' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Score bar -->
+      <div class="risk-breakdown__progress">
+        <app-score-bar
+          [value]="getExposurePercentage(task.exposure)"
+          [segments]="10"
+          [color]="task.exposure"
+        ></app-score-bar>
+      </div>
+
+      <!-- Expanded content with category framework -->
+      <div class="risk-breakdown__task-details" *ngIf="expandedTaskIndex === i">
+        <p class="risk-breakdown__task-reason">{{ task.reason }}</p>
+
+        <!-- Category info -->
+        <div class="risk-breakdown__task-category">
+          <span class="risk-breakdown__category-label" [ngClass]="'risk-breakdown__category-label--' + task.exposure">
+            {{ getCategoryInfo(task.exposure).label }}
+          </span>
+          <span class="risk-breakdown__category-meaning">
+            {{ getCategoryInfo(task.exposure).meaning }}
+          </span>
+        </div>
+
+        <div class="risk-breakdown__task-insight">
+          <span class="risk-breakdown__insight-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </span>
+          <span class="risk-breakdown__insight-text">
+            <strong>Action:</strong> {{ copy.exposureDescriptors[task.exposure] }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="risk-breakdown__cta" (click)="onContinue()">
+    {{ copy.cta.primary }}
+    <span class="risk-breakdown__cta-arrow">&rarr;</span>
+  </button>
+</div>

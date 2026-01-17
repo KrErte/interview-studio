@@ -1,0 +1,182 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.kpi-grid {
+  display: grid;
+  gap: 1rem;
+
+  &--cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &--cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &--cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &--cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+
+    &--accent {
+      background: var(--color-accent-glow);
+      color: var(--color-accent);
+    }
+
+    &--purple {
+      background: var(--color-purple-glow);
+      color: var(--color-purple);
+    }
+
+    &--cyan {
+      background: var(--color-cyan-glow);
+      color: var(--color-cyan);
+    }
+
+    &--emerald {
+      background: var(--color-emerald-glow);
+      color: var(--color-emerald);
+    }
+
+    &--amber {
+      background: var(--color-amber-glow);
+      color: var(--color-amber);
+    }
+
+    &--rose {
+      background: var(--color-rose-glow);
+      color: var(--color-rose);
+    }
+
+    &--low {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--color-low-risk);
+    }
+
+    &--medium {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--color-medium-risk);
+    }
+
+    &--high {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--color-high-risk);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__value {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'SF Mono', monospace;
+    line-height: 1;
+    margin-bottom: 0.375rem;
+
+    &--accent { color: var(--color-accent); }
+    &--purple { color: var(--color-purple); }
+    &--cyan { color: var(--color-cyan); }
+    &--emerald { color: var(--color-emerald); }
+    &--amber { color: var(--color-amber); }
+    &--rose { color: var(--color-rose); }
+    &--low { color: var(--color-low-risk); }
+    &--medium { color: var(--color-medium-risk); }
+    &--high { color: var(--color-high-risk); }
+  }
+
+  &__suffix {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-left: 0.125rem;
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  &__trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &--up {
+      color: var(--color-emerald);
+    }
+
+    &--down {
+      color: var(--color-rose);
+    }
+
+    &--neutral {
+      color: var(--color-text-secondary);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .kpi-grid {
+    &--cols-3,
+    &--cols-4,
+    &--cols-6 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    &--cols-2,
+    &--cols-3,
+    &--cols-4,
+    &--cols-6 {
+      grid-template-columns: 1fr;
+    }
+  }
+}

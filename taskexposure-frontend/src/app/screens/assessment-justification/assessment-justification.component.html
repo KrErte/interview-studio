@@ -1,0 +1,81 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="assessment-justification">
+  <h1 class="assessment-justification__headline">{{ copy.headline }}</h1>
+
+  <p class="assessment-justification__subheadline">{{ copy.subheadline }}</p>
+
+  <section class="glass-card glass-card--cyan assessment-justification__section">
+    <h2 class="assessment-justification__section-title">
+      {{ copy.sections.capabilities.title }}
+    </h2>
+    <p class="assessment-justification__section-desc">
+      {{ copy.sections.capabilities.description }}
+    </p>
+    <ul class="assessment-justification__list">
+      <li *ngFor="let capability of aiCapabilities">{{ capability }}</li>
+    </ul>
+  </section>
+
+  <section class="glass-card glass-card--rose assessment-justification__section">
+    <h2 class="assessment-justification__section-title">
+      {{ copy.sections.limitations.title }}
+    </h2>
+    <p class="assessment-justification__section-desc">
+      {{ copy.sections.limitations.description }}
+    </p>
+    <ul class="assessment-justification__list">
+      <li *ngFor="let limitation of aiLimitations">{{ limitation }}</li>
+    </ul>
+  </section>
+
+  <section class="glass-card glass-card--accent assessment-justification__section assessment-justification__section--signal">
+    <h2 class="assessment-justification__section-title">
+      {{ copy.sections.signalStrength.title }}
+    </h2>
+    <p class="assessment-justification__signal">
+      {{ copy.sections.signalStrength.label }}: <strong>{{ signalStrength }}</strong>
+    </p>
+    <p class="assessment-justification__signal-explanation">
+      {{ signalStrengthExplanation }}
+    </p>
+
+    <button
+      type="button"
+      class="assessment-justification__learn-more-toggle"
+      (click)="toggleSignalInfo()"
+    >
+      {{ copy.sections.signalStrength.learnMore.title }}
+      <span class="assessment-justification__toggle-indicator">
+        {{ isSignalInfoExpanded ? '−' : '+' }}
+      </span>
+    </button>
+
+    <div
+      class="assessment-justification__learn-more-content"
+      *ngIf="isSignalInfoExpanded"
+    >
+      <p *ngFor="let paragraph of copy.sections.signalStrength.learnMore.content">
+        {{ paragraph }}
+      </p>
+    </div>
+  </section>
+
+  <button type="button" class="assessment-justification__cta" (click)="onContinue()">
+    {{ copy.cta.primary }}
+  </button>
+</div>

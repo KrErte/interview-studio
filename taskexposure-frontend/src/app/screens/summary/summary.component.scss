@@ -1,0 +1,401 @@
+/*
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// 3.8 Summary Screen - "The Commitment"
+// Close the loop. Provide portable summary.
+// Enable commitment tracking. Set up for return visits.
+
+.summary {
+  &__header {
+    margin-bottom: 1.5rem;
+  }
+
+  &__headline {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text);
+  }
+
+  &__subheadline {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  // Killer sentence
+  &__killer-sentence {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0 0 2rem 0;
+    color: var(--color-accent);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--color-accent);
+    background-color: rgba(96, 165, 250, 0.05);
+  }
+
+  &__kpis {
+    margin-bottom: 2rem;
+  }
+
+  // Persona Archetype Display
+  &__archetype {
+    margin-bottom: 2rem;
+  }
+
+  &__archetype-card {
+    padding: 1.5rem;
+  }
+
+  &__archetype-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__archetype-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  &__archetype-signal {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--color-accent);
+    font-style: italic;
+  }
+
+  &__archetype-position {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: var(--color-text);
+  }
+
+  &__archetype-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  &__breakdown {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__card {
+    padding: 1.5rem;
+    height: 100%;
+  }
+
+  &__priority,
+  &__committed {
+    margin-bottom: 2rem;
+  }
+
+  &__section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border-subtle);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // Committed actions list
+  &__committed-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &__committed-number {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-purple);
+    background-color: rgba(147, 51, 234, 0.15);
+    border-radius: 50%;
+  }
+
+  &__committed-text {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  &__action-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text);
+  }
+
+  &__action-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--color-text-secondary);
+  }
+
+  // What-If Simulator
+  &__simulator {
+    margin-bottom: 2rem;
+  }
+
+  // Scenario View - "If You Do Nothing vs If You Act"
+  &__scenario {
+    margin-bottom: 2rem;
+  }
+
+  &__scenario-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-accent);
+      background-color: rgba(96, 165, 250, 0.05);
+    }
+  }
+
+  &__toggle-icon {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--color-text-secondary);
+  }
+
+  &__scenario-content {
+    margin-top: 1rem;
+    animation: slide-down 0.3s ease-out;
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__scenario-subheadline {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  &__scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__scenario-path {
+    padding: 1.25rem;
+
+    &--nothing {
+      border-left: 3px solid var(--color-high-risk);
+    }
+
+    &--act {
+      border-left: 3px solid var(--color-low-risk);
+    }
+  }
+
+  &__scenario-path-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem 0;
+
+    .summary__scenario-path--nothing & {
+      color: var(--color-high-risk);
+    }
+
+    .summary__scenario-path--act & {
+      color: var(--color-low-risk);
+    }
+  }
+
+  &__scenario-timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &__timeline-marker {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+  }
+
+  &__timeline-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+
+  &__scenario-support {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    font-style: italic;
+  }
+
+  &__next-steps {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+    padding: 1rem 1.25rem;
+    background-color: var(--color-surface);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 4px;
+    color: var(--color-text-secondary);
+  }
+
+  &__return-prompt {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  &__options {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  &__download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-purple) 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--color-accent-glow);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .summary {
+    &__breakdown {
+      grid-template-columns: 1fr;
+    }
+
+    &__scenario-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

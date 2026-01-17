@@ -1,0 +1,96 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- 3.1 Start Screen - "The Mirror" -->
+<div class="entry">
+  <!-- Animated Background -->
+  <div class="entry__bg">
+    <div class="entry__bg-shape entry__bg-shape--1"></div>
+    <div class="entry__bg-shape entry__bg-shape--2"></div>
+    <div class="entry__bg-shape entry__bg-shape--3"></div>
+  </div>
+
+  <div class="entry__content">
+    <!-- Hero Section -->
+    <div class="entry__hero">
+      <span class="entry__badge">AI Exposure Assessment</span>
+
+      <h1 class="entry__headline">
+        <span class="entry__headline-line">{{ copy.headline }}</span>
+      </h1>
+
+      <p class="entry__subheadline">{{ copy.subheadline }}</p>
+
+      <div class="entry__body" *ngIf="copy.body?.length">
+        <p *ngFor="let paragraph of copy.body">{{ paragraph }}</p>
+      </div>
+
+      <!-- Killer Sentence -->
+      <p class="entry__killer-sentence" *ngIf="copy.killerSentence">
+        {{ copy.killerSentence }}
+      </p>
+
+      <div class="entry__cta-group">
+        <button type="button" class="entry__cta entry__cta--primary" (click)="onBegin()">
+          {{ copy.cta.primary }}
+          <span class="entry__cta-arrow">&rarr;</span>
+        </button>
+        <span class="entry__cta-meta">{{ copy.timeEstimate }}</span>
+      </div>
+    </div>
+
+    <!-- Differentiators Grid -->
+    <div class="entry__features">
+      <div
+        class="glass-card entry__feature"
+        [ngClass]="'glass-card--' + featureColors[i]"
+        *ngFor="let diff of copy.differentiators; let i = index"
+      >
+        <div class="entry__feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path *ngIf="i === 0" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path *ngIf="i === 1" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            <path *ngIf="i === 2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>
+        </div>
+        <div class="entry__feature-content">
+          <h3 class="entry__feature-title">{{ diff.title }}</h3>
+          <p class="entry__feature-desc">{{ diff.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- What You Receive -->
+    <div class="entry__deliverables">
+      <h2 class="entry__section-title">What you will receive</h2>
+      <ul class="entry__deliverables-list">
+        <li class="entry__deliverable" *ngFor="let item of copy.deliverables; let i = index">
+          <span class="entry__deliverable-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M5 13l4 4L19 7"/>
+            </svg>
+          </span>
+          <span class="entry__deliverable-text">{{ item }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Requirements Note -->
+    <div class="entry__proof">
+      <p class="entry__proof-text">{{ copy.requirements }}</p>
+    </div>
+  </div>
+</div>

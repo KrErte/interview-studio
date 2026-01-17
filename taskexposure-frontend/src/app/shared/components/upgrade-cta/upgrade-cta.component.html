@@ -1,0 +1,99 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Inline variant - compact CTA -->
+<div class="upgrade-cta upgrade-cta--inline" *ngIf="variant === 'inline'">
+  <div class="upgrade-cta__badge">FULL ANALYSIS</div>
+
+  <h3 class="upgrade-cta__title">See what you can change</h3>
+  <p class="upgrade-cta__description">
+    Get your personalized action plan to reduce AI exposure
+  </p>
+
+  <div class="upgrade-cta__price-row">
+    <span class="upgrade-cta__price">{{ price }}</span>
+    <span class="upgrade-cta__price-note">for this assessment</span>
+  </div>
+
+  <div class="upgrade-cta__actions">
+    <button type="button" class="upgrade-cta__button upgrade-cta__button--primary" (click)="onUpgrade()">
+      Show me how to reduce my risk
+    </button>
+    <button type="button" class="upgrade-cta__button upgrade-cta__button--secondary" (click)="onContinueFree()">
+      Skip for now
+    </button>
+  </div>
+</div>
+
+<!-- Full variant - comparison table -->
+<div class="upgrade-cta upgrade-cta--full" *ngIf="variant === 'full'">
+  <div class="upgrade-cta__header">
+    <h2 class="upgrade-cta__headline">Get your full analysis</h2>
+    <p class="upgrade-cta__subheadline">See exactly what to change to reduce your AI exposure</p>
+  </div>
+
+  <div class="upgrade-cta__plans">
+    <!-- Free plan -->
+    <div class="upgrade-cta__plan">
+      <div class="upgrade-cta__plan-header">
+        <h3 class="upgrade-cta__plan-name">Basic</h3>
+        <div class="upgrade-cta__plan-price">
+          <span class="upgrade-cta__plan-amount">€0</span>
+        </div>
+      </div>
+      <ul class="upgrade-cta__plan-features">
+        <li *ngFor="let feature of freeFeatures" class="upgrade-cta__plan-feature">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          {{ feature }}
+        </li>
+      </ul>
+      <button
+        type="button"
+        class="upgrade-cta__plan-button upgrade-cta__plan-button--secondary"
+        (click)="onContinueFree()">
+        Skip for now
+      </button>
+    </div>
+
+    <!-- Full Analysis -->
+    <div class="upgrade-cta__plan upgrade-cta__plan--featured">
+      <div class="upgrade-cta__plan-badge">FULL ANALYSIS</div>
+      <div class="upgrade-cta__plan-header">
+        <h3 class="upgrade-cta__plan-name">Complete Report</h3>
+        <div class="upgrade-cta__plan-price">
+          <span class="upgrade-cta__plan-amount">{{ price }}</span>
+          <span class="upgrade-cta__plan-period">this assessment</span>
+        </div>
+      </div>
+      <ul class="upgrade-cta__plan-features">
+        <li *ngFor="let feature of premiumFeatures" class="upgrade-cta__plan-feature upgrade-cta__plan-feature--premium">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          {{ feature }}
+        </li>
+      </ul>
+      <button
+        type="button"
+        class="upgrade-cta__plan-button upgrade-cta__plan-button--primary"
+        (click)="onUpgrade()">
+        Show me how to reduce my risk
+      </button>
+    </div>
+  </div>
+</div>

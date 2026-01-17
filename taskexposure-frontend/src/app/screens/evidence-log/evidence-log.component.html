@@ -1,0 +1,578 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="evidence-log">
+  <!-- Header -->
+  <header class="evidence-log__header">
+    <div class="evidence-log__header-content">
+      <h1 class="evidence-log__title">{{ 'evidenceLog.title' | translate }}</h1>
+      <p class="evidence-log__subtitle">{{ 'evidenceLog.subtitle' | translate }}</p>
+    </div>
+    <div class="evidence-log__header-actions">
+      <button
+        type="button"
+        class="btn btn--secondary btn--sm"
+        (click)="toggleLanguage()"
+      >
+        {{ currentLang === 'en' ? 'ET' : 'EN' }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Quick Add Card -->
+  <section class="quick-add glass-card">
+    <h2 class="quick-add__heading">{{ 'evidenceLog.quickAdd.title' | translate }}</h2>
+    <form [formGroup]="quickAddForm" (ngSubmit)="submitQuickAdd()">
+      <div class="quick-add__main">
+        <div class="form-group">
+          <input
+            type="text"
+            formControlName="title"
+            class="form-input"
+            [placeholder]="t('evidenceLog.quickAdd.placeholder')"
+            maxlength="120"
+          />
+          @if (quickAddForm.get('title')?.touched && quickAddForm.get('title')?.errors) {
+            <div class="form-error">
+              @if (quickAddForm.get('title')?.errors?.['required']) {
+                {{ 'evidenceLog.validation.titleRequired' | translate }}
+              }
+              @if (quickAddForm.get('title')?.errors?.['minlength']) {
+                {{ 'evidenceLog.validation.titleMinLength' | translate }}
+              }
+              @if (quickAddForm.get('title')?.errors?.['maxlength']) {
+                {{ 'evidenceLog.validation.titleMaxLength' | translate }}
+              }
+            </div>
+          }
+        </div>
+
+        <div class="quick-add__actions">
+          <button
+            type="button"
+            class="btn btn--ghost btn--sm"
+            (click)="toggleQuickAddDetails()"
+          >
+            @if (showQuickAddDetails) {
+              {{ 'evidenceLog.quickAdd.lessOptions' | translate }}
+            } @else {
+              {{ 'evidenceLog.quickAdd.moreOptions' | translate }}
+            }
+          </button>
+          <button
+            type="submit"
+            class="btn btn--primary"
+            [disabled]="quickAddForm.invalid"
+          >
+            {{ 'evidenceLog.quickAdd.save' | translate }}
+          </button>
+        </div>
+      </div>
+
+      @if (showQuickAddDetails) {
+        <div class="quick-add__details">
+          <!-- Notes -->
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.notes' | translate }}</label>
+            <textarea
+              formControlName="notes"
+              class="form-textarea"
+              rows="3"
+              maxlength="1000"
+              [placeholder]="t('evidenceLog.form.notesPlaceholder')"
+            ></textarea>
+            @if (quickAddForm.get('notes')?.errors?.['maxlength']) {
+              <div class="form-error">
+                {{ 'evidenceLog.validation.notesMaxLength' | translate }}
+              </div>
+            }
+          </div>
+
+          <!-- Tags -->
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.tags' | translate }}</label>
+            <div class="tags-input">
+              <div class="tags-input__chips">
+                @for (tag of quickAddForm.get('tags')?.value || []; track tag) {
+                  <span class="tag-chip">
+                    {{ tag }}
+                    <button type="button" class="tag-chip__remove" (click)="removeTag(tag)">×</button>
+                  </span>
+                }
+              </div>
+              @if ((quickAddForm.get('tags')?.value || []).length < 5) {
+                <input
+                  type="text"
+                  class="tags-input__input"
+                  [(ngModel)]="tagInput"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keydown)="onTagKeydown($event)"
+                  [placeholder]="t('evidenceLog.form.tagsPlaceholder')"
+                  maxlength="24"
+                />
+              }
+            </div>
+            <span class="form-hint">{{ 'evidenceLog.form.tagsHint' | translate }}</span>
+          </div>
+
+          <!-- Impact -->
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.impact' | translate }}</label>
+            <div class="impact-selector">
+              @for (level of ['low', 'medium', 'high']; track level) {
+                <label class="impact-option" [class.impact-option--selected]="quickAddForm.get('impact')?.value === level">
+                  <input
+                    type="radio"
+                    formControlName="impact"
+                    [value]="level"
+                    class="sr-only"
+                  />
+                  <span class="impact-option__label">{{ t('evidenceLog.impact.' + level) }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </form>
+  </section>
+
+  <!-- Filters Row -->
+  <section class="filters">
+    <div class="filters__search">
+      <input
+        type="text"
+        class="form-input form-input--search"
+        [placeholder]="t('evidenceLog.filters.searchPlaceholder')"
+        [ngModel]="filter().searchText"
+        (ngModelChange)="updateFilter('searchText', $event)"
+      />
+    </div>
+
+    <div class="filters__dropdowns">
+      <select
+        class="form-select"
+        [ngModel]="filter().impact"
+        (ngModelChange)="updateFilter('impact', $event)"
+      >
+        <option value="all">{{ 'evidenceLog.filters.impactAll' | translate }}</option>
+        <option value="low">{{ 'evidenceLog.impact.low' | translate }}</option>
+        <option value="medium">{{ 'evidenceLog.impact.medium' | translate }}</option>
+        <option value="high">{{ 'evidenceLog.impact.high' | translate }}</option>
+      </select>
+
+      <select
+        class="form-select"
+        [ngModel]="filter().timeRange"
+        (ngModelChange)="updateFilter('timeRange', $event)"
+      >
+        <option value="all">{{ 'evidenceLog.filters.timeAll' | translate }}</option>
+        <option value="last7days">{{ 'evidenceLog.filters.last7Days' | translate }}</option>
+        <option value="last30days">{{ 'evidenceLog.filters.last30Days' | translate }}</option>
+      </select>
+
+      <select
+        class="form-select"
+        [ngModel]="filter().status"
+        (ngModelChange)="updateFilter('status', $event)"
+      >
+        <option value="all">{{ 'evidenceLog.filters.statusAll' | translate }}</option>
+        <option value="FRESH">{{ 'evidenceLog.status.fresh' | translate }}</option>
+        <option value="STALE">{{ 'evidenceLog.status.stale' | translate }}</option>
+        <option value="OLD">{{ 'evidenceLog.status.old' | translate }}</option>
+        <option value="ARCHIVE">{{ 'evidenceLog.status.archive' | translate }}</option>
+      </select>
+    </div>
+
+    @if (allTags().length > 0) {
+      <div class="filters__tags">
+        <span class="filters__tags-label">{{ 'evidenceLog.filters.tags' | translate }}:</span>
+        @for (tag of allTags(); track tag) {
+          <button
+            type="button"
+            class="filter-tag"
+            [class.filter-tag--active]="isTagSelected(tag)"
+            (click)="toggleTagFilter(tag)"
+          >
+            {{ tag }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (hasActiveFilters()) {
+      <button type="button" class="btn btn--ghost btn--sm" (click)="clearFilters()">
+        {{ 'evidenceLog.filters.clearAll' | translate }}
+      </button>
+    }
+  </section>
+
+  <div class="evidence-log__content">
+    <!-- Entries List -->
+    <section class="entries-list">
+      @if (loading()) {
+        <div class="entries-list__loading">
+          <div class="loading-spinner"></div>
+          <p>{{ 'common.loading' | translate }}</p>
+        </div>
+      } @else if (filteredEntries().length === 0) {
+        <div class="entries-list__empty glass-card">
+          @if (entries().length === 0) {
+            <div class="empty-state">
+              <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <h3 class="empty-state__title">{{ 'evidenceLog.empty.title' | translate }}</h3>
+              <p class="empty-state__text">{{ 'evidenceLog.empty.description' | translate }}</p>
+            </div>
+          } @else {
+            <div class="empty-state">
+              <h3 class="empty-state__title">{{ 'evidenceLog.empty.noResults' | translate }}</h3>
+              <p class="empty-state__text">{{ 'evidenceLog.empty.tryDifferentFilters' | translate }}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        @for (entry of filteredEntries(); track entry.id) {
+          <article class="entry-card glass-card" [class.entry-card--needs-anchor]="entry.needsReanchor">
+            <div class="entry-card__header">
+              <h3 class="entry-card__title">{{ entry.title }}</h3>
+              <div class="entry-card__badges">
+                @if (entry.status) {
+                  <span class="status-badge" [ngClass]="getStatusClass(entry.status)">
+                    {{ getStatusLabel(entry.status) }}
+                  </span>
+                }
+                <span class="impact-pill" [ngClass]="getImpactClass(entry.impact)">
+                  {{ getImpactLabel(entry.impact) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="entry-card__meta">
+              <span class="entry-card__date">{{ formatDate(entry.createdAt) }}</span>
+              @if (entry.weight !== undefined) {
+                <span class="entry-card__weight" [class.entry-card__weight--low]="entry.weight < 0.5">
+                  {{ 'evidenceLog.decay.weight' | translate }}: {{ formatWeight(entry.weight) }}
+                </span>
+              }
+              @if (entry.ageDays !== undefined) {
+                <span class="entry-card__age">
+                  {{ 'evidenceLog.decay.age' | translate : { days: entry.ageDays } }}
+                </span>
+              }
+            </div>
+
+            @if (entry.tags && entry.tags.length > 0) {
+              <div class="entry-card__tags">
+                @for (tag of entry.tags; track tag) {
+                  <span class="tag-chip tag-chip--small">{{ tag }}</span>
+                }
+              </div>
+            }
+
+            @if (entry.notes) {
+              <div class="entry-card__notes">
+                @if (isNotesExpanded(entry.id) || !shouldTruncateNotes(entry.notes)) {
+                  <p>{{ entry.notes }}</p>
+                } @else {
+                  <p>{{ getTruncatedNotes(entry.notes) }}</p>
+                }
+                @if (shouldTruncateNotes(entry.notes)) {
+                  <button
+                    type="button"
+                    class="btn btn--link btn--sm"
+                    (click)="toggleNotes(entry.id)"
+                  >
+                    @if (isNotesExpanded(entry.id)) {
+                      {{ 'evidenceLog.entry.showLess' | translate }}
+                    } @else {
+                      {{ 'evidenceLog.entry.showMore' | translate }}
+                    }
+                  </button>
+                }
+              </div>
+            }
+
+            <div class="entry-card__actions">
+              @if (entry.needsReanchor) {
+                <button
+                  type="button"
+                  class="btn btn--accent btn--sm"
+                  (click)="anchorEntry(entry)"
+                >
+                  {{ 'evidenceLog.actions.reanchor' | translate }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm"
+                (click)="openEditModal(entry)"
+              >
+                {{ 'evidenceLog.actions.edit' | translate }}
+              </button>
+              <button
+                type="button"
+                class="btn btn--ghost btn--sm btn--danger"
+                (click)="openDeleteConfirm(entry)"
+              >
+                {{ 'evidenceLog.actions.delete' | translate }}
+              </button>
+            </div>
+          </article>
+        }
+      }
+    </section>
+
+    <!-- Insights Panel -->
+    <aside class="insights-panel glass-card">
+      <h3 class="insights-panel__title">{{ 'evidenceLog.insights.title' | translate }}</h3>
+
+      <div class="insight-item">
+        <span class="insight-item__label">{{ 'evidenceLog.insights.totalEntries' | translate }}</span>
+        <span class="insight-item__value">{{ insights().totalLast30Days }}</span>
+      </div>
+
+      @if (insights().topTags.length > 0) {
+        <div class="insight-item">
+          <span class="insight-item__label">{{ 'evidenceLog.insights.topTags' | translate }}</span>
+          <div class="insight-item__tags">
+            @for (tagItem of insights().topTags; track tagItem.tag) {
+              <span class="tag-chip tag-chip--small">
+                {{ tagItem.tag }} ({{ tagItem.count }})
+              </span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="insight-item">
+        <span class="insight-item__label">{{ 'evidenceLog.insights.byImpact' | translate }}</span>
+        <div class="impact-distribution">
+          <div class="impact-distribution__bar">
+            @if (insights().totalLast30Days > 0) {
+              <div
+                class="impact-distribution__segment impact-distribution__segment--high"
+                [style.width.%]="(insights().impactDistribution.high / insights().totalLast30Days) * 100"
+              ></div>
+              <div
+                class="impact-distribution__segment impact-distribution__segment--medium"
+                [style.width.%]="(insights().impactDistribution.medium / insights().totalLast30Days) * 100"
+              ></div>
+              <div
+                class="impact-distribution__segment impact-distribution__segment--low"
+                [style.width.%]="(insights().impactDistribution.low / insights().totalLast30Days) * 100"
+              ></div>
+            }
+          </div>
+          <div class="impact-distribution__legend">
+            <span class="legend-item legend-item--high">
+              {{ 'evidenceLog.impact.high' | translate }}: {{ insights().impactDistribution.high }}
+            </span>
+            <span class="legend-item legend-item--medium">
+              {{ 'evidenceLog.impact.medium' | translate }}: {{ insights().impactDistribution.medium }}
+            </span>
+            <span class="legend-item legend-item--low">
+              {{ 'evidenceLog.impact.low' | translate }}: {{ insights().impactDistribution.low }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Preview Section -->
+      @if (auditPreview()) {
+        <div class="insight-section insight-section--audit">
+          <h4 class="insight-section__title">{{ 'evidenceLog.audit.title' | translate }}</h4>
+
+          <div class="insight-item">
+            <span class="insight-item__label">{{ 'evidenceLog.audit.averageWeight' | translate }}</span>
+            <span class="insight-item__value insight-item__value--sm">{{ formatWeight(auditPreview()!.averageWeight) }}</span>
+          </div>
+
+          @if (auditPreview()!.needsAttentionCount > 0) {
+            <div class="insight-item insight-item--warning">
+              <span class="insight-item__label">{{ 'evidenceLog.audit.needsAttention' | translate }}</span>
+              <span class="insight-item__value insight-item__value--warning">{{ auditPreview()!.needsAttentionCount }}</span>
+            </div>
+          }
+
+          <div class="insight-item">
+            <span class="insight-item__label">{{ 'evidenceLog.audit.byStatus' | translate }}</span>
+            <div class="status-distribution">
+              <div class="status-distribution__bar">
+                @if (auditPreview()!.totalEntries > 0) {
+                  <div
+                    class="status-distribution__segment status-distribution__segment--fresh"
+                    [style.width.%]="(auditPreview()!.statusDistribution.fresh / auditPreview()!.totalEntries) * 100"
+                  ></div>
+                  <div
+                    class="status-distribution__segment status-distribution__segment--stale"
+                    [style.width.%]="(auditPreview()!.statusDistribution.stale / auditPreview()!.totalEntries) * 100"
+                  ></div>
+                  <div
+                    class="status-distribution__segment status-distribution__segment--old"
+                    [style.width.%]="(auditPreview()!.statusDistribution.old / auditPreview()!.totalEntries) * 100"
+                  ></div>
+                  <div
+                    class="status-distribution__segment status-distribution__segment--archive"
+                    [style.width.%]="(auditPreview()!.statusDistribution.archive / auditPreview()!.totalEntries) * 100"
+                  ></div>
+                }
+              </div>
+              <div class="status-distribution__legend">
+                <span class="legend-item legend-item--fresh">
+                  {{ 'evidenceLog.status.fresh' | translate }}: {{ auditPreview()!.statusDistribution.fresh }}
+                </span>
+                <span class="legend-item legend-item--stale">
+                  {{ 'evidenceLog.status.stale' | translate }}: {{ auditPreview()!.statusDistribution.stale }}
+                </span>
+                <span class="legend-item legend-item--old">
+                  {{ 'evidenceLog.status.old' | translate }}: {{ auditPreview()!.statusDistribution.old }}
+                </span>
+                <span class="legend-item legend-item--archive">
+                  {{ 'evidenceLog.status.archive' | translate }}: {{ auditPreview()!.statusDistribution.archive }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </aside>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+@if (showEditModal && editingEntry) {
+  <div class="modal-overlay" (click)="closeEditModal()">
+    <div class="modal glass-card" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">{{ 'evidenceLog.edit.title' | translate }}</h2>
+        <button type="button" class="modal__close" (click)="closeEditModal()">×</button>
+      </div>
+
+      <form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <div class="modal__body">
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.title' | translate }}</label>
+            <input
+              type="text"
+              formControlName="title"
+              class="form-input"
+              maxlength="120"
+            />
+            @if (editForm.get('title')?.touched && editForm.get('title')?.errors) {
+              <div class="form-error">
+                @if (editForm.get('title')?.errors?.['required']) {
+                  {{ 'evidenceLog.validation.titleRequired' | translate }}
+                }
+                @if (editForm.get('title')?.errors?.['minlength']) {
+                  {{ 'evidenceLog.validation.titleMinLength' | translate }}
+                }
+              </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.notes' | translate }}</label>
+            <textarea
+              formControlName="notes"
+              class="form-textarea"
+              rows="4"
+              maxlength="1000"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.tags' | translate }}</label>
+            <div class="tags-input">
+              <div class="tags-input__chips">
+                @for (tag of editForm.get('tags')?.value || []; track tag) {
+                  <span class="tag-chip">
+                    {{ tag }}
+                    <button type="button" class="tag-chip__remove" (click)="removeTag(tag, true)">×</button>
+                  </span>
+                }
+              </div>
+              @if ((editForm.get('tags')?.value || []).length < 5) {
+                <input
+                  type="text"
+                  class="tags-input__input"
+                  [(ngModel)]="editTagInput"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keydown)="onTagKeydown($event, true)"
+                  [placeholder]="t('evidenceLog.form.tagsPlaceholder')"
+                  maxlength="24"
+                />
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ 'evidenceLog.form.impact' | translate }}</label>
+            <div class="impact-selector">
+              @for (level of ['low', 'medium', 'high']; track level) {
+                <label class="impact-option" [class.impact-option--selected]="editForm.get('impact')?.value === level">
+                  <input
+                    type="radio"
+                    formControlName="impact"
+                    [value]="level"
+                    class="sr-only"
+                  />
+                  <span class="impact-option__label">{{ t('evidenceLog.impact.' + level) }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="modal__footer">
+          <button type="button" class="btn btn--ghost" (click)="closeEditModal()">
+            {{ 'common.close' | translate }}
+          </button>
+          <button type="submit" class="btn btn--primary" [disabled]="editForm.invalid">
+            {{ 'evidenceLog.edit.save' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirmation Modal -->
+@if (showDeleteConfirm && deletingEntry) {
+  <div class="modal-overlay" (click)="closeDeleteConfirm()">
+    <div class="modal modal--sm glass-card" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <h2 class="modal__title">{{ 'evidenceLog.delete.title' | translate }}</h2>
+        <button type="button" class="modal__close" (click)="closeDeleteConfirm()">×</button>
+      </div>
+
+      <div class="modal__body">
+        <p>{{ 'evidenceLog.delete.confirmation' | translate }}</p>
+        <p class="modal__entry-title">"{{ deletingEntry.title }}"</p>
+      </div>
+
+      <div class="modal__footer">
+        <button type="button" class="btn btn--ghost" (click)="closeDeleteConfirm()">
+          {{ 'common.close' | translate }}
+        </button>
+        <button type="button" class="btn btn--danger" (click)="confirmDelete()">
+          {{ 'evidenceLog.delete.confirm' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

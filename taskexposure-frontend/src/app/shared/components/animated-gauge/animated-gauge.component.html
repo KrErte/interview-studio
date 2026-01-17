@@ -1,0 +1,82 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="gauge-container" [ngClass]="gaugeColorClass">
+  <!-- Background pulse effect -->
+  <div class="gauge-pulse" [class.gauge-pulse--active]="animationDone"></div>
+
+  <!-- Celebration particles for low scores -->
+  <div class="gauge-celebration" *ngIf="animationDone && scoreColorClass === 'low'">
+    <span class="particle particle--1"></span>
+    <span class="particle particle--2"></span>
+    <span class="particle particle--3"></span>
+    <span class="particle particle--4"></span>
+    <span class="particle particle--5"></span>
+    <span class="particle particle--6"></span>
+  </div>
+
+  <!-- Warning glow for high scores -->
+  <div class="gauge-warning" *ngIf="animationDone && scoreColorClass === 'high'"></div>
+
+  <svg class="gauge-svg" viewBox="0 0 200 200">
+    <!-- Background circle -->
+    <circle
+      class="gauge-bg"
+      cx="100"
+      cy="100"
+      [attr.r]="radius"
+      fill="none"
+      [attr.stroke-width]="strokeWidth"
+    />
+
+    <!-- Progress circle -->
+    <circle
+      #gaugeCircle
+      class="gauge-progress"
+      [ngClass]="'gauge-progress--' + scoreColorClass"
+      cx="100"
+      cy="100"
+      [attr.r]="radius"
+      fill="none"
+      [attr.stroke-width]="strokeWidth"
+      [attr.stroke-dasharray]="circumference"
+      [attr.stroke-dashoffset]="strokeDashoffset"
+      stroke-linecap="round"
+      transform="rotate(-90 100 100)"
+    />
+
+    <!-- Glow effect circle -->
+    <circle
+      class="gauge-glow"
+      [ngClass]="'gauge-glow--' + scoreColorClass"
+      cx="100"
+      cy="100"
+      [attr.r]="radius"
+      fill="none"
+      [attr.stroke-width]="strokeWidth + 8"
+      [attr.stroke-dasharray]="circumference"
+      [attr.stroke-dashoffset]="strokeDashoffset"
+      stroke-linecap="round"
+      transform="rotate(-90 100 100)"
+    />
+  </svg>
+
+  <div class="gauge-center">
+    <span class="gauge-score" [ngClass]="'gauge-score--' + scoreColorClass">
+      {{ displayScore }}<span class="gauge-percent">%</span>
+    </span>
+  </div>
+</div>
