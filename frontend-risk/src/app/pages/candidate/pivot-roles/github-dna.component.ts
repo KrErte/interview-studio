@@ -1120,7 +1120,7 @@ export class GitHubDNAComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.http.get<CareerDNA>(`${environment.apiUrl}/api/career-intel/github/${this.usernameInput.trim()}`)
+    this.http.get<CareerDNA>(`${environment.apiBaseUrl}/career-intel/github/${this.usernameInput.trim()}`)
       .subscribe({
         next: (data) => {
           this.dna.set(data);
