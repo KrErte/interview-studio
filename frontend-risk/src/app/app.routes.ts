@@ -41,6 +41,13 @@ export const routes: Routes = [
             (m) => m.FutureproofAssessmentPageComponent
           )
       },
+      {
+        path: 'career-intel',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/career-intel.page').then(
+            (m) => m.CareerIntelPage
+          )
+      },
       // Roadmap requires auth - this is where we gate registration
       {
         path: 'roadmap',
