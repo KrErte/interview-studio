@@ -143,10 +143,10 @@
         <button
           *ngFor="let tab of [
             { id: 'overview', label: 'Overview', icon: '◉' },
+            { id: 'actions', label: 'Tegevusplaan', icon: '🎯' },
             { id: 'simulator', label: 'What-If', icon: '🔮' },
             { id: 'pulse', label: 'Market Pulse', icon: '📡' },
-            { id: 'decay', label: 'Skill Decay', icon: '⏱' },
-            { id: 'autopsy', label: 'Case Studies', icon: '🔍' }
+            { id: 'decay', label: 'Skill Decay', icon: '⏱' }
           ]"
           type="button"
           class="flex-1 min-w-[100px] px-3 py-2 rounded-lg text-xs font-medium transition-all"
@@ -165,7 +165,8 @@
             { id: 'threats', label: 'Threat Radar', icon: '◎' },
             { id: 'skills', label: 'Skill Matrix', icon: '▦' },
             { id: 'vitals', label: 'Career Vitals', icon: '♡' },
-            { id: 'timeline', label: 'AI Timeline', icon: '⚡' }
+            { id: 'timeline', label: 'AI Timeline', icon: '⚡' },
+            { id: 'autopsy', label: 'Case Studies', icon: '🔍' }
           ]"
           type="button"
           class="flex-1 min-w-[100px] px-3 py-2 rounded-lg text-xs font-medium transition-all"
@@ -317,6 +318,13 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Actions Tab - Tegevusplaan -->
+    <div *ngIf="activeTab === 'actions'" class="animate-fadeIn">
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 overflow-hidden">
+        <app-action-recommendations [userRole]="currentRole"></app-action-recommendations>
       </div>
     </div>
 

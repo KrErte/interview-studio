@@ -27,6 +27,7 @@ import { ScenarioSimulatorComponent } from './scenario-simulator.component';
 import { SkillDecayClockComponent } from './skill-decay-clock.component';
 import { MarketPulseComponent } from './market-pulse.component';
 import { DisruptionAutopsyComponent } from './disruption-autopsy.component';
+import { ActionRecommendationsComponent } from './action-recommendations.component';
 
 @Component({
   selector: 'app-futureproof-assessment-page',
@@ -41,7 +42,8 @@ import { DisruptionAutopsyComponent } from './disruption-autopsy.component';
     ScenarioSimulatorComponent,
     SkillDecayClockComponent,
     MarketPulseComponent,
-    DisruptionAutopsyComponent
+    DisruptionAutopsyComponent,
+    ActionRecommendationsComponent
   ],
   templateUrl: './futureproof-assessment.page.html'
 })
@@ -53,7 +55,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   showDetails = false;
   selectedTimelineRisk: { year: number; risk: number } | null = null;
   showRegisterPrompt = false;
-  activeTab: 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' = 'overview';
+  activeTab: 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' | 'actions' = 'overview';
 
   private destroy$ = new Subject<void>();
 
@@ -121,7 +123,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: string): void {
-    this.activeTab = tab as 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy';
+    this.activeTab = tab as 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' | 'actions';
   }
 
   retry(): void {
