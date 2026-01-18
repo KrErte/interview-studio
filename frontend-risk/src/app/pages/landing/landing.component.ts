@@ -304,7 +304,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   startAssessment(): void {
-    // Allow anyone to start assessment - require registration to see results
-    this.router.navigateByUrl('/futureproof/overview');
+    // Guide users through skill assessment questionnaire first
+    this.router.navigateByUrl('/start');
   }
 }

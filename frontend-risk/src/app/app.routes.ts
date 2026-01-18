@@ -20,6 +20,34 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent }
     ]
   },
+  // NEW: Skill Assessment Onboarding (no auth, entry point)
+  {
+    path: 'start',
+    component: AppShellComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/onboarding/skill-assessment.component').then(
+            (m) => m.SkillAssessmentComponent
+          )
+      }
+    ]
+  },
+  // NEW: Job Analyzer Tool (no auth, public tool)
+  {
+    path: 'tools',
+    component: AppShellComponent,
+    children: [
+      {
+        path: 'job-analyzer',
+        loadComponent: () =>
+          import('./pages/tools/job-analyzer.component').then(
+            (m) => m.JobAnalyzerComponent
+          )
+      }
+    ]
+  },
   // Assessment flow - NO auth required (public can do assessment)
   {
     path: 'futureproof',
@@ -55,6 +83,12 @@ export const routes: Routes = [
         canActivate: [authGuard]
       }
     ]
+  },
+  // Redirect /analysis to futureproof/assessment (for questionnaire completion)
+  {
+    path: 'analysis',
+    redirectTo: 'futureproof/assessment',
+    pathMatch: 'full'
   },
   // 404
   { path: '**', component: NotFoundComponent }

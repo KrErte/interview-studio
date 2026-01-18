@@ -18,6 +18,16 @@ import { FutureproofStepperComponent } from './futureproof-stepper.component';
             Tulevikukindlus
           </a>
 
+          <!-- Quick Tools Links -->
+          <div class="flex items-center gap-4 text-sm">
+            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors">
+              📝 Hinda oskusi
+            </a>
+            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors">
+              🔬 Job X-Ray
+            </a>
+          </div>
+
           <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
             <ng-container [ngSwitch]="nav.mode">
               <ng-container *ngSwitchCase="'futureproof'">
