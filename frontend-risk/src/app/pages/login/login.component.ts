@@ -210,6 +210,15 @@ type LoginForm = {
           </div>
         </div>
       </div>
+
+      <!-- Mock Data Button -->
+      <button
+        class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-lg bg-purple-500 text-white font-semibold shadow-lg shadow-purple-500/40 hover:bg-purple-600 hover:-translate-y-0.5 transition-all"
+        (click)="fillMockData()"
+        title="Fill with test data"
+      >
+        🧪 Mock
+      </button>
     </div>
   `
 })
@@ -303,6 +312,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.error = err?.error?.message || 'Authentication failed. Please check your credentials.';
       }
+    });
+  }
+
+  fillMockData(): void {
+    this.form.patchValue({
+      email: 'test@example.com',
+      password: 'password123'
     });
   }
 }

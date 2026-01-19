@@ -300,6 +300,11 @@ interface AssessmentData {
           </button>
         }
       </div>
+
+      <!-- Mock Data Button -->
+      <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
+        🧪 Mock
+      </button>
     </div>
   `,
   styles: [`
@@ -747,6 +752,27 @@ interface AssessmentData {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
+    .mock-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #8b5cf6;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      z-index: 1000;
+      transition: all 0.2s;
+    }
+
+    .mock-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
+    }
   `]
 })
 export class SkillAssessmentComponent {
@@ -906,5 +932,33 @@ export class SkillAssessmentComponent {
     this.router.navigate(['/analysis'], {
       queryParams: { source: 'assessment' }
     });
+  }
+
+  fillMockData() {
+    // Fill all form data with mock values
+    this.assessment = {
+      currentRole: 'Full Stack Developer',
+      yearsExperience: 5,
+      skills: [
+        { name: 'TypeScript', level: 4, yearsUsed: 3 },
+        { name: 'React', level: 4, yearsUsed: 3 },
+        { name: 'Node.js', level: 3, yearsUsed: 2 },
+        { name: 'PostgreSQL', level: 3, yearsUsed: 2 },
+        { name: 'Docker', level: 2, yearsUsed: 1 },
+        { name: 'AWS', level: 2, yearsUsed: 1 }
+      ],
+      workBreakdown: {
+        repetitiveTasks: 20,
+        problemSolving: 40,
+        communication: 25,
+        creativity: 15
+      },
+      industryContext: 'SaaS',
+      companySize: 'medium',
+      remoteWork: 80
+    };
+
+    // Jump to last step
+    this.currentStep.set(this.totalSteps);
   }
 }

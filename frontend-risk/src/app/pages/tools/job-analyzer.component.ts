@@ -204,6 +204,11 @@ Requirements:
           </div>
         </div>
       }
+
+      <!-- Mock Data Button -->
+      <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
+        🧪 Mock
+      </button>
     </div>
   `,
   styles: [`
@@ -553,6 +558,26 @@ Requirements:
         grid-template-columns: 1fr;
       }
     }
+
+    .mock-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #8b5cf6;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      z-index: 1000;
+    }
+
+    .mock-btn:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+    }
   `]
 })
 export class JobAnalyzerComponent {
@@ -815,5 +840,39 @@ export class JobAnalyzerComponent {
     }
 
     return recs;
+  }
+
+  fillMockData() {
+    this.jobText = `Senior Full Stack Developer - Remote
+
+About Us:
+We are a fast-growing SaaS company backed by Series B funding, looking for a talented developer to join our engineering team.
+
+Requirements:
+- 5+ years of experience in software development
+- Strong proficiency in TypeScript and React
+- Experience with Node.js and PostgreSQL
+- Familiarity with AWS services (EC2, S3, Lambda)
+- Knowledge of Docker and CI/CD pipelines
+- Experience with REST APIs and GraphQL
+- Strong problem-solving skills
+- Excellent communication in English
+
+Nice to Have:
+- Experience with Kubernetes
+- Knowledge of Python or Go
+- Previous startup experience
+- Contributions to open source projects
+
+What We Offer:
+- Competitive salary ($120,000 - $160,000)
+- Equity/stock options
+- Fully remote work
+- Unlimited PTO
+- Learning and development budget
+- Health insurance
+
+We're looking for someone who can wear many hats and thrives in a fast-paced environment!`;
+    this.result.set(null);
   }
 }
