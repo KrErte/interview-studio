@@ -15,7 +15,6 @@ export const appConfig: ApplicationConfig = {
       TranslateModule.forRoot({
         defaultLanguage: 'et',
         useDefaultLang: true,
-        fallbackLanguage: 'en',
         loader: {
           provide: TranslateLoader,
           useFactory: createTranslateLoader,

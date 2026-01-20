@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # PostgreSQL Database (optional - use with --profile postgres)
   postgres:
     image: postgres:16-alpine
     container_name: interview-postgres
@@ -20,26 +20,22 @@ services:
       retries: 5
     networks:
       - interview-network
+    profiles:
+      - postgres  # Only starts when explicitly requested
 
-  # Spring Boot Backend
+  # Spring Boot Backend (H2 in-memory by default)
   backend:
     build:
       context: ./studio-backend
       dockerfile: Dockerfile
     container_name: interview-backend
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      DB_URL: jdbc:postgresql://postgres:5432/ai
-      DB_USER: ai
-      DB_PASS: ai123
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-dev}
       JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-characters}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:4200}
     ports:
       - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -78,7 +74,6 @@ services:
       - interview-network
 
   # TaskExposure Frontend (cloned from GitHub)
-  # To use: git clone https://github.com/KrErte/taskexposure-frontend.git
   taskexposure-frontend:
     build:
       context: ./taskexposure-frontend

@@ -10,6 +10,7 @@ import { PivotRolesPageComponent } from './pages/candidate/pivot-roles/pivot-rol
 import { FutureproofRoadmapPageComponent } from './pages/candidate/pivot-roles/futureproof-roadmap.page';
 
 export const routes: Routes = [
+  // Public pages (landing, auth)
   {
     path: '',
     component: PublicShellComponent,
@@ -19,34 +20,111 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent }
     ]
   },
+  // NEW: Skill Assessment Onboarding (no auth, entry point)
   {
-    path: '',
+    path: 'start',
     component: AppShellComponent,
-    canActivate: [authGuard],
     children: [
       {
-        path: 'futureproof',
-        children: [
-          { path: '', pathMatch: 'full', redirectTo: 'overview' },
-          { path: 'overview', component: PivotRolesPageComponent },
-          {
-            path: 'questions',
-            loadComponent: () =>
-              import('./pages/candidate/pivot-roles/futureproof-questions.page').then(
-                (m) => m.FutureproofQuestionsPageComponent
-              )
-          },
-          {
-            path: 'assessment',
-            loadComponent: () =>
-              import('./pages/candidate/pivot-roles/futureproof-assessment.page').then(
-                (m) => m.FutureproofAssessmentPageComponent
-              )
-          },
-          { path: 'roadmap', component: FutureproofRoadmapPageComponent }
-        ]
-      },
-      { path: '**', component: NotFoundComponent }
+        path: '',
+        loadComponent: () =>
+          import('./pages/onboarding/skill-assessment.component').then(
+            (m) => m.SkillAssessmentComponent
+          )
+      }
     ]
-  }
+  },
+  // NEW: Job Analyzer Tool (no auth, public tool)
+  {
+    path: 'tools',
+    component: AppShellComponent,
+    children: [
+      {
+        path: 'job-analyzer',
+        loadComponent: () =>
+          import('./pages/tools/job-analyzer.component').then(
+            (m) => m.JobAnalyzerComponent
+          )
+      }
+    ]
+  },
+  // NEW: Arena - Interactive Training Tools (unique features)
+  {
+    path: 'arena',
+    component: AppShellComponent,
+    children: [
+      {
+        path: 'interview',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/interview-interrogation.component').then(
+            (m) => m.InterviewInterrogationComponent
+          )
+      },
+      {
+        path: 'negotiation',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/salary-negotiation-dojo.component').then(
+            (m) => m.SalaryNegotiationDojoComponent
+          )
+      },
+      {
+        path: 'truth',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/brutal-truth-machine.component').then(
+            (m) => m.BrutalTruthMachineComponent
+          )
+      },
+      {
+        path: 'stress-test',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/career-stress-test.component').then(
+            (m) => m.CareerStressTestComponent
+          )
+      }
+    ]
+  },
+  // Assessment flow - NO auth required (public can do assessment)
+  {
+    path: 'futureproof',
+    component: AppShellComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'overview' },
+      { path: 'overview', component: PivotRolesPageComponent },
+      {
+        path: 'questions',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/futureproof-questions.page').then(
+            (m) => m.FutureproofQuestionsPageComponent
+          )
+      },
+      {
+        path: 'assessment',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/futureproof-assessment.page').then(
+            (m) => m.FutureproofAssessmentPageComponent
+          )
+      },
+      {
+        path: 'career-intel',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/career-intel.page').then(
+            (m) => m.CareerIntelPage
+          )
+      },
+      // Roadmap requires auth - this is where we gate registration
+      {
+        path: 'roadmap',
+        component: FutureproofRoadmapPageComponent,
+        canActivate: [authGuard]
+      }
+    ]
+  },
+  // Redirect /analysis to futureproof/assessment (for questionnaire completion)
+  {
+    path: 'analysis',
+    redirectTo: 'futureproof/assessment',
+    pathMatch: 'full'
+  },
+  // 404
+  { path: '**', component: NotFoundComponent }
 ];

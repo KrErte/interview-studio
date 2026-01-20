@@ -430,4 +430,16 @@ export class RiskComponent implements OnInit, OnDestroy {
       this.generateRoadmap(this.selectedRoadmapDuration);
     }
   }
+
+  fillMockData(): void {
+    // Fill experience input with mock data
+    this.cvUploaded = true;
+    this.experienceInput = {
+      yearsOfExperience: 5,
+      currentRole: 'Senior Software Engineer',
+      seniority: 'Senior',
+      industry: 'FinTech',
+      stack: 'TypeScript, React, Node.js, PostgreSQL, AWS, Docker, Kubernetes'
+    };
+  }
 }

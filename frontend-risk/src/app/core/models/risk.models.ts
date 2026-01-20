@@ -206,3 +206,112 @@ export interface GenerateRoadmapRequest {
   duration: RoadmapDuration;
 }
 
+// Risk Analysis DTOs
+export interface ThreatVector {
+  id: string;
+  label: string;
+  severity: number;
+  category: 'automation' | 'outsourcing' | 'obsolescence' | 'competition';
+  eta: string;
+  description: string;
+}
+
+export interface SkillCell {
+  skill: string;
+  currentLevel: number;
+  aiCapability: number;
+  demandTrend: 'rising' | 'stable' | 'declining';
+  category: string;
+}
+
+export interface VitalSign {
+  id: string;
+  label: string;
+  value: number;
+  unit: string;
+  min: number;
+  max: number;
+  optimalMin: number;
+  optimalMax: number;
+  trend: 'up' | 'down' | 'stable';
+  history: number[];
+}
+
+export interface AIMilestone {
+  year: number;
+  capability: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high' | 'critical';
+  probability: number;
+  status: 'past' | 'imminent' | 'projected';
+  affectedTasks: string[];
+}
+
+export interface Scenario {
+  id: string;
+  action: string;
+  timeInvestment: string;
+  riskChange: number;
+  salaryChange: number;
+  demandChange: number;
+  description: string;
+}
+
+export interface SkillDecay {
+  skill: string;
+  halfLife: string;
+  currentRelevance: number;
+  lastUpdated: string;
+  decayRate: 'fast' | 'moderate' | 'slow';
+  renewalAction: string;
+}
+
+export interface MarketSignal {
+  id: string;
+  type: 'opportunity' | 'warning' | 'trend' | 'layoff';
+  title: string;
+  source: string;
+  timeAgo: string;
+  relevanceScore: number;
+  details: string;
+  actionable: boolean;
+  action?: string;
+}
+
+export interface MarketMetric {
+  label: string;
+  value: string;
+  change: number;
+  trend: 'up' | 'down' | 'stable';
+}
+
+export interface TimelineEvent {
+  year: number;
+  event: string;
+}
+
+export interface DisruptedRole {
+  title: string;
+  peakYear: number;
+  currentStatus: 'disrupted' | 'transformed' | 'declining';
+  peakEmployment: string;
+  currentEmployment: string;
+  decline: number;
+  disruptors: string[];
+  timeline: TimelineEvent[];
+  survivors: string[];
+  lessons: string[];
+}
+
+export interface RiskAnalysisResponse {
+  threatVectors: ThreatVector[];
+  skillMatrix: SkillCell[];
+  vitalSigns: VitalSign[];
+  aiMilestones: AIMilestone[];
+  scenarios: Scenario[];
+  skillDecay: SkillDecay[];
+  marketSignals: MarketSignal[];
+  marketMetrics: MarketMetric[];
+  disruptedRoles: DisruptedRole[];
+}
+

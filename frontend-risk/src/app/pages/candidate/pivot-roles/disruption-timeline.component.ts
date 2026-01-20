@@ -14,7 +14,7 @@ export interface DisruptionPoint {
   templateUrl: './disruption-timeline.component.html'
 })
 export class DisruptionTimelineComponent implements OnInit {
-  @Input() currentRole = 'Sinu roll';
+  @Input() currentRole = 'Your Role';
   @Input() timeline: DisruptionPoint[] = [];
 
   activePoint: DisruptionPoint | null = null;
@@ -34,10 +34,10 @@ export class DisruptionTimelineComponent implements OnInit {
   }
 
   riskLabel(risk: number): string {
-    if (risk <= 25) return 'Madal';
-    if (risk <= 45) return 'Mõõdukas';
-    if (risk <= 65) return 'Kõrge';
-    return 'Väga kõrge';
+    if (risk <= 25) return 'Low';
+    if (risk <= 45) return 'Moderate';
+    if (risk <= 65) return 'High';
+    return 'Very High';
   }
 
   riskBand(risk: number): 'green' | 'amber' | 'red' {
@@ -49,8 +49,8 @@ export class DisruptionTimelineComponent implements OnInit {
   riskHint(point: DisruptionPoint | null): string | null {
     if (!point) return null;
     const band = this.riskBand(point.automationRisk);
-    if (band === 'amber') return 'Soovitav alustada ettevalmistust 12–24 kuu jooksul.';
-    if (band === 'red') return 'Soovitav tegutseda enne seda aastat.';
+    if (band === 'amber') return 'Recommended to begin preparation within 12-24 months.';
+    if (band === 'red') return 'Recommended to take action before this year.';
     return null;
   }
 
