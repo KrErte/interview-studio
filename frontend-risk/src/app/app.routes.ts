@@ -48,6 +48,41 @@ export const routes: Routes = [
       }
     ]
   },
+  // NEW: Arena - Interactive Training Tools (unique features)
+  {
+    path: 'arena',
+    component: AppShellComponent,
+    children: [
+      {
+        path: 'interview',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/interview-interrogation.component').then(
+            (m) => m.InterviewInterrogationComponent
+          )
+      },
+      {
+        path: 'negotiation',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/salary-negotiation-dojo.component').then(
+            (m) => m.SalaryNegotiationDojoComponent
+          )
+      },
+      {
+        path: 'truth',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/brutal-truth-machine.component').then(
+            (m) => m.BrutalTruthMachineComponent
+          )
+      },
+      {
+        path: 'stress-test',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/career-stress-test.component').then(
+            (m) => m.CareerStressTestComponent
+          )
+      }
+    ]
+  },
   // Assessment flow - NO auth required (public can do assessment)
   {
     path: 'futureproof',
