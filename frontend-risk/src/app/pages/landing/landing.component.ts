@@ -232,6 +232,118 @@ import { AuthService } from '../../core/auth/auth-api.service';
       </div>
     </section>
 
+    <!-- For Employers Section -->
+    <section class="py-24 px-6 bg-gradient-to-b from-slate-900 to-slate-950">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-sm mb-6">
+              <span>For Employers</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+              Future-Proof Your Workforce
+            </h2>
+            <p class="text-slate-400 mb-6 leading-relaxed">
+              Don't wait until your best people are obsolete. Get AI-powered insights into your team's
+              skill gaps, automation risk, and upskilling ROI.
+            </p>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center gap-3 text-slate-300">
+                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                Workforce risk analytics dashboard
+              </li>
+              <li class="flex items-center gap-3 text-slate-300">
+                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                AI-powered upskilling recommendations
+              </li>
+              <li class="flex items-center gap-3 text-slate-300">
+                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                ROI tracking on training investments
+              </li>
+              <li class="flex items-center gap-3 text-slate-300">
+                <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                HRIS & LMS integrations
+              </li>
+            </ul>
+            <div class="flex gap-4">
+              <a routerLink="/pricing" class="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">
+                View Pricing
+              </a>
+              <a routerLink="/business" class="px-6 py-3 border border-slate-700 text-slate-300 rounded-lg font-semibold hover:border-slate-500 hover:text-white transition-colors">
+                Book Demo
+              </a>
+            </div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-semibold text-white">Workforce Risk Overview</h3>
+              <span class="text-xs text-slate-500">Demo Data</span>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Engineering</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="w-1/3 h-full bg-emerald-500 rounded-full"></div>
+                  </div>
+                  <span class="text-emerald-400 font-mono text-sm">32%</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Marketing</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="w-3/4 h-full bg-red-500 rounded-full"></div>
+                  </div>
+                  <span class="text-red-400 font-mono text-sm">76%</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Finance</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="w-1/2 h-full bg-amber-500 rounded-full"></div>
+                  </div>
+                  <span class="text-amber-400 font-mono text-sm">54%</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Sales</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div class="w-2/5 h-full bg-amber-500 rounded-full"></div>
+                  </div>
+                  <span class="text-amber-400 font-mono text-sm">41%</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <div class="text-2xl font-bold text-white">4.2x</div>
+                <div class="text-xs text-slate-500">Avg. Upskill ROI</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-emerald-400">$340K</div>
+                <div class="text-xs text-slate-500">Est. Annual Savings</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-purple-400">89%</div>
+                <div class="text-xs text-slate-500">Assessment Rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Final CTA -->
     <section class="py-24 px-6 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent"></div>

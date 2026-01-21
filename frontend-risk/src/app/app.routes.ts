@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { PublicShellComponent } from './layout/public-shell.component';
 import { AppShellComponent } from './layout/app-shell.component';
+import { BusinessShellComponent } from './layout/business-shell.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -18,6 +19,50 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', component: LandingComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent }
+    ]
+  },
+  // Pricing page (public)
+  {
+    path: 'pricing',
+    loadComponent: () =>
+      import('./pages/business/pricing.component').then(m => m.PricingComponent)
+  },
+  // B2B Business Dashboard (auth required)
+  {
+    path: 'business',
+    component: BusinessShellComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/business/company-dashboard.component').then(m => m.CompanyDashboardComponent)
+      },
+      {
+        path: 'team',
+        loadComponent: () =>
+          import('./pages/business/team-management.component').then(m => m.TeamManagementComponent)
+      },
+      {
+        path: 'analytics',
+        loadComponent: () =>
+          import('./pages/business/analytics-reports.component').then(m => m.AnalyticsReportsComponent)
+      },
+      {
+        path: 'training',
+        loadComponent: () =>
+          import('./pages/business/training-plans.component').then(m => m.TrainingPlansComponent)
+      },
+      {
+        path: 'integrations',
+        loadComponent: () =>
+          import('./pages/business/integrations.component').then(m => m.IntegrationsComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./pages/business/business-settings.component').then(m => m.BusinessSettingsComponent)
+      }
     ]
   },
   // NEW: Skill Assessment Onboarding (no auth, entry point)

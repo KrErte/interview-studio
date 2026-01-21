@@ -49,6 +49,18 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
               class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
             >Home</a>
 
+            <a
+              routerLink="/pricing"
+              routerLinkActive="text-emerald-400"
+              class="hidden sm:block px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
+            >Pricing</a>
+
+            <a
+              routerLink="/business"
+              routerLinkActive="text-purple-400"
+              class="hidden sm:block px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
+            >For Employers</a>
+
             <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block"></div>
 
             <a
