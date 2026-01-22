@@ -103,8 +103,8 @@ HEADLINE VARIANTS (for A/B testing)
           </h2>
           <p class="text-slate-400 max-w-2xl mx-auto">
             {{ lang() === 'en'
-              ? 'These aren\'t generic tips. These are the specific reasons you — based on your actual profile — aren\'t converting.'
-              : 'Need pole üldised nõuanded. Need on konkreetsed põhjused, miks sina — sinu tegeliku profiili põhjal — ei konverteeru.' }}
+              ? 'These are not generic tips. These are the specific reasons you - based on your actual profile - are not converting.'
+              : 'Need pole uldised nouanded. Need on konkreetsed pohjused, miks sina - sinu tegeliku profiili pohjal - ei konverteeru.' }}
           </p>
         </div>
 
@@ -118,8 +118,8 @@ HEADLINE VARIANTS (for A/B testing)
             </h3>
             <p class="text-slate-400 text-sm">
               {{ lang() === 'en'
-                ? '"Why are you here?" — if you can\'t answer this clearly in 30 seconds, the interview is already lost.'
-                : '"Miks sa siin oled?" — kui sa ei saa sellele selgelt 30 sekundiga vastata, on intervjuu juba kaotatud.' }}
+                ? '"Why are you here?" - if you can\'t answer this clearly in 30 seconds, the interview is already lost.'
+                : '"Miks sa siin oled?" - kui sa ei saa sellele selgelt 30 sekundiga vastata, on intervjuu juba kaotatud.' }}
             </p>
           </div>
 

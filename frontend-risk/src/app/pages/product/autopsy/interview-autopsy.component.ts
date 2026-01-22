@@ -236,7 +236,7 @@ interface AutopsyResult {
                 <button
                   (click)="openPaywall()"
                   class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform shadow-lg shadow-emerald-500/25">
-                  {{ lang() === 'en' ? 'Unlock Full Report — €14.99' : 'Ava Täielik Raport — €14.99' }}
+                  {{ lang() === 'en' ? 'Unlock Full Report - €14.99' : 'Ava Täielik Raport - €14.99' }}
                 </button>
               </div>
             </div>
@@ -269,7 +269,7 @@ interface AutopsyResult {
           <button
             (click)="openPaywall()"
             class="px-10 py-5 bg-white text-slate-900 font-bold rounded-xl text-lg hover:scale-105 transition-transform shadow-2xl">
-            {{ lang() === 'en' ? 'Get Full Interview Autopsy — €14.99' : 'Saa Täielik Intervjuu Lahkamine — €14.99' }}
+            {{ lang() === 'en' ? 'Get Full Interview Autopsy - €14.99' : 'Saa Täielik Intervjuu Lahkamine - €14.99' }}
           </button>
           <p class="text-xs text-slate-500 mt-3">
             {{ lang() === 'en' ? '30-day access • PDF export • Money-back guarantee' : '30-päevane ligipääs • PDF eksport • Raha tagasi garantii' }}

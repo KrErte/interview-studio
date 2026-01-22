@@ -120,7 +120,7 @@ interface Department {
                 <td class="p-4">
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-purple-500 flex items-center justify-center text-white font-medium">
-                      {{ employee.name.split(' ').map(n => n[0]).join('') }}
+                      {{ getInitials(employee.name) }}
                     </div>
                     <div>
                       <div class="font-medium text-white">{{ employee.name }}</div>
@@ -309,6 +309,10 @@ export class TeamManagementComponent {
 
     return result;
   });
+
+  getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('');
+  }
 
   sendInvites() {
     const emails = this.inviteEmails

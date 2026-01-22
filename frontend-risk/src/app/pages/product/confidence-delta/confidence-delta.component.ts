@@ -202,7 +202,7 @@ interface DeltaMetric {
                     : 'Vaata kuidas sinu oodatav palk võrdleb sellega, mida turg tegelikult sinu profiili eest maksab.' }}
                 </p>
                 <button class="px-8 py-4 bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform">
-                  {{ lang() === 'en' ? 'Unlock Salary Reality — €14.99' : 'Ava Palgareaalsus — €14.99' }}
+                  {{ lang() === 'en' ? 'Unlock Salary Reality - €14.99' : 'Ava Palgareaalsus - €14.99' }}
                 </button>
               </div>
             </div>
@@ -330,17 +330,17 @@ export class ConfidenceDeltaComponent {
 
   getHardTruth(): string {
     const delta = this.overallDelta();
-    if (delta > 15) return 'You\'re significantly overestimating your market position. This explains why interviews aren\'t converting — you\'re likely coming across as arrogant or unaware. The market doesn\'t care what you think you\'re worth; it cares what you can prove.';
+    if (delta > 15) return 'You\'re significantly overestimating your market position. This explains why interviews aren\'t converting - you\'re likely coming across as arrogant or unaware. The market doesn\'t care what you think you\'re worth; it cares what you can prove.';
     if (delta > 5) return 'You have a mild case of inflated self-assessment. You\'re probably targeting roles slightly above your current level without the evidence to back it up. This leads to getting ghosted after interviews.';
-    if (delta < -10) return 'You\'re underselling yourself significantly. This might feel humble, but it\'s costing you money and opportunities. Companies are paying for confidence too — if you don\'t value yourself, why would they?';
+    if (delta < -10) return 'You\'re underselling yourself significantly. This might feel humble, but it\'s costing you money and opportunities. Companies are paying for confidence too - if you don\'t value yourself, why would they?';
     return 'Your self-assessment is reasonably aligned with market reality. This is rare and healthy. Focus on closing specific gaps rather than recalibrating your entire view.';
   }
 
   getHardTruthEt(): string {
     const delta = this.overallDelta();
-    if (delta > 15) return 'Sa ülehindad oluliselt oma turupositsiooni. See selgitab, miks intervjuud ei konverteeru — sa tuled ilmselt üle ülbe või teadmatuna. Turgu ei huvita, mida sa arvad, et sa väärt oled; teda huvitab, mida sa tõestada saad.';
+    if (delta > 15) return 'Sa ülehindad oluliselt oma turupositsiooni. See selgitab, miks intervjuud ei konverteeru - sa tuled ilmselt üle ülbe või teadmatuna. Turgu ei huvita, mida sa arvad, et sa väärt oled; teda huvitab, mida sa tõestada saad.';
     if (delta > 5) return 'Sul on kerge paisutatud enesehinnangu juhtum. Sa sihtid ilmselt rolle veidi üle oma praeguse taseme ilma tõenditeta seda toetada. See viib selleni, et sind ignoreeritakse pärast intervjuusid.';
-    if (delta < -10) return 'Sa müüd end oluliselt alla. See võib tunduda tagasihoidlik, aga see maksab sulle raha ja võimalusi. Ettevõtted maksavad ka enesekindluse eest — kui sa ennast ei väärtusta, miks peaksid nemad?';
+    if (delta < -10) return 'Sa müüd end oluliselt alla. See võib tunduda tagasihoidlik, aga see maksab sulle raha ja võimalusi. Ettevõtted maksavad ka enesekindluse eest - kui sa ennast ei väärtusta, miks peaksid nemad?';
     return 'Sinu enesehinnang on mõistlikult kooskõlas turu reaalsusega. See on haruldane ja tervislik. Keskendu konkreetsete lünkade sulgemisele, mitte kogu vaate ümberkalibreerimus.';
   }
 

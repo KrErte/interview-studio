@@ -94,7 +94,7 @@ export class PaywallComponent {
   @Input() icon: string = '🔒';
   @Input() title: string = 'Unlock Full Access';
   @Input() description: string = 'Get the complete analysis and actionable insights.';
-  @Input() ctaText: string = 'Unlock Now — €14.99';
+  @Input() ctaText: string = 'Unlock Now - €14.99';
   @Input() subtext: string = '30-day access • Instant delivery';
   @Input() features: string[] = [];
   @Input() targetPlan: PlanType = 'report';

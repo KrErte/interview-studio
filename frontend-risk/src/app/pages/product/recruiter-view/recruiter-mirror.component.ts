@@ -249,7 +249,7 @@ interface SeniorityAnalysis {
                     : 'Sisaldab: Ettevõtte tajumise skoor, tiitli trajektoori analüüs ja kompensatsiooni positsioneerimine.' }}
                 </p>
                 <button class="px-8 py-4 bg-gradient-to-r from-purple-500 to-emerald-500 text-white font-bold rounded-xl hover:scale-105 transition-transform">
-                  {{ lang() === 'en' ? 'Unlock Full Analysis — €14.99' : 'Ava Täielik Analüüs — €14.99' }}
+                  {{ lang() === 'en' ? 'Unlock Full Analysis - €14.99' : 'Ava Täielik Analüüs - €14.99' }}
                 </button>
               </div>
             </div>
