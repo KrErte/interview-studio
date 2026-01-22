@@ -164,11 +164,56 @@ export const routes: Routes = [
       }
     ]
   },
-  // Redirect /analysis to futureproof/assessment (for questionnaire completion)
+  // PRODUCT: Interview Autopsy (public, with paywall)
+  {
+    path: 'autopsy',
+    component: AppShellComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/product/autopsy/interview-autopsy.component').then(
+            m => m.InterviewAutopsyComponent
+          )
+      }
+    ]
+  },
+  // PRODUCT: Analysis modules
   {
     path: 'analysis',
-    redirectTo: 'futureproof/assessment',
-    pathMatch: 'full'
+    component: AppShellComponent,
+    children: [
+      { path: '', redirectTo: 'recruiter-view', pathMatch: 'full' },
+      {
+        path: 'recruiter-view',
+        loadComponent: () =>
+          import('./pages/product/recruiter-view/recruiter-mirror.component').then(
+            m => m.RecruiterMirrorComponent
+          )
+      },
+      {
+        path: 'delta',
+        loadComponent: () =>
+          import('./pages/product/confidence-delta/confidence-delta.component').then(
+            m => m.ConfidenceDeltaComponent
+          )
+      },
+      {
+        path: 'next-72h',
+        loadComponent: () =>
+          import('./pages/product/action-plan/action-plan-72h.component').then(
+            m => m.ActionPlan72hComponent
+          )
+      }
+    ]
+  },
+  // PRODUCT: Conversion Landing Page
+  {
+    path: 'product',
+    loadComponent: () =>
+      import('./pages/product/landing/product-landing.component').then(
+        m => m.ProductLandingComponent
+      )
   },
   // 404
   { path: '**', component: NotFoundComponent }
