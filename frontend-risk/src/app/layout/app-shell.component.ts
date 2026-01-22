@@ -20,15 +20,28 @@ import { FutureproofStepperComponent } from './futureproof-stepper.component';
 
           <!-- Quick Tools Links -->
           <div class="flex items-center gap-4 text-sm">
-            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors">
-              📝 Assess Skills
+            <a routerLink="/autopsy" class="text-red-400 hover:text-red-300 transition-colors font-medium">
+              💀 Autopsy
             </a>
-            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors">
-              🔬 Job X-Ray
-            </a>
-            <a routerLink="/business" class="text-slate-400 hover:text-purple-400 transition-colors">
-              🏢 Business
-            </a>
+            <div class="relative group">
+              <button class="text-slate-400 hover:text-amber-400 transition-colors flex items-center gap-1">
+                📊 Analysis
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div class="absolute top-full left-0 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
+                <a routerLink="/analysis/recruiter-view" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-amber-400 rounded-t-lg">
+                  🪞 Recruiter View
+                </a>
+                <a routerLink="/analysis/delta" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-amber-400">
+                  ⚖️ Confidence Delta
+                </a>
+                <a routerLink="/analysis/next-72h" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-amber-400 rounded-b-lg">
+                  ⚡ 72h Action Plan
+                </a>
+              </div>
+            </div>
             <div class="relative group">
               <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1">
                 🏟️ Arena
@@ -51,6 +64,9 @@ import { FutureproofStepperComponent } from './futureproof-stepper.component';
                 </a>
               </div>
             </div>
+            <a routerLink="/business" class="text-slate-400 hover:text-emerald-400 transition-colors">
+              🏢 Business
+            </a>
           </div>
 
           <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
