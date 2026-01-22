@@ -51,8 +51,8 @@ interface SeniorityAnalysis {
 
           <p class="text-slate-400 text-lg max-w-2xl mx-auto">
             {{ lang() === 'en'
-              ? 'The hiring manager will spend 7.4 seconds on your profile. Here\'s what registers — and what doesn\'t.'
-              : 'Personalijuht kulutab sinu profiilile 7.4 sekundit. Siin on, mis registreerub — ja mis mitte.' }}
+              ? 'The hiring manager will spend 7.4 seconds on your profile. Here is what registers - and what does not.'
+              : 'Personalijuht kulutab sinu profiilile 7.4 sekundit. Siin on, mis registreerub - ja mis mitte.' }}
           </p>
         </div>
 

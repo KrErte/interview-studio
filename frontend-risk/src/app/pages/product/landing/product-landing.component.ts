@@ -56,8 +56,8 @@ HEADLINE VARIANTS (for A/B testing)
       <!-- Subheadline -->
       <p class="text-xl md:text-2xl text-slate-400 text-center max-w-2xl mb-8">
         {{ lang() === 'en'
-          ? 'We analyze your profile against 10,000+ interview outcomes. In 3 minutes, know exactly what will sink you — and how to fix it.'
-          : 'Analüüsime sinu profiili 10,000+ intervjuu tulemuse vastu. 3 minutiga tea täpselt, mis sind uppi ajab — ja kuidas seda parandada.' }}
+          ? 'We analyze your profile against 10,000+ interview outcomes. In 3 minutes, know exactly what will sink you - and how to fix it.'
+          : 'Analüüsime sinu profiili 10,000+ intervjuu tulemuse vastu. 3 minutiga tea täpselt, mis sind uppi ajab - ja kuidas seda parandada.' }}
       </p>
 
       <!-- Social Proof -->
