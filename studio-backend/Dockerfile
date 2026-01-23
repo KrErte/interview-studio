@@ -2,8 +2,8 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /app
 
-# Install bash, dos2unix, and unzip for gradlew compatibility
-RUN apk add --no-cache bash dos2unix unzip
+# Install bash and dos2unix for gradlew compatibility
+RUN apk add --no-cache bash dos2unix
 
 # Copy gradle files
 COPY gradlew .
@@ -15,13 +15,14 @@ COPY settings.gradle .
 RUN dos2unix gradlew && chmod +x gradlew
 
 # Download gradle-wrapper.jar if missing (often excluded from git via *.jar rule)
+# The wrapper jar is downloaded from the official Gradle GitHub repository
 ARG GRADLE_VERSION=8.7
 RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
         mkdir -p gradle/wrapper && \
-        wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" && \
-        unzip -q /tmp/gradle.zip "gradle-${GRADLE_VERSION}/lib/gradle-wrapper*.jar" -d /tmp && \
-        cp /tmp/gradle-${GRADLE_VERSION}/lib/gradle-wrapper-*.jar gradle/wrapper/gradle-wrapper.jar && \
-        rm -rf /tmp/gradle.zip /tmp/gradle-${GRADLE_VERSION}; \
+        wget -q -O gradle/wrapper/gradle-wrapper.jar \
+        "https://github.com/gradle/gradle/raw/v${GRADLE_VERSION}.0/gradle/wrapper/gradle-wrapper.jar" || \
+        wget -q -O gradle/wrapper/gradle-wrapper.jar \
+        "https://raw.githubusercontent.com/gradle/gradle/v${GRADLE_VERSION}.0/gradle/wrapper/gradle-wrapper.jar"; \
     fi
 
 # Download dependencies (cached layer)
