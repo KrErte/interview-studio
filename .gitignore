@@ -45,6 +45,7 @@ replay_pid*.log
 *.class
 *.war
 *.jar
+!**/gradle-wrapper.jar
 *.ear
 
 # =========================

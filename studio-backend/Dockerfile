@@ -2,8 +2,8 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /app
 
-# Install bash and dos2unix for gradlew compatibility
-RUN apk add --no-cache bash dos2unix
+# Install bash, dos2unix, and unzip for gradlew compatibility
+RUN apk add --no-cache bash dos2unix unzip
 
 # Copy gradle files
 COPY gradlew .
@@ -11,8 +11,18 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 
-# Fix line endings (Windows CRLF -> Unix LF) and make executable
+# Fix line endings and make gradlew executable
 RUN dos2unix gradlew && chmod +x gradlew
+
+# Download gradle-wrapper.jar if missing (often excluded from git via *.jar rule)
+ARG GRADLE_VERSION=8.7
+RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
+        mkdir -p gradle/wrapper && \
+        wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" && \
+        unzip -q /tmp/gradle.zip "gradle-${GRADLE_VERSION}/lib/gradle-wrapper*.jar" -d /tmp && \
+        cp /tmp/gradle-${GRADLE_VERSION}/lib/gradle-wrapper-*.jar gradle/wrapper/gradle-wrapper.jar && \
+        rm -rf /tmp/gradle.zip /tmp/gradle-${GRADLE_VERSION}; \
+    fi
 
 # Download dependencies (cached layer)
 RUN ./gradlew dependencies --no-daemon || true
