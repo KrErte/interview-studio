@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
 
 @Component({
   selector: 'app-public-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent],
   template: `
     <!-- Animated Background -->
     <div class="fixed inset-0 -z-10 overflow-hidden">
@@ -40,29 +41,37 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
             </div>
           </a>
 
-          <!-- Navigation -->
-          <nav class="flex items-center gap-1">
-            <a
-              routerLink="/"
-              routerLinkActive="bg-slate-800/50 text-white"
-              [routerLinkActiveOptions]="{ exact: true }"
-              class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
-            >Home</a>
+          <!-- Navigation + UI Mode Toggle -->
+          <div class="flex items-center gap-4">
+            <!-- UI Mode Toggle (top-right) -->
+            <app-ui-mode-toggle />
 
-            <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block"></div>
+            <!-- Separator -->
+            <div class="h-4 w-px bg-slate-800"></div>
 
-            <a
-              routerLink="/login"
-              routerLinkActive="text-emerald-400"
-              class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
-            >Sign In</a>
+            <nav class="flex items-center gap-1">
+              <a
+                routerLink="/"
+                routerLinkActive="bg-slate-800/50 text-white"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
+              >Home</a>
 
-            <a
-              routerLink="/register"
-              routerLinkActive="ring-emerald-400"
-              class="ml-1 px-4 py-1.5 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all shadow-lg shadow-emerald-500/20"
-            >Get Started</a>
-          </nav>
+              <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block"></div>
+
+              <a
+                routerLink="/login"
+                routerLinkActive="text-emerald-400"
+                class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
+              >Sign In</a>
+
+              <a
+                routerLink="/register"
+                routerLinkActive="ring-emerald-400"
+                class="ml-1 px-4 py-1.5 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all shadow-lg shadow-emerald-500/20"
+              >Get Started</a>
+            </nav>
+          </div>
         </div>
       </header>
 

@@ -5,11 +5,13 @@ import { TokenStorageService } from '../core/auth/token-storage.service';
 import { NavContextService, NavState } from '../core/services/nav-context.service';
 import { Observable, Subject, filter, takeUntil } from 'rxjs';
 import { FutureproofStepperComponent } from './futureproof-stepper.component';
+import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
+import { UiModeService } from '../core/services/ui-mode.service';
 
 @Component({
   selector: 'app-app-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FutureproofStepperComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, FutureproofStepperComponent, UiModeToggleComponent],
   template: `
     <div class="min-h-screen bg-slate-950 text-slate-100">
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
@@ -50,45 +52,54 @@ import { FutureproofStepperComponent } from './futureproof-stepper.component';
             </div>
           </div>
 
-          <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
-            <ng-container [ngSwitch]="nav.mode">
-              <ng-container *ngSwitchCase="'futureproof'">
-                <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
-                  <button
-                    *ngFor="let item of nav.items"
-                    type="button"
-                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold"
-                    [ngClass]="{
-                      'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
-                      'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
-                    }"
-                    (click)="onFutureproofNav(item.key)"
-                  >
-                    {{ item.label }}
+          <!-- Right side: UI Mode Toggle + Navigation -->
+          <div class="flex items-center gap-4">
+            <!-- UI Mode Toggle (top-right) -->
+            <app-ui-mode-toggle />
+
+            <!-- Separator -->
+            <div class="h-5 w-px bg-slate-700"></div>
+
+            <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
+              <ng-container [ngSwitch]="nav.mode">
+                <ng-container *ngSwitchCase="'futureproof'">
+                  <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
+                    <button
+                      *ngFor="let item of nav.items"
+                      type="button"
+                      class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold"
+                      [ngClass]="{
+                        'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
+                        'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
+                      }"
+                      (click)="onFutureproofNav(item.key)"
+                    >
+                      {{ item.label }}
+                    </button>
+                  </ng-container>
+                  <ng-template #onboardingNavPlaceholder>
+                    <span class="text-xs text-slate-500">Onboarding</span>
+                  </ng-template>
+                  <button type="button" (click)="logout()"
+                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
+                    Logout
                   </button>
                 </ng-container>
-                <ng-template #onboardingNavPlaceholder>
-                  <span class="text-xs text-slate-500">Onboarding</span>
-                </ng-template>
-                <button type="button" (click)="logout()"
-                  class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
-                  Logout
-                </button>
+                <ng-container *ngSwitchDefault>
+                  <a
+                    routerLink="/futureproof"
+                    routerLinkActive="text-emerald-300"
+                    class="text-slate-300 hover:text-slate-50"
+                    >Futureproof</a
+                  >
+                  <button type="button" (click)="logout()"
+                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
+                    Logout
+                  </button>
+                </ng-container>
               </ng-container>
-              <ng-container *ngSwitchDefault>
-                <a
-                  routerLink="/futureproof"
-                  routerLinkActive="text-emerald-300"
-                  class="text-slate-300 hover:text-slate-50"
-                  >Futureproof</a
-                >
-                <button type="button" (click)="logout()"
-                  class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
-                  Logout
-                </button>
-              </ng-container>
-            </ng-container>
-          </nav>
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -106,11 +117,16 @@ export class AppShellComponent implements OnDestroy {
   isOnboarding = true;
   private destroy$ = new Subject<void>();
 
+  /** Expose UI mode service for template conditional rendering */
+  readonly uiMode: UiModeService;
+
   constructor(
     private tokenStorage: TokenStorageService,
     private router: Router,
-    private navContext: NavContextService
+    private navContext: NavContextService,
+    uiModeService: UiModeService
   ) {
+    this.uiMode = uiModeService;
     this.navState$ = this.navContext.state$;
     this.navContext.activeKey$
       .pipe(takeUntil(this.destroy$))
@@ -189,4 +205,3 @@ export class AppShellComponent implements OnDestroy {
     this.destroy$.complete();
   }
 }
-

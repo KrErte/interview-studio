@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { authGuard } from './core/auth/auth.guard';
+import { uiModeCanMatch } from './core/guards/ui-mode.guard';
 import { PivotRolesPageComponent } from './pages/candidate/pivot-roles/pivot-roles.page';
 import { FutureproofRoadmapPageComponent } from './pages/candidate/pivot-roles/futureproof-roadmap.page';
 
@@ -49,6 +50,7 @@ export const routes: Routes = [
     ]
   },
   // NEW: Arena - Interactive Training Tools (unique features)
+  // With Simple/Advanced mode-based routing
   {
     path: 'arena',
     component: AppShellComponent,
@@ -60,22 +62,55 @@ export const routes: Routes = [
             (m) => m.InterviewInterrogationComponent
           )
       },
+      // Salary Negotiation - Simple Mode
       {
         path: 'negotiation',
+        canMatch: [uiModeCanMatch('simple')],
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/salary-negotiation-dojo-simple.component').then(
+            (m) => m.SalaryNegotiationDojoSimpleComponent
+          )
+      },
+      // Salary Negotiation - Advanced Mode
+      {
+        path: 'negotiation',
+        canMatch: [uiModeCanMatch('advanced')],
         loadComponent: () =>
           import('./pages/candidate/pivot-roles/salary-negotiation-dojo.component').then(
             (m) => m.SalaryNegotiationDojoComponent
           )
       },
+      // Brutal Truth - Simple Mode
       {
         path: 'truth',
+        canMatch: [uiModeCanMatch('simple')],
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/brutal-truth-machine-simple.component').then(
+            (m) => m.BrutalTruthMachineSimpleComponent
+          )
+      },
+      // Brutal Truth - Advanced Mode
+      {
+        path: 'truth',
+        canMatch: [uiModeCanMatch('advanced')],
         loadComponent: () =>
           import('./pages/candidate/pivot-roles/brutal-truth-machine.component').then(
             (m) => m.BrutalTruthMachineComponent
           )
       },
+      // Career Stress Test - Simple Mode
       {
         path: 'stress-test',
+        canMatch: [uiModeCanMatch('simple')],
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/career-stress-test-simple.component').then(
+            (m) => m.CareerStressTestSimpleComponent
+          )
+      },
+      // Career Stress Test - Advanced Mode
+      {
+        path: 'stress-test',
+        canMatch: [uiModeCanMatch('advanced')],
         loadComponent: () =>
           import('./pages/candidate/pivot-roles/career-stress-test.component').then(
             (m) => m.CareerStressTestComponent
