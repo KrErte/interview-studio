@@ -187,7 +187,9 @@ interface AssessmentData {
                 Rutiinsed ülesanded
                 <span class="hint">(andmete sisestamine, reportid, copy-paste)</span>
               </label>
-              <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.repetitiveTasks">
+              <input type="range" min="0" max="100" step="5"
+                [ngModel]="assessment.workBreakdown.repetitiveTasks"
+                (input)="updateWorkBreakdown('repetitiveTasks', $event)">
               <span class="percent">{{ assessment.workBreakdown.repetitiveTasks }}%</span>
             </div>
 
@@ -197,7 +199,9 @@ interface AssessmentData {
                 Probleemide lahendamine
                 <span class="hint">(debugging, arhitektuur, optimeerimine)</span>
               </label>
-              <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.problemSolving">
+              <input type="range" min="0" max="100" step="5"
+                [ngModel]="assessment.workBreakdown.problemSolving"
+                (input)="updateWorkBreakdown('problemSolving', $event)">
               <span class="percent">{{ assessment.workBreakdown.problemSolving }}%</span>
             </div>
 
@@ -207,7 +211,9 @@ interface AssessmentData {
                 Suhtlus & koostöö
                 <span class="hint">(koosolekud, mentorlus, kliendid)</span>
               </label>
-              <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.communication">
+              <input type="range" min="0" max="100" step="5"
+                [ngModel]="assessment.workBreakdown.communication"
+                (input)="updateWorkBreakdown('communication', $event)">
               <span class="percent">{{ assessment.workBreakdown.communication }}%</span>
             </div>
 
@@ -217,16 +223,15 @@ interface AssessmentData {
                 Loovus & innovatsioon
                 <span class="hint">(uued lahendused, eksperimendid, R&D)</span>
               </label>
-              <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.creativity">
+              <input type="range" min="0" max="100" step="5"
+                [ngModel]="assessment.workBreakdown.creativity"
+                (input)="updateWorkBreakdown('creativity', $event)">
               <span class="percent">{{ assessment.workBreakdown.creativity }}%</span>
             </div>
           </div>
 
-          <div class="breakdown-total" [class.warning]="workBreakdownTotal() !== 100">
+          <div class="breakdown-total">
             Kokku: {{ workBreakdownTotal() }}%
-            @if (workBreakdownTotal() !== 100) {
-              <span class="warning-text">(peaks olema 100%)</span>
-            }
           </div>
         </div>
       }
@@ -898,13 +903,76 @@ export class SkillAssessmentComponent {
     }
   }
 
+  updateWorkBreakdown(field: keyof typeof this.assessment.workBreakdown, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newValue = parseInt(input.value, 10);
+    const oldValue = this.assessment.workBreakdown[field];
+    const diff = newValue - oldValue;
+
+    if (diff === 0) return;
+
+    // Get other fields
+    const allFields: (keyof typeof this.assessment.workBreakdown)[] = [
+      'repetitiveTasks', 'problemSolving', 'communication', 'creativity'
+    ];
+    const otherFields = allFields.filter(f => f !== field);
+
+    // Calculate total of other fields
+    const otherTotal = otherFields.reduce((sum, f) => sum + this.assessment.workBreakdown[f], 0);
+
+    if (otherTotal === 0 && diff > 0) {
+      // Can't take from others if they're all 0
+      this.assessment.workBreakdown[field] = newValue;
+      return;
+    }
+
+    // Set the new value for the changed field
+    this.assessment.workBreakdown[field] = newValue;
+
+    // Distribute the negative diff proportionally among other fields
+    let remaining = -diff;
+    for (let i = 0; i < otherFields.length; i++) {
+      const f = otherFields[i];
+      const currentVal = this.assessment.workBreakdown[f];
+
+      if (i === otherFields.length - 1) {
+        // Last field gets the remainder to ensure exactly 100%
+        const newVal = Math.max(0, Math.min(100, currentVal + remaining));
+        this.assessment.workBreakdown[f] = newVal;
+      } else if (otherTotal > 0) {
+        // Distribute proportionally
+        const proportion = currentVal / otherTotal;
+        const change = Math.round(-diff * proportion);
+        const newVal = Math.max(0, Math.min(100, currentVal + change));
+        const actualChange = newVal - currentVal;
+        this.assessment.workBreakdown[f] = newVal;
+        remaining -= actualChange;
+      }
+    }
+
+    // Final correction to ensure exactly 100%
+    const total = this.workBreakdownTotal();
+    if (total !== 100) {
+      const correction = 100 - total;
+      // Find a field that can absorb the correction
+      for (const f of otherFields) {
+        const val = this.assessment.workBreakdown[f];
+        const newVal = val + correction;
+        if (newVal >= 0 && newVal <= 100) {
+          this.assessment.workBreakdown[f] = newVal;
+          break;
+        }
+      }
+    }
+  }
+
   canProceed(): boolean {
     switch (this.currentStep()) {
       case 1: return !!this.assessment.currentRole;
       case 2: return true;
       case 3: return this.assessment.skills.length >= 3;
       case 4: return true;
-      case 5: return this.workBreakdownTotal() >= 90 && this.workBreakdownTotal() <= 110;
+      case 5: return true; // Always 100% now with linked sliders
       case 6: return !!this.assessment.industryContext && !!this.assessment.companySize;
       default: return true;
     }
