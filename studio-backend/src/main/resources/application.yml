@@ -41,3 +41,24 @@ app:
     secret: ${JWT_SECRET:this-is-a-development-secret-key-min-32-chars}
     expiration-ms: 86400000        # 24 hours
     refresh-expiration-ms: 604800000  # 7 days
+
+# Email Configuration (Gmail SMTP)
+spring.mail:
+  host: smtp.gmail.com
+  port: 587
+  username: ${GMAIL_USERNAME:}
+  password: ${GMAIL_APP_PASSWORD:}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+          required: true
+        connectiontimeout: 5000
+        timeout: 5000
+        writetimeout: 5000
+
+email:
+  from: ${GMAIL_USERNAME:noreply@tulevikukindlus.ee}
+  enabled: ${EMAIL_ENABLED:false}

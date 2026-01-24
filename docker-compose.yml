@@ -34,6 +34,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-characters}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:4200}
+      GMAIL_USERNAME: ${GMAIL_USERNAME:-}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:-}
+      EMAIL_ENABLED: ${EMAIL_ENABLED:-false}
     ports:
       - "8080:8080"
     healthcheck:

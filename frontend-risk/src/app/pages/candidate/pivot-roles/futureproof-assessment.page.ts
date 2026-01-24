@@ -5,6 +5,7 @@ import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
 import { AuthService } from '../../../core/auth/auth-api.service';
 import { UserTierService } from '../../../core/services/user-tier.service';
+import { EmailApiService } from '../../../core/services/email-api.service';
 import {
   AssessmentResult,
   RiskLevel,
@@ -90,7 +91,8 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
     private navContext: NavContextService,
     private riskApi: RiskApiService,
     private auth: AuthService,
-    public userTier: UserTierService
+    public userTier: UserTierService,
+    private emailApi: EmailApiService
   ) {}
 
   ngOnInit(): void {
@@ -167,8 +169,27 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
   onEmailSubmitted(email: string): void {
     this.showEmailCapture = false;
-    // Could trigger a toast notification here
-    console.log('Email captured:', email);
+    console.log('Email captured, sending...', email);
+
+    // Send email with assessment results
+    if (this.assessment) {
+      this.emailApi.sendAssessmentResults({
+        email,
+        role: this.currentRole,
+        riskPercent: this.assessment.riskPercent,
+        confidence: this.confidencePercent,
+        assessmentUrl: window.location.href
+      }).subscribe({
+        next: (res) => {
+          console.log('Email sent successfully:', res.message);
+          // Could show a toast notification here
+        },
+        error: (err) => {
+          console.error('Failed to send email:', err);
+          // Email is already saved locally, so no need to show error to user
+        }
+      });
+    }
   }
 
   onEmailSkipped(): void {
