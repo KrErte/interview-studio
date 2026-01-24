@@ -20,8 +20,8 @@ import { UiModeService } from '../core/services/ui-mode.service';
             Tulevikukindlus
           </a>
 
-          <!-- Quick Tools Links - hidden on smaller screens -->
-          <div class="hidden xl:flex items-center gap-3 text-sm">
+          <!-- Quick Tools Links - hidden on smaller screens and in futureproof view -->
+          <div class="hidden xl:flex items-center gap-3 text-sm" *ngIf="!isFutureproofRoute">
             <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               📝 Hinda oskusi
             </a>
