@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
 import { AuthService } from '../../../core/auth/auth-api.service';
+import { UserTierService } from '../../../core/services/user-tier.service';
 import {
   AssessmentResult,
   RiskLevel,
@@ -28,6 +29,8 @@ import { SkillDecayClockComponent } from './skill-decay-clock.component';
 import { MarketPulseComponent } from './market-pulse.component';
 import { DisruptionAutopsyComponent } from './disruption-autopsy.component';
 import { ActionRecommendationsComponent } from './action-recommendations.component';
+import { EmailCaptureModalComponent } from '../../../shared/email-capture-modal/email-capture-modal.component';
+import { PaywallModalComponent } from '../../../shared/paywall-modal/paywall-modal.component';
 
 @Component({
   selector: 'app-futureproof-assessment-page',
@@ -43,7 +46,9 @@ import { ActionRecommendationsComponent } from './action-recommendations.compone
     SkillDecayClockComponent,
     MarketPulseComponent,
     DisruptionAutopsyComponent,
-    ActionRecommendationsComponent
+    ActionRecommendationsComponent,
+    EmailCaptureModalComponent,
+    PaywallModalComponent
   ],
   templateUrl: './futureproof-assessment.page.html'
 })
@@ -56,6 +61,14 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   selectedTimelineRisk: { year: number; risk: number } | null = null;
   showRegisterPrompt = false;
   activeTab: 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' | 'actions' = 'overview';
+
+  // Paywall state
+  showEmailCapture = false;
+  showPaywall = false;
+  paywallFeatureName = '';
+
+  // Locked tabs for free users
+  readonly lockedTabs = ['actions', 'simulator', 'pulse', 'decay', 'threats', 'skills', 'vitals', 'timeline', 'autopsy'];
 
   private destroy$ = new Subject<void>();
 
@@ -76,7 +89,8 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navContext: NavContextService,
     private riskApi: RiskApiService,
-    private auth: AuthService
+    private auth: AuthService,
+    public userTier: UserTierService
   ) {}
 
   ngOnInit(): void {
@@ -123,7 +137,69 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   setActiveTab(tab: string): void {
+    // Check if tab is locked for free users
+    if (this.lockedTabs.includes(tab) && !this.userTier.isPro()) {
+      this.paywallFeatureName = this.getTabDisplayName(tab);
+      this.showPaywall = true;
+      return;
+    }
     this.activeTab = tab as 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' | 'actions';
+  }
+
+  isTabLocked(tabId: string): boolean {
+    return this.lockedTabs.includes(tabId) && !this.userTier.isPro();
+  }
+
+  private getTabDisplayName(tabId: string): string {
+    const names: Record<string, string> = {
+      'actions': 'Tegevusplaan',
+      'simulator': 'What-If Simulator',
+      'pulse': 'Market Pulse',
+      'decay': 'Skill Decay',
+      'threats': 'Threat Radar',
+      'skills': 'Skill Matrix',
+      'vitals': 'Career Vitals',
+      'timeline': 'AI Timeline',
+      'autopsy': 'Case Studies'
+    };
+    return names[tabId] || tabId;
+  }
+
+  onEmailSubmitted(email: string): void {
+    this.showEmailCapture = false;
+    // Could trigger a toast notification here
+    console.log('Email captured:', email);
+  }
+
+  onEmailSkipped(): void {
+    this.showEmailCapture = false;
+  }
+
+  onPaywallUpgrade(): void {
+    this.showPaywall = false;
+    // Refresh to show unlocked content
+  }
+
+  onPaywallClosed(): void {
+    this.showPaywall = false;
+  }
+
+  tryDownloadPDF(): void {
+    if (!this.userTier.isPro()) {
+      this.paywallFeatureName = 'PDF eksport';
+      this.showPaywall = true;
+      return;
+    }
+    this.downloadPDF();
+  }
+
+  tryGoToRoadmap(): void {
+    if (!this.userTier.isPro()) {
+      this.paywallFeatureName = '12 kuu tegevusplaan';
+      this.showPaywall = true;
+      return;
+    }
+    this.goToRoadmap();
   }
 
   retry(): void {
@@ -346,6 +422,16 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.setInitialTimelineSelection();
           this.loadRiskAnalysis(sessionId);
+
+          // Show email capture modal after assessment loads (if no email yet)
+          if (!this.userTier.hasEmail()) {
+            setTimeout(() => {
+              this.showEmailCapture = true;
+            }, 2000); // Show after 2 seconds
+          }
+
+          // Increment assessment count for free tier limit
+          this.userTier.incrementAssessmentCount();
         },
         error: (err) => {
           this.loading = false;
