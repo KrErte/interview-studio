@@ -2,36 +2,26 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /app
 
-# Install bash, dos2unix, and unzip for gradlew compatibility
-RUN apk add --no-cache bash dos2unix unzip
+# Install Gradle directly (avoids gradle-wrapper.jar issues)
+ARG GRADLE_VERSION=8.7
+RUN apk add --no-cache bash unzip && \
+    wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" && \
+    unzip -q /tmp/gradle.zip -d /opt && \
+    ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/local/bin/gradle && \
+    rm /tmp/gradle.zip
 
-# Copy gradle files
-COPY gradlew .
-COPY gradle gradle
+# Copy build files
 COPY build.gradle .
 COPY settings.gradle .
 
-# Fix line endings and make gradlew executable
-RUN dos2unix gradlew && chmod +x gradlew
-
-# Download gradle-wrapper.jar if missing (often excluded from git via *.jar rule)
-ARG GRADLE_VERSION=8.7
-RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
-        mkdir -p gradle/wrapper && \
-        wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" && \
-        unzip -q /tmp/gradle.zip "gradle-${GRADLE_VERSION}/lib/gradle-wrapper*.jar" -d /tmp && \
-        cp /tmp/gradle-${GRADLE_VERSION}/lib/gradle-wrapper-*.jar gradle/wrapper/gradle-wrapper.jar && \
-        rm -rf /tmp/gradle.zip /tmp/gradle-${GRADLE_VERSION}; \
-    fi
-
 # Download dependencies (cached layer)
-RUN ./gradlew dependencies --no-daemon || true
+RUN gradle dependencies --no-daemon || true
 
 # Copy source code
 COPY src src
 
 # Build the application
-RUN ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
