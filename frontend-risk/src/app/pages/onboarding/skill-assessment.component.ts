@@ -14,15 +14,89 @@ interface AssessmentData {
   currentRole: string;
   yearsExperience: number;
   skills: { name: string; level: number; yearsUsed: number }[];
+  // Old % breakdown for backward compatibility - computed from selections
   workBreakdown: {
     repetitiveTasks: number;
     problemSolving: number;
     communication: number;
     creativity: number;
   };
+  // New selection-based work pattern data
+  workPattern: {
+    timeGoesTo: string[];      // max 2 selections
+    mostDraining: string;       // single selection
+    aiChangesFirst: string;     // single selection
+  };
   industryContext: string;
   companySize: string;
   remoteWork: number;
+}
+
+// Work pattern options for selection UI
+interface WorkPatternOption {
+  id: string;
+  emoji: string;
+  label: string;
+  description: string;
+}
+
+/**
+ * Maps selection-based work pattern answers to normalized % weights.
+ * This preserves backward compatibility with the existing scoring model.
+ *
+ * Mapping logic:
+ * - "timeGoesTo" selections get higher weights (primary activities)
+ * - "mostDraining" selection gets moderate weight boost
+ * - "aiChangesFirst" selection indicates high automation vulnerability
+ *
+ * The weights are normalized to sum to 1.0 internally.
+ */
+function mapAnswersToWorkdayWeights(pattern: AssessmentData['workPattern']): AssessmentData['workBreakdown'] {
+  // Base weights for each category
+  const weights = {
+    repetitiveTasks: 15,
+    problemSolving: 25,
+    communication: 30,
+    creativity: 30
+  };
+
+  // Map option IDs to weight keys
+  const optionToWeight: Record<string, keyof typeof weights> = {
+    'routine': 'repetitiveTasks',
+    'problem-solving': 'problemSolving',
+    'meetings': 'communication',
+    'creative': 'creativity'
+  };
+
+  // Boost weights for "timeGoesTo" selections (primary activities)
+  for (const selection of pattern.timeGoesTo) {
+    const key = optionToWeight[selection];
+    if (key) {
+      weights[key] += 25; // Primary activity boost
+    }
+  }
+
+  // Moderate boost for "mostDraining" selection
+  const drainingKey = optionToWeight[pattern.mostDraining];
+  if (drainingKey) {
+    weights[drainingKey] += 10;
+  }
+
+  // "aiChangesFirst" indicates high automation risk for that category
+  // Boost that category slightly as it represents current workflow
+  const aiFirstKey = optionToWeight[pattern.aiChangesFirst];
+  if (aiFirstKey) {
+    weights[aiFirstKey] += 5;
+  }
+
+  // Normalize to 100%
+  const total = Object.values(weights).reduce((sum, w) => sum + w, 0);
+  return {
+    repetitiveTasks: Math.round((weights.repetitiveTasks / total) * 100),
+    problemSolving: Math.round((weights.problemSolving / total) * 100),
+    communication: Math.round((weights.communication / total) * 100),
+    creativity: Math.round((weights.creativity / total) * 100)
+  };
 }
 
 @Component({
@@ -174,64 +248,90 @@ interface AssessmentData {
         </div>
       }
 
-      <!-- Step 5: Work breakdown -->
+      <!-- Step 5: Work pattern (new selection-based UI) -->
       @if (currentStep() === 5) {
         <div class="step fade-in">
-          <h1>Kuidas sinu tööpäev jaguneb?</h1>
-          <p class="subtitle">See aitab hinnata automatiseerimise riski</p>
+          <div class="step-meta">
+            <span class="time-hint">⏱️ ~20 sek</span>
+            <span class="question-count">3 küsimust</span>
+          </div>
 
-          <div class="work-sliders">
-            <div class="slider-row">
-              <label>
-                <span class="emoji">🔄</span>
-                Rutiinsed ülesanded
-                <span class="hint">(andmete sisestamine, reportid, copy-paste)</span>
-              </label>
-              <input type="range" min="0" max="100" step="5"
-                [ngModel]="assessment.workBreakdown.repetitiveTasks"
-                (input)="updateWorkBreakdown('repetitiveTasks', $event)">
-              <span class="percent">{{ assessment.workBreakdown.repetitiveTasks }}%</span>
+          <!-- Question 5a: Time goes to... (max 2) -->
+          <div class="work-question" [class.answered]="assessment.workPattern.timeGoesTo.length > 0">
+            <h2>Sinu aeg läheb peamiselt...</h2>
+            <p class="hint">Vali kuni 2 tegevust, mis võtavad enim aega</p>
+
+            <div class="option-cards">
+              @for (option of timeGoesToOptions; track option.id) {
+                <button
+                  type="button"
+                  class="option-card"
+                  [class.selected]="isTimeGoesToSelected(option.id)"
+                  [class.disabled]="!isTimeGoesToSelected(option.id) && assessment.workPattern.timeGoesTo.length >= 2"
+                  [attr.aria-pressed]="isTimeGoesToSelected(option.id)"
+                  [attr.aria-label]="option.label"
+                  (click)="toggleTimeGoesTo(option.id)"
+                  (keydown.enter)="toggleTimeGoesTo(option.id)"
+                  (keydown.space)="toggleTimeGoesTo(option.id); $event.preventDefault()">
+                  <span class="option-emoji">{{ option.emoji }}</span>
+                  <span class="option-label">{{ option.label }}</span>
+                  <span class="option-desc">{{ option.description }}</span>
+                  @if (isTimeGoesToSelected(option.id)) {
+                    <span class="check-mark">✓</span>
+                  }
+                </button>
+              }
             </div>
+            <p class="selection-hint" *ngIf="assessment.workPattern.timeGoesTo.length === 0">
+              💡 Vali vähemalt üks
+            </p>
+          </div>
 
-            <div class="slider-row">
-              <label>
-                <span class="emoji">🧩</span>
-                Probleemide lahendamine
-                <span class="hint">(debugging, arhitektuur, optimeerimine)</span>
-              </label>
-              <input type="range" min="0" max="100" step="5"
-                [ngModel]="assessment.workBreakdown.problemSolving"
-                (input)="updateWorkBreakdown('problemSolving', $event)">
-              <span class="percent">{{ assessment.workBreakdown.problemSolving }}%</span>
-            </div>
+          <!-- Question 5b: Most draining -->
+          <div class="work-question" [class.answered]="assessment.workPattern.mostDraining">
+            <h2>Mis väsitab sind enim?</h2>
+            <p class="hint">Vali üks</p>
 
-            <div class="slider-row">
-              <label>
-                <span class="emoji">💬</span>
-                Suhtlus & koostöö
-                <span class="hint">(koosolekud, mentorlus, kliendid)</span>
-              </label>
-              <input type="range" min="0" max="100" step="5"
-                [ngModel]="assessment.workBreakdown.communication"
-                (input)="updateWorkBreakdown('communication', $event)">
-              <span class="percent">{{ assessment.workBreakdown.communication }}%</span>
-            </div>
-
-            <div class="slider-row">
-              <label>
-                <span class="emoji">💡</span>
-                Loovus & innovatsioon
-                <span class="hint">(uued lahendused, eksperimendid, R&D)</span>
-              </label>
-              <input type="range" min="0" max="100" step="5"
-                [ngModel]="assessment.workBreakdown.creativity"
-                (input)="updateWorkBreakdown('creativity', $event)">
-              <span class="percent">{{ assessment.workBreakdown.creativity }}%</span>
+            <div class="option-chips">
+              @for (option of drainingOptions; track option.id) {
+                <button
+                  type="button"
+                  class="option-chip"
+                  [class.selected]="assessment.workPattern.mostDraining === option.id"
+                  [attr.aria-pressed]="assessment.workPattern.mostDraining === option.id"
+                  (click)="selectMostDraining(option.id)">
+                  <span class="chip-emoji">{{ option.emoji }}</span>
+                  {{ option.label }}
+                </button>
+              }
             </div>
           </div>
 
-          <div class="breakdown-total">
-            Kokku: {{ workBreakdownTotal() }}%
+          <!-- Question 5c: AI changes first -->
+          <div class="work-question" [class.answered]="assessment.workPattern.aiChangesFirst">
+            <h2>Kui AI sinu tööd muudab, siis esimesena...</h2>
+            <p class="hint">Mille osa tööst AI tõenäoliselt ära teeb?</p>
+
+            <div class="option-chips">
+              @for (option of aiChangesOptions; track option.id) {
+                <button
+                  type="button"
+                  class="option-chip"
+                  [class.selected]="assessment.workPattern.aiChangesFirst === option.id"
+                  [attr.aria-pressed]="assessment.workPattern.aiChangesFirst === option.id"
+                  (click)="selectAiChangesFirst(option.id)">
+                  <span class="chip-emoji">{{ option.emoji }}</span>
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Progress indicator -->
+          <div class="question-progress">
+            <span [class.done]="assessment.workPattern.timeGoesTo.length > 0">①</span>
+            <span [class.done]="assessment.workPattern.mostDraining">②</span>
+            <span [class.done]="assessment.workPattern.aiChangesFirst">③</span>
           </div>
         </div>
       }
@@ -604,74 +704,184 @@ interface AssessmentData {
       color: #94a3b8;
     }
 
-    .work-sliders {
+    /* New selection-based work pattern UI */
+    .step-meta {
       display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .slider-row {
-      background: rgba(255,255,255,0.03);
-      padding: 1rem;
-      border-radius: 8px;
-    }
-
-    .slider-row label {
-      display: block;
-      color: #e2e8f0;
-      margin-bottom: 0.75rem;
-    }
-
-    .slider-row .emoji {
-      margin-right: 0.5rem;
-    }
-
-    .slider-row .hint {
-      display: block;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
       font-size: 0.75rem;
       color: #64748b;
-      margin-top: 0.25rem;
     }
 
-    .slider-row input[type="range"] {
-      width: calc(100% - 60px);
-      height: 6px;
-      -webkit-appearance: none;
-      background: rgba(255,255,255,0.1);
-      border-radius: 3px;
+    .time-hint, .question-count {
+      background: rgba(255,255,255,0.05);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
     }
 
-    .slider-row input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      background: #10b981;
-      border-radius: 50%;
-      cursor: pointer;
+    .work-question {
+      margin-bottom: 2rem;
+      padding: 1.25rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
     }
 
-    .slider-row .percent {
-      float: right;
-      color: #10b981;
-      font-weight: 500;
+    .work-question.answered {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.03);
     }
 
-    .breakdown-total {
-      text-align: center;
+    .work-question h2 {
+      font-size: 1.25rem;
+      color: #f1f5f9;
+      margin-bottom: 0.25rem;
+    }
+
+    .work-question .hint {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+
+    .option-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .option-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
       padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .option-card:hover:not(.disabled) {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .option-card:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #10b981;
+    }
+
+    .option-card.selected {
       background: rgba(16, 185, 129, 0.1);
+      border-color: #10b981;
+    }
+
+    .option-card.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .option-emoji {
+      font-size: 1.5rem;
+    }
+
+    .option-label {
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .option-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .check-mark {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #10b981;
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+
+    .option-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .option-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 25px;
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .option-chip:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .option-chip:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #10b981;
+    }
+
+    .option-chip.selected {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
       color: #10b981;
     }
 
-    .breakdown-total.warning {
-      background: rgba(245, 158, 11, 0.1);
+    .chip-emoji {
+      font-size: 1rem;
+    }
+
+    .selection-hint {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
       color: #f59e0b;
     }
 
-    .warning-text {
-      font-size: 0.875rem;
+    .question-progress {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      font-size: 1.25rem;
+      color: #475569;
+    }
+
+    .question-progress span {
+      transition: color 0.3s ease;
+    }
+
+    .question-progress span.done {
+      color: #10b981;
     }
 
     .context-section {
@@ -842,6 +1052,28 @@ export class SkillAssessmentComponent {
     { value: 'enterprise', label: '1000+ (Enterprise)' }
   ];
 
+  // Work pattern selection options
+  timeGoesToOptions: WorkPatternOption[] = [
+    { id: 'routine', emoji: '🔄', label: 'Rutiinsed ülesanded', description: 'Andmete sisestamine, reportid, dokumentatsioon' },
+    { id: 'problem-solving', emoji: '🧩', label: 'Probleemide lahendamine', description: 'Debugging, optimeerimine, arhitektuur' },
+    { id: 'meetings', emoji: '💬', label: 'Koosolekud ja suhtlus', description: 'Tiimi kohtumised, kliendid, mentorlus' },
+    { id: 'creative', emoji: '💡', label: 'Loov töö', description: 'Uued lahendused, eksperimendid, disain' }
+  ];
+
+  drainingOptions: WorkPatternOption[] = [
+    { id: 'routine', emoji: '😴', label: 'Rutiinne töö', description: '' },
+    { id: 'problem-solving', emoji: '🤯', label: 'Keerulised probleemid', description: '' },
+    { id: 'meetings', emoji: '😮‍💨', label: 'Koosolekud', description: '' },
+    { id: 'creative', emoji: '😓', label: 'Loov surve', description: '' }
+  ];
+
+  aiChangesOptions: WorkPatternOption[] = [
+    { id: 'routine', emoji: '🤖', label: 'Rutiinsed asjad', description: '' },
+    { id: 'problem-solving', emoji: '🔍', label: 'Analüüs ja debugging', description: '' },
+    { id: 'meetings', emoji: '📝', label: 'Dokumenteerimine', description: '' },
+    { id: 'creative', emoji: '🎨', label: 'Esimesed kavandid', description: '' }
+  ];
+
   assessment: AssessmentData = {
     currentRole: '',
     yearsExperience: 3,
@@ -851,6 +1083,11 @@ export class SkillAssessmentComponent {
       problemSolving: 35,
       communication: 20,
       creativity: 20
+    },
+    workPattern: {
+      timeGoesTo: [],
+      mostDraining: '',
+      aiChangesFirst: ''
     },
     industryContext: '',
     companySize: '',
@@ -862,13 +1099,6 @@ export class SkillAssessmentComponent {
   progressPercent = computed(() => (this.currentStep() / this.totalSteps) * 100);
 
   selectedSkills = computed(() => this.assessment.skills.map(s => s.name));
-
-  workBreakdownTotal = computed(() =>
-    this.assessment.workBreakdown.repetitiveTasks +
-    this.assessment.workBreakdown.problemSolving +
-    this.assessment.workBreakdown.communication +
-    this.assessment.workBreakdown.creativity
-  );
 
   selectRole(role: string) {
     if (role.trim()) {
@@ -903,67 +1133,45 @@ export class SkillAssessmentComponent {
     }
   }
 
-  updateWorkBreakdown(field: keyof typeof this.assessment.workBreakdown, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const newValue = parseInt(input.value, 10);
-    const oldValue = this.assessment.workBreakdown[field];
-    const diff = newValue - oldValue;
+  // Work pattern selection methods
+  isTimeGoesToSelected(id: string): boolean {
+    return this.assessment.workPattern.timeGoesTo.includes(id);
+  }
 
-    if (diff === 0) return;
-
-    // Get other fields
-    const allFields: (keyof typeof this.assessment.workBreakdown)[] = [
-      'repetitiveTasks', 'problemSolving', 'communication', 'creativity'
-    ];
-    const otherFields = allFields.filter(f => f !== field);
-
-    // Calculate total of other fields
-    const otherTotal = otherFields.reduce((sum, f) => sum + this.assessment.workBreakdown[f], 0);
-
-    if (otherTotal === 0 && diff > 0) {
-      // Can't take from others if they're all 0
-      this.assessment.workBreakdown[field] = newValue;
-      return;
+  toggleTimeGoesTo(id: string): void {
+    const index = this.assessment.workPattern.timeGoesTo.indexOf(id);
+    if (index >= 0) {
+      // Remove selection
+      this.assessment.workPattern.timeGoesTo.splice(index, 1);
+    } else if (this.assessment.workPattern.timeGoesTo.length < 2) {
+      // Add selection (max 2)
+      this.assessment.workPattern.timeGoesTo.push(id);
     }
+    this.updateWorkBreakdownFromPattern();
+  }
 
-    // Set the new value for the changed field
-    this.assessment.workBreakdown[field] = newValue;
+  selectMostDraining(id: string): void {
+    this.assessment.workPattern.mostDraining = id;
+    this.updateWorkBreakdownFromPattern();
+  }
 
-    // Distribute the negative diff proportionally among other fields
-    let remaining = -diff;
-    for (let i = 0; i < otherFields.length; i++) {
-      const f = otherFields[i];
-      const currentVal = this.assessment.workBreakdown[f];
+  selectAiChangesFirst(id: string): void {
+    this.assessment.workPattern.aiChangesFirst = id;
+    this.updateWorkBreakdownFromPattern();
+  }
 
-      if (i === otherFields.length - 1) {
-        // Last field gets the remainder to ensure exactly 100%
-        const newVal = Math.max(0, Math.min(100, currentVal + remaining));
-        this.assessment.workBreakdown[f] = newVal;
-      } else if (otherTotal > 0) {
-        // Distribute proportionally
-        const proportion = currentVal / otherTotal;
-        const change = Math.round(-diff * proportion);
-        const newVal = Math.max(0, Math.min(100, currentVal + change));
-        const actualChange = newVal - currentVal;
-        this.assessment.workBreakdown[f] = newVal;
-        remaining -= actualChange;
-      }
-    }
+  /**
+   * Updates the legacy workBreakdown percentages from the new selection-based pattern.
+   * This ensures backward compatibility with existing scoring/API.
+   */
+  private updateWorkBreakdownFromPattern(): void {
+    this.assessment.workBreakdown = mapAnswersToWorkdayWeights(this.assessment.workPattern);
+  }
 
-    // Final correction to ensure exactly 100%
-    const total = this.workBreakdownTotal();
-    if (total !== 100) {
-      const correction = 100 - total;
-      // Find a field that can absorb the correction
-      for (const f of otherFields) {
-        const val = this.assessment.workBreakdown[f];
-        const newVal = val + correction;
-        if (newVal >= 0 && newVal <= 100) {
-          this.assessment.workBreakdown[f] = newVal;
-          break;
-        }
-      }
-    }
+  workPatternComplete(): boolean {
+    return this.assessment.workPattern.timeGoesTo.length > 0 &&
+           !!this.assessment.workPattern.mostDraining &&
+           !!this.assessment.workPattern.aiChangesFirst;
   }
 
   canProceed(): boolean {
@@ -972,7 +1180,7 @@ export class SkillAssessmentComponent {
       case 2: return true;
       case 3: return this.assessment.skills.length >= 3;
       case 4: return true;
-      case 5: return true; // Always 100% now with linked sliders
+      case 5: return this.assessment.workPattern.timeGoesTo.length > 0; // At least one selection, gentle validation
       case 6: return !!this.assessment.industryContext && !!this.assessment.companySize;
       default: return true;
     }
@@ -1021,10 +1229,18 @@ export class SkillAssessmentComponent {
         communication: 25,
         creativity: 15
       },
+      workPattern: {
+        timeGoesTo: ['problem-solving', 'creative'],
+        mostDraining: 'meetings',
+        aiChangesFirst: 'routine'
+      },
       industryContext: 'SaaS',
       companySize: 'medium',
       remoteWork: 80
     };
+
+    // Update workBreakdown from the new pattern
+    this.updateWorkBreakdownFromPattern();
 
     // Jump to last step
     this.currentStep.set(this.totalSteps);
