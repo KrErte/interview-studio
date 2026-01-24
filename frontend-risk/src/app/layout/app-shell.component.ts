@@ -15,7 +15,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
   template: `
     <div class="min-h-screen bg-slate-950 text-slate-100">
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-2">
+        <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-2 min-w-0">
           <a routerLink="/futureproof" class="font-extrabold tracking-tight text-slate-50 text-lg shrink-0">
             Tulevikukindlus
           </a>
@@ -23,65 +23,68 @@ import { UiModeService } from '../core/services/ui-mode.service';
           <!-- Quick Tools Links - hidden on smaller screens and in futureproof view -->
           <div class="hidden xl:flex items-center gap-3 text-sm" *ngIf="!isFutureproofRoute">
             <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
-              📝 Hinda oskusi
+              Hinda oskusi
             </a>
             <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
-              🔬 Job X-Ray
+              Job X-Ray
             </a>
             <div class="relative group">
               <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1">
-                🏟️ Arena
+                Arena
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               <div class="absolute top-full left-0 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
                 <a routerLink="/arena/interview" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
-                  🎭 Interview Room
+                  Interview Room
                 </a>
                 <a routerLink="/arena/negotiation" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  💰 Salary Dojo
+                  Salary Dojo
                 </a>
                 <a routerLink="/arena/truth" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🪞 Brutal Truth
+                  Brutal Truth
                 </a>
                 <a routerLink="/arena/stress-test" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
-                  🔬 Stress Test
+                  Stress Test
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Right side: UI Mode Toggle + Navigation -->
-          <div class="flex items-center gap-2">
-            <!-- UI Mode Toggle - hidden in futureproof view to save space -->
-            <app-ui-mode-toggle class="hidden" [class.sm:block]="!isFutureproofRoute" />
+          <!-- Right side: Navigation - simplified for futureproof view -->
+          <div class="flex items-center gap-2 shrink-0">
+            <!-- UI Mode Toggle - hidden in futureproof view -->
+            <app-ui-mode-toggle *ngIf="!isFutureproofRoute" class="hidden sm:block" />
 
             <!-- Separator - hidden in futureproof view -->
-            <div class="h-5 w-px bg-slate-700" [class.hidden]="isFutureproofRoute" [class.sm:block]="!isFutureproofRoute"></div>
+            <div *ngIf="!isFutureproofRoute" class="hidden sm:block h-5 w-px bg-slate-700"></div>
 
             <nav class="flex items-center gap-1 text-sm" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'futureproof'">
                   <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
-                    <button
-                      *ngFor="let item of nav.items"
-                      type="button"
-                      class="rounded-md border border-slate-700 px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
-                      [ngClass]="{
-                        'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
-                        'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
-                      }"
-                      (click)="onFutureproofNav(item.key)"
-                    >
-                      {{ item.label }}
-                    </button>
+                    <!-- Show only key nav items, hide middle ones on small screens -->
+                    <ng-container *ngFor="let item of nav.items; let i = index">
+                      <button
+                        type="button"
+                        class="rounded-md border border-slate-700 px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
+                        [ngClass]="{
+                          'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
+                          'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key,
+                          'hidden md:inline-flex': i === 1 || i === 2
+                        }"
+                        (click)="onFutureproofNav(item.key)"
+                      >
+                        {{ item.label }}
+                      </button>
+                    </ng-container>
                   </ng-container>
                   <ng-template #onboardingNavPlaceholder>
                     <span class="text-xs text-slate-500">Onboarding</span>
                   </ng-template>
                   <button type="button" (click)="logout()"
-                    class="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-200 hover:border-emerald-400 whitespace-nowrap">
+                    class="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-200 hover:border-emerald-400 whitespace-nowrap ml-1">
                     Logout
                   </button>
                 </ng-container>
