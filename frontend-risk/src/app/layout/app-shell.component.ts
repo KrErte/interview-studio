@@ -54,20 +54,20 @@ import { UiModeService } from '../core/services/ui-mode.service';
 
           <!-- Right side: UI Mode Toggle + Navigation -->
           <div class="flex items-center gap-2">
-            <!-- UI Mode Toggle (top-right) -->
-            <app-ui-mode-toggle class="hidden sm:block" />
+            <!-- UI Mode Toggle - hidden in futureproof view to save space -->
+            <app-ui-mode-toggle class="hidden" [class.sm:block]="!isFutureproofRoute" />
 
-            <!-- Separator -->
-            <div class="hidden sm:block h-5 w-px bg-slate-700"></div>
+            <!-- Separator - hidden in futureproof view -->
+            <div class="h-5 w-px bg-slate-700" [class.hidden]="isFutureproofRoute" [class.sm:block]="!isFutureproofRoute"></div>
 
-            <nav class="flex flex-wrap items-center gap-1 sm:gap-2 text-sm" *ngIf="navState$ | async as nav">
+            <nav class="flex items-center gap-1 text-sm" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'futureproof'">
                   <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
                     <button
                       *ngFor="let item of nav.items"
                       type="button"
-                      class="rounded-md border border-slate-700 px-2 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap"
+                      class="rounded-md border border-slate-700 px-2 py-0.5 text-xs font-semibold whitespace-nowrap"
                       [ngClass]="{
                         'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
                         'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
@@ -81,7 +81,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
                     <span class="text-xs text-slate-500">Onboarding</span>
                   </ng-template>
                   <button type="button" (click)="logout()"
-                    class="rounded-md border border-slate-700 px-2 py-1 text-xs sm:text-sm text-slate-200 hover:border-emerald-400 whitespace-nowrap">
+                    class="rounded-md border border-slate-700 px-2 py-0.5 text-xs text-slate-200 hover:border-emerald-400 whitespace-nowrap">
                     Logout
                   </button>
                 </ng-container>
