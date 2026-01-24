@@ -15,17 +15,17 @@ import { UiModeService } from '../core/services/ui-mode.service';
   template: `
     <div class="min-h-screen bg-slate-950 text-slate-100">
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
-          <a routerLink="/futureproof" class="font-extrabold tracking-tight text-slate-50 text-lg">
+        <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between gap-2">
+          <a routerLink="/futureproof" class="font-extrabold tracking-tight text-slate-50 text-lg shrink-0">
             Tulevikukindlus
           </a>
 
-          <!-- Quick Tools Links -->
-          <div class="flex items-center gap-4 text-sm">
-            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors">
+          <!-- Quick Tools Links - hidden on smaller screens -->
+          <div class="hidden xl:flex items-center gap-3 text-sm">
+            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               📝 Hinda oskusi
             </a>
-            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               🔬 Job X-Ray
             </a>
             <div class="relative group">
@@ -53,21 +53,21 @@ import { UiModeService } from '../core/services/ui-mode.service';
           </div>
 
           <!-- Right side: UI Mode Toggle + Navigation -->
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
             <!-- UI Mode Toggle (top-right) -->
-            <app-ui-mode-toggle />
+            <app-ui-mode-toggle class="hidden sm:block" />
 
             <!-- Separator -->
-            <div class="h-5 w-px bg-slate-700"></div>
+            <div class="hidden sm:block h-5 w-px bg-slate-700"></div>
 
-            <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
+            <nav class="flex flex-wrap items-center gap-1 sm:gap-2 text-sm" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'futureproof'">
                   <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
                     <button
                       *ngFor="let item of nav.items"
                       type="button"
-                      class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold"
+                      class="rounded-md border border-slate-700 px-2 py-1 text-xs sm:text-sm font-semibold whitespace-nowrap"
                       [ngClass]="{
                         'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
                         'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
@@ -81,7 +81,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
                     <span class="text-xs text-slate-500">Onboarding</span>
                   </ng-template>
                   <button type="button" (click)="logout()"
-                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
+                    class="rounded-md border border-slate-700 px-2 py-1 text-xs sm:text-sm text-slate-200 hover:border-emerald-400 whitespace-nowrap">
                     Logout
                   </button>
                 </ng-container>
