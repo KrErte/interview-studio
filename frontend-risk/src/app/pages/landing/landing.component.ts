@@ -30,12 +30,12 @@ import { AuthService } from '../../core/auth/auth-api.service';
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span>{{ liveAssessments | number }} assessments today</span>
+          <span>{{ liveAssessments | number }} career plans created today</span>
         </div>
         <div class="hidden sm:block h-3 w-px bg-slate-700"></div>
         <div class="hidden sm:flex items-center gap-2">
-          <span class="text-amber-400">⚡</span>
-          <span>{{ jobsAtRisk }}% of jobs disrupted by 2030</span>
+          <span class="text-emerald-400">↑</span>
+          <span>97M new roles emerging by 2030</span>
         </div>
       </div>
 
@@ -46,25 +46,25 @@ import { AuthService } from '../../core/auth/auth-api.service';
           <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span class="text-sm font-medium text-emerald-300">CAREER DISRUPTION INDEX™</span>
+          <span class="text-sm font-medium text-emerald-300">CAREER MOMENTUM™</span>
         </div>
 
         <!-- Headline -->
         <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight">
-          Will AI Replace
+          Unlock Your
           <span class="relative inline-block">
-            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400">Your Career?</span>
+            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400">Career Edge</span>
             <span class="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 blur-2xl"></span>
           </span>
         </h1>
 
         <!-- Subheadline -->
         <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-          Get your personalized <span class="text-white font-semibold">Disruption Risk Score</span> in 3 minutes.
-          Based on real market data, AI advancement trends, and your unique skill profile.
+          Discover your <span class="text-white font-semibold">Career Momentum Score</span> in 3 minutes.
+          See where you stand, what makes you valuable, and how to level up.
         </p>
 
-        <!-- Risk Meter Preview -->
+        <!-- Momentum Meter Preview -->
         <div class="flex justify-center py-6">
           <div class="relative w-64 h-32">
             <svg class="w-full h-full" viewBox="0 0 200 100">
@@ -76,18 +76,18 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 stroke-width="12"
                 class="text-slate-800"
               />
-              <!-- Gradient arc -->
+              <!-- Gradient arc - reversed for momentum (low=red, high=green) -->
               <defs>
-                <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#10b981" />
+                <linearGradient id="momentumGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ef4444" />
                   <stop offset="50%" stop-color="#eab308" />
-                  <stop offset="100%" stop-color="#ef4444" />
+                  <stop offset="100%" stop-color="#10b981" />
                 </linearGradient>
               </defs>
               <path
                 d="M 20 90 A 80 80 0 0 1 180 90"
                 fill="none"
-                stroke="url(#riskGradient)"
+                stroke="url(#momentumGradient)"
                 stroke-width="12"
                 stroke-dasharray="251.2"
                 [attr.stroke-dashoffset]="251.2 - (meterProgress * 2.512)"
@@ -101,7 +101,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
             </svg>
             <div class="absolute inset-x-0 bottom-0 text-center">
               <span class="text-3xl font-bold text-white">{{ displayScore }}%</span>
-              <span class="block text-xs text-slate-500 mt-1">Average Risk Score</span>
+              <span class="block text-xs text-slate-500 mt-1">Average Momentum Score</span>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
             class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300"
           >
             <span class="flex items-center gap-3">
-              Calculate My Risk Score
+              Discover My Edge
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -124,7 +124,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
             routerLink="/login"
             class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all"
           >
-            Already have results? Sign in
+            Already have a profile? Sign in
           </a>
         </div>
 
@@ -165,7 +165,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
           <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">How It Works</h2>
-          <p class="text-slate-400 max-w-2xl mx-auto">Three steps to understand your career's future and build a defense strategy</p>
+          <p class="text-slate-400 max-w-2xl mx-auto">Three steps to discover your strengths and accelerate your career</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
@@ -177,8 +177,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Upload Your Profile</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Share your CV or describe your role. Our AI analyzes your skills against 10,000+ job market data points.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Share Your Profile</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Upload your CV or describe your role. Our AI maps your unique strengths against market opportunities.</p>
           </div>
 
           <!-- Step 2 -->
@@ -189,8 +189,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Get Your Risk Analysis</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Receive a detailed breakdown of automation risk, AI replacement probability, and market demand trends for your role.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Discover Your Superpowers</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">See what makes you valuable, which skills set you apart, and where the biggest opportunities lie.</p>
           </div>
 
           <!-- Step 3 -->
@@ -201,8 +201,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Build Your Roadmap</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Get a personalized 90-day action plan with specific skills to learn, certifications to pursue, and career pivots to consider.</p>
+            <h3 class="text-xl font-bold text-white mb-3">Get Your Growth Plan</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Receive a personalized 90-day roadmap with specific skills to develop and career moves to consider.</p>
           </div>
         </div>
       </div>
@@ -213,20 +213,20 @@ import { AuthService } from '../../core/auth/auth-api.service';
       <div class="max-w-6xl mx-auto">
         <div class="grid md:grid-cols-4 gap-8 text-center">
           <div>
-            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">85M</div>
-            <div class="text-sm text-slate-500 mt-2">Jobs displaced by 2025</div>
-          </div>
-          <div>
-            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">47%</div>
-            <div class="text-sm text-slate-500 mt-2">Of US jobs at high risk</div>
-          </div>
-          <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">97M</div>
-            <div class="text-sm text-slate-500 mt-2">New roles emerging</div>
+            <div class="text-sm text-slate-500 mt-2">New roles emerging by 2030</div>
+          </div>
+          <div>
+            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">40%</div>
+            <div class="text-sm text-slate-500 mt-2">Salary increase with right skills</div>
+          </div>
+          <div>
+            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">12K+</div>
+            <div class="text-sm text-slate-500 mt-2">Career plans created</div>
           </div>
           <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">3 min</div>
-            <div class="text-sm text-slate-500 mt-2">To know your risk</div>
+            <div class="text-sm text-slate-500 mt-2">To discover your edge</div>
           </div>
         </div>
       </div>
@@ -236,8 +236,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <section class="py-24 px-6 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent"></div>
       <div class="max-w-3xl mx-auto text-center relative z-10">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Don't Wait Until It's Too Late</h2>
-        <p class="text-slate-400 mb-8">The workforce is changing faster than ever. Know where you stand and take control of your career future.</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Level Up?</h2>
+        <p class="text-slate-400 mb-8">The best time to invest in your career is now. Discover your strengths and build your path forward.</p>
         <button
           type="button"
           (click)="startAssessment()"
@@ -285,7 +285,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   private animateMeter(): void {
-    const targetScore = 42;
+    const targetScore = 67; // Momentum score - higher is better
     const duration = 2000;
     const steps = 60;
     const increment = targetScore / steps;

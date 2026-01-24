@@ -36,8 +36,8 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
               <div class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
             </div>
             <div class="hidden sm:block">
-              <span class="font-bold text-white text-sm tracking-tight">Career Disruption</span>
-              <span class="block text-[10px] text-emerald-400 font-semibold tracking-widest">INDEX™</span>
+              <span class="font-bold text-white text-sm tracking-tight">Career Momentum</span>
+              <span class="block text-[10px] text-emerald-400 font-semibold tracking-widest">PLATFORM™</span>
             </div>
           </a>
 
@@ -88,10 +88,10 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
               <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span>Career Disruption Index™</span>
+              <span>Career Momentum™</span>
             </div>
             <div class="flex items-center gap-4">
-              <span>Powered by AI labor market analysis</span>
+              <span>Powered by AI career intelligence</span>
               <span class="hidden sm:inline">•</span>
               <span class="hidden sm:inline">Updated daily</span>
             </div>
