@@ -424,10 +424,13 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
           this.loadRiskAnalysis(sessionId);
 
           // Show email capture modal after assessment loads (if no email yet)
-          if (!this.userTier.hasEmail()) {
+          const hasEmail = this.userTier.hasEmail();
+          console.log('Email capture check:', { hasEmail, assessmentCount: this.userTier.assessmentCount() });
+          if (!hasEmail) {
             setTimeout(() => {
+              console.log('Showing email capture modal');
               this.showEmailCapture = true;
-            }, 2000); // Show after 2 seconds
+            }, 1500);
           }
 
           // Increment assessment count for free tier limit

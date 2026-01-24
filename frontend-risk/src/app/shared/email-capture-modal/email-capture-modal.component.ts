@@ -13,11 +13,12 @@ import { UserTierService } from '../../core/services/user-tier.service';
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
       (click)="onBackdropClick($event)"
     >
-      <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+      <div class="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
         <!-- Close button -->
         <button
+          type="button"
           (click)="close()"
-          class="absolute top-4 right-4 text-slate-400 hover:text-slate-200"
+          class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 z-10"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
