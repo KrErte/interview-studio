@@ -18,10 +18,10 @@ RUN dos2unix gradlew && chmod +x gradlew
 ARG GRADLE_VERSION=8.7
 RUN if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then \
         mkdir -p gradle/wrapper && \
-        wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" && \
-        unzip -q /tmp/gradle.zip "gradle-${GRADLE_VERSION}/lib/gradle-wrapper*.jar" -d /tmp && \
-        cp /tmp/gradle-${GRADLE_VERSION}/lib/gradle-wrapper-*.jar gradle/wrapper/gradle-wrapper.jar && \
-        rm -rf /tmp/gradle.zip /tmp/gradle-${GRADLE_VERSION}; \
+        wget -q -O /tmp/gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip" && \
+        unzip -q -j /tmp/gradle.zip "gradle-${GRADLE_VERSION}/lib/plugins/gradle-wrapper-${GRADLE_VERSION}.jar" -d gradle/wrapper && \
+        mv gradle/wrapper/gradle-wrapper-${GRADLE_VERSION}.jar gradle/wrapper/gradle-wrapper.jar && \
+        rm -f /tmp/gradle.zip; \
     fi
 
 # Download dependencies (cached layer)
