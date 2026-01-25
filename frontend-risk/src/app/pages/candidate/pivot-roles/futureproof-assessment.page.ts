@@ -55,6 +55,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   showDetails = false;
   selectedTimelineRisk: { year: number; risk: number } | null = null;
   showRegisterPrompt = false;
+  showAdvanced = false;
   activeTab: 'overview' | 'threats' | 'skills' | 'vitals' | 'timeline' | 'simulator' | 'decay' | 'pulse' | 'autopsy' | 'actions' = 'overview';
 
   private destroy$ = new Subject<void>();
