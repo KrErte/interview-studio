@@ -10,9 +10,7 @@
 
     <changeSet id="007-seed-demo-users" author="seed">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableIsEmpty tableName="app_users"/>
-            </not>
+            <tableIsEmpty tableName="app_users"/>
         </preConditions>
         <insert tableName="app_users">
             <column name="email" value="admin@demo.local"/>
@@ -64,9 +62,7 @@
     <changeSet id="007-seed-related-data" author="seed">
         <!-- Only seed rows for test users if not already present -->
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableIsEmpty tableName="training_progress"/>
-            </not>
+            <tableIsEmpty tableName="training_progress"/>
         </preConditions>
         <insert tableName="training_progress">
             <column name="email" value="candidate1@demo.local"/>
