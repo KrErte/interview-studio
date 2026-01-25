@@ -1,3 +1,33 @@
-{}
-
-
+{
+  "app": {
+    "name": "Karjääri Häirimise Indeks",
+    "tagline": "Sinu tulevikukindluse hindamine"
+  },
+  "common": {
+    "loading": "Laadin...",
+    "error": "Viga",
+    "retry": "Proovi uuesti",
+    "submit": "Saada",
+    "cancel": "Tühista",
+    "save": "Salvesta",
+    "next": "Edasi",
+    "back": "Tagasi",
+    "skip": "Jäta vahele"
+  },
+  "auth": {
+    "login": "Logi sisse",
+    "register": "Registreeru",
+    "logout": "Logi välja",
+    "email": "E-post",
+    "password": "Parool",
+    "fullName": "Täisnimi",
+    "invalidCredentials": "Vale e-post või parool"
+  },
+  "risk": {
+    "title": "Karjääri tulevikukaart",
+    "score": "Häirimise risk",
+    "low": "Madal risk",
+    "medium": "Keskmine risk",
+    "high": "Kõrge risk"
+  }
+}
