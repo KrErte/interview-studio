@@ -33,6 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Set<String> PUBLIC_PATH_PREFIXES = Set.of(
         "/api/auth",
+        "/api/risk",
+        "/api/risk-analysis",
         "/auth",
         "/actuator",
         "/v3/api-docs",
