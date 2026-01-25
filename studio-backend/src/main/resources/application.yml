@@ -34,6 +34,9 @@ management:
       exposure:
         include: health,info,mappings
       base-path: /actuator
+  health:
+    mail:
+      enabled: false
 
 # JWT Configuration
 app:

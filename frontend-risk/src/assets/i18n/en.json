@@ -1,3 +1,33 @@
-{}
-
-
+{
+  "app": {
+    "name": "Career Disruption Index",
+    "tagline": "Assess your future-proof potential"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Try again",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip"
+  },
+  "auth": {
+    "login": "Sign in",
+    "register": "Register",
+    "logout": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "risk": {
+    "title": "Career Future Map",
+    "score": "Disruption Risk",
+    "low": "Low risk",
+    "medium": "Medium risk",
+    "high": "High risk"
+  }
+}

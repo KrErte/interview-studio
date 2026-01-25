@@ -17,11 +17,14 @@ public class DisruptedRoleDto {
     List<TimelineEventDto> timeline;
     List<String> survivors;
     List<String> lessons;
+    List<String> sources; // Data sources for credibility
+    String region; // Geographic scope (US, EU, Estonia, Global)
 
     @Value
     @Builder
     public static class TimelineEventDto {
         int year;
         String event;
+        String source; // Optional source attribution
     }
 }

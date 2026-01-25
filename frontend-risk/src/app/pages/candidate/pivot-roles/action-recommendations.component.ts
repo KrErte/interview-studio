@@ -354,9 +354,23 @@ export class ActionRecommendationsComponent {
       skill: 'AI/ML põhitõed',
       urgency: 'critical',
       timeToLearn: '4-6 nädalat',
-      reason: 'AI-ga töötamine on muutumas kohustuslikuks. Isegi kui sa ei ehita ML mudeleid, pead mõistma kuidas neid integreerida.',
-      roi: '+40% palgakasv AI-seotud rollides',
+      reason: 'AI-ga töötamine on muutumas kohustuslikuks. Eesti AI/ML inseneride palk +35% võrreldes tavalise arendajaga (Palgainfo 2024).',
+      roi: '+40% palgakasv AI-seotud rollides (€5.8K median)',
       resources: [
+        {
+          name: 'TalTech - Masinõppe alused',
+          type: 'course',
+          url: 'https://taltech.ee/en/artificial-intelligence',
+          price: 'free',
+          duration: '1 semester'
+        },
+        {
+          name: 'Tartu Ülikool - Machine Learning',
+          type: 'course',
+          url: 'https://courses.cs.ut.ee/',
+          price: 'free',
+          duration: '1 semester'
+        },
         {
           name: 'fast.ai Practical Deep Learning',
           type: 'course',
@@ -370,13 +384,36 @@ export class ActionRecommendationsComponent {
           url: 'https://developers.google.com/machine-learning/crash-course',
           price: 'free',
           duration: '15 tundi'
+        }
+      ]
+    },
+    {
+      skill: 'Prompt Engineering & AI Tools',
+      urgency: 'critical',
+      timeToLearn: '1-2 nädalat',
+      reason: 'Bolt ja Wise nõuavad juba Copilot oskust. AI tööriistad suurendavad produktiivsust 2-3x.',
+      roi: '2-3x produktiivsuse kasv, konkurentsieelis',
+      resources: [
+        {
+          name: 'Anthropic Prompt Engineering Guide',
+          type: 'tutorial',
+          url: 'https://docs.anthropic.com/claude/docs/prompt-engineering',
+          price: 'free',
+          duration: '2-3 tundi'
         },
         {
-          name: 'Ehita oma AI projekt',
-          type: 'project',
-          url: 'https://github.com/practical-tutorials/project-based-learning#machine-learning',
+          name: 'GitHub Copilot (tasuta tudengitele)',
+          type: 'tutorial',
+          url: 'https://education.github.com/pack',
           price: 'free',
-          duration: '2-4 nädalat'
+          duration: 'Ongoing'
+        },
+        {
+          name: 'DeepLearning.AI Short Courses',
+          type: 'course',
+          url: 'https://www.deeplearning.ai/short-courses/',
+          price: 'free',
+          duration: '1-2 nädalat'
         }
       ]
     },
@@ -384,7 +421,7 @@ export class ActionRecommendationsComponent {
       skill: 'TypeScript mastery',
       urgency: 'critical',
       timeToLearn: '2-3 nädalat',
-      reason: 'TypeScript on de facto standard. JS-only projektid on muutumas harvaks. Tööpakkumistes nõutakse 85% juhtudest.',
+      reason: 'TypeScript on de facto standard. CV.ee andmetel nõutakse 78% Eesti tööpakkumistes.',
       roi: '+25% rohkem tööpakkumisi',
       resources: [
         {
@@ -414,8 +451,8 @@ export class ActionRecommendationsComponent {
       skill: 'System Design',
       urgency: 'important',
       timeToLearn: '4-8 nädalat',
-      reason: 'Senior rollid nõuavad süsteemi disaini oskust. AI ei asenda arhitektuurilisi otsuseid.',
-      roi: 'Vajalik Staff+ rollidele',
+      reason: 'Bolt, Wise, Veriff intervjuudes alati küsitakse. Senior+ rollid nõuavad arhitektuurioskust.',
+      roi: 'Vajalik Staff+ rollidele (€5-8K/kuu)',
       resources: [
         {
           name: 'System Design Primer',
@@ -441,25 +478,55 @@ export class ActionRecommendationsComponent {
       ]
     },
     {
+      skill: 'Küberturvalisus',
+      urgency: 'important',
+      timeToLearn: '8-12 nädalat',
+      reason: 'Eesti on e-riigina küberturvalisuse fookuses. RIA ja kaitsevägi otsivad pidevalt spetsialiste.',
+      roi: 'Turvarollid €4-7K/kuu, stabiilne nõudlus',
+      resources: [
+        {
+          name: 'TalTech Küberkaitse magistriprogramm',
+          type: 'course',
+          url: 'https://taltech.ee/en/cyber-security',
+          price: 'paid',
+          duration: '2 aastat'
+        },
+        {
+          name: 'SANS CyberTalent (stipendiumid)',
+          type: 'certification',
+          url: 'https://www.sans.org/cybertalent/',
+          price: 'free',
+          duration: '3-6 kuud'
+        },
+        {
+          name: 'HackTheBox / TryHackMe',
+          type: 'tutorial',
+          url: 'https://www.hackthebox.com/',
+          price: 'free',
+          duration: 'Ongoing'
+        }
+      ]
+    },
+    {
       skill: 'Cloud Sertifikaadid (AWS/GCP)',
       urgency: 'important',
       timeToLearn: '6-8 nädalat',
-      reason: 'Cloud oskused on nõutud 70%+ tööpakkumistes. Sertifikaat annab konkreetse tõendi.',
-      roi: '+15-20% palgalisa sertifikaadiga',
+      reason: 'AWS on Eesti turul domineeriv (72% CV.ee pakkumistes). Sertifikaat annab konkreetse tõendi.',
+      roi: '+15-20% palgalisa (€600-900/kuu)',
       resources: [
+        {
+          name: 'AWS re/Start programm Eestis',
+          type: 'course',
+          url: 'https://aws.amazon.com/training/restart/',
+          price: 'free',
+          duration: '12 nädalat'
+        },
         {
           name: 'AWS Solutions Architect (Cantrill)',
           type: 'course',
           url: 'https://learn.cantrill.io/',
           price: 'paid',
           duration: '60+ tundi'
-        },
-        {
-          name: 'AWS Free Tier + Tutorials',
-          type: 'tutorial',
-          url: 'https://aws.amazon.com/getting-started/',
-          price: 'free',
-          duration: 'Ongoing'
         },
         {
           name: 'Google Cloud Skills Boost',
@@ -471,11 +538,11 @@ export class ActionRecommendationsComponent {
       ]
     },
     {
-      skill: 'Kubernetes & Container Orchestration',
+      skill: 'Kubernetes & DevOps',
       urgency: 'nice-to-have',
       timeToLearn: '3-4 nädalat',
-      reason: 'K8s on muutunud standard enterprise keskkonnas. DevOps karjäärile hädavajalik.',
-      roi: 'DevOps rollid +30% kõrgem palk',
+      reason: 'K8s on standard Bolt, Wise jt suurfirmades. DevOps rollid +52% kasv Eestis (CV.ee).',
+      roi: 'DevOps €4.3K mediaanpalk (+18% YoY)',
       resources: [
         {
           name: 'Kubernetes the Hard Way',
@@ -494,32 +561,39 @@ export class ActionRecommendationsComponent {
       ]
     },
     {
-      skill: 'Prompt Engineering & AI Tools',
-      urgency: 'critical',
-      timeToLearn: '1-2 nädalat',
-      reason: 'AI tööriistad (Copilot, Claude, ChatGPT) suurendavad produktiivsust 2-3x. Nende efektiivne kasutamine on konkurentsieelis.',
-      roi: '2-3x produktiivsuse kasv',
+      skill: 'Eesti tech kogukond',
+      urgency: 'nice-to-have',
+      timeToLearn: 'Ongoing',
+      reason: 'Võrgustik on Eesti väikesel turul kriitiline. Sisemine värbamine on tavaline.',
+      roi: 'Parem juurdepääs töökohtadele, mentorlus',
       resources: [
         {
-          name: 'Anthropic Prompt Engineering Guide',
-          type: 'tutorial',
-          url: 'https://docs.anthropic.com/claude/docs/prompt-engineering',
+          name: 'Garage48 hackathonid',
+          type: 'project',
+          url: 'https://garage48.org/',
           price: 'free',
-          duration: '2-3 tundi'
+          duration: '48 tundi'
         },
         {
-          name: 'GitHub Copilot Labs',
+          name: 'Startup Estonia kogukond',
           type: 'tutorial',
-          url: 'https://githubnext.com/projects/copilot-labs',
+          url: 'https://startupestonia.ee/',
           price: 'free',
-          duration: '1 päev'
+          duration: 'Ongoing'
         },
         {
-          name: 'Building LLM Applications',
-          type: 'course',
-          url: 'https://www.deeplearning.ai/short-courses/',
+          name: 'Bolt Engineering Blog',
+          type: 'tutorial',
+          url: 'https://medium.com/bolt-labs',
           price: 'free',
-          duration: '1-2 nädalat'
+          duration: 'Ongoing'
+        },
+        {
+          name: 'Wise Tech Blog',
+          type: 'tutorial',
+          url: 'https://wise.com/tech/',
+          price: 'free',
+          duration: 'Ongoing'
         }
       ]
     }
