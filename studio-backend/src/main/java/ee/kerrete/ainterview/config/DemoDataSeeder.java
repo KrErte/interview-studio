@@ -8,6 +8,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -42,7 +43,9 @@ public class DemoDataSeeder {
     private final TrainingTaskRepository trainingTaskRepository;
     private final UserProfileRepository userProfileRepository;
     private final TrainingProgressRepository trainingProgressRepository;
+    private final PasswordEncoder passwordEncoder;
 
+    private static final String DEMO_PASSWORD = "Test1234!";
     private final Random random = new Random(42); // Fixed seed for reproducibility
 
     @EventListener(ApplicationReadyEvent.class)
@@ -51,9 +54,9 @@ public class DemoDataSeeder {
         log.info("Starting DemoDataSeeder...");
 
         for (String email : USER_EMAILS) {
+            // Create user if not exists
             if (appUserRepository.findByEmail(email).isEmpty()) {
-                log.warn("User {} not found, skipping demo data", email);
-                continue;
+                createDemoUser(email);
             }
 
             seedCvSummary(email);
@@ -65,6 +68,22 @@ public class DemoDataSeeder {
         }
 
         log.info("DemoDataSeeder completed.");
+    }
+
+    private void createDemoUser(String email) {
+        String fullName = getFullNameForEmail(email);
+        UserRole role = email.contains("admin") ? UserRole.ADMIN : UserRole.USER;
+
+        AppUser user = AppUser.builder()
+                .email(email)
+                .password(passwordEncoder.encode(DEMO_PASSWORD))
+                .fullName(fullName)
+                .role(role)
+                .enabled(true)
+                .build();
+
+        appUserRepository.save(user);
+        log.info("Created demo user: {} with password: {}", email, DEMO_PASSWORD);
     }
 
     private void seedCvSummary(String email) {
