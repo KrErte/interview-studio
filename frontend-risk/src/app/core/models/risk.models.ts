@@ -288,12 +288,13 @@ export interface MarketMetric {
 export interface TimelineEvent {
   year: number;
   event: string;
+  source?: string; // Optional source attribution
 }
 
 export interface DisruptedRole {
   title: string;
   peakYear: number;
-  currentStatus: 'disrupted' | 'transformed' | 'declining';
+  currentStatus: 'disrupted' | 'transformed' | 'declining' | 'transforming';
   peakEmployment: string;
   currentEmployment: string;
   decline: number;
@@ -301,6 +302,8 @@ export interface DisruptedRole {
   timeline: TimelineEvent[];
   survivors: string[];
   lessons: string[];
+  sources?: string[]; // Data sources for credibility
+  region?: string; // Geographic scope (US, EU, Estonia, Global)
 }
 
 export interface RiskAnalysisResponse {
