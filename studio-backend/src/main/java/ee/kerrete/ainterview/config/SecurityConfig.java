@@ -101,11 +101,11 @@ public class SecurityConfig {
                 auth
                     .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/trainer/status").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/risk/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/risk-analysis/**").permitAll()
+                    // Risk analysis endpoints - all public for now
+                    .requestMatchers("/api/risk/**").permitAll()
+                    .requestMatchers("/api/risk-analysis/**").permitAll()
                     .requestMatchers("/api/candidate/**").authenticated()
                     .requestMatchers("/api/studio/**").authenticated()
-                    .requestMatchers("/api/risk/**").authenticated()
                     .anyRequest().authenticated();
             })
 
