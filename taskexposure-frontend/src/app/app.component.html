@@ -23,6 +23,15 @@ limitations under the License.
   (paymentComplete)="onPaymentComplete($event)"
 ></app-payment-modal>
 
+<!-- Job Market Payment Modal -->
+<app-payment-modal
+  [isOpen]="showJobMarketPaymentModal"
+  [price]="'€9.99'"
+  [productName]="'30-Day Action Plan'"
+  (close)="onCloseJobMarketPaymentModal()"
+  (paymentComplete)="onJobMarketPaymentComplete($event)"
+></app-payment-modal>
+
 <app-sidebar
   [currentScreen]="currentScreen"
   [collapsed]="sidebarCollapsed"
@@ -127,6 +136,34 @@ limitations under the License.
     }
     @case ('evidence-log') {
       <app-evidence-log></app-evidence-log>
+    }
+    @case ('job-market-landing') {
+      <app-job-market-landing
+        (start)="onJobMarketStart()"
+      ></app-job-market-landing>
+    }
+    @case ('job-market-cv-upload') {
+      <app-job-market-cv-upload
+        (continue)="onJobMarketCvContinue()"
+        (back)="onJobMarketCvBack()"
+      ></app-job-market-cv-upload>
+    }
+    @case ('job-market-questionnaire') {
+      <app-job-market-questionnaire
+        (continue)="onJobMarketQuestionnaireContinue()"
+        (back)="onJobMarketQuestionnaireBack()"
+      ></app-job-market-questionnaire>
+    }
+    @case ('job-market-result-free') {
+      <app-job-market-result-free
+        (getPlan)="onJobMarketGetPlan()"
+        (back)="onJobMarketResultBack()"
+      ></app-job-market-result-free>
+    }
+    @case ('job-market-result-paid') {
+      <app-job-market-result-paid
+        (startOver)="onJobMarketStartOver()"
+      ></app-job-market-result-paid>
     }
   }
   </div>

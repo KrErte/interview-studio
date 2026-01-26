@@ -255,6 +255,33 @@ limitations under the License.
     color: currentColor;
   }
 
+  &__section--jobmarket {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 1rem;
+  }
+
+  &__list--jobmarket {
+    .sidebar__link--jobmarket {
+      &.sidebar__link--active {
+        background: var(--color-purple-glow);
+        color: var(--color-purple);
+
+        .sidebar__step--jobmarket {
+          background: var(--color-purple);
+          color: white;
+          border-color: var(--color-purple);
+        }
+      }
+    }
+  }
+
+  &__step--jobmarket {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+  }
+
   &__section--tools {
     margin-top: 1.5rem;
     border-top: 1px solid var(--color-border-subtle);

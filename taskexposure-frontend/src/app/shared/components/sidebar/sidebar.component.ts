@@ -49,6 +49,14 @@ export class SidebarComponent {
     { id: 'summary', label: 'Summary', icon: 'summarize' },
   ];
 
+  jobMarketItems: NavItem[] = [
+    { id: 'job-market-landing', label: 'Job Check', icon: 'work' },
+    { id: 'job-market-cv-upload', label: 'CV Upload', icon: 'upload_file' },
+    { id: 'job-market-questionnaire', label: 'Questions', icon: 'quiz' },
+    { id: 'job-market-result-free', label: 'Results', icon: 'assessment' },
+    { id: 'job-market-result-paid', label: 'Action Plan', icon: 'checklist' },
+  ];
+
   toolItems: NavItem[] = [
     { id: 'evidence-log', label: 'Evidence Log', icon: 'note_add' },
   ];

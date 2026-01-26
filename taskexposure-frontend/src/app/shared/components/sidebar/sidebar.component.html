@@ -71,6 +71,28 @@ limitations under the License.
       }
     </ul>
 
+    <!-- Job Market Section -->
+    <div class="sidebar__section sidebar__section--jobmarket">
+      <span class="sidebar__section-label" *ngIf="!collapsed">Job Market Check</span>
+    </div>
+
+    <ul class="sidebar__list sidebar__list--jobmarket">
+      @for (item of jobMarketItems; track item.id; let i = $index) {
+        <li class="sidebar__item">
+          <button
+            class="sidebar__link sidebar__link--jobmarket"
+            [class.sidebar__link--active]="isStepActive(item.id)"
+            (click)="onNavigate(item.id)"
+          >
+            <span class="sidebar__step sidebar__step--jobmarket">
+              {{ i + 1 }}
+            </span>
+            <span class="sidebar__label" *ngIf="!collapsed">{{ item.label }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
     <!-- Tools Section -->
     <div class="sidebar__section sidebar__section--tools">
       <span class="sidebar__section-label" *ngIf="!collapsed">Tools</span>

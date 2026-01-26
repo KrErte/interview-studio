@@ -1,0 +1,91 @@
+<!--
+Copyright 2025 TASKEXPOSURE
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="landing">
+  <!-- Animated Background -->
+  <div class="landing__bg">
+    <div class="landing__bg-shape landing__bg-shape--1"></div>
+    <div class="landing__bg-shape landing__bg-shape--2"></div>
+    <div class="landing__bg-shape landing__bg-shape--3"></div>
+  </div>
+
+  <div class="landing__content">
+    <!-- Hero Section -->
+    <div class="landing__hero">
+      <span class="landing__badge">Job Market Check</span>
+
+      <h1 class="landing__headline">{{ promise }}</h1>
+
+      <p class="landing__subtitle">{{ subtitle }}</p>
+
+      <!-- Value Bullets -->
+      <ul class="landing__bullets">
+        <li class="landing__bullet" *ngFor="let bullet of bullets; let i = index">
+          <span class="landing__bullet-icon" [ngClass]="{
+            'landing__bullet-icon--red': i === 0,
+            'landing__bullet-icon--yellow': i === 0,
+            'landing__bullet-icon--green': i === 0
+          }">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 13l4 4L19 7"/>
+            </svg>
+          </span>
+          <span class="landing__bullet-text">{{ bullet }}</span>
+        </li>
+      </ul>
+
+      <!-- CTA -->
+      <div class="landing__cta-group">
+        <button type="button" class="landing__cta" (click)="onStart()">
+          Check my position
+          <span class="landing__cta-arrow">&rarr;</span>
+        </button>
+        <span class="landing__cta-meta">15 minutes</span>
+      </div>
+    </div>
+
+    <!-- What's Included -->
+    <div class="landing__tiers">
+      <div class="landing__tier landing__tier--free">
+        <h3 class="landing__tier-title">Free</h3>
+        <ul class="landing__tier-items">
+          <li>Status: Red / Yellow / Green</li>
+          <li>3 concrete blockers</li>
+          <li>1 teaser action</li>
+        </ul>
+      </div>
+
+      <div class="landing__tier landing__tier--paid">
+        <span class="landing__tier-badge">Full Plan</span>
+        <h3 class="landing__tier-title">
+          <span class="landing__tier-price">9.99</span>
+          <span class="landing__tier-currency">one-time</span>
+        </h3>
+        <ul class="landing__tier-items">
+          <li>30-day action plan (7 steps)</li>
+          <li>CV rewrite bullets</li>
+          <li>Roles to avoid</li>
+          <li>Pivot suggestion if needed</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Trust Note -->
+    <p class="landing__trust">
+      No subscription. No upsells. One payment, full access.
+    </p>
+  </div>
+</div>

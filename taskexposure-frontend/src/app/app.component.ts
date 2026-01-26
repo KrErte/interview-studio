@@ -32,9 +32,15 @@ import { RiskBreakdownComponent } from './screens/risk-breakdown/risk-breakdown.
 import { RoadmapComponent } from './screens/roadmap/roadmap.component';
 import { SummaryComponent } from './screens/summary/summary.component';
 import { EvidenceLogComponent } from './screens/evidence-log/evidence-log.component';
+import { JobMarketLandingComponent } from './screens/job-market-landing/job-market-landing.component';
+import { JobMarketCvUploadComponent } from './screens/job-market-cv-upload/job-market-cv-upload.component';
+import { JobMarketQuestionnaireComponent } from './screens/job-market-questionnaire/job-market-questionnaire.component';
+import { JobMarketResultFreeComponent } from './screens/job-market-result-free/job-market-result-free.component';
+import { JobMarketResultPaidComponent } from './screens/job-market-result-paid/job-market-result-paid.component';
 import { RiskApiService } from './core/services/risk-api.service';
 import { SessionService } from './core/services/session.service';
 import { PremiumService } from './core/services/premium.service';
+import { JobMarketService } from './core/services/job-market.service';
 import {
   AnalyzeResponse,
   RefineResponse,
@@ -58,7 +64,12 @@ type ScreenId =
   | 'risk-breakdown'
   | 'roadmap'
   | 'summary'
-  | 'evidence-log';
+  | 'evidence-log'
+  | 'job-market-landing'
+  | 'job-market-cv-upload'
+  | 'job-market-questionnaire'
+  | 'job-market-result-free'
+  | 'job-market-result-paid';
 
 @Component({
   selector: 'app-root',
@@ -88,6 +99,13 @@ type ScreenId =
     RoadmapComponent,
     SummaryComponent,
     EvidenceLogComponent,
+
+    // Job Market screens
+    JobMarketLandingComponent,
+    JobMarketCvUploadComponent,
+    JobMarketQuestionnaireComponent,
+    JobMarketResultFreeComponent,
+    JobMarketResultPaidComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -97,14 +115,16 @@ export class AppComponent {
   private readonly session = inject(SessionService);
   private readonly toast = inject(ToastService);
   readonly premium = inject(PremiumService);
+  readonly jobMarket = inject(JobMarketService);
 
   // app.component.html uses this to switch sections
-  currentScreen: ScreenId = 'entry';
+  currentScreen: ScreenId = 'job-market-landing';
   isLoading = false;
   errorMessage = '';
   isTransitioning = false;
   sidebarCollapsed = false;
   showPaymentModal = false;
+  showJobMarketPaymentModal = false;
 
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
@@ -263,6 +283,53 @@ export class AppComponent {
   onContinueFree(): void {
     // Allow user to continue with limited view
     this.navigateTo('summary');
+  }
+
+  // Job Market Flow Methods
+  onJobMarketStart(): void {
+    this.navigateTo('job-market-cv-upload');
+  }
+
+  onJobMarketCvContinue(): void {
+    this.navigateTo('job-market-questionnaire');
+  }
+
+  onJobMarketCvBack(): void {
+    this.navigateTo('job-market-landing');
+  }
+
+  onJobMarketQuestionnaireContinue(): void {
+    this.navigateTo('job-market-result-free');
+  }
+
+  onJobMarketQuestionnaireBack(): void {
+    this.navigateTo('job-market-cv-upload');
+  }
+
+  onJobMarketGetPlan(): void {
+    this.showJobMarketPaymentModal = true;
+  }
+
+  onJobMarketResultBack(): void {
+    this.navigateTo('job-market-questionnaire');
+  }
+
+  onCloseJobMarketPaymentModal(): void {
+    this.showJobMarketPaymentModal = false;
+  }
+
+  onJobMarketPaymentComplete(result: PaymentResult): void {
+    this.showJobMarketPaymentModal = false;
+    if (result.success) {
+      this.jobMarket.markAsPaid();
+      this.toast.success('Payment successful! Here\'s your full 30-day plan.');
+      this.navigateTo('job-market-result-paid');
+    }
+  }
+
+  onJobMarketStartOver(): void {
+    this.jobMarket.reset();
+    this.navigateTo('job-market-landing');
   }
 
   private useFallbackForAnalysis(tasks: string[]): void {
