@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 TASKEXPOSURE
+ * Copyright 2025 Interview Studio
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,18 @@
  */
 
 import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideRouter(routes),
     provideHttpClient(
       withFetch(),
-      withInterceptors([httpErrorInterceptor])
+      withInterceptors([authInterceptor, httpErrorInterceptor])
     ),
   ],
 };

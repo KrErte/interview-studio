@@ -53,4 +53,7 @@
     <include file="changes/2025-12-27-observer-log-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/2025-12-22-evidence-entries.xml" relativeToChangelogFile="true"/>
 
+    <!-- Interview Studio V2 -->
+    <include file="changes/2026-01-26-create-interview-studio-session.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

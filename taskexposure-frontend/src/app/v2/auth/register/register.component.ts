@@ -1,0 +1,171 @@
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { AuthService, RegisterRequest } from '../../../core/services/auth.service';
+import { AnalyticsService } from '../../../core/services/analytics.service';
+
+@Component({
+  selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
+  template: `
+    <div class="min-h-screen bg-gray-950 flex flex-col">
+      <!-- Header -->
+      <header class="border-b border-gray-800">
+        <div class="max-w-md mx-auto px-4 py-4">
+          <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
+            Interview Studio
+          </a>
+        </div>
+      </header>
+
+      <main class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-sm">
+          <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-white mb-2">Create an account</h1>
+            <p class="text-gray-400">Save your sessions and share reports</p>
+          </div>
+
+          <form (ngSubmit)="submit()" class="space-y-4">
+            <div>
+              <label class="block text-gray-300 text-sm mb-2">Full Name</label>
+              <input
+                type="text"
+                [(ngModel)]="form.fullName"
+                name="fullName"
+                placeholder="Jane Doe"
+                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                [disabled]="loading()"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-gray-300 text-sm mb-2">Email</label>
+              <input
+                type="email"
+                [(ngModel)]="form.email"
+                name="email"
+                placeholder="you&#64;example.com"
+                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                [disabled]="loading()"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-gray-300 text-sm mb-2">Password</label>
+              <input
+                type="password"
+                [(ngModel)]="form.password"
+                name="password"
+                placeholder="••••••••"
+                class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                [disabled]="loading()"
+                required
+                minlength="8"
+              />
+              <p class="text-gray-500 text-xs mt-1">Minimum 8 characters</p>
+            </div>
+
+            @if (error()) {
+              <div class="p-3 bg-red-900/30 border border-red-800 rounded-lg text-red-300 text-sm">
+                {{ error() }}
+              </div>
+            }
+
+            <button
+              type="submit"
+              [disabled]="loading() || !isValid()"
+              class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-colors"
+            >
+              {{ loading() ? 'Creating account...' : 'Create Account' }}
+            </button>
+          </form>
+
+          <div class="mt-6 text-center">
+            <p class="text-gray-400">
+              Already have an account?
+              <a routerLink="/login" [queryParams]="returnUrlParams" class="text-emerald-400 hover:text-emerald-300">
+                Sign in
+              </a>
+            </p>
+          </div>
+
+          <div class="mt-8 pt-8 border-t border-gray-800 text-center">
+            <p class="text-gray-500 text-sm">
+              Or continue as guest with
+              <a routerLink="/session/new" class="text-emerald-400 hover:text-emerald-300">Quick Check</a>
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  `,
+})
+export class RegisterComponent implements OnInit {
+  loading = signal(false);
+  error = signal<string | null>(null);
+
+  form: RegisterRequest = {
+    email: '',
+    password: '',
+    fullName: '',
+  };
+
+  returnUrl = '/';
+  returnUrlParams: Record<string, string> = {};
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private analytics: AnalyticsService
+  ) {}
+
+  ngOnInit(): void {
+    this.analytics.pageView('/register', 'Register');
+    this.analytics.track('register_started');
+
+    // Get return URL from query params
+    this.route.queryParams.subscribe(params => {
+      if (params['returnUrl']) {
+        this.returnUrl = params['returnUrl'];
+        this.returnUrlParams = { returnUrl: this.returnUrl };
+      }
+    });
+
+    // Redirect if already logged in
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate([this.returnUrl]);
+    }
+  }
+
+  isValid(): boolean {
+    return !!this.form.email && !!this.form.password && this.form.password.length >= 8 && !!this.form.fullName;
+  }
+
+  submit(): void {
+    if (this.loading() || !this.isValid()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.authService.register(this.form).subscribe({
+      next: () => {
+        this.analytics.track('register_completed');
+        this.analytics.identify(this.form.email, { fullName: this.form.fullName });
+        this.router.navigate([this.returnUrl]);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        if (err.status === 409) {
+          this.error.set('An account with this email already exists');
+        } else {
+          this.error.set(err.error?.message || 'Registration failed. Please try again.');
+        }
+      },
+    });
+  }
+}

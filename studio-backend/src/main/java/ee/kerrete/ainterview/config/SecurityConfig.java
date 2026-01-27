@@ -104,6 +104,17 @@ public class SecurityConfig {
                     // Risk analysis endpoints - all public for now
                     .requestMatchers("/api/risk/**").permitAll()
                     .requestMatchers("/api/risk-analysis/**").permitAll()
+                    // TaskExposure V1 - public (no auth required)
+                    .requestMatchers("/api/taskexposure/**").permitAll()
+                    // Interview Studio V2 - public endpoints
+                    .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/simple").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/pay").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/studio/v2/sessions/*").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/studio/v2/sessions/*/full").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/studio/v2/share/*").permitAll()
+                    // Interview Studio V2 - authenticated endpoints
+                    .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/advanced").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/studio/v2/sessions/history").authenticated()
                     .requestMatchers("/api/candidate/**").authenticated()
                     .requestMatchers("/api/studio/**").authenticated()
                     .anyRequest().authenticated();
