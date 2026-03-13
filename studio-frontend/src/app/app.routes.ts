@@ -79,6 +79,11 @@ export const appRoutes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
   },
+  {
+    path: 'pricing',
+    loadComponent: () =>
+      import('./pages/pricing/pricing.component').then(m => m.PricingComponent)
+  },
   { path: '**', redirectTo: 'interview-studio' },
 ];
 
