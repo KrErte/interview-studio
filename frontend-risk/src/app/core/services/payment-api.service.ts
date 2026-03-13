@@ -1,0 +1,43 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiClient } from '../api/api-client.service';
+
+export interface CheckoutResponse {
+  checkoutUrl: string;
+}
+
+export interface TierResponse {
+  tier: string;
+  purchasedAt: string | null;
+}
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  features: string[];
+  current: boolean;
+  popular: boolean;
+}
+
+@Injectable({ providedIn: 'root' })
+export class PaymentApiService {
+  constructor(private api: ApiClient) {}
+
+  createCheckout(tier: string, successUrl: string, cancelUrl: string): Observable<CheckoutResponse> {
+    return this.api.post<CheckoutResponse>('/payment/checkout', {
+      tier,
+      successUrl,
+      cancelUrl
+    });
+  }
+
+  getCurrentTier(): Observable<TierResponse> {
+    return this.api.get<TierResponse>('/payment/tier');
+  }
+
+  getPricing(): Observable<PricingTier[]> {
+    return this.api.get<PricingTier[]>('/pricing');
+  }
+}

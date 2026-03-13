@@ -82,7 +82,7 @@ public class SkillProfileService {
             .yearsExperience(profile.getYearsExperience())
             .skills(readSkills(profile))
             .visibility(profile.getVisibility())
-            .futureProofScore(profile.getFutureProofScore())
+            .careerRiskScore(profile.getCareerRiskScore())
             .build();
     }
 }

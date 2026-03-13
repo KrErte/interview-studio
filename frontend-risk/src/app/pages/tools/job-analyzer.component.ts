@@ -1,6 +1,8 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { TierService } from '../../core/services/tier.service';
 
 interface AnalysisResult {
   mustHave: string[];
@@ -35,7 +37,7 @@ interface CompanySignal {
 @Component({
   selector: 'app-job-analyzer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="analyzer-container">
       <div class="header">
@@ -43,7 +45,16 @@ interface CompanySignal {
         <p>Paste any job description to see what they really want vs wishlist</p>
       </div>
 
-      @if (!result()) {
+      @if (rateLimited()) {
+        <div class="rate-limit-banner">
+          <div class="banner-icon">🔒</div>
+          <h3>Daily limit reached</h3>
+          <p>Free users get 1 analysis per day. Upgrade to Professional for unlimited analyses.</p>
+          <a routerLink="/pricing" class="upgrade-btn">Upgrade to Professional</a>
+        </div>
+      }
+
+      @if (!result() && !rateLimited()) {
         <div class="input-section">
           <textarea
             [(ngModel)]="jobText"
@@ -578,12 +589,79 @@ Requirements:
       background: #7c3aed;
       transform: translateY(-2px);
     }
+
+    .rate-limit-banner {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(245, 158, 11, 0.3);
+      border-radius: 16px;
+      margin-bottom: 2rem;
+    }
+
+    .rate-limit-banner .banner-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .rate-limit-banner h3 {
+      font-size: 1.5rem;
+      color: #f1f5f9;
+      margin-bottom: 0.5rem;
+    }
+
+    .rate-limit-banner p {
+      color: #94a3b8;
+      max-width: 400px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .upgrade-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, #10b981, #06d6a0);
+      border-radius: 8px;
+      color: #0f172a;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .upgrade-btn:hover {
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
   `]
 })
 export class JobAnalyzerComponent {
+  private readonly tierService = inject(TierService);
+
   jobText = '';
   isAnalyzing = signal(false);
   result = signal<AnalysisResult | null>(null);
+  rateLimited = signal(false);
+
+  private readonly RATE_LIMIT_KEY = 'jobAnalyzer_lastUsed';
+
+  constructor() {
+    this.checkRateLimit();
+  }
+
+  private checkRateLimit(): void {
+    if (this.tierService.canAccessUnlimitedAnalyzer()) return;
+    const lastUsed = localStorage.getItem(this.RATE_LIMIT_KEY);
+    if (lastUsed) {
+      const lastDate = new Date(lastUsed).toDateString();
+      const today = new Date().toDateString();
+      if (lastDate === today) {
+        this.rateLimited.set(true);
+      }
+    }
+  }
+
+  private recordUsage(): void {
+    if (!this.tierService.canAccessUnlimitedAnalyzer()) {
+      localStorage.setItem(this.RATE_LIMIT_KEY, new Date().toISOString());
+    }
+  }
 
   getScoreClass(score: number): string {
     if (score >= 70) return 'high';
@@ -604,6 +682,7 @@ export class JobAnalyzerComponent {
       const analysis = this.performAnalysis(this.jobText);
       this.result.set(analysis);
       this.isAnalyzing.set(false);
+      this.recordUsage();
     }, 1500);
   }
 

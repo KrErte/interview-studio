@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CandidateSearchRequest {
     private String targetRole;
-    private Double minFutureProofScore;
+    private Double minCareerRiskScore;
     private String location;
     private VisibilityLevel visibility;
 }

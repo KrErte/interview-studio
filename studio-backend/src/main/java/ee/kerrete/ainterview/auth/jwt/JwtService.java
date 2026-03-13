@@ -1,6 +1,7 @@
 package ee.kerrete.ainterview.auth.jwt;
 
 import ee.kerrete.ainterview.model.UserRole;
+import ee.kerrete.ainterview.model.UserTier;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -42,6 +43,10 @@ public class JwtService {
      * Access tokens include role and userId for stateless authentication.
      */
     public String generateAccessToken(String email, UserRole role, Long userId) {
+        return generateAccessToken(email, role, userId, UserTier.FREE);
+    }
+
+    public String generateAccessToken(String email, UserRole role, Long userId, UserTier tier) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + properties.expirationMs());
 
@@ -49,6 +54,7 @@ public class JwtService {
             .setSubject(email)
             .claim(JwtClaims.ROLE, role.name())
             .claim(JwtClaims.USER_ID, userId)
+            .claim(JwtClaims.TIER, (tier != null ? tier : UserTier.FREE).name())
             .claim(JwtClaims.TOKEN_TYPE, JwtClaims.TYPE_ACCESS)
             .setIssuedAt(now)
             .setExpiration(expiry)
@@ -140,6 +146,17 @@ public class JwtService {
     /**
      * Extract token type from claims.
      */
+    public UserTier extractTier(String token) {
+        return parseToken(token)
+            .map(claims -> claims.get(JwtClaims.TIER, String.class))
+            .filter(tier -> tier != null && !tier.isBlank())
+            .map(tier -> {
+                try { return UserTier.valueOf(tier); }
+                catch (IllegalArgumentException e) { return UserTier.FREE; }
+            })
+            .orElse(UserTier.FREE);
+    }
+
     public String extractTokenType(String token) {
         return parseToken(token)
             .map(claims -> claims.get(JwtClaims.TOKEN_TYPE, String.class))

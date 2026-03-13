@@ -29,7 +29,7 @@ public class MarketplaceSearchControllerIT extends AbstractIntegrationTest {
             .roleFamily("ENGINEERING")
             .location("Tallinn")
             .visibility(MarketplaceVisibility.PUBLIC)
-            .futureProofScore(78.0)
+            .careerRiskScore(78.0)
             .build());
         marketplaceProfileRepository.save(MarketplaceProfile.builder()
             .skillProfileId(visible.getId())
@@ -44,7 +44,7 @@ public class MarketplaceSearchControllerIT extends AbstractIntegrationTest {
             .roleFamily("ENGINEERING")
             .location("Tallinn")
             .visibility(MarketplaceVisibility.OFF)
-            .futureProofScore(90.0)
+            .careerRiskScore(90.0)
             .build());
         marketplaceProfileRepository.save(MarketplaceProfile.builder()
             .skillProfileId(hidden.getId())

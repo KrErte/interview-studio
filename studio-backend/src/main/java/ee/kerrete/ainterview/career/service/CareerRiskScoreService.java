@@ -1,11 +1,11 @@
 package ee.kerrete.ainterview.career.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.kerrete.ainterview.career.dto.FutureProofScoreDto;
-import ee.kerrete.ainterview.career.dto.FutureProofScoreRequest;
-import ee.kerrete.ainterview.career.model.FutureProofScore;
+import ee.kerrete.ainterview.career.dto.CareerRiskScoreDto;
+import ee.kerrete.ainterview.career.dto.CareerRiskScoreRequest;
+import ee.kerrete.ainterview.career.model.CareerRiskScore;
 import ee.kerrete.ainterview.career.model.SkillProfile;
-import ee.kerrete.ainterview.career.repository.FutureProofScoreRepository;
+import ee.kerrete.ainterview.career.repository.CareerRiskScoreRepository;
 import ee.kerrete.ainterview.career.repository.SkillProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("careerFutureProofScoreService")
+@Service("careerRiskScoreService")
 @RequiredArgsConstructor
-public class FutureProofScoreService {
+public class CareerRiskScoreService {
 
     private final SkillProfileRepository skillProfileRepository;
-    private final FutureProofScoreRepository futureProofScoreRepository;
+    private final CareerRiskScoreRepository careerRiskScoreRepository;
     private final SkillProfileService skillProfileService;
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public FutureProofScoreDto computeAndPersist(FutureProofScoreRequest request) {
+    public CareerRiskScoreDto computeAndPersist(CareerRiskScoreRequest request) {
         SkillProfile profile = resolveProfile(request);
         List<String> skills = resolveSkills(request, profile);
         int skillCount = Math.min(30, skills.size());
@@ -50,18 +50,18 @@ public class FutureProofScoreService {
 
         String explainJson = writeJson(explain);
 
-        FutureProofScore record = FutureProofScore.builder()
+        CareerRiskScore record = CareerRiskScore.builder()
             .skillProfileId(profile.getId())
             .score(score)
             .explainJson(explainJson)
             .build();
-        futureProofScoreRepository.save(record);
+        careerRiskScoreRepository.save(record);
 
-        profile.setFutureProofScore(score);
-        profile.setFutureProofExplainJson(explainJson);
+        profile.setCareerRiskScore(score);
+        profile.setCareerRiskExplainJson(explainJson);
         skillProfileRepository.save(profile);
 
-        return FutureProofScoreDto.builder()
+        return CareerRiskScoreDto.builder()
             .skillProfileId(profile.getId())
             .score(score)
             .explainJson(explainJson)
@@ -69,7 +69,7 @@ public class FutureProofScoreService {
             .build();
     }
 
-    private SkillProfile resolveProfile(FutureProofScoreRequest request) {
+    private SkillProfile resolveProfile(CareerRiskScoreRequest request) {
         if (request.getSkillProfileId() != null) {
             return skillProfileRepository.findById(request.getSkillProfileId())
                 .orElseThrow(() -> new IllegalArgumentException("SkillProfile not found: " + request.getSkillProfileId()));
@@ -87,7 +87,7 @@ public class FutureProofScoreService {
                 .build()));
     }
 
-    private List<String> resolveSkills(FutureProofScoreRequest request, SkillProfile profile) {
+    private List<String> resolveSkills(CareerRiskScoreRequest request, SkillProfile profile) {
         if (request.getSkills() != null && !request.getSkills().isEmpty()) {
             return request.getSkills();
         }

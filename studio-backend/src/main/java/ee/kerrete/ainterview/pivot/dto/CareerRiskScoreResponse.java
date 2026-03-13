@@ -1,6 +1,6 @@
 package ee.kerrete.ainterview.pivot.dto;
 
-import ee.kerrete.ainterview.pivot.entity.PivotFutureProofScore;
+import ee.kerrete.ainterview.pivot.entity.PivotCareerRiskScore;
 import lombok.Builder;
 import lombok.Value;
 
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class FutureProofScoreResponse {
+public class CareerRiskScoreResponse {
     Double overallScore;
     Double adaptabilityScore;
     Double skillRelevanceScore;
@@ -16,11 +16,11 @@ public class FutureProofScoreResponse {
     Double stabilityScore;
     LocalDateTime computedAt;
 
-    public static FutureProofScoreResponse from(PivotFutureProofScore entity) {
+    public static CareerRiskScoreResponse from(PivotCareerRiskScore entity) {
         if (entity == null) {
             return null;
         }
-        return FutureProofScoreResponse.builder()
+        return CareerRiskScoreResponse.builder()
             .overallScore(entity.getOverallScore())
             .adaptabilityScore(entity.getAdaptabilityScore())
             .skillRelevanceScore(entity.getSkillRelevanceScore())

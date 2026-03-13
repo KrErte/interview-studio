@@ -106,6 +106,9 @@ public class SecurityConfig {
                     .requestMatchers("/api/risk-analysis/**").permitAll()
                     // TaskExposure V1 - public (no auth required)
                     .requestMatchers("/api/taskexposure/**").permitAll()
+                    // Payment - public endpoints
+                    .requestMatchers(HttpMethod.POST, "/api/payment/webhook").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/pricing").permitAll()
                     // Interview Studio V2 - public endpoints
                     .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/simple").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/pay").permitAll()

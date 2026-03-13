@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class FutureProofScoreDto {
+public class CareerRiskScoreDto {
     Long skillProfileId;
     Double score;
     String explainJson;

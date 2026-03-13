@@ -273,119 +273,162 @@
 
       <!-- Advanced tabs and content -->
       <div *ngIf="showAdvanced" class="px-5 pb-5 space-y-4 animate-fadeIn">
-        <!-- Tab navigation for advanced features -->
-        <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-800/50 border border-slate-700/50">
-          <button
-            *ngFor="let tab of [
-              { id: 'overview', label: 'Overview', icon: '◉' },
-              { id: 'actions', label: 'Action Plan', icon: '🎯' },
-              { id: 'threats', label: 'Threats', icon: '◎' },
-              { id: 'skills', label: 'Skills', icon: '▦' },
-              { id: 'simulator', label: 'What-If', icon: '🔮' },
-              { id: 'pulse', label: 'Market', icon: '📡' },
-              { id: 'autopsy', label: 'Examples', icon: '🔍' }
-            ]"
-            type="button"
-            class="px-3 py-2 rounded-lg text-xs font-medium transition-all"
-            [ngClass]="activeTab === tab.id
-              ? 'bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-violet-300 border border-violet-500/30'
-              : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'"
-            (click)="setActiveTab(tab.id)"
-          >
-            <span class="mr-1">{{ tab.icon }}</span>
-            {{ tab.label }}
-          </button>
-        </div>
 
-        <!-- Overview Tab (detailed stats) -->
-        <div *ngIf="activeTab === 'overview'" class="space-y-4 animate-fadeIn">
-          <div class="grid gap-4 md:grid-cols-3">
-            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Disruption Risk</span>
-                <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">◉</span>
-              </div>
-              <div class="text-4xl font-mono font-bold text-emerald-400">{{ assessment.riskPercent }}%</div>
-              <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all" [style.width.%]="assessment.riskPercent"></div>
-              </div>
-              <div class="mt-3 text-xs text-slate-400">
-                <span class="text-emerald-400 font-semibold">{{ getPercentileSaferThan() }}%</span>
-                of other {{ currentRole }} roles have higher risk
-              </div>
+        <!-- FREE tier: Upgrade CTA instead of tabs -->
+        <div *ngIf="tierService.isFree()" class="relative">
+          <!-- Blurred preview behind -->
+          <div class="filter blur-sm pointer-events-none select-none opacity-50">
+            <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-800/50 border border-slate-700/50">
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">◉ Overview</span>
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">🎯 Action Plan</span>
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">◎ Threats</span>
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">▦ Skills</span>
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">🔮 What-If</span>
+              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">📡 Market</span>
             </div>
-
-            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Analysis Confidence</span>
-                <span class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">◎</span>
-              </div>
-              <div class="text-4xl font-mono font-bold text-cyan-400">{{ confidencePercent }}%</div>
-              <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-cyan-500 rounded-full transition-all" [style.width.%]="confidencePercent"></div>
-              </div>
-            </div>
-
-            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs uppercase tracking-wide text-slate-400">Time to Adapt</span>
-                <span class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">⏱</span>
-              </div>
-              <div class="text-4xl font-mono font-bold text-amber-400">18<span class="text-lg">mo</span></div>
-              <p class="text-xs text-slate-400 mt-2">Recommended preparation time</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-3">
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
             </div>
           </div>
 
-          <!-- Pivot Roles -->
-          <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-            <h3 class="font-semibold text-white mb-4">Recommended alternative roles</h3>
-            <div class="space-y-2" *ngIf="topPivotRoles.length; else noRoles">
-              <div *ngFor="let role of topPivotRoles; let i = index" class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-                <div class="flex items-center gap-3">
-                  <span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400">{{ i + 1 }}</span>
-                  <span class="font-medium text-slate-200">{{ role }}</span>
+          <!-- Upgrade overlay -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center p-8 rounded-2xl bg-slate-900/95 border border-emerald-500/30 shadow-2xl max-w-md">
+              <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
+                <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Unlock Full Analysis</h3>
+              <p class="text-sm text-slate-400 mb-5">
+                Get detailed threat radar, skill matrix, what-if simulator, market signals, and your personalized action plan.
+              </p>
+              <a routerLink="/pricing"
+                class="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
+                Upgrade from $7
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESSENTIALS+ tier: Full tab content -->
+        <ng-container *ngIf="!tierService.isFree()">
+          <!-- Tab navigation for advanced features -->
+          <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <button
+              *ngFor="let tab of [
+                { id: 'overview', label: 'Overview', icon: '◉' },
+                { id: 'actions', label: 'Action Plan', icon: '🎯' },
+                { id: 'threats', label: 'Threats', icon: '◎' },
+                { id: 'skills', label: 'Skills', icon: '▦' },
+                { id: 'simulator', label: 'What-If', icon: '🔮' },
+                { id: 'pulse', label: 'Market', icon: '📡' },
+                { id: 'autopsy', label: 'Examples', icon: '🔍' }
+              ]"
+              type="button"
+              class="px-3 py-2 rounded-lg text-xs font-medium transition-all"
+              [ngClass]="activeTab === tab.id
+                ? 'bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-violet-300 border border-violet-500/30'
+                : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'"
+              (click)="setActiveTab(tab.id)"
+            >
+              <span class="mr-1">{{ tab.icon }}</span>
+              {{ tab.label }}
+            </button>
+          </div>
+
+          <!-- Overview Tab (detailed stats) -->
+          <div *ngIf="activeTab === 'overview'" class="space-y-4 animate-fadeIn">
+            <div class="grid gap-4 md:grid-cols-3">
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs uppercase tracking-wide text-slate-400">Disruption Risk</span>
+                  <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">◉</span>
                 </div>
-                <span class="text-xs text-emerald-400 font-medium">Good fit</span>
+                <div class="text-4xl font-mono font-bold text-emerald-400">{{ assessment.riskPercent }}%</div>
+                <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all" [style.width.%]="assessment.riskPercent"></div>
+                </div>
+                <div class="mt-3 text-xs text-slate-400">
+                  <span class="text-emerald-400 font-semibold">{{ getPercentileSaferThan() }}%</span>
+                  of other {{ currentRole }} roles have higher risk
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs uppercase tracking-wide text-slate-400">Analysis Confidence</span>
+                  <span class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">◎</span>
+                </div>
+                <div class="text-4xl font-mono font-bold text-cyan-400">{{ confidencePercent }}%</div>
+                <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-cyan-500 rounded-full transition-all" [style.width.%]="confidencePercent"></div>
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs uppercase tracking-wide text-slate-400">Time to Adapt</span>
+                  <span class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">⏱</span>
+                </div>
+                <div class="text-4xl font-mono font-bold text-amber-400">18<span class="text-lg">mo</span></div>
+                <p class="text-xs text-slate-400 mt-2">Recommended preparation time</p>
               </div>
             </div>
-            <ng-template #noRoles>
-              <p class="text-sm text-slate-400">Complete your profile to get recommendations.</p>
-            </ng-template>
+
+            <!-- Pivot Roles -->
+            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <h3 class="font-semibold text-white mb-4">Recommended alternative roles</h3>
+              <div class="space-y-2" *ngIf="topPivotRoles.length; else noRoles">
+                <div *ngFor="let role of topPivotRoles; let i = index" class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                  <div class="flex items-center gap-3">
+                    <span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400">{{ i + 1 }}</span>
+                    <span class="font-medium text-slate-200">{{ role }}</span>
+                  </div>
+                  <span class="text-xs text-emerald-400 font-medium">Good fit</span>
+                </div>
+              </div>
+              <ng-template #noRoles>
+                <p class="text-sm text-slate-400">Complete your profile to get recommendations.</p>
+              </ng-template>
+            </div>
           </div>
-        </div>
 
-        <!-- Actions Tab -->
-        <div *ngIf="activeTab === 'actions'" class="animate-fadeIn">
-          <app-action-recommendations [userRole]="currentRole"></app-action-recommendations>
-        </div>
+          <!-- Actions Tab -->
+          <div *ngIf="activeTab === 'actions'" class="animate-fadeIn">
+            <app-action-recommendations [userRole]="currentRole"></app-action-recommendations>
+          </div>
 
-        <!-- Threats Tab -->
-        <div *ngIf="activeTab === 'threats'" class="animate-fadeIn">
-          <app-threat-radar [threats]="threatVectors"></app-threat-radar>
-        </div>
+          <!-- Threats Tab -->
+          <div *ngIf="activeTab === 'threats'" class="animate-fadeIn">
+            <app-threat-radar [threats]="threatVectors"></app-threat-radar>
+          </div>
 
-        <!-- Skills Tab -->
-        <div *ngIf="activeTab === 'skills'" class="animate-fadeIn">
-          <app-skill-vulnerability-matrix [skills]="skillCells"></app-skill-vulnerability-matrix>
-        </div>
+          <!-- Skills Tab -->
+          <div *ngIf="activeTab === 'skills'" class="animate-fadeIn">
+            <app-skill-vulnerability-matrix [skills]="skillCells"></app-skill-vulnerability-matrix>
+          </div>
 
-        <!-- What-If Simulator Tab -->
-        <div *ngIf="activeTab === 'simulator'" class="animate-fadeIn">
-          <app-scenario-simulator
-            [currentRisk]="assessment.riskPercent"
-            [currentSalary]="95"
-          ></app-scenario-simulator>
-        </div>
+          <!-- What-If Simulator Tab -->
+          <div *ngIf="activeTab === 'simulator'" class="animate-fadeIn">
+            <app-scenario-simulator
+              [currentRisk]="assessment.riskPercent"
+              [currentSalary]="95"
+            ></app-scenario-simulator>
+          </div>
 
-        <!-- Market Pulse Tab -->
-        <div *ngIf="activeTab === 'pulse'" class="animate-fadeIn">
-          <app-market-pulse [userRole]="currentRole"></app-market-pulse>
-        </div>
+          <!-- Market Pulse Tab -->
+          <div *ngIf="activeTab === 'pulse'" class="animate-fadeIn">
+            <app-market-pulse [userRole]="currentRole"></app-market-pulse>
+          </div>
 
-        <!-- Case Studies Tab -->
-        <div *ngIf="activeTab === 'autopsy'" class="animate-fadeIn">
-          <app-disruption-autopsy></app-disruption-autopsy>
-        </div>
+          <!-- Case Studies Tab -->
+          <div *ngIf="activeTab === 'autopsy'" class="animate-fadeIn">
+            <app-disruption-autopsy></app-disruption-autopsy>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

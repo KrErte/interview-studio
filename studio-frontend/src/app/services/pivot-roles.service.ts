@@ -14,7 +14,7 @@ export interface RoleMatch {
   seniority?: string;
 }
 
-export interface FutureProofScore {
+export interface CareerRiskScore {
   overall: number; // 0-100
   automationRisk: number; // lower is better
   adaptability: number;
@@ -40,12 +40,12 @@ export class PivotRolesService {
   }
 
   /**
-   * Fetches an aggregate future-proof score for the candidate.
-   * BACKEND: GET /api/candidate/pivot-roles/future-proof-score?email=...
+   * Fetches an aggregate career-risk score for the candidate.
+   * BACKEND: GET /api/candidate/pivot-roles/career-risk-score?email=...
    */
-  getFutureProofScore(email: string): Observable<FutureProofScore> {
+  getCareerRiskScore(email: string): Observable<CareerRiskScore> {
     const params = new HttpParams().set('email', email);
-    return this.http.get<FutureProofScore>(`${this.baseUrl}/future-proof-score`, { params });
+    return this.http.get<CareerRiskScore>(`${this.baseUrl}/career-risk-score`, { params });
   }
 }
 

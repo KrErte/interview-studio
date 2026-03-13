@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 type VisibilityMode = 'OFF' | 'ANON' | 'PUBLIC';
 type FlowStep = 'OVERVIEW' | 1 | 2 | 3 | 4;
 type InsightView = 'overview' | 'strengths' | 'gaps';
-type FutureproofNavKey = 'OVERVIEW' | 'PROFILE' | 'QUESTIONS' | 'ANALYSIS' | 'ROADMAP';
+type CareerriskNavKey = 'OVERVIEW' | 'PROFILE' | 'QUESTIONS' | 'ANALYSIS' | 'ROADMAP';
 
 interface PivotRoleMatch {
   id: string;
@@ -21,7 +21,7 @@ interface PivotRoleMatch {
   gapSkills: string[];
 }
 
-interface FutureReadinessScore {
+interface CareerRiskReadinessScore {
   overall: number;
   adaptability: number;
   automationResilience: number;
@@ -51,7 +51,7 @@ interface PlanBlock {
 })
 export class PivotRolesPageComponent implements OnInit, OnDestroy {
   currentStep: FlowStep = 'OVERVIEW';
-  activeNav: FutureproofNavKey = 'OVERVIEW';
+  activeNav: CareerriskNavKey = 'OVERVIEW';
 
   // Step 1 inputs
   profileYears: number | null = null;
@@ -66,7 +66,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   loadingRoles = false;
   rolesError: string | null = null;
 
-  futureScore: FutureReadinessScore | null = null;
+  careerRiskScore: CareerRiskReadinessScore | null = null;
   loadingScore = false;
   scoreError: string | null = null;
 
@@ -169,7 +169,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.navContext.setFutureproofNav([
+    this.navContext.setCareerriskNav([
       { label: 'Overview', key: 'OVERVIEW' },
       { label: 'Profile', key: 'PROFILE' },
       { label: 'Questions', key: 'QUESTIONS' },
@@ -179,15 +179,15 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
 
     this.navContext.commands$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((key) => this.applyNavCommand(key as FutureproofNavKey));
+      .subscribe((key) => this.applyNavCommand(key as CareerriskNavKey));
 
     const queryStep = (this.route.snapshot.queryParamMap.get('step') || '').toUpperCase();
     if (['OVERVIEW', 'PROFILE', 'QUESTIONS', 'ANALYSIS', 'ROADMAP'].includes(queryStep)) {
-      this.applyNavCommand(queryStep as FutureproofNavKey, true);
+      this.applyNavCommand(queryStep as CareerriskNavKey, true);
     }
 
     this.loadRoleMatches();
-    this.loadFutureScore();
+    this.loadCareerRiskScore();
     this.loadVisibility();
   }
 
@@ -199,7 +199,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   get hasAnyData(): boolean {
-    return !!(this.roleMatches.length || this.futureScore || this.visibility);
+    return !!(this.roleMatches.length || this.careerRiskScore || this.visibility);
   }
 
   setInsightView(view: InsightView): void {
@@ -207,15 +207,15 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   goToQuestions(): void {
-    this.router.navigateByUrl('/futureproof/questions');
+    this.router.navigateByUrl('/careerrisk/questions');
   }
 
   goToAssessment(): void {
-    this.router.navigateByUrl('/futureproof/assessment');
+    this.router.navigateByUrl('/careerrisk/assessment');
   }
 
   goToRoadmap(): void {
-    this.router.navigateByUrl('/futureproof/roadmap');
+    this.router.navigateByUrl('/careerrisk/roadmap');
   }
 
   goToStep(step: FlowStep): void {
@@ -243,7 +243,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     this.lastSnapshotMessage = null;
     this.queueTimer(() => {
       this.snapshotBusy = false;
-      this.lastSnapshotMessage = 'Future-readiness overview updated. Matches refreshed.';
+      this.lastSnapshotMessage = 'Career-risk readiness overview updated. Matches refreshed.';
       this.currentStep = 3;
       this.activeNav = 'ANALYSIS';
       this.navContext.setActiveKey(this.activeNav);
@@ -254,7 +254,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
 
   onTrackProgress(): void {
     this.planSelectionMessage = 'Readiness tracking coming soon.';
-    this.router.navigateByUrl('/futureproof');
+    this.router.navigateByUrl('/careerrisk');
   }
 
   onGeneratePlan(match: PivotRoleMatch): void {
@@ -296,15 +296,15 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
         visibilityThreshold: this.visibilityDraftThreshold
       };
       this.savingVisibility = false;
-      this.visibilitySavedMessage = 'Visibility preferences saved for your future-proof profile.';
+      this.visibilitySavedMessage = 'Visibility preferences saved for your career-risk profile.';
     }, 500);
   }
 
   goToDashboard(): void {
-    this.router.navigateByUrl('/futureproof/overview');
+    this.router.navigateByUrl('/careerrisk/overview');
   }
 
-  private applyNavCommand(key: FutureproofNavKey, fromQuery: boolean = false): void {
+  private applyNavCommand(key: CareerriskNavKey, fromQuery: boolean = false): void {
     this.activeNav = key;
     this.navContext.setActiveKey(key);
     if (key === 'OVERVIEW') {
@@ -326,7 +326,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private stepToNav(step: FlowStep): FutureproofNavKey {
+  private stepToNav(step: FlowStep): CareerriskNavKey {
     if (step === 'OVERVIEW') return 'OVERVIEW';
     if (step === 1) return 'PROFILE';
     if (step === 2) return 'QUESTIONS';
@@ -381,11 +381,11 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     }, 420);
   }
 
-  private loadFutureScore(): void {
+  private loadCareerRiskScore(): void {
     this.loadingScore = true;
     this.scoreError = null;
     this.queueTimer(() => {
-      this.futureScore = {
+      this.careerRiskScore = {
         overall: 82,
         adaptability: 79,
         automationResilience: 76,

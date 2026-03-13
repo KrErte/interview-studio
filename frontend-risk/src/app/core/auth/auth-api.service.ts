@@ -1,16 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, map, tap } from 'rxjs';
 import { ApiClient } from '../api/api-client.service';
 import { TokenStorageService } from './token-storage.service';
+import { TierService } from '../services/tier.service';
 
 export interface AuthResponse {
   token?: string;
   accessToken?: string;
+  tier?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly tokenSubject: BehaviorSubject<string | null>;
+  private readonly tierService = inject(TierService);
 
   readonly token$;
 
@@ -18,6 +21,11 @@ export class AuthService {
     const initialToken = this.tokenStorage.getToken();
     this.tokenSubject = new BehaviorSubject<string | null>(initialToken);
     this.token$ = this.tokenSubject.asObservable();
+
+    // On startup, decode tier from existing JWT if present
+    if (initialToken) {
+      this.decodeTierFromToken(initialToken);
+    }
   }
 
   login(email: string, password: string) {
@@ -41,6 +49,14 @@ export class AuthService {
   logout(): void {
     this.tokenStorage.clear();
     this.tokenSubject.next(null);
+    this.tierService.reset();
+  }
+
+  refreshTier(): void {
+    const token = this.tokenSubject.value;
+    if (token) {
+      this.decodeTierFromToken(token);
+    }
   }
 
   private persist(res: AuthResponse): void {
@@ -48,6 +64,22 @@ export class AuthService {
     if (token) {
       this.tokenStorage.setToken(token);
       this.tokenSubject.next(token);
+    }
+    if (res?.tier) {
+      this.tierService.setTier(res.tier);
+    } else if (token) {
+      this.decodeTierFromToken(token);
+    }
+  }
+
+  private decodeTierFromToken(token: string): void {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.tier) {
+        this.tierService.setTier(payload.tier);
+      }
+    } catch {
+      // Invalid token, ignore
     }
   }
 }

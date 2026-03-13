@@ -10,13 +10,13 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "future_proof_score")
+@Table(name = "career_risk_score")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FutureProofScore {
+public class CareerRiskScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

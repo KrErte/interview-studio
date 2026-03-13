@@ -6,7 +6,7 @@ import ee.kerrete.ainterview.pivot.entity.PivotMarketplaceProfile;
 import ee.kerrete.ainterview.pivot.entity.PivotRoleMatch;
 import ee.kerrete.ainterview.pivot.entity.TransitionProfile;
 import ee.kerrete.ainterview.pivot.enums.VisibilityLevel;
-import ee.kerrete.ainterview.pivot.repository.PivotFutureProofScoreRepository;
+import ee.kerrete.ainterview.pivot.repository.PivotCareerRiskScoreRepository;
 import ee.kerrete.ainterview.pivot.repository.PivotMarketplaceProfileRepository;
 import ee.kerrete.ainterview.pivot.repository.PivotRoleMatchRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CandidateSearchService {
 
     private final PivotMarketplaceProfileRepository marketplaceProfileRepository;
     private final PivotRoleMatchRepository roleMatchRepository;
-    private final PivotFutureProofScoreRepository futureProofScoreRepository;
+    private final PivotCareerRiskScoreRepository careerRiskScoreRepository;
 
     @Transactional(readOnly = true)
     public List<CandidateSearchResult> search(CandidateSearchRequest request) {
@@ -42,7 +42,7 @@ public class CandidateSearchService {
         return candidates.stream()
             .filter(profile -> filterByRole(profile.getProfile(), request.getTargetRole()))
             .filter(profile -> filterByLocation(profile, request.getLocation()))
-            .map(profile -> toResult(profile, request.getMinFutureProofScore()))
+            .map(profile -> toResult(profile, request.getMinCareerRiskScore()))
             .flatMap(Optional::stream)
             .sorted(this::compareByScoreDescNullsLast)
             .collect(Collectors.toList());
@@ -66,14 +66,14 @@ public class CandidateSearchService {
         return location.contains(requestedLocation.toLowerCase(Locale.ROOT));
     }
 
-    private Optional<CandidateSearchResult> toResult(PivotMarketplaceProfile profile, Double minFutureScore) {
+    private Optional<CandidateSearchResult> toResult(PivotMarketplaceProfile profile, Double minCareerRiskScoreVal) {
         TransitionProfile transitionProfile = profile.getProfile();
         PivotRoleMatch lastMatch = roleMatchRepository.findTopByProfileOrderByComputedAtDesc(transitionProfile).orElse(null);
-        Double latestFutureProof = futureProofScoreRepository.findTopByProfileOrderByComputedAtDesc(transitionProfile)
+        Double latestCareerRisk = careerRiskScoreRepository.findTopByProfileOrderByComputedAtDesc(transitionProfile)
             .map(score -> score.getOverallScore())
             .orElse(null);
 
-        if (minFutureScore != null && (latestFutureProof == null || latestFutureProof < minFutureScore)) {
+        if (minCareerRiskScoreVal != null && (latestCareerRisk == null || latestCareerRisk < minCareerRiskScoreVal)) {
             return Optional.empty();
         }
 
@@ -88,7 +88,7 @@ public class CandidateSearchService {
             .targetRole(transitionProfile.getTargetRole())
             .visibility(profile.getVisibility())
             .matchScore(lastMatch != null ? lastMatch.getMatchScore() : null)
-            .futureProofScore(latestFutureProof)
+            .careerRiskScore(latestCareerRisk)
             .locationPreference(profile.getLocationPreference())
             .openToInterview(profile.isOpenToInterview())
             .build();
@@ -97,8 +97,8 @@ public class CandidateSearchService {
     }
 
     private int compareByScoreDescNullsLast(CandidateSearchResult left, CandidateSearchResult right) {
-        Double l = left.getFutureProofScore();
-        Double r = right.getFutureProofScore();
+        Double l = left.getCareerRiskScore();
+        Double r = right.getCareerRiskScore();
         if (l == null && r == null) {
             return 0;
         }

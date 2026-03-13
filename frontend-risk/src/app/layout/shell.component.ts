@@ -16,7 +16,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
           <a routerLink="/" class="font-extrabold tracking-tight text-slate-50 text-lg">
-            Futureproof
+            CareerRisk
           </a>
 
           <div class="flex items-center gap-4">
@@ -28,16 +28,16 @@ import { UiModeService } from '../core/services/ui-mode.service';
 
             <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
-                <ng-container *ngSwitchCase="'futureproof'">
+                <ng-container *ngSwitchCase="'careerrisk'">
                   <button
                     *ngFor="let item of nav.items"
                     type="button"
                     class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold"
                     [ngClass]="{
-                      'bg-emerald-500 text-slate-900': activeFutureproofKey === item.key,
-                      'text-slate-300 hover:text-slate-50 bg-slate-900': activeFutureproofKey !== item.key
+                      'bg-emerald-500 text-slate-900': activeCareerRiskKey === item.key,
+                      'text-slate-300 hover:text-slate-50 bg-slate-900': activeCareerRiskKey !== item.key
                     }"
-                    (click)="onFutureproofNav(item.key)"
+                    (click)="onCareerRiskNav(item.key)"
                   >
                     {{ item.label }}
                   </button>
@@ -48,17 +48,17 @@ import { UiModeService } from '../core/services/ui-mode.service';
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                   <a
-                    [routerLink]="loggedIn ? '/futureproof' : '/'"
+                    [routerLink]="loggedIn ? '/careerrisk' : '/'"
                     routerLinkActive="text-emerald-300"
                     [routerLinkActiveOptions]="{ exact: true }"
                     class="text-slate-300 hover:text-slate-50"
                     >Home</a
                   >
                   <a
-                    routerLink="/futureproof"
+                    routerLink="/careerrisk"
                     routerLinkActive="text-emerald-300"
                     class="text-slate-300 hover:text-slate-50"
-                    >Futureproof</a
+                    >CareerRisk</a
                   >
                   <ng-container *ngIf="loggedIn; else authLinks">
                     <button type="button" (click)="logout()"
@@ -87,7 +87,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
 })
 export class ShellComponent {
   navState$: Observable<NavState>;
-  activeFutureproofKey: string | null = null;
+  activeCareerRiskKey: string | null = null;
 
   /** Expose UI mode service for template conditional rendering */
   readonly uiMode = inject(UiModeService);
@@ -99,7 +99,7 @@ export class ShellComponent {
   ) {
     this.navState$ = this.navContext.state$;
     this.navContext.activeKey$.subscribe((key) => {
-      this.activeFutureproofKey = key;
+      this.activeCareerRiskKey = key;
     });
   }
 
@@ -112,7 +112,7 @@ export class ShellComponent {
     this.router.navigateByUrl('/login');
   }
 
-  onFutureproofNav(key: string): void {
+  onCareerRiskNav(key: string): void {
     this.navContext.setActiveKey(key);
     this.navContext.emitCommand(key);
   }

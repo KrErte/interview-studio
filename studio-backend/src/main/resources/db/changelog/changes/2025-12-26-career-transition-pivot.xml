@@ -67,7 +67,7 @@
             <column name="match_score" type="DECIMAL(5,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="future_proof_score" type="DECIMAL(5,2)"/>
+            <column name="career_risk_score" type="DECIMAL(5,2)"/>
             <column name="gap_summary" type="TEXT"/>
             <column name="recommended_actions" type="TEXT"/>
             <column name="computed_at" type="TIMESTAMP">
@@ -92,14 +92,14 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="2025-12-26-pivot-future-proof-score" author="architect">
+    <changeSet id="2025-12-26-pivot-career-risk-score" author="architect">
         <preConditions onFail="MARK_RAN" onError="MARK_RAN">
             <not>
-                <tableExists tableName="pivot_future_proof_score"/>
+                <tableExists tableName="pivot_career_risk_score"/>
             </not>
         </preConditions>
 
-        <createTable tableName="pivot_future_proof_score">
+        <createTable tableName="pivot_career_risk_score">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -119,20 +119,20 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="pivot_future_proof_score"
+        <addForeignKeyConstraint baseTableName="pivot_career_risk_score"
                                  baseColumnNames="transition_profile_id"
                                  constraintName="fk_future_score_profile"
                                  referencedTableName="transition_profile"
                                  referencedColumnNames="id"/>
 
-        <createIndex tableName="pivot_future_proof_score" indexName="idx_pivot_future_score_profile">
+        <createIndex tableName="pivot_career_risk_score" indexName="idx_pivot_future_score_profile">
             <column name="transition_profile_id"/>
         </createIndex>
-        <createIndex tableName="pivot_future_proof_score" indexName="idx_pivot_future_score_computed_at">
+        <createIndex tableName="pivot_career_risk_score" indexName="idx_pivot_future_score_computed_at">
             <column name="computed_at"/>
         </createIndex>
 
-        <createTable tableName="future_proof_score_event">
+        <createTable tableName="career_risk_score_event">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -152,13 +152,13 @@
             </column>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="future_proof_score_event"
+        <addForeignKeyConstraint baseTableName="career_risk_score_event"
                                  baseColumnNames="transition_profile_id"
                                  constraintName="fk_future_score_event_profile"
                                  referencedTableName="transition_profile"
                                  referencedColumnNames="id"/>
 
-        <createIndex tableName="future_proof_score_event" indexName="idx_future_score_event_profile">
+        <createIndex tableName="career_risk_score_event" indexName="idx_future_score_event_profile">
             <column name="transition_profile_id"/>
         </createIndex>
 

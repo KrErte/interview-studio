@@ -3,7 +3,7 @@ package ee.kerrete.ainterview.pivot.service;
 import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.pivot.dto.ComputeRoleMatchesRequest;
 import ee.kerrete.ainterview.pivot.dto.ComputeRoleMatchesResponse;
-import ee.kerrete.ainterview.pivot.dto.FutureProofScoreResponse;
+import ee.kerrete.ainterview.pivot.dto.CareerRiskScoreResponse;
 import ee.kerrete.ainterview.pivot.dto.PivotRoleMatchDto;
 import ee.kerrete.ainterview.pivot.entity.PivotRoleMatch;
 import ee.kerrete.ainterview.pivot.entity.TransitionProfile;
@@ -28,8 +28,8 @@ public class PivotRoleMatchService {
 
     private final TransitionProfileRepository transitionProfileRepository;
     private final PivotRoleMatchRepository roleMatchRepository;
-    @Qualifier("pivotFutureProofScoreService")
-    private final PivotFutureProofScoreService futureProofScoreService;
+    @Qualifier("pivotCareerRiskScoreService")
+    private final PivotCareerRiskScoreService careerRiskScoreService;
     private final EntityManager entityManager;
 
     @Transactional
@@ -58,19 +58,19 @@ public class PivotRoleMatchService {
                 .gapSummary(buildGapSummary(request.getJobDescription()))
                 .recommendedActions(buildActionPlan(request.getJobDescription()))
                 .computedAt(computedAt)
-                .futureProofScore(null)
+                .careerRiskScore(null)
                 .requestId(requestId)
                 .build())
             .collect(Collectors.toList());
 
         List<PivotRoleMatch> saved = roleMatchRepository.saveAll(matches);
-        FutureProofScoreResponse score = futureProofScoreService.recordFromRoleMatches(
+        CareerRiskScoreResponse score = careerRiskScoreService.recordFromRoleMatches(
             profile, saved, ScoreTriggerType.ROLE_MATCH_COMPUTE, request.getJobDescription()
         );
 
         List<PivotRoleMatchDto> result = saved.stream()
             .map(entity -> {
-                entity.setFutureProofScore(score.getOverallScore());
+                entity.setCareerRiskScore(score.getOverallScore());
                 return PivotRoleMatchDto.from(entity);
             })
             .collect(Collectors.toList());

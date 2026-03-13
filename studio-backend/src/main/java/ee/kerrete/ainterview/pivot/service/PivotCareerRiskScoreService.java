@@ -1,13 +1,13 @@
 package ee.kerrete.ainterview.pivot.service;
 
-import ee.kerrete.ainterview.pivot.dto.FutureProofScoreResponse;
-import ee.kerrete.ainterview.pivot.entity.PivotFutureProofScore;
-import ee.kerrete.ainterview.pivot.entity.FutureProofScoreEvent;
+import ee.kerrete.ainterview.pivot.dto.CareerRiskScoreResponse;
+import ee.kerrete.ainterview.pivot.entity.PivotCareerRiskScore;
+import ee.kerrete.ainterview.pivot.entity.CareerRiskScoreEvent;
 import ee.kerrete.ainterview.pivot.entity.PivotRoleMatch;
 import ee.kerrete.ainterview.pivot.entity.TransitionProfile;
 import ee.kerrete.ainterview.pivot.enums.ScoreTriggerType;
-import ee.kerrete.ainterview.pivot.repository.FutureProofScoreEventRepository;
-import ee.kerrete.ainterview.pivot.repository.PivotFutureProofScoreRepository;
+import ee.kerrete.ainterview.pivot.repository.CareerRiskScoreEventRepository;
+import ee.kerrete.ainterview.pivot.repository.PivotCareerRiskScoreRepository;
 import ee.kerrete.ainterview.pivot.repository.TransitionProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,16 +18,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service("pivotFutureProofScoreService")
+@Service("pivotCareerRiskScoreService")
 @RequiredArgsConstructor
-public class PivotFutureProofScoreService {
+public class PivotCareerRiskScoreService {
 
-    private final PivotFutureProofScoreRepository scoreRepository;
-    private final FutureProofScoreEventRepository eventRepository;
+    private final PivotCareerRiskScoreRepository scoreRepository;
+    private final CareerRiskScoreEventRepository eventRepository;
     private final TransitionProfileRepository transitionProfileRepository;
 
     @Transactional
-    public FutureProofScoreResponse recordFromRoleMatches(TransitionProfile profile,
+    public CareerRiskScoreResponse recordFromRoleMatches(TransitionProfile profile,
                                                           List<PivotRoleMatch> matches,
                                                           ScoreTriggerType triggerType,
                                                           String payload) {
@@ -47,7 +47,7 @@ public class PivotFutureProofScoreService {
         double stability = clamp(55d + (matches != null ? matches.size() * 2d : 0d));
 
         UUID eventId = UUID.randomUUID();
-        FutureProofScoreEvent event = FutureProofScoreEvent.builder()
+        CareerRiskScoreEvent event = CareerRiskScoreEvent.builder()
             .eventId(eventId)
             .profile(profile)
             .triggerType(triggerType)
@@ -57,7 +57,7 @@ public class PivotFutureProofScoreService {
             .build();
         eventRepository.save(event);
 
-        PivotFutureProofScore score = PivotFutureProofScore.builder()
+        PivotCareerRiskScore score = PivotCareerRiskScore.builder()
             .profile(profile)
             .overallScore(overall)
             .adaptabilityScore(adaptability)
@@ -68,16 +68,16 @@ public class PivotFutureProofScoreService {
             .computedAt(LocalDateTime.now())
             .build();
 
-        PivotFutureProofScore persisted = scoreRepository.save(score);
-        return FutureProofScoreResponse.from(persisted);
+        PivotCareerRiskScore persisted = scoreRepository.save(score);
+        return CareerRiskScoreResponse.from(persisted);
     }
 
     @Transactional(readOnly = true)
-    public FutureProofScoreResponse getLatestForUser(Long userId) {
+    public CareerRiskScoreResponse getLatestForUser(Long userId) {
         Optional<TransitionProfile> profile = transitionProfileRepository.findByJobseekerId(userId);
         return profile
             .flatMap(scoreRepository::findTopByProfileOrderByComputedAtDesc)
-            .map(FutureProofScoreResponse::from)
+            .map(CareerRiskScoreResponse::from)
             .orElse(null);
     }
 

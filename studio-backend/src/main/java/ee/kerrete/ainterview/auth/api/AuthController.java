@@ -6,6 +6,10 @@ import ee.kerrete.ainterview.auth.dto.request.RegisterRequest;
 import ee.kerrete.ainterview.auth.dto.response.AuthResponse;
 import ee.kerrete.ainterview.auth.service.AuthService;
 import ee.kerrete.ainterview.auth.util.SecurityUtils;
+import ee.kerrete.ainterview.model.AppUser;
+import ee.kerrete.ainterview.model.UserTier;
+import ee.kerrete.ainterview.repository.AppUserRepository;
+import ee.kerrete.ainterview.security.AuthenticatedUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +39,7 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final AuthService authService;
+    private final AppUserRepository appUserRepository;
 
     /**
      * Register a new user.
@@ -92,8 +97,16 @@ public class AuthController {
         List<String> roles = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
-        return new MeResponse(username, roles);
+
+        String tier = UserTier.FREE.name();
+        if (authentication.getPrincipal() instanceof AuthenticatedUser au && au.id() != null) {
+            tier = appUserRepository.findById(au.id())
+                .map(u -> u.getTier().name())
+                .orElse(UserTier.FREE.name());
+        }
+
+        return new MeResponse(username, roles, tier);
     }
 
-    public record MeResponse(String username, List<String> roles) {}
+    public record MeResponse(String username, List<String> roles, String tier) {}
 }

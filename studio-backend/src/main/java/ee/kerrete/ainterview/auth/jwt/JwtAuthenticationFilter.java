@@ -46,7 +46,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     );
 
     private static final Set<String> PUBLIC_PATH_EXACT = Set.of(
-        "/api/ping"
+        "/api/ping",
+        "/api/payment/webhook",
+        "/api/pricing"
     );
 
     private final JwtService jwtService;

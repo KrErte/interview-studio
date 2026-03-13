@@ -1,6 +1,6 @@
 package ee.kerrete.ainterview.dto.dashboard;
 
-import ee.kerrete.ainterview.career.dto.FutureProofScoreDto;
+import ee.kerrete.ainterview.career.dto.CareerRiskScoreDto;
 import ee.kerrete.ainterview.career.dto.RoleMatchDto;
 import ee.kerrete.ainterview.career.dto.SkillProfileDto;
 import ee.kerrete.ainterview.dto.CvSummaryDto;
@@ -16,7 +16,7 @@ public class DashboardResponse {
     CvSummaryDto cvSummary;
     SkillProfileDto skillProfile;
     List<RoleMatchDto> recentRoleMatches;
-    List<FutureProofScoreDto> futureProofScores;
+    List<CareerRiskScoreDto> careerRiskScores;
     DashboardTrainingDto training;
     List<DashboardJobAnalysisDto> jobAnalyses;
 }

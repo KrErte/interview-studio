@@ -13,7 +13,7 @@ public class CandidateSearchResult {
     String targetRole;
     VisibilityLevel visibility;
     Double matchScore;
-    Double futureProofScore;
+    Double careerRiskScore;
     String locationPreference;
     boolean openToInterview;
 }

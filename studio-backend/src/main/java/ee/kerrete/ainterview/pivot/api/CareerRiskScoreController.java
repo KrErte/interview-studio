@@ -1,7 +1,7 @@
 package ee.kerrete.ainterview.pivot.api;
 
-import ee.kerrete.ainterview.pivot.dto.FutureProofScoreResponse;
-import ee.kerrete.ainterview.pivot.service.PivotFutureProofScoreService;
+import ee.kerrete.ainterview.pivot.dto.CareerRiskScoreResponse;
+import ee.kerrete.ainterview.pivot.service.PivotCareerRiskScoreService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ee.kerrete.ainterview.security.AuthenticatedUser;
 import ee.kerrete.ainterview.security.CurrentUser;
@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping({"/api/studio/future-proof-score", "/api/future-proof-score"})
+@RequestMapping({"/api/studio/career-risk-score", "/api/career-risk-score"})
 @RequiredArgsConstructor
-public class FutureProofScoreController {
+public class CareerRiskScoreController {
 
-    @Qualifier("pivotFutureProofScoreService")
-    private final PivotFutureProofScoreService futureProofScoreService;
+    @Qualifier("pivotCareerRiskScoreService")
+    private final PivotCareerRiskScoreService careerRiskScoreService;
 
     @GetMapping
     @PreAuthorize("hasRole('JOBSEEKER')")
-    public FutureProofScoreResponse latest(@CurrentUser AuthenticatedUser user) {
-        return futureProofScoreService.getLatestForUser(user.id());
+    public CareerRiskScoreResponse latest(@CurrentUser AuthenticatedUser user) {
+        return careerRiskScoreService.getLatestForUser(user.id());
     }
 }
 

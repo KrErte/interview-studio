@@ -34,7 +34,10 @@ public record AuthResponse(
     String role,
 
     /** User's database ID */
-    Long userId
+    Long userId,
+
+    /** User's subscription tier (e.g., "FREE", "ESSENTIALS", "PROFESSIONAL", "LIFETIME") */
+    String tier
 ) {
     /**
      * Builder helper that sets both token fields for backward compatibility.

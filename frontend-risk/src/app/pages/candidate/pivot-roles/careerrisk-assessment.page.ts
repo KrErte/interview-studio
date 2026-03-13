@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
 import { AuthService } from '../../../core/auth/auth-api.service';
+import { TierService } from '../../../core/services/tier.service';
 import {
   AssessmentResult,
   RiskLevel,
@@ -30,10 +31,11 @@ import { DisruptionAutopsyComponent } from './disruption-autopsy.component';
 import { ActionRecommendationsComponent } from './action-recommendations.component';
 
 @Component({
-  selector: 'app-futureproof-assessment-page',
+  selector: 'app-careerrisk-assessment-page',
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     DisruptionTimelineComponent,
     ThreatRadarComponent,
     SkillVulnerabilityMatrixComponent,
@@ -45,9 +47,10 @@ import { ActionRecommendationsComponent } from './action-recommendations.compone
     DisruptionAutopsyComponent,
     ActionRecommendationsComponent
   ],
-  templateUrl: './futureproof-assessment.page.html'
+  templateUrl: './careerrisk-assessment.page.html'
 })
-export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
+export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
+  readonly tierService = inject(TierService);
   assessment: AssessmentResult | null = null;
   loading = false;
   error: string | null = null;
@@ -81,7 +84,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.navContext.setFutureproofNav([
+    this.navContext.setCareerriskNav([
       { label: 'Overview', key: 'OVERVIEW' },
       { label: 'Profile', key: 'PROFILE' },
       { label: 'Questions', key: 'QUESTIONS' },
@@ -133,7 +136,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
   goToRoadmap(): void {
     if (this.auth.isAuthenticated()) {
-      this.router.navigateByUrl('/futureproof/roadmap');
+      this.router.navigateByUrl('/careerrisk/roadmap');
     } else {
       this.showRegisterPrompt = true;
     }
@@ -158,7 +161,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   goToQuestions(): void {
-    this.router.navigateByUrl('/futureproof/questions');
+    this.router.navigateByUrl('/careerrisk/questions');
   }
 
   shareResults(): void {
@@ -238,7 +241,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
     }
 
     lines.push('═══════════════════════════════════════════════════');
-    lines.push('          Powered by Futureproof                ');
+    lines.push('          Powered by Careerrisk                ');
     lines.push('═══════════════════════════════════════════════════');
 
     return lines.join('\n');

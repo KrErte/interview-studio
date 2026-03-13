@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FutureProofScoreRequest {
+public class CareerRiskScoreRequest {
     private Long skillProfileId;
     private String email;
     private String roleFamily;

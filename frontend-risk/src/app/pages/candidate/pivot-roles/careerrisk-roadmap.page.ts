@@ -7,13 +7,13 @@ import { RoadmapDuration, RoadmapItem, RoadmapResponse } from '../../../core/mod
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-futureproof-roadmap-page',
+  selector: 'app-careerrisk-roadmap-page',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './futureproof-roadmap.page.html',
-  styleUrls: ['./futureproof-roadmap.page.scss']
+  templateUrl: './careerrisk-roadmap.page.html',
+  styleUrls: ['./careerrisk-roadmap.page.scss']
 })
-export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
+export class CareerriskRoadmapPageComponent implements OnInit, OnDestroy {
   durations: RoadmapDuration[] = [
     RoadmapDuration.SEVEN_DAYS,
     RoadmapDuration.THIRTY_DAYS,
@@ -35,7 +35,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.navContext.setFutureproofNav([
+    this.navContext.setCareerriskNav([
       { label: 'Overview', key: 'OVERVIEW' },
       { label: 'Profile', key: 'PROFILE' },
       { label: 'Questions', key: 'QUESTIONS' },
@@ -49,7 +49,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
         if (key === 'ROADMAP') {
           return;
         }
-        this.router.navigateByUrl(`/futureproof?step=${key}`);
+        this.router.navigateByUrl(`/careerrisk?step=${key}`);
       });
 
     this.sessionId = sessionStorage.getItem('fp_session');
@@ -79,12 +79,12 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
   }
 
   backToOverview(): void {
-    this.router.navigateByUrl('/futureproof');
+    this.router.navigateByUrl('/careerrisk');
   }
 
   backToAssessment(): void {
     if (this.sessionId) {
-      this.router.navigate(['/futureproof/assessment'], { queryParams: { sessionId: this.sessionId } });
+      this.router.navigate(['/careerrisk/assessment'], { queryParams: { sessionId: this.sessionId } });
     }
   }
 
@@ -121,7 +121,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.generating = false;
           try {
-            localStorage.setItem('futureproofCompleted', 'true');
+            localStorage.setItem('careerriskCompleted', 'true');
           } catch {
             // ignore storage errors
           }
@@ -135,7 +135,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
   }
 
   private redirectToStart(): void {
-    this.router.navigateByUrl('/futureproof/overview');
+    this.router.navigateByUrl('/careerrisk/overview');
   }
 }
 

@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface SkillProfileRepository extends JpaRepository<SkillProfile, Long> {
     Optional<SkillProfile> findByEmail(String email);
-    List<SkillProfile> findByVisibilityNotAndFutureProofScoreGreaterThanEqual(MarketplaceVisibility visibility, Double score);
+    List<SkillProfile> findByVisibilityNotAndCareerRiskScoreGreaterThanEqual(MarketplaceVisibility visibility, Double score);
 }
 

@@ -18,7 +18,7 @@ export interface CandidateSummary {
   currentRole?: string;
   seniority?: string;
   overlapPercent: number;
-  futureProofScore?: number;
+  careerRiskScore?: number;
   topTransferableSkills: string[];
   humanEdgeBullets: string[];
   visibilityMode: MarketplaceVisibilityMode;

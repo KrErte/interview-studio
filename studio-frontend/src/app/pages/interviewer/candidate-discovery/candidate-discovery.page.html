@@ -12,7 +12,7 @@
         <div>
           <h1 class="text-2xl font-semibold text-slate-50">Candidate discovery</h1>
           <p class="text-sm text-slate-400">
-            Search for candidates by overlap, future-proof score, and transferable skills.
+            Search for candidates by overlap, career-risk score, and transferable skills.
           </p>
         </div>
       </div>
@@ -143,10 +143,10 @@
                 </p>
                 <p class="text-[11px] text-slate-400">overlap</p>
                 <p
-                  *ngIf="candidate.futureProofScore != null"
+                  *ngIf="candidate.careerRiskScore != null"
                   class="mt-1 text-[11px] text-slate-400"
                 >
-                  FP: {{ candidate.futureProofScore }}%
+                  FP: {{ candidate.careerRiskScore }}%
                 </p>
               </div>
             </div>
@@ -217,10 +217,10 @@
               </p>
               <p class="text-[11px] text-slate-400">overlap</p>
               <p
-                *ngIf="c.futureProofScore != null"
+                *ngIf="c.careerRiskScore != null"
                 class="mt-1 text-[11px] text-slate-400"
               >
-                Future-proof: {{ c.futureProofScore }}%
+                Career-risk: {{ c.careerRiskScore }}%
               </p>
             </div>
           </div>

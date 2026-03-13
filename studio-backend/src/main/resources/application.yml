@@ -44,3 +44,10 @@ app:
     secret: ${JWT_SECRET:this-is-a-development-secret-key-min-32-chars}
     expiration-ms: 86400000        # 24 hours
     refresh-expiration-ms: 604800000  # 7 days
+  lemonsqueezy:
+    api-key: ${LEMONSQUEEZY_API_KEY:test_key}
+    webhook-secret: ${LEMONSQUEEZY_WEBHOOK_SECRET:test_secret}
+    store-id: ${LEMONSQUEEZY_STORE_ID:0}
+    essentials-variant-id: ${LEMONSQUEEZY_ESSENTIALS_VARIANT_ID:0}
+    professional-variant-id: ${LEMONSQUEEZY_PROFESSIONAL_VARIANT_ID:0}
+    lifetime-variant-id: ${LEMONSQUEEZY_LIFETIME_VARIANT_ID:0}

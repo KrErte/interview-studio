@@ -3,14 +3,14 @@ package ee.kerrete.ainterview.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.auth.util.SecurityUtils;
-import ee.kerrete.ainterview.career.dto.FutureProofScoreDto;
+import ee.kerrete.ainterview.career.dto.CareerRiskScoreDto;
 import ee.kerrete.ainterview.career.dto.RoleMatchDto;
 import ee.kerrete.ainterview.career.dto.SkillProfileDto;
-import ee.kerrete.ainterview.career.model.FutureProofScore;
+import ee.kerrete.ainterview.career.model.CareerRiskScore;
 import ee.kerrete.ainterview.career.model.RoleMatch;
 import ee.kerrete.ainterview.career.model.RoleProfile;
 import ee.kerrete.ainterview.career.model.SkillProfile;
-import ee.kerrete.ainterview.career.repository.FutureProofScoreRepository;
+import ee.kerrete.ainterview.career.repository.CareerRiskScoreRepository;
 import ee.kerrete.ainterview.career.repository.RoleMatchRepository;
 import ee.kerrete.ainterview.career.repository.RoleProfileRepository;
 import ee.kerrete.ainterview.career.service.SkillProfileService;
@@ -40,7 +40,7 @@ public class CandidateDashboardService {
     private final CvSummaryService cvSummaryService;
     private final SkillProfileService skillProfileService;
     private final RoleMatchRepository roleMatchRepository;
-    private final FutureProofScoreRepository futureProofScoreRepository;
+    private final CareerRiskScoreRepository careerRiskScoreRepository;
     private final RoleProfileRepository roleProfileRepository;
     private final TrainingTaskRepository trainingTaskRepository;
     private final TrainingProgressRepository trainingProgressRepository;
@@ -71,16 +71,16 @@ public class CandidateDashboardService {
                 .yearsExperience(null)
                 .skills(List.of())
                 .visibility(null)
-                .futureProofScore(null)
+                .careerRiskScore(null)
                 .build();
 
         List<RoleMatchDto> matches = skillProfile == null
             ? List.of()
             : mapRoleMatches(skillProfile.getId());
 
-        List<FutureProofScoreDto> scores = skillProfile == null
+        List<CareerRiskScoreDto> scores = skillProfile == null
             ? List.of()
-            : mapFutureProofScores(skillProfile.getId());
+            : mapCareerRiskScores(skillProfile.getId());
 
         DashboardTrainingDto training = buildTraining(email);
         List<DashboardJobAnalysisDto> analyses = mapJobAnalyses(email);
@@ -90,7 +90,7 @@ public class CandidateDashboardService {
             .cvSummary(cvSummary)
             .skillProfile(skillProfileDto)
             .recentRoleMatches(matches)
-            .futureProofScores(scores)
+            .careerRiskScores(scores)
             .training(training)
             .jobAnalyses(analyses)
             .build();
@@ -124,10 +124,10 @@ public class CandidateDashboardService {
             .build();
     }
 
-    private List<FutureProofScoreDto> mapFutureProofScores(Long skillProfileId) {
-        List<FutureProofScore> entities = futureProofScoreRepository.findTop5BySkillProfileIdOrderByCreatedAtDesc(skillProfileId);
+    private List<CareerRiskScoreDto> mapCareerRiskScores(Long skillProfileId) {
+        List<CareerRiskScore> entities = careerRiskScoreRepository.findTop5BySkillProfileIdOrderByCreatedAtDesc(skillProfileId);
         return entities.stream()
-            .map(score -> FutureProofScoreDto.builder()
+            .map(score -> CareerRiskScoreDto.builder()
                 .skillProfileId(score.getSkillProfileId())
                 .score(score.getScore())
                 .explainJson(score.getExplainJson())

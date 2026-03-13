@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "future_proof_score_event")
+@Table(name = "career_risk_score_event")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FutureProofScoreEvent {
+public class CareerRiskScoreEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -40,4 +40,11 @@ app:
   cors:
     # Set from env FRONTEND_BASE_URL, e.g. https://your-domain.com
     allowed-origins: ${FRONTEND_BASE_URL:https://your-domain.com}
+  lemonsqueezy:
+    api-key: ${LEMONSQUEEZY_API_KEY}
+    webhook-secret: ${LEMONSQUEEZY_WEBHOOK_SECRET}
+    store-id: ${LEMONSQUEEZY_STORE_ID}
+    essentials-variant-id: ${LEMONSQUEEZY_ESSENTIALS_VARIANT_ID}
+    professional-variant-id: ${LEMONSQUEEZY_PROFESSIONAL_VARIANT_ID}
+    lifetime-variant-id: ${LEMONSQUEEZY_LIFETIME_VARIANT_ID}
 

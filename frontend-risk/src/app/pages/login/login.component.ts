@@ -256,7 +256,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
-      this.router.navigateByUrl('/futureproof');
+      this.router.navigateByUrl('/careerrisk');
       return;
     }
 
@@ -306,7 +306,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.auth.login(email, password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigateByUrl('/futureproof');
+        this.router.navigateByUrl('/careerrisk');
       },
       error: (err) => {
         this.loading = false;

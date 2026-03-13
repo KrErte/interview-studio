@@ -8,12 +8,12 @@ import { ExperienceInput, RiskQuestion } from '../../../core/models/risk.models'
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-futureproof-questions-page',
+  selector: 'app-careerrisk-questions-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './futureproof-questions.page.html'
+  templateUrl: './careerrisk-questions.page.html'
 })
-export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
+export class CareerriskQuestionsPageComponent implements OnInit, OnDestroy {
   sessionId: string | null = null;
   question: RiskQuestion | null = null;
   questionIndex = 0;
@@ -35,7 +35,7 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.navContext.setFutureproofNav([
+    this.navContext.setCareerriskNav([
       { label: 'Overview', key: 'OVERVIEW' },
       { label: 'Profile', key: 'PROFILE' },
       { label: 'Questions', key: 'QUESTIONS' },
@@ -172,7 +172,7 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
   navigateToAssessment(): void {
     const sessionId = this.sessionId || sessionStorage.getItem('fp_session');
     const queryParams = sessionId ? { sessionId } : {};
-    this.router.navigate(['/futureproof/assessment'], { queryParams });
+    this.router.navigate(['/careerrisk/assessment'], { queryParams });
   }
 }
 

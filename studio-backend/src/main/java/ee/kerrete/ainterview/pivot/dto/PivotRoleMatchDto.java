@@ -12,7 +12,7 @@ public class PivotRoleMatchDto {
     Long id;
     String targetRole;
     Double matchScore;
-    Double futureProofScore;
+    Double careerRiskScore;
     String gapSummary;
     String recommendedActions;
     LocalDateTime computedAt;
@@ -22,7 +22,7 @@ public class PivotRoleMatchDto {
             .id(entity.getId())
             .targetRole(entity.getTargetRole())
             .matchScore(entity.getMatchScore())
-            .futureProofScore(entity.getFutureProofScore())
+            .careerRiskScore(entity.getCareerRiskScore())
             .gapSummary(entity.getGapSummary())
             .recommendedActions(entity.getRecommendedActions())
             .computedAt(entity.getComputedAt())

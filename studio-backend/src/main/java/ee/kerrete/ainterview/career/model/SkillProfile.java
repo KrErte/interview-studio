@@ -44,12 +44,12 @@ public class SkillProfile {
     @Column(name = "visibility", length = 20, nullable = false)
     private MarketplaceVisibility visibility;
 
-    @Column(name = "future_proof_score")
-    private Double futureProofScore;
+    @Column(name = "career_risk_score")
+    private Double careerRiskScore;
 
     @Lob
-    @Column(name = "future_proof_explain_json")
-    private String futureProofExplainJson;
+    @Column(name = "career_risk_explain_json")
+    private String careerRiskExplainJson;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

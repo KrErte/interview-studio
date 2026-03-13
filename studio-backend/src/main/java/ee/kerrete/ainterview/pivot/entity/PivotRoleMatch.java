@@ -33,8 +33,8 @@ public class PivotRoleMatch {
     @Column(name = "match_score", nullable = false)
     private Double matchScore;
 
-    @Column(name = "future_proof_score")
-    private Double futureProofScore;
+    @Column(name = "career_risk_score")
+    private Double careerRiskScore;
 
     @Column(name = "gap_summary", columnDefinition = "TEXT")
     private String gapSummary;

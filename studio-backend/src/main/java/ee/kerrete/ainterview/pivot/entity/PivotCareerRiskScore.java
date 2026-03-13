@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "pivot_future_proof_score")
+@Table(name = "pivot_career_risk_score")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PivotFutureProofScore {
+public class PivotCareerRiskScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,7 +10,7 @@ interface FlowStep {
 }
 
 @Component({
-  selector: 'app-futureproof-stepper',
+  selector: 'app-careerrisk-stepper',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -51,12 +51,12 @@ interface FlowStep {
     </div>
   `
 })
-export class FutureproofStepperComponent implements OnInit, OnDestroy {
+export class CareerriskStepperComponent implements OnInit, OnDestroy {
   steps: FlowStep[] = [
-    { key: 'overview', label: 'Profile', path: '/futureproof/overview' },
-    { key: 'questions', label: 'Questions', path: '/futureproof/questions' },
-    { key: 'assessment', label: 'Analysis', path: '/futureproof/assessment' },
-    { key: 'roadmap', label: 'Roadmap', path: '/futureproof/roadmap' }
+    { key: 'overview', label: 'Profile', path: '/careerrisk/overview' },
+    { key: 'questions', label: 'Questions', path: '/careerrisk/questions' },
+    { key: 'assessment', label: 'Analysis', path: '/careerrisk/assessment' },
+    { key: 'roadmap', label: 'Roadmap', path: '/careerrisk/roadmap' }
   ];
 
   activeKey: FlowStep['key'] = 'overview';
@@ -80,15 +80,15 @@ export class FutureproofStepperComponent implements OnInit, OnDestroy {
   }
 
   private updateActive(url: string): void {
-    if (url.startsWith('/futureproof/questions')) {
+    if (url.startsWith('/careerrisk/questions')) {
       this.activeKey = 'questions';
       return;
     }
-    if (url.startsWith('/futureproof/assessment')) {
+    if (url.startsWith('/careerrisk/assessment')) {
       this.activeKey = 'assessment';
       return;
     }
-    if (url.startsWith('/futureproof/roadmap')) {
+    if (url.startsWith('/careerrisk/roadmap')) {
       this.activeKey = 'roadmap';
       return;
     }

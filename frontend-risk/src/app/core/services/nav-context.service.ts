@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-export type NavMode = 'default' | 'futureproof';
+export type NavMode = 'default' | 'careerrisk';
 
 export interface NavItem {
   label: string;
@@ -26,8 +26,8 @@ export class NavContextService {
   private activeKeySubject = new BehaviorSubject<string | null>(null);
   readonly activeKey$ = this.activeKeySubject.asObservable();
 
-  setFutureproofNav(items: NavItem[]): void {
-    this.stateSubject.next({ mode: 'futureproof', items });
+  setCareerriskNav(items: NavItem[]): void {
+    this.stateSubject.next({ mode: 'careerrisk', items });
     if (items.length) {
       this.activeKeySubject.next(items[0].key);
     }

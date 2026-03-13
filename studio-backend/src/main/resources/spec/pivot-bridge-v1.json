@@ -3,13 +3,13 @@
   "info": {
     "title": "Pivot Bridge API",
     "version": "1.0.0",
-    "description": "Role match + FutureProofScore + marketplace bridge between jobseeker and interviewer apps."
+    "description": "Role match + CareerRiskScore + marketplace bridge between jobseeker and interviewer apps."
   },
   "paths": {
     "/api/pivot/role-matches/compute": {
       "post": {
         "tags": ["pivot-role-matches"],
-        "summary": "Compute role matches and FutureProofScore for the current jobseeker",
+        "summary": "Compute role matches and CareerRiskScore for the current jobseeker",
         "security": [
           { "bearerAuth": [] }
         ],
@@ -67,10 +67,10 @@
         }
       }
     },
-    "/api/future-proof-score": {
+    "/api/career-risk-score": {
       "get": {
-        "tags": ["pivot-future-proof-score"],
-        "summary": "Get latest FutureProofScore for the current jobseeker",
+        "tags": ["pivot-career-risk-score"],
+        "summary": "Get latest CareerRiskScore for the current jobseeker",
         "security": [
           { "bearerAuth": [] }
         ],
@@ -79,7 +79,7 @@
             "description": "Latest score",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/FutureProofScoreResponse" }
+                "schema": { "$ref": "#/components/schemas/CareerRiskScoreResponse" }
               }
             }
           },
@@ -135,7 +135,7 @@
             "schema": { "type": "string" }
           },
           {
-            "name": "minFutureProofScore",
+            "name": "minCareerRiskScore",
             "in": "query",
             "schema": { "type": "number", "format": "double" }
           },
@@ -203,7 +203,7 @@
             "type": "array",
             "items": { "$ref": "#/components/schemas/PivotRoleMatchDto" }
           },
-          "futureProofScore": { "$ref": "#/components/schemas/FutureProofScoreResponse" }
+          "careerRiskScore": { "$ref": "#/components/schemas/CareerRiskScoreResponse" }
         }
       },
       "PivotRoleMatchDto": {
@@ -212,13 +212,13 @@
           "id": { "type": "integer", "format": "int64" },
           "targetRole": { "type": "string" },
           "matchScore": { "type": "number", "format": "double" },
-          "futureProofScore": { "type": "number", "format": "double" },
+          "careerRiskScore": { "type": "number", "format": "double" },
           "gapSummary": { "type": "string" },
           "recommendedActions": { "type": "string" },
           "computedAt": { "type": "string", "format": "date-time" }
         }
       },
-      "FutureProofScoreResponse": {
+      "CareerRiskScoreResponse": {
         "type": "object",
         "properties": {
           "overallScore": { "type": "number", "format": "double" },
@@ -267,7 +267,7 @@
           "targetRole": { "type": "string" },
           "visibility": { "$ref": "#/components/schemas/VisibilityLevel" },
           "matchScore": { "type": "number", "format": "double" },
-          "futureProofScore": { "type": "number", "format": "double" },
+          "careerRiskScore": { "type": "number", "format": "double" },
           "locationPreference": { "type": "string" },
           "openToInterview": { "type": "boolean" }
         }

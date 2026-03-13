@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 @Builder
 public class ComputeRoleMatchesResponse {
     List<PivotRoleMatchDto> matches;
-    FutureProofScoreResponse futureProofScore;
+    CareerRiskScoreResponse careerRiskScore;
 
     public static ComputeRoleMatchesResponse from(List<? extends PivotRoleMatchDto> matches,
-                                                  FutureProofScoreResponse scoreResponse) {
+                                                  CareerRiskScoreResponse scoreResponse) {
         return ComputeRoleMatchesResponse.builder()
             .matches(matches.stream().collect(Collectors.toList()))
-            .futureProofScore(scoreResponse)
+            .careerRiskScore(scoreResponse)
             .build();
     }
 }

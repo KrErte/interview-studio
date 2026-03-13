@@ -143,7 +143,8 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(
             user.getEmail(),
             user.getRole(),
-            user.getId()
+            user.getId(),
+            user.getTier()
         );
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
@@ -156,6 +157,7 @@ public class AuthService {
             .fullName(user.getFullName())
             .role(user.getRole().name())  // String for backward compatibility
             .userId(user.getId())
+            .tier(user.getTier().name())
             .build();
     }
 }

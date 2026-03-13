@@ -20,4 +20,7 @@ public final class JwtClaims {
     /** Token type values */
     public static final String TYPE_ACCESS = "access";
     public static final String TYPE_REFRESH = "refresh";
+
+    /** User's subscription tier (e.g., "FREE", "ESSENTIALS", "PROFESSIONAL", "LIFETIME") */
+    public static final String TIER = "tier";
 }

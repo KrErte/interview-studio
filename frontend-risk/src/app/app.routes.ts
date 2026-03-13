@@ -7,8 +7,9 @@ import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { authGuard } from './core/auth/auth.guard';
 import { uiModeCanMatch } from './core/guards/ui-mode.guard';
+import { tierGuard } from './core/guards/tier.guard';
 import { PivotRolesPageComponent } from './pages/candidate/pivot-roles/pivot-roles.page';
-import { FutureproofRoadmapPageComponent } from './pages/candidate/pivot-roles/futureproof-roadmap.page';
+import { CareerriskRoadmapPageComponent } from './pages/candidate/pivot-roles/careerrisk-roadmap.page';
 
 export const routes: Routes = [
   // Public pages (landing, auth)
@@ -19,6 +20,35 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', component: LandingComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent }
+    ]
+  },
+  // Pricing (public, no auth required)
+  {
+    path: 'pricing',
+    component: AppShellComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/pricing/pricing.component').then(
+            (m) => m.PricingComponent
+          )
+      }
+    ]
+  },
+  // Payment success (auth required)
+  {
+    path: 'payment',
+    component: AppShellComponent,
+    children: [
+      {
+        path: 'success',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/pricing/payment-success.component').then(
+            (m) => m.PaymentSuccessComponent
+          )
+      }
     ]
   },
   // NEW: Skill Assessment Onboarding (no auth, entry point)
@@ -49,11 +79,12 @@ export const routes: Routes = [
       }
     ]
   },
-  // NEW: Arena - Interactive Training Tools (unique features)
+  // NEW: Arena - Interactive Training Tools (requires PROFESSIONAL tier)
   // With Simple/Advanced mode-based routing
   {
     path: 'arena',
     component: AppShellComponent,
+    canActivate: [authGuard, tierGuard('PROFESSIONAL')],
     children: [
       {
         path: 'interview',
@@ -120,7 +151,7 @@ export const routes: Routes = [
   },
   // Assessment flow - NO auth required (public can do assessment)
   {
-    path: 'futureproof',
+    path: 'careerrisk',
     component: AppShellComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
@@ -128,15 +159,15 @@ export const routes: Routes = [
       {
         path: 'questions',
         loadComponent: () =>
-          import('./pages/candidate/pivot-roles/futureproof-questions.page').then(
-            (m) => m.FutureproofQuestionsPageComponent
+          import('./pages/candidate/pivot-roles/careerrisk-questions.page').then(
+            (m) => m.CareerriskQuestionsPageComponent
           )
       },
       {
         path: 'assessment',
         loadComponent: () =>
-          import('./pages/candidate/pivot-roles/futureproof-assessment.page').then(
-            (m) => m.FutureproofAssessmentPageComponent
+          import('./pages/candidate/pivot-roles/careerrisk-assessment.page').then(
+            (m) => m.CareerriskAssessmentPageComponent
           )
       },
       {
@@ -146,18 +177,18 @@ export const routes: Routes = [
             (m) => m.CareerIntelPage
           )
       },
-      // Roadmap requires auth - this is where we gate registration
+      // Roadmap requires auth + PROFESSIONAL tier
       {
         path: 'roadmap',
-        component: FutureproofRoadmapPageComponent,
-        canActivate: [authGuard]
+        component: CareerriskRoadmapPageComponent,
+        canActivate: [authGuard, tierGuard('PROFESSIONAL')]
       }
     ]
   },
-  // Redirect /analysis to futureproof/assessment (for questionnaire completion)
+  // Redirect /analysis to careerrisk/assessment (for questionnaire completion)
   {
     path: 'analysis',
-    redirectTo: 'futureproof/assessment',
+    redirectTo: 'careerrisk/assessment',
     pathMatch: 'full'
   },
   // 404

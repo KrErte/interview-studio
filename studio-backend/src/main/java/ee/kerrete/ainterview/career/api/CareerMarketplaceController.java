@@ -1,7 +1,7 @@
 package ee.kerrete.ainterview.career.api;
 
 import ee.kerrete.ainterview.career.dto.*;
-import ee.kerrete.ainterview.career.service.FutureProofScoreService;
+import ee.kerrete.ainterview.career.service.CareerRiskScoreService;
 import ee.kerrete.ainterview.career.service.MarketplaceService;
 import ee.kerrete.ainterview.career.service.RoleMatchService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ import java.util.List;
 public class CareerMarketplaceController {
 
     private final RoleMatchService roleMatchService;
-    @Qualifier("careerFutureProofScoreService")
-    private final FutureProofScoreService futureProofScoreService;
+    @Qualifier("careerRiskScoreService")
+    private final CareerRiskScoreService careerRiskScoreService;
     private final MarketplaceService marketplaceService;
 
     @PostMapping("/role-matches")
@@ -25,9 +25,9 @@ public class CareerMarketplaceController {
         return roleMatchService.compute(request);
     }
 
-    @PostMapping("/future-proof-score")
-    public FutureProofScoreDto computeFutureProof(@RequestBody FutureProofScoreRequest request) {
-        return futureProofScoreService.computeAndPersist(request);
+    @PostMapping("/career-risk-score")
+    public CareerRiskScoreDto computeCareerRisk(@RequestBody CareerRiskScoreRequest request) {
+        return careerRiskScoreService.computeAndPersist(request);
     }
 
     @GetMapping("/search")

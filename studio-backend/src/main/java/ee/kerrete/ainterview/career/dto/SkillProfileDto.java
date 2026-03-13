@@ -16,6 +16,6 @@ public class SkillProfileDto {
     Integer yearsExperience;
     List<String> skills;
     MarketplaceVisibility visibility;
-    Double futureProofScore;
+    Double careerRiskScore;
 }
 

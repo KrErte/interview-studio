@@ -6,7 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import {
   PivotRolesService,
   RoleMatch,
-  FutureProofScore
+  CareerRiskScore
 } from '../../../services/pivot-roles.service';
 import {
   CandidateMarketplaceService,
@@ -28,7 +28,7 @@ export class PivotRolesPageComponent implements OnInit {
   loadingRoles = false;
   rolesError: string | null = null;
 
-  futureScore: FutureProofScore | null = null;
+  futureScore: CareerRiskScore | null = null;
   loadingScore = false;
   scoreError: string | null = null;
 
@@ -55,13 +55,13 @@ export class PivotRolesPageComponent implements OnInit {
     this.email = this.auth.getCurrentUserEmail();
     if (!this.email) {
       this.rolesError = 'Please log in again to see your pivot roles.';
-      this.scoreError = 'Please log in again to see your future-proof score.';
+      this.scoreError = 'Please log in again to see your career-risk score.';
       this.visibilityError = 'Please log in again to adjust marketplace visibility.';
       return;
     }
 
     this.loadRoleMatches(this.email);
-    this.loadFutureProofScore(this.email);
+    this.loadCareerRiskScore(this.email);
     this.loadVisibility(this.email);
   }
 
@@ -142,17 +142,17 @@ export class PivotRolesPageComponent implements OnInit {
     });
   }
 
-  private loadFutureProofScore(email: string): void {
+  private loadCareerRiskScore(email: string): void {
     this.loadingScore = true;
     this.scoreError = null;
-    this.pivotRoles.getFutureProofScore(email).subscribe({
+    this.pivotRoles.getCareerRiskScore(email).subscribe({
       next: (score) => {
         this.futureScore = score ?? null;
         this.loadingScore = false;
       },
       error: (err) => {
         this.scoreError =
-          err?.error?.message || 'Could not load future-proof score. Please try again.';
+          err?.error?.message || 'Could not load career-risk score. Please try again.';
         this.loadingScore = false;
       }
     });

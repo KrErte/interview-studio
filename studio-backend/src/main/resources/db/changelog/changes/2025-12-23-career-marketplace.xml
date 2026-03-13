@@ -20,8 +20,8 @@
             <column name="visibility" type="varchar(20)" defaultValue="LIMITED">
                 <constraints nullable="false"/>
             </column>
-            <column name="future_proof_score" type="numeric(10,2)"/>
-            <column name="future_proof_explain_json" type="text"/>
+            <column name="career_risk_score" type="numeric(10,2)"/>
+            <column name="career_risk_explain_json" type="text"/>
             <column name="updated_at" type="timestamp"/>
             <column name="created_at" type="timestamp"/>
         </createTable>
@@ -63,7 +63,7 @@
             <column name="skill_profile_id"/>
         </createIndex>
 
-        <createTable tableName="future_proof_score">
+        <createTable tableName="career_risk_score">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -74,7 +74,7 @@
             <column name="explain_json" type="text"/>
             <column name="created_at" type="timestamp"/>
         </createTable>
-        <createIndex tableName="future_proof_score" indexName="idx_future_score_skill_profile">
+        <createIndex tableName="career_risk_score" indexName="idx_future_score_skill_profile">
             <column name="skill_profile_id"/>
         </createIndex>
 
