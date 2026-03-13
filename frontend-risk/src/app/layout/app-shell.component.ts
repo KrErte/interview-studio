@@ -17,13 +17,13 @@ import { UiModeService } from '../core/services/ui-mode.service';
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
           <a routerLink="/futureproof" class="font-extrabold tracking-tight text-slate-50 text-lg">
-            Tulevikukindlus
+            Futureproof
           </a>
 
           <!-- Quick Tools Links -->
           <div class="flex items-center gap-4 text-sm">
             <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors">
-              📝 Hinda oskusi
+              📝 Assess Skills
             </a>
             <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors">
               🔬 Job X-Ray

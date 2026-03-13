@@ -163,8 +163,8 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
   shareResults(): void {
     const shareData = {
-      title: 'Minu Career Disruption Index',
-      text: `Minu karjääri automatiseerimise risk on ${this.assessment?.riskPercent}%. Kontrolli oma riski: `,
+      title: 'My Career Disruption Index',
+      text: `My career automation risk is ${this.assessment?.riskPercent}%. Check yours: `,
       url: window.location.href
     };
 
@@ -178,9 +178,9 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   private copyToClipboard(): void {
-    const text = `Minu Career Disruption Index: ${this.assessment?.riskPercent}% risk. Kontrolli oma: ${window.location.origin}/start`;
+    const text = `My Career Disruption Index: ${this.assessment?.riskPercent}% risk. Check yours: ${window.location.origin}/start`;
     navigator.clipboard.writeText(text).then(() => {
-      alert('Link kopeeritud!');
+      alert('Link copied!');
     });
   }
 
@@ -202,17 +202,17 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
       '           CAREER DISRUPTION INDEX REPORT          ',
       '═══════════════════════════════════════════════════',
       '',
-      `Genereeritud: ${new Date().toLocaleDateString('et-EE')}`,
+      `Generated: ${new Date().toLocaleDateString('en-US')}`,
       `Roll: ${this.currentRole}`,
       '',
       '───────────────────────────────────────────────────',
-      '                   KOKKUVÕTE                       ',
+      '                   SUMMARY                       ',
       '───────────────────────────────────────────────────',
       '',
       `Disruption Risk:     ${this.assessment?.riskPercent}%`,
       `Risk Level:          ${this.riskBandLabel}`,
       `Confidence:          ${this.confidencePercent}%`,
-      `Time to Adapt:       18 kuud`,
+      `Time to Adapt:       18 months`,
       '',
       '───────────────────────────────────────────────────',
       '                   TIMELINE                        ',
@@ -228,7 +228,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
 
     if (this.topPivotRoles.length > 0) {
       lines.push('───────────────────────────────────────────────────');
-      lines.push('              SOOVITATUD ROLLID                    ');
+      lines.push('              RECOMMENDED ROLES                    ');
       lines.push('───────────────────────────────────────────────────');
       lines.push('');
       this.topPivotRoles.forEach((role, i) => {
@@ -238,7 +238,7 @@ export class FutureproofAssessmentPageComponent implements OnInit, OnDestroy {
     }
 
     lines.push('═══════════════════════════════════════════════════');
-    lines.push('          Powered by Tulevikukindlus                ');
+    lines.push('          Powered by Futureproof                ');
     lines.push('═══════════════════════════════════════════════════');
 
     return lines.join('\n');

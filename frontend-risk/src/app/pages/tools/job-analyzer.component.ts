@@ -65,25 +65,25 @@ Requirements:
               (click)="analyzeJob()"
               [disabled]="jobText.length < 100 || isAnalyzing()">
               @if (isAnalyzing()) {
-                <span class="spinner"></span> Analüüsin...
+                <span class="spinner"></span> Analyzing...
               } @else {
-                Analüüsi tööpakkumist →
+                Analyze job posting →
               }
             </button>
           </div>
 
           <div class="tips">
-            <h4>💡 Vihjed</h4>
+            <h4>💡 Tips</h4>
             <ul>
-              <li>Kopeeri kogu tööpakkumise tekst, mitte ainult requirements</li>
-              <li>LinkedIn, Indeed, Glassdoor - kõik töötab</li>
-              <li>Mida rohkem teksti, seda parem analüüs</li>
+              <li>Copy the entire job posting text, not just requirements</li>
+              <li>LinkedIn, Indeed, Glassdoor - all work</li>
+              <li>More text means better analysis</li>
             </ul>
           </div>
         </div>
       } @else {
         <div class="results fade-in">
-          <button class="btn-back" (click)="reset()">← Analüüsi uut pakkumist</button>
+          <button class="btn-back" (click)="reset()">← Analyze new posting</button>
 
           <!-- Match Score -->
           <div class="match-score-card">
@@ -91,17 +91,17 @@ Requirements:
               {{ result()!.matchScore }}%
             </div>
             <div class="score-info">
-              <h3>Sinu Match Score</h3>
-              <p>Põhineb sinu profiili ja selle pakkumise võrdlusel</p>
+              <h3>Your Match Score</h3>
+              <p>Based on comparison of your profile and this posting</p>
             </div>
           </div>
 
           <!-- Requirements Analysis -->
           <div class="section">
-            <h2>📋 Nõuete analüüs</h2>
+            <h2>📋 Requirements Analysis</h2>
             <div class="two-columns">
               <div class="column must-have">
-                <h3>🎯 Must Have (päriselt vajalik)</h3>
+                <h3>🎯 Must Have (truly required)</h3>
                 @for (item of result()!.mustHave; track item) {
                   <div class="req-item">
                     <span class="check">✓</span>
@@ -110,7 +110,7 @@ Requirements:
                 }
               </div>
               <div class="column nice-to-have">
-                <h3>✨ Nice to Have (soovnimekiri)</h3>
+                <h3>✨ Nice to Have (wishlist)</h3>
                 @for (item of result()!.niceToHave; track item) {
                   <div class="req-item">
                     <span class="star">☆</span>
@@ -139,16 +139,16 @@ Requirements:
 
           <!-- Tech Stack -->
           <div class="section">
-            <h2>🛠 Tech Stack analüüs</h2>
+            <h2>🛠 Tech Stack Analysis</h2>
             <div class="tech-grid">
               @for (tech of result()!.techStack; track tech.name) {
                 <div class="tech-item" [class]="tech.demand">
                   <span class="tech-name">{{ tech.name }}</span>
                   <span class="tech-category">{{ tech.category }}</span>
                   <span class="tech-demand">
-                    @if (tech.demand === 'rising') { 📈 Tõusev }
-                    @else if (tech.demand === 'declining') { 📉 Langev }
-                    @else { ➡️ Stabiilne }
+                    @if (tech.demand === 'rising') { 📈 Rising }
+                    @else if (tech.demand === 'declining') { 📉 Declining }
+                    @else { ➡️ Stable }
                   </span>
                 </div>
               }
@@ -157,7 +157,7 @@ Requirements:
 
           <!-- Company Signals -->
           <div class="section">
-            <h2>🏢 Ettevõtte signaalid</h2>
+            <h2>🏢 Company Signals</h2>
             <div class="signals-list">
               @for (signal of result()!.companySignals; track signal.text) {
                 <div class="signal-item" [class]="signal.type">
@@ -173,31 +173,31 @@ Requirements:
           <!-- Salary & Details -->
           <div class="section details-grid">
             <div class="detail-card">
-              <h4>💰 Palga hinnang</h4>
+              <h4>💰 Salary Estimate</h4>
               @if (result()!.salaryEstimate) {
                 <p class="big-text">
                   {{ result()!.salaryEstimate!.currency }}{{ result()!.salaryEstimate!.min | number }}
                   - {{ result()!.salaryEstimate!.max | number }}
                 </p>
               } @else {
-                <p class="muted">Palka pole mainitud</p>
+                <p class="muted">Salary not mentioned</p>
               }
             </div>
             <div class="detail-card">
-              <h4>📅 Kogemust vaja</h4>
+              <h4>📅 Experience Required</h4>
               <p class="big-text">
-                {{ result()!.experienceRequired.min }}-{{ result()!.experienceRequired.max }} aastat
+                {{ result()!.experienceRequired.min }}-{{ result()!.experienceRequired.max }} years
               </p>
             </div>
             <div class="detail-card">
-              <h4>🏠 Remote poliitika</h4>
+              <h4>🏠 Remote Policy</h4>
               <p class="big-text">{{ result()!.remotePolicy }}</p>
             </div>
           </div>
 
           <!-- Recommendations -->
           <div class="section recommendations">
-            <h2>💡 Soovitused</h2>
+            <h2>💡 Recommendations</h2>
             @for (rec of result()!.recommendations; track rec) {
               <div class="rec-item">{{ rec }}</div>
             }
@@ -658,41 +658,41 @@ export class JobAnalyzerComponent {
 
     if (/rockstar|ninja|guru|wizard/i.test(text)) {
       redFlags.push({
-        text: 'Kasutab "rockstar/ninja/guru" terminoloogiat',
+        text: 'Uses "rockstar/ninja/guru" terminology',
         severity: 'medium',
-        explanation: 'Viitab ebaküpsele ettevõtte kultuurile või ebareaslitlikele ootustele'
+        explanation: 'Suggests immature company culture or unrealistic expectations'
       });
     }
 
     if (/fast[- ]?paced|wear many hats|startup mentality/i.test(text)) {
       redFlags.push({
-        text: 'Ootab "kiire tempoga" töökeskkonda',
+        text: 'Expects "fast-paced" work environment',
         severity: 'low',
-        explanation: 'Võib tähendada ülekoormust või puudulikke protsesse'
+        explanation: 'May mean overwork or lack of processes'
       });
     }
 
     if (/unlimited pto|unlimited vacation/i.test(text)) {
       redFlags.push({
-        text: 'Piiramatu puhkus',
+        text: 'Unlimited PTO',
         severity: 'low',
-        explanation: 'Statistiliselt võtavad inimesed vähem puhkust kui traditsioonilise süsteemiga'
+        explanation: 'Statistically people take less time off than with traditional systems'
       });
     }
 
     if (techStack.length > 10) {
       redFlags.push({
-        text: `Nõuab ${techStack.length} erinevat tehnoloogiat`,
+        text: `Requires ${techStack.length} different technologies`,
         severity: 'medium',
-        explanation: 'Liiga pikk nimekirja viitab sellele, et nad ei tea täpselt mida otsivad'
+        explanation: 'Too long a list suggests they don\'t know exactly what they want'
       });
     }
 
     if (/competitive salary|salary commensurate/i.test(text) && !/\$\d|€\d|\d+k/i.test(text)) {
       redFlags.push({
-        text: 'Palka pole avaldatud',
+        text: 'Salary not disclosed',
         severity: 'medium',
-        explanation: 'Ettevõtted, kes ei avalda palka, maksavad tavaliselt alla turu keskmise'
+        explanation: 'Companies that don\'t disclose salary typically pay below market average'
       });
     }
 
@@ -701,11 +701,11 @@ export class JobAnalyzerComponent {
     const minExp = expMatch ? parseInt(expMatch[1]) : 3;
 
     // Remote detection
-    let remotePolicy = 'Pole mainitud';
+    let remotePolicy = 'Not mentioned';
     if (/fully remote|100% remote/i.test(text)) remotePolicy = '100% Remote';
-    else if (/hybrid/i.test(text)) remotePolicy = 'Hübriid';
-    else if (/on[- ]?site|office/i.test(text)) remotePolicy = 'Kontoris';
-    else if (/remote/i.test(text)) remotePolicy = 'Remote võimalik';
+    else if (/hybrid/i.test(text)) remotePolicy = 'Hybrid';
+    else if (/on[- ]?site|office/i.test(text)) remotePolicy = 'On-site';
+    else if (/remote/i.test(text)) remotePolicy = 'Remote possible';
 
     // Salary detection
     let salaryEstimate = null;
@@ -720,19 +720,19 @@ export class JobAnalyzerComponent {
     const companySignals: CompanySignal[] = [];
 
     if (/series [a-c]|seed|funded/i.test(text)) {
-      companySignals.push({ type: 'neutral', text: 'Startup - rahastatud, aga risk on kõrgem' });
+      companySignals.push({ type: 'neutral', text: 'Startup - funded but higher risk' });
     }
     if (/fortune 500|established|leader/i.test(text)) {
-      companySignals.push({ type: 'positive', text: 'Suur ettevõte - stabiilsem, aga aeglasem karjäär' });
+      companySignals.push({ type: 'positive', text: 'Large company - more stable but slower career growth' });
     }
     if (/equity|stock options|esop/i.test(text)) {
-      companySignals.push({ type: 'positive', text: 'Pakub osalust ettevõttes' });
+      companySignals.push({ type: 'positive', text: 'Offers equity in the company' });
     }
     if (/learning|growth|development/i.test(text)) {
-      companySignals.push({ type: 'positive', text: 'Rõhutab õppimist ja arengut' });
+      companySignals.push({ type: 'positive', text: 'Emphasizes learning and development' });
     }
     if (/immediate|asap|urgent/i.test(text)) {
-      companySignals.push({ type: 'negative', text: 'Kiire vajadus - keegi lahkus ootamatult?' });
+      companySignals.push({ type: 'negative', text: 'Urgent need - someone left unexpectedly?' });
     }
 
     // Match score based on user profile (if exists)
@@ -821,22 +821,22 @@ export class JobAnalyzerComponent {
     const recs: string[] = [];
 
     if (matchScore < 50) {
-      recs.push('Sinu profiil ei matchi hästi - keskendu puuduvatele must-have oskustele enne kandideerimist');
+      recs.push('Your profile doesn\'t match well - focus on missing must-have skills before applying');
     } else if (matchScore > 80) {
-      recs.push('Tugev match! Rõhuta CV-s konkreetseid kogemusi mainitud tehnoloogiatega');
+      recs.push('Strong match! Highlight specific experience with mentioned technologies in your CV');
     }
 
     const risingTech = techStack.filter(t => t.demand === 'rising');
     if (risingTech.length > 0) {
-      recs.push(`Fookuses on tõusvad tehnoloogiad (${risingTech.map(t => t.name).join(', ')}) - hea märk pikaajalise karjääri jaoks`);
+      recs.push(`Focus is on rising technologies (${risingTech.map(t => t.name).join(', ')}) - good sign for long-term career`);
     }
 
     if (redFlags.length >= 3) {
-      recs.push('Mitu red flagi - uuri ettevõtet Glassdoor/Teamblind kaudu enne kandideerimist');
+      recs.push('Multiple red flags - research the company on Glassdoor/Teamblind before applying');
     }
 
     if (mustHave.length > 8) {
-      recs.push('Pikk nõuete nimekiri - tõenäoliselt on nad paindlikud, keskendu 70% täitmisele');
+      recs.push('Long requirements list - they\'re likely flexible, focus on meeting 70%');
     }
 
     return recs;

@@ -35,7 +35,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-http://localhost:4200}
     ports:
-      - "8080:8080"
+      - "8082:8080"
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
       interval: 30s

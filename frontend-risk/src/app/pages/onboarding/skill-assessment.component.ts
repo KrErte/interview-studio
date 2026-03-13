@@ -40,8 +40,8 @@ interface AssessmentData {
       <!-- Step 1: Role -->
       @if (currentStep() === 1) {
         <div class="step fade-in">
-          <h1>Mis on sinu praegune roll?</h1>
-          <p class="subtitle">See aitab meil mõista sinu karjääri konteksti</p>
+          <h1>What is your current role?</h1>
+          <p class="subtitle">This helps us understand your career context</p>
 
           <div class="role-grid">
             @for (role of roles; track role) {
@@ -57,7 +57,7 @@ interface AssessmentData {
           <div class="custom-input">
             <input
               type="text"
-              placeholder="Või kirjuta oma roll..."
+              placeholder="Or type your role..."
               [(ngModel)]="customRole"
               (keyup.enter)="selectRole(customRole)">
           </div>
@@ -67,7 +67,7 @@ interface AssessmentData {
       <!-- Step 2: Experience -->
       @if (currentStep() === 2) {
         <div class="step fade-in">
-          <h1>Kui kaua oled selles valdkonnas töötanud?</h1>
+          <h1>How long have you worked in this field?</h1>
 
           <div class="experience-slider">
             <input
@@ -77,23 +77,23 @@ interface AssessmentData {
               [(ngModel)]="assessment.yearsExperience">
             <div class="experience-display">
               <span class="years">{{ assessment.yearsExperience }}</span>
-              <span class="label">aastat</span>
+              <span class="label">years</span>
             </div>
           </div>
 
           <div class="experience-context">
             @if (assessment.yearsExperience < 2) {
-              <span class="badge junior">Algaja</span>
-              <p>AI tööriistad võivad sind aidata kiiremini õppida</p>
+              <span class="badge junior">Beginner</span>
+              <p>AI tools can help you learn faster</p>
             } @else if (assessment.yearsExperience < 5) {
-              <span class="badge mid">Keskmine</span>
-              <p>Hea aeg spetsialiseeruda ja eristuda</p>
+              <span class="badge mid">Mid-level</span>
+              <p>Good time to specialize and differentiate</p>
             } @else if (assessment.yearsExperience < 10) {
-              <span class="badge senior">Kogenud</span>
-              <p>Sinu kogemus on väärtuslik - fookus peaks olema strateegilisel mõtlemisel</p>
+              <span class="badge senior">Experienced</span>
+              <p>Your experience is valuable - focus should be on strategic thinking</p>
             } @else {
-              <span class="badge expert">Ekspert</span>
-              <p>Keskendu mentorluse ja arhitektuuri rollidele</p>
+              <span class="badge expert">Expert</span>
+              <p>Focus on mentoring and architecture roles</p>
             }
           </div>
         </div>
@@ -102,8 +102,8 @@ interface AssessmentData {
       <!-- Step 3: Skills -->
       @if (currentStep() === 3) {
         <div class="step fade-in">
-          <h1>Milliseid tehnoloogiaid kasutad?</h1>
-          <p class="subtitle">Vali kõik mis kehtivad. Hiljem saad täpsustada taset.</p>
+          <h1>What technologies do you use?</h1>
+          <p class="subtitle">Select all that apply. You can specify levels later.</p>
 
           @for (category of skillCategories; track category.name) {
             <div class="skill-category">
@@ -127,14 +127,14 @@ interface AssessmentData {
           <div class="custom-skill">
             <input
               type="text"
-              placeholder="Lisa oma skill..."
+              placeholder="Add your skill..."
               [(ngModel)]="customSkill"
               (keyup.enter)="addCustomSkill()">
-            <button (click)="addCustomSkill()" [disabled]="!customSkill">Lisa</button>
+            <button (click)="addCustomSkill()" [disabled]="!customSkill">Add</button>
           </div>
 
           <div class="selected-count">
-            {{ selectedSkills().length }} skilli valitud
+            {{ selectedSkills().length }} skills selected
           </div>
         </div>
       }
@@ -142,8 +142,8 @@ interface AssessmentData {
       <!-- Step 4: Skill levels -->
       @if (currentStep() === 4) {
         <div class="step fade-in">
-          <h1>Hinda oma oskuste taset</h1>
-          <p class="subtitle">1 = algaja, 5 = ekspert</p>
+          <h1>Rate your skill levels</h1>
+          <p class="subtitle">1 = beginner, 5 = expert</p>
 
           <div class="skill-levels">
             @for (skill of assessment.skills; track skill.name) {
@@ -177,15 +177,15 @@ interface AssessmentData {
       <!-- Step 5: Work breakdown -->
       @if (currentStep() === 5) {
         <div class="step fade-in">
-          <h1>Kuidas sinu tööpäev jaguneb?</h1>
-          <p class="subtitle">See aitab hinnata automatiseerimise riski</p>
+          <h1>How does your workday break down?</h1>
+          <p class="subtitle">This helps assess automation risk</p>
 
           <div class="work-sliders">
             <div class="slider-row">
               <label>
                 <span class="emoji">🔄</span>
-                Rutiinsed ülesanded
-                <span class="hint">(andmete sisestamine, reportid, copy-paste)</span>
+                Routine tasks
+                <span class="hint">(data entry, reports, copy-paste)</span>
               </label>
               <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.repetitiveTasks">
               <span class="percent">{{ assessment.workBreakdown.repetitiveTasks }}%</span>
@@ -194,8 +194,8 @@ interface AssessmentData {
             <div class="slider-row">
               <label>
                 <span class="emoji">🧩</span>
-                Probleemide lahendamine
-                <span class="hint">(debugging, arhitektuur, optimeerimine)</span>
+                Problem solving
+                <span class="hint">(debugging, architecture, optimization)</span>
               </label>
               <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.problemSolving">
               <span class="percent">{{ assessment.workBreakdown.problemSolving }}%</span>
@@ -204,8 +204,8 @@ interface AssessmentData {
             <div class="slider-row">
               <label>
                 <span class="emoji">💬</span>
-                Suhtlus & koostöö
-                <span class="hint">(koosolekud, mentorlus, kliendid)</span>
+                Communication & collaboration
+                <span class="hint">(meetings, mentoring, clients)</span>
               </label>
               <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.communication">
               <span class="percent">{{ assessment.workBreakdown.communication }}%</span>
@@ -214,8 +214,8 @@ interface AssessmentData {
             <div class="slider-row">
               <label>
                 <span class="emoji">💡</span>
-                Loovus & innovatsioon
-                <span class="hint">(uued lahendused, eksperimendid, R&D)</span>
+                Creativity & innovation
+                <span class="hint">(new solutions, experiments, R&D)</span>
               </label>
               <input type="range" min="0" max="100" step="5" [(ngModel)]="assessment.workBreakdown.creativity">
               <span class="percent">{{ assessment.workBreakdown.creativity }}%</span>
@@ -223,9 +223,9 @@ interface AssessmentData {
           </div>
 
           <div class="breakdown-total" [class.warning]="workBreakdownTotal() !== 100">
-            Kokku: {{ workBreakdownTotal() }}%
+            Total: {{ workBreakdownTotal() }}%
             @if (workBreakdownTotal() !== 100) {
-              <span class="warning-text">(peaks olema 100%)</span>
+              <span class="warning-text">(should be 100%)</span>
             }
           </div>
         </div>
@@ -234,10 +234,10 @@ interface AssessmentData {
       <!-- Step 6: Context -->
       @if (currentStep() === 6) {
         <div class="step fade-in">
-          <h1>Veel veidi konteksti</h1>
+          <h1>A bit more context</h1>
 
           <div class="context-section">
-            <label>Mis valdkonnas töötad?</label>
+            <label>What industry do you work in?</label>
             <div class="option-grid">
               @for (industry of industries; track industry) {
                 <button
@@ -251,7 +251,7 @@ interface AssessmentData {
           </div>
 
           <div class="context-section">
-            <label>Ettevõtte suurus</label>
+            <label>Company size</label>
             <div class="option-grid">
               @for (size of companySizes; track size.value) {
                 <button
@@ -265,7 +265,7 @@ interface AssessmentData {
           </div>
 
           <div class="context-section">
-            <label>Kui palju töötad kaugtööna?</label>
+            <label>How much do you work remotely?</label>
             <div class="remote-slider">
               <input type="range" min="0" max="100" step="10" [(ngModel)]="assessment.remoteWork">
               <span>{{ assessment.remoteWork }}% remote</span>
@@ -277,7 +277,7 @@ interface AssessmentData {
       <!-- Navigation -->
       <div class="nav-buttons">
         @if (currentStep() > 1) {
-          <button class="btn-back" (click)="previousStep()">← Tagasi</button>
+          <button class="btn-back" (click)="previousStep()">← Back</button>
         }
 
         @if (currentStep() < totalSteps) {
@@ -285,7 +285,7 @@ interface AssessmentData {
             class="btn-next"
             (click)="nextStep()"
             [disabled]="!canProceed()">
-            Edasi →
+            Next →
           </button>
         } @else {
           <button
@@ -293,9 +293,9 @@ interface AssessmentData {
             (click)="submitAssessment()"
             [disabled]="isSubmitting()">
             @if (isSubmitting()) {
-              Analüüsin...
+              Analyzing...
             } @else {
-              Analüüsi minu karjääri 🚀
+              Analyze my career 🚀
             }
           </button>
         }
@@ -799,7 +799,7 @@ export class SkillAssessmentComponent {
 
   skillCategories: SkillCategory[] = [
     {
-      name: 'Programmeerimiskeeled',
+      name: 'Programming Languages',
       skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin']
     },
     {
@@ -811,7 +811,7 @@ export class SkillAssessmentComponent {
       skills: ['Node.js', 'Spring Boot', '.NET', 'Django', 'FastAPI', 'Express', 'NestJS']
     },
     {
-      name: 'Andmebaasid',
+      name: 'Databases',
       skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'DynamoDB']
     },
     {
@@ -831,9 +831,9 @@ export class SkillAssessmentComponent {
 
   companySizes = [
     { value: 'startup', label: '1-10 (Startup)' },
-    { value: 'small', label: '11-50 (Väike)' },
-    { value: 'medium', label: '51-200 (Keskmine)' },
-    { value: 'large', label: '201-1000 (Suur)' },
+    { value: 'small', label: '11-50 (Small)' },
+    { value: 'medium', label: '51-200 (Medium)' },
+    { value: 'large', label: '201-1000 (Large)' },
     { value: 'enterprise', label: '1000+ (Enterprise)' }
   ];
 
