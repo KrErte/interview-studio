@@ -25,7 +25,7 @@ export const routes: Routes = [
   // Pricing (public, no auth required)
   {
     path: 'pricing',
-    component: AppShellComponent,
+    component: PublicShellComponent,
     children: [
       {
         path: '',
@@ -189,6 +189,12 @@ export const routes: Routes = [
   {
     path: 'analysis',
     redirectTo: 'careerrisk/assessment',
+    pathMatch: 'full'
+  },
+  // Redirect /plans to /pricing (common alternative URL)
+  {
+    path: 'plans',
+    redirectTo: 'pricing',
     pathMatch: 'full'
   },
   // 404

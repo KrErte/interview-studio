@@ -57,6 +57,12 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
                 class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
               >Home</a>
 
+              <a
+                routerLink="/pricing"
+                routerLinkActive="bg-slate-800/50 text-white"
+                class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
+              >Pricing</a>
+
               <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block"></div>
 
               <a
@@ -91,9 +97,11 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
               <span>Career Disruption Index™</span>
             </div>
             <div class="flex items-center gap-4">
-              <span>Powered by AI labor market analysis</span>
+              <a routerLink="/pricing" class="hover:text-emerald-400 transition-colors">Pricing</a>
               <span class="hidden sm:inline">•</span>
-              <span class="hidden sm:inline">Updated daily</span>
+              <a routerLink="/login" class="hidden sm:inline hover:text-emerald-400 transition-colors">Sign In</a>
+              <span class="hidden sm:inline">•</span>
+              <span class="hidden sm:inline">Powered by AI labor market analysis</span>
             </div>
           </div>
         </div>

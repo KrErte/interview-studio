@@ -208,6 +208,42 @@ import { AuthService } from '../../core/auth/auth-api.service';
       </div>
     </section>
 
+    <!-- Pricing Teaser -->
+    <section class="py-24 px-6">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 mb-6">
+          <span class="text-sm font-medium text-emerald-300">SIMPLE PRICING</span>
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Start free. Upgrade when ready.</h2>
+        <p class="text-slate-400 mb-8 max-w-2xl mx-auto">
+          Get your risk score for free. Unlock the full action plan, career roadmap, and AI training arena with a one-time payment.
+        </p>
+        <div class="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
+          <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
+            <div class="text-2xl font-bold text-slate-300">Free</div>
+            <div class="text-xs text-slate-500 mt-1">Risk score + blockers</div>
+          </div>
+          <div class="rounded-xl border border-emerald-500/50 bg-slate-900/50 p-5 shadow-lg shadow-emerald-500/5">
+            <div class="text-2xl font-bold text-white">From $7</div>
+            <div class="text-xs text-emerald-400 mt-1">Full assessment + plan</div>
+          </div>
+          <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
+            <div class="text-2xl font-bold text-slate-300">$49</div>
+            <div class="text-xs text-slate-500 mt-1">Lifetime access</div>
+          </div>
+        </div>
+        <a
+          routerLink="/pricing"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/10 transition-all"
+        >
+          View all plans
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
     <!-- Stats Section -->
     <section class="py-24 px-6">
       <div class="max-w-6xl mx-auto">
