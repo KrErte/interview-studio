@@ -83,7 +83,7 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
                   class="w-full py-3 rounded-xl border border-emerald-500/50 text-sm font-semibold text-emerald-400 cursor-default">
                   Active
                 </button>
-              } @else if (tierService.isAtLeast(tier.id as UserTier)) {
+              } @else if (isTierIncluded(tier.id)) {
                 <button
                   class="w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-500 cursor-default">
                   Included
@@ -149,7 +149,10 @@ export class PricingComponent implements OnInit {
   readonly checkoutLoading = signal(false);
 
   readonly currentTier = this.tierService.tier;
-  readonly UserTier = '' as UserTier; // expose type for template
+
+  isTierIncluded(tierId: string): boolean {
+    return this.tierService.isAtLeast(tierId as UserTier);
+  }
 
   ngOnInit() {
     this.paymentApi.getPricing().subscribe({
