@@ -54,29 +54,29 @@
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <p class="text-xs text-slate-400">Overall score</p>
           <p class="text-3xl font-bold text-emerald-400">
-            {{ futureScore?.overall ?? '—' }}<span class="text-lg">/100</span>
+            {{ careerRiskScore?.overall ?? '—' }}<span class="text-lg">/100</span>
           </p>
           <p class="text-xs text-slate-400">
-            {{ futureScore ? 'Latest analysis' : 'Add CV and answers to calculate score' }}
+            {{ careerRiskScore ? 'Latest analysis' : 'Add CV and answers to calculate score' }}
           </p>
         </div>
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <p class="text-xs text-slate-400">Top %</p>
           <p class="text-2xl font-bold text-emerald-300">
-            {{ futureScore ? 'Top ' + benchmarkPercentile + '%' : '—' }}
+            {{ careerRiskScore ? 'Top ' + benchmarkPercentile + '%' : '—' }}
           </p>
           <p class="text-xs text-slate-400">Among similar profiles</p>
         </div>
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
           <p class="text-xs text-slate-400">Field baseline</p>
           <p class="text-2xl font-bold text-slate-100">
-            {{ futureScore ? benchmarkFieldAverage : '—' }}
+            {{ careerRiskScore ? benchmarkFieldAverage : '—' }}
           </p>
           <p class="text-xs text-slate-400">Comparison threshold</p>
         </div>
       </div>
-      <div class="mt-4 space-y-2 text-sm text-slate-300" *ngIf="futureScore; else overviewPlaceholder">
-        <p>{{ futureScore?.explanation }}</p>
+      <div class="mt-4 space-y-2 text-sm text-slate-300" *ngIf="careerRiskScore; else overviewPlaceholder">
+        <p>{{ careerRiskScore?.explanation }}</p>
         <p class="text-xs text-slate-500">
           Future-readiness considers CV, interview signals, and recent learning.
         </p>
@@ -226,7 +226,7 @@
             </p>
             <div class="flex items-baseline gap-2">
               <span class="text-4xl font-extrabold text-emerald-400">
-                {{ futureScore?.overall ?? '—' }}
+                {{ careerRiskScore?.overall ?? '—' }}
               </span>
               <span class="text-sm text-slate-400">/100 readiness</span>
             </div>
@@ -236,7 +236,7 @@
                 <span class="font-semibold text-emerald-200">{{ benchmarkFieldAverage }}</span>
               </p>
               <p class="text-slate-400">
-                {{ futureScore?.explanation || 'We combine interview signals, CV overlaps, and recent learning into a forward-looking score.' }}
+                {{ careerRiskScore?.explanation || 'We combine interview signals, CV overlaps, and recent learning into a forward-looking score.' }}
               </p>
             </div>
           </div>
@@ -244,21 +244,21 @@
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
               <p class="font-semibold text-emerald-200">Adaptability</p>
               <p class="text-2xl font-bold text-emerald-400">
-                {{ futureScore?.adaptability ?? '—' }}
+                {{ careerRiskScore?.adaptability ?? '—' }}
               </p>
               <p class="text-[11px] text-slate-400">Ease of moving between roles</p>
             </div>
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
               <p class="font-semibold text-emerald-200">Automation resilience</p>
               <p class="text-2xl font-bold text-emerald-400">
-                {{ futureScore?.automationResilience ?? '—' }}
+                {{ careerRiskScore?.automationResilience ?? '—' }}
               </p>
               <p class="text-[11px] text-slate-400">Protection against commoditization</p>
             </div>
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
               <p class="font-semibold text-emerald-200">Learning velocity</p>
               <p class="text-2xl font-bold text-emerald-400">
-                {{ futureScore?.learningVelocity ?? '—' }}
+                {{ careerRiskScore?.learningVelocity ?? '—' }}
               </p>
               <p class="text-[11px] text-slate-400">How fast you pick things up</p>
             </div>
