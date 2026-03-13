@@ -1,28 +1,28 @@
 <section class="space-y-6 max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
   <header class="space-y-3 pb-2">
     <div class="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-slate-400">
-      <span class="rounded-full bg-slate-800 px-3 py-1 font-semibold text-emerald-300">Tulevikukindlus</span>
+      <span class="rounded-full bg-slate-800 px-3 py-1 font-semibold text-emerald-300">Future-readiness</span>
     </div>
     <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
       <div class="space-y-1">
-        <h1 class="text-3xl md:text-4xl font-bold text-slate-50">Üks voog: profiilist tegevuskavani</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-50">One flow: from profile to roadmap</h1>
         <p class="text-sm text-slate-400">
-          Loo tulevikukindluse ülevaade, vasta küsimustele ja ava tegevuskava samal lehel.
+          Create a future-readiness overview, answer questions, and unlock a roadmap on the same page.
         </p>
       </div>
       <div class="flex items-center gap-2 text-xs text-emerald-300">
         <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>
-        Ülevaade uueneb, kui õpid, intervjueerid või laed uue CV.
+        Overview updates as you learn, interview, or upload a new CV.
       </div>
     </div>
   </header>
 
   <div *ngIf="currentStep === 'OVERVIEW'" class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
     <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-emerald-500/5">
-      <p class="text-xs uppercase tracking-wide text-emerald-300">Ülevaade</p>
-      <h2 class="mt-2 text-2xl font-semibold text-slate-50">Tulevikukindluse voog ühes kohas</h2>
+      <p class="text-xs uppercase tracking-wide text-emerald-300">Overview</p>
+      <h2 class="mt-2 text-2xl font-semibold text-slate-50">Future-readiness flow in one place</h2>
       <p class="mt-2 text-sm text-slate-300">
-        Alusta profiiliga, vasta lühikestele küsimustele, vaata analüüsi ja lukusta tegevuskava 7/30/90 päevaks.
+        Start with your profile, answer short questions, view analysis, and lock a roadmap for 7/30/90 days.
       </p>
       <div class="mt-4 flex flex-wrap gap-3">
         <button
@@ -30,7 +30,7 @@
           class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:ring-offset-2 focus:ring-offset-slate-900"
           (click)="goToQuestions()"
         >
-          Alusta küsimustega
+          Start with questions
         </button>
         <button
           type="button"
@@ -38,26 +38,26 @@
           (click)="goToAssessment()"
           [disabled]="!hasAnyData"
         >
-          Vaata viimast hinnangut
+          View latest assessment
         </button>
       </div>
     </div>
     <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-emerald-500/5">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-xs uppercase tracking-wide text-emerald-300">Valmisoleku hetkeseis</p>
-          <p class="text-sm text-slate-400">Ülevaade sinu praegusest skoorist ja baasjoonest.</p>
+          <p class="text-xs uppercase tracking-wide text-emerald-300">Current readiness</p>
+          <p class="text-sm text-slate-400">Overview of your current score and baseline.</p>
         </div>
-        <span class="text-[11px] text-slate-500">Reaalajas</span>
+        <span class="text-[11px] text-slate-500">Real-time</span>
       </div>
       <div class="mt-3 grid gap-3 md:grid-cols-3">
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <p class="text-xs text-slate-400">Üldskoor</p>
+          <p class="text-xs text-slate-400">Overall score</p>
           <p class="text-3xl font-bold text-emerald-400">
             {{ futureScore?.overall ?? '—' }}<span class="text-lg">/100</span>
           </p>
           <p class="text-xs text-slate-400">
-            {{ futureScore ? 'Värskeim analüüs' : 'Lisa CV ja vastused, et arvutada skoor' }}
+            {{ futureScore ? 'Latest analysis' : 'Add CV and answers to calculate score' }}
           </p>
         </div>
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
@@ -65,25 +65,25 @@
           <p class="text-2xl font-bold text-emerald-300">
             {{ futureScore ? 'Top ' + benchmarkPercentile + '%' : '—' }}
           </p>
-          <p class="text-xs text-slate-400">Sarnaste profiilide seas</p>
+          <p class="text-xs text-slate-400">Among similar profiles</p>
         </div>
         <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-4">
-          <p class="text-xs text-slate-400">Valdkonna baas</p>
+          <p class="text-xs text-slate-400">Field baseline</p>
           <p class="text-2xl font-bold text-slate-100">
             {{ futureScore ? benchmarkFieldAverage : '—' }}
           </p>
-          <p class="text-xs text-slate-400">Võrdluslävi</p>
+          <p class="text-xs text-slate-400">Comparison threshold</p>
         </div>
       </div>
       <div class="mt-4 space-y-2 text-sm text-slate-300" *ngIf="futureScore; else overviewPlaceholder">
         <p>{{ futureScore?.explanation }}</p>
         <p class="text-xs text-slate-500">
-          Tulevikukindlus arvestab CV-d, intervjuu signaale ja hiljutist õppimist.
+          Future-readiness considers CV, interview signals, and recent learning.
         </p>
       </div>
       <ng-template #overviewPlaceholder>
         <p class="text-sm text-slate-400">
-          Lisa CV ja vasta küsimustele, et arvutada valmisoleku ülevaade ja analüüs.
+          Add CV and answer questions to calculate readiness overview and analysis.
         </p>
       </ng-template>
     </div>
@@ -95,38 +95,38 @@
       <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs uppercase tracking-wide text-slate-400">Profiil</p>
-            <h2 class="text-lg font-semibold text-slate-50">Lae CV ja märgi kogemus</h2>
+            <p class="text-xs uppercase tracking-wide text-slate-400">Profile</p>
+            <h2 class="text-lg font-semibold text-slate-50">Upload CV and note experience</h2>
           </div>
         </div>
         <div class="mt-4 space-y-4">
           <div class="flex flex-col gap-2">
-            <label class="text-sm text-slate-200">CV fail</label>
+            <label class="text-sm text-slate-200">CV file</label>
             <input
               type="file"
               class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
               (change)="onCvSelected($event)"
             />
-            <p class="text-xs text-slate-400" *ngIf="cvFileName">Valitud: {{ cvFileName }}</p>
+            <p class="text-xs text-slate-400" *ngIf="cvFileName">Selected: {{ cvFileName }}</p>
           </div>
           <div class="grid gap-3 md:grid-cols-2">
             <div class="flex flex-col gap-2">
-              <label class="text-sm text-slate-200">Aastad kogemust</label>
+              <label class="text-sm text-slate-200">Years of experience</label>
               <input
                 type="number"
                 min="0"
                 [(ngModel)]="profileYears"
                 class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
-                placeholder="nt 5"
+                placeholder="e.g. 5"
               />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-sm text-slate-200">Roll</label>
+              <label class="text-sm text-slate-200">Role</label>
               <input
                 type="text"
                 [(ngModel)]="profileRole"
                 class="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100"
-                placeholder="nt Senior Frontend Engineer"
+                placeholder="e.g. Senior Frontend Engineer"
               />
             </div>
           </div>
@@ -147,16 +147,16 @@
     </div>
     <aside class="space-y-4">
       <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Miks alustada?</p>
-        <h3 class="text-base font-semibold text-slate-50">Üks voog, neli sammu</h3>
+        <p class="text-xs uppercase tracking-wide text-slate-400">Why start?</p>
+        <h3 class="text-base font-semibold text-slate-50">One flow, four steps</h3>
         <ul class="mt-3 space-y-2 text-sm text-slate-300">
-          <li>• Profiil: CV + kogemus</li>
-          <li>• Küsimused: 3 selgitavat küsimust</li>
-          <li>• Analüüs: tulevikukindluse ülevaade</li>
-          <li>• Tegevuskava: 7/30/90 päevaks</li>
+          <li>• Profile: CV + experience</li>
+          <li>• Questions: 3 clarifying questions</li>
+          <li>• Analysis: future-readiness overview</li>
+          <li>• Roadmap: for 7/30/90 days</li>
         </ul>
         <p class="mt-3 text-xs text-slate-400">
-          Kõik sammud toimuvad samal lehel. Hoia fookus ja liigu edasi.
+          All steps happen on the same page. Stay focused and keep moving.
         </p>
       </div>
     </aside>
@@ -166,34 +166,34 @@
   <div *ngIf="currentStep === 2" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-xs uppercase tracking-wide text-slate-400">Küsimused</p>
-        <h2 class="text-lg font-semibold text-slate-50">Selgitavad küsimused</h2>
+        <p class="text-xs uppercase tracking-wide text-slate-400">Questions</p>
+        <h2 class="text-lg font-semibold text-slate-50">Clarifying questions</h2>
       </div>
-      <span class="text-[11px] text-slate-400">3 küsimust · 2 min</span>
+      <span class="text-[11px] text-slate-400">3 questions · 2 min</span>
     </div>
     <div class="mt-4 space-y-4 text-sm text-slate-300">
       <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <p class="font-semibold text-slate-100">Kuidas lähened uuele tehnilisele väljakutsele?</p>
+        <p class="font-semibold text-slate-100">How do you approach a new technical challenge?</p>
         <textarea
           class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
           rows="3"
-          placeholder="Kirjelda lühidalt oma sammusid ja mõõdikuid."
+          placeholder="Briefly describe your steps and metrics."
         ></textarea>
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <p class="font-semibold text-slate-100">Mis hoiab sinu õppimise tempot?</p>
+        <p class="font-semibold text-slate-100">What keeps your learning pace going?</p>
         <textarea
           class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
           rows="3"
-          placeholder="Meetodid, rutiinid, tööriistad."
+          placeholder="Methods, routines, tools."
         ></textarea>
       </div>
       <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <p class="font-semibold text-slate-100">Kuidas teed koostööd, kui ajakava on pingeline?</p>
+        <p class="font-semibold text-slate-100">How do you collaborate when the schedule is tight?</p>
         <textarea
           class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
           rows="3"
-          placeholder="Too näide ja tulemus."
+          placeholder="Give an example and the outcome."
         ></textarea>
       </div>
     </div>
@@ -203,14 +203,14 @@
         class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
         (click)="analyzeReadiness()"
       >
-        Analüüsi valmisolekut
+        Analyze readiness
       </button>
       <button
         type="button"
         class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200"
         (click)="goToStep(1)"
       >
-        Tagasi profiilile
+        Back to profile
       </button>
     </div>
   </div>
@@ -222,66 +222,66 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div class="space-y-2">
             <p class="text-xs font-semibold uppercase tracking-wide text-emerald-300">
-              Tulevikukindluse ülevaade
+              Future-readiness overview
             </p>
             <div class="flex items-baseline gap-2">
               <span class="text-4xl font-extrabold text-emerald-400">
                 {{ futureScore?.overall ?? '—' }}
               </span>
-              <span class="text-sm text-slate-400">/100 valmisolek</span>
+              <span class="text-sm text-slate-400">/100 readiness</span>
             </div>
             <div class="space-y-1 text-xs text-slate-300">
               <p>
-                Top {{ benchmarkPercentile }}% sarnaste taustade seas · Valdkonna baas:
+                Top {{ benchmarkPercentile }}% among similar backgrounds · Field baseline:
                 <span class="font-semibold text-emerald-200">{{ benchmarkFieldAverage }}</span>
               </p>
               <p class="text-slate-400">
-                {{ futureScore?.explanation || 'Koondame intervjoo signaalid, CV kattuvused ja hiljutise õppimise tulevikku vaatavaks hindeks.' }}
+                {{ futureScore?.explanation || 'We combine interview signals, CV overlaps, and recent learning into a forward-looking score.' }}
               </p>
             </div>
           </div>
           <div class="grid grid-cols-3 gap-3 text-xs text-slate-200">
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
-              <p class="font-semibold text-emerald-200">Kohanemisvõime</p>
+              <p class="font-semibold text-emerald-200">Adaptability</p>
               <p class="text-2xl font-bold text-emerald-400">
                 {{ futureScore?.adaptability ?? '—' }}
               </p>
-              <p class="text-[11px] text-slate-400">Liikumise kergus rollide vahel</p>
+              <p class="text-[11px] text-slate-400">Ease of moving between roles</p>
             </div>
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
-              <p class="font-semibold text-emerald-200">Automatiseerimise vastupidavus</p>
+              <p class="font-semibold text-emerald-200">Automation resilience</p>
               <p class="text-2xl font-bold text-emerald-400">
                 {{ futureScore?.automationResilience ?? '—' }}
               </p>
-              <p class="text-[11px] text-slate-400">Kaitse commoditiseerimise eest</p>
+              <p class="text-[11px] text-slate-400">Protection against commoditization</p>
             </div>
             <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-3">
-              <p class="font-semibold text-emerald-200">Õppimiskiirus</p>
+              <p class="font-semibold text-emerald-200">Learning velocity</p>
               <p class="text-2xl font-bold text-emerald-400">
                 {{ futureScore?.learningVelocity ?? '—' }}
               </p>
-              <p class="text-[11px] text-slate-400">Kui kiiresti omandad</p>
+              <p class="text-[11px] text-slate-400">How fast you pick things up</p>
             </div>
           </div>
         </div>
 
         <div class="mt-4 grid gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4 md:grid-cols-3">
           <div class="space-y-1">
-            <p class="text-xs font-semibold text-slate-200">Tugevad signaalid</p>
+            <p class="text-xs font-semibold text-slate-200">Strong signals</p>
             <p class="text-sm text-slate-300">
-              Töötubade juhtimine, arhitektuuri ülevaatused ja kiire prototüüpimine on sinu praegused tugevused.
+              Workshop facilitation, architecture reviews, and rapid prototyping are your current strengths.
             </p>
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-semibold text-slate-200">Arengufookus</p>
+            <p class="text-xs font-semibold text-slate-200">Development focus</p>
             <p class="text-sm text-slate-300">
-              Süvenda mõõtmist, mudelite hindamist ja promptide ahelat, et avada järgmise taseme positsioonid.
+              Deepen measurement, model evaluation, and prompt chaining to unlock next-level positions.
             </p>
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-semibold text-slate-200">Hoog</p>
+            <p class="text-xs font-semibold text-slate-200">Momentum</p>
             <p class="text-sm text-slate-300">
-              Iga intervjuu lisab signaali; hoia rütmi, et sinu valmisolek oleks turumuutustest ees.
+              Every interview adds a signal; keep the rhythm so your readiness stays ahead of market changes.
             </p>
           </div>
         </div>
@@ -292,7 +292,7 @@
             class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400"
             (click)="goToRoadmap()"
           >
-            Genereeri tegevuskava →
+            Generate roadmap →
           </button>
           <p *ngIf="lastSnapshotMessage" class="text-xs text-emerald-200">
             {{ lastSnapshotMessage }}
@@ -301,7 +301,7 @@
 
         <div *ngIf="loadingScore" class="mt-3 flex items-center gap-2 text-xs text-slate-400">
           <span class="h-3 w-3 animate-spin rounded-full border-2 border-slate-700 border-t-emerald-400"></span>
-          Arvutan sinu viimast valmisolekut…
+          Calculating your latest readiness…
         </div>
         <p *ngIf="scoreError" class="mt-3 rounded-lg border border-rose-600/50 bg-rose-950/60 px-3 py-2 text-xs text-rose-100">
           {{ scoreError }}
@@ -312,9 +312,9 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-xs uppercase tracking-wide text-slate-400">Opportunities</p>
-            <h2 class="text-lg font-semibold text-slate-50">Positsiooni sobivused</h2>
+            <h2 class="text-lg font-semibold text-slate-50">Position matches</h2>
           </div>
-          <span *ngIf="loadingRoles" class="text-[11px] text-slate-400">Värskendan…</span>
+          <span *ngIf="loadingRoles" class="text-[11px] text-slate-400">Refreshing…</span>
         </div>
 
         <p *ngIf="rolesError" class="mt-3 rounded-lg border border-rose-600/50 bg-rose-950/60 px-3 py-2 text-xs text-rose-100">
@@ -325,9 +325,9 @@
           *ngIf="!loadingRoles && !rolesError && !roleMatches.length"
           class="mt-3 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 px-4 py-6 text-sm text-slate-300"
         >
-          <p class="font-medium text-slate-100">Pöördepositsioone pole veel.</p>
+          <p class="font-medium text-slate-100">No pivot roles yet.</p>
           <p class="mt-1 text-slate-400">
-            Lae üles CV, tee töökohtade sobitus või lõpeta proovintervjuu, et näha tugeva kattuvusega positsioone.
+            Upload a CV, run a job match, or complete a mock interview to see high-overlap positions.
           </p>
         </div>
 
@@ -338,19 +338,19 @@
           >
             <div class="flex items-start justify-between gap-2">
               <div>
-                <p class="text-[11px] uppercase tracking-wide text-slate-400">Pöördepositsioon</p>
+                <p class="text-[11px] uppercase tracking-wide text-slate-400">Pivot role</p>
                 <p class="text-base font-semibold text-slate-50">
                   {{ match.targetRole }}
                 </p>
                 <p class="text-xs text-slate-400" *ngIf="match.archetype">
-                  Arhetüüp: {{ match.archetype }}
+                  Archetype: {{ match.archetype }}
                 </p>
               </div>
               <div class="text-right">
                 <p class="text-2xl font-bold text-emerald-400">
                   {{ match.matchPercent }}<span class="text-sm">%</span>
                 </p>
-                <p class="text-[11px] text-slate-400">kattuvus</p>
+                <p class="text-[11px] text-slate-400">match</p>
               </div>
             </div>
 
@@ -371,7 +371,7 @@
 
             <div class="space-y-2">
               <div>
-                <p class="text-xs font-semibold text-slate-200">Ülekattuvad tugevused</p>
+                <p class="text-xs font-semibold text-slate-200">Overlapping strengths</p>
                 <div class="mt-1 flex flex-wrap gap-1.5">
                   <span
                     *ngFor="let skill of match.overlapSkills"
@@ -380,13 +380,13 @@
                     {{ skill }}
                   </span>
                   <span *ngIf="!match.overlapSkills?.length" class="text-[11px] text-slate-400">
-                    Lisame kattuvused, kui rohkem andmeid on saadaval.
+                    We'll add overlaps when more data is available.
                   </span>
                 </div>
               </div>
 
               <div>
-                <p class="text-xs font-semibold text-slate-200">Mikrolüngad, mida katta</p>
+                <p class="text-xs font-semibold text-slate-200">Micro-gaps to close</p>
                 <div class="mt-1 flex flex-wrap gap-1.5">
                   <span
                     *ngFor="let skill of match.gapSkills"
@@ -395,7 +395,7 @@
                     {{ skill }}
                   </span>
                   <span *ngIf="!match.gapSkills?.length" class="text-[11px] text-slate-400">
-                    Selgeid lünki pole hetkel tuvastatud.
+                    No clear gaps identified at the moment.
                   </span>
                 </div>
               </div>
@@ -403,14 +403,14 @@
 
             <div class="mt-1 flex items-center justify-between">
               <p class="text-[11px] text-slate-400">
-                Muuda need lüngad konkreetseks mini-tegevuskavaks.
+                Turn these gaps into a concrete mini roadmap.
               </p>
               <button
                 type="button"
                 class="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-900 shadow hover:bg-white/90"
                 (click)="onGeneratePlan(match)"
               >
-                Genereeri tegevuskava
+                Generate roadmap
                 <span aria-hidden="true" class="text-slate-500">→</span>
               </button>
             </div>
@@ -421,8 +421,8 @@
       <div *ngIf="currentStep === 4" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-xs uppercase tracking-wide text-slate-400">Tegevuskava</p>
-            <h2 class="text-lg font-semibold text-slate-50">Vali 7 / 30 / 90 päeva vaade</h2>
+            <p class="text-xs uppercase tracking-wide text-slate-400">Roadmap</p>
+            <h2 class="text-lg font-semibold text-slate-50">Choose 7 / 30 / 90 day view</h2>
           </div>
           <div class="flex items-center gap-2">
             <button
@@ -471,8 +471,8 @@
 
     <aside class="space-y-4">
       <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg" *ngIf="insightView === 'overview' || insightView === 'strengths'">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Tugevused</p>
-        <h2 class="text-base font-semibold text-slate-50">Mis töötab sinu kasuks</h2>
+        <p class="text-xs uppercase tracking-wide text-slate-400">Strengths</p>
+        <h2 class="text-base font-semibold text-slate-50">What works in your favor</h2>
         <div class="mt-3 flex flex-wrap gap-2">
           <span
             *ngFor="let s of strengths"
@@ -482,7 +482,7 @@
           </span>
         </div>
         <div class="mt-4 space-y-2">
-          <p class="text-xs font-semibold text-slate-200">Üle benchmarki</p>
+          <p class="text-xs font-semibold text-slate-200">Above benchmark</p>
           <div class="space-y-2 text-sm text-slate-300">
             <div *ngFor="let dim of strengthsAboveBenchmark" class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2">
               <span>{{ dim.name }}</span>
@@ -493,8 +493,8 @@
       </div>
 
       <div *ngIf="insightView === 'gaps'" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
-        <p class="text-xs uppercase tracking-wide text-slate-400">Arengukohad</p>
-        <h2 class="text-base font-semibold text-slate-50">Mida parandada järgmise 30 päeva jooksul</h2>
+        <p class="text-xs uppercase tracking-wide text-slate-400">Growth areas</p>
+        <h2 class="text-base font-semibold text-slate-50">What to improve in the next 30 days</h2>
         <div class="mt-3 flex flex-wrap gap-2">
           <span
             *ngFor="let g of gaps"
@@ -504,7 +504,7 @@
           </span>
         </div>
         <div class="mt-4 space-y-2">
-          <p class="text-xs font-semibold text-slate-200">Alla benchmarki</p>
+          <p class="text-xs font-semibold text-slate-200">Below benchmark</p>
           <div class="space-y-2 text-sm text-slate-300">
             <div *ngFor="let dim of gapsBelowBenchmark" class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2">
               <span>{{ dim.name }}</span>
@@ -518,12 +518,12 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-[11px] uppercase tracking-wide text-slate-400">Marketplace</p>
-            <h2 class="text-base font-semibold text-slate-50">Nähtavuse seaded</h2>
+            <h2 class="text-base font-semibold text-slate-50">Visibility settings</h2>
           </div>
-          <span *ngIf="loadingVisibility" class="text-[11px] text-slate-400">Laen…</span>
+          <span *ngIf="loadingVisibility" class="text-[11px] text-slate-400">Loading…</span>
         </div>
         <p class="mt-2 text-xs text-slate-400">
-          Vali, kuidas intervjueerijad sind leiavad, kui sinu sobivus ületab nende lävendi.
+          Choose how interviewers find you when your match exceeds their threshold.
         </p>
 
         <div class="mt-4 grid grid-cols-3 gap-2">
@@ -564,7 +564,7 @@
 
         <div class="mt-4 space-y-2">
           <div class="flex items-center justify-between text-xs text-slate-300">
-            <span>Minimaalne kattuvus, et sind näidata</span>
+            <span>Minimum match to show your profile</span>
             <span class="font-semibold text-emerald-200">
               {{ visibilityDraftThreshold }}%
             </span>
@@ -578,7 +578,7 @@
             class="w-full accent-emerald-400"
           />
           <p class="text-[11px] text-slate-500">
-            Näita profiili siis, kui värbaja rolli kattuvus ületab selle piiri.
+            Show profile when recruiter role match exceeds this threshold.
           </p>
         </div>
 
@@ -589,10 +589,10 @@
             (click)="saveVisibility()"
             [disabled]="savingVisibility || loadingVisibility"
           >
-            <span *ngIf="!savingVisibility">Salvesta nähtavus</span>
+            <span *ngIf="!savingVisibility">Save visibility</span>
             <span *ngIf="savingVisibility" class="flex items-center gap-2">
               <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700"></span>
-              Salvestan…
+              Saving…
             </span>
           </button>
           <p *ngIf="visibilityError" class="text-[11px] text-rose-200">
@@ -605,24 +605,24 @@
       </div>
 
       <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg">
-        <p class="text-[11px] uppercase tracking-wide text-slate-400">Valmisoleku rada</p>
-        <h2 class="text-base font-semibold text-slate-50">Mis juhtub edasi</h2>
+        <p class="text-[11px] uppercase tracking-wide text-slate-400">Readiness path</p>
+        <h2 class="text-base font-semibold text-slate-50">What happens next</h2>
         <div class="mt-3 space-y-3 text-sm text-slate-300">
           <div class="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
             <span class="mt-0.5 h-2 w-2 rounded-full bg-emerald-400"></span>
             <div>
-              <p class="font-semibold text-slate-100">Kinnita oma ülevaade</p>
+              <p class="font-semibold text-slate-100">Confirm your overview</p>
               <p class="text-slate-400">
-                Kasuta "Loo ülevaade", et värskendada skoorid, kui laed CV või lõpetad intervjuu.
+                Use "Create overview" to refresh scores when you upload a CV or complete an interview.
               </p>
             </div>
           </div>
           <div class="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
             <span class="mt-0.5 h-2 w-2 rounded-full bg-emerald-400"></span>
             <div>
-              <p class="font-semibold text-slate-100">Vali üks pöördepositsioon</p>
+              <p class="font-semibold text-slate-100">Choose one pivot role</p>
               <p class="text-slate-400">
-                Genereeri mini-tegevuskava positsioonile, mille lüngad on kõige väiksemad, et hoida hoogu.
+                Generate a mini roadmap for the position with the smallest gaps to maintain momentum.
               </p>
               <p *ngIf="planSelectionMessage" class="mt-1 text-xs text-emerald-200">
                 {{ planSelectionMessage }}
@@ -632,15 +632,15 @@
           <div class="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-3">
             <span class="mt-0.5 h-2 w-2 rounded-full bg-emerald-400"></span>
             <div>
-              <p class="font-semibold text-slate-100">Püsi leitav</p>
+              <p class="font-semibold text-slate-100">Stay discoverable</p>
               <p class="text-slate-400">
-                Häälesta nähtavus nii, et intervjueerijad näeksid sind, kui nende roll vastab sinu sobivusele.
+                Tune visibility so interviewers can see you when their role matches your fit.
               </p>
             </div>
           </div>
         </div>
         <div *ngIf="!hasAnyData && !loadingRoles && !loadingScore && !loadingVisibility" class="mt-4 rounded-lg border border-dashed border-slate-700 bg-slate-900/60 px-3 py-2 text-xs text-slate-400">
-          Lae CV või lõpeta proovintervjuu, et täita tulevikukindluse ülevaade ja pöördepositsioonid.
+          Upload a CV or complete a mock interview to populate the future-readiness overview and pivot roles.
         </div>
       </div>
     </aside>
@@ -649,7 +649,7 @@
   <div class="sticky bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-950/80 px-4 py-3 backdrop-blur md:static md:px-0 md:py-0 md:border-none">
     <div class="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-end">
       <div class="text-xs text-slate-400 md:text-right">
-        Uuri positsioone või liigu edasi, kui ülevaade tundub õige.
+        Explore positions or move forward if the overview looks right.
       </div>
       <div class="flex flex-col gap-2 md:flex-row">
         <button
@@ -658,7 +658,7 @@
           class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 md:w-auto"
           (click)="analyzeReadiness()"
         >
-          Analüüsi valmisolekut
+          Analyze readiness
         </button>
         <button
           *ngIf="currentStep === 3"
@@ -666,7 +666,7 @@
           class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 md:w-auto"
           (click)="goToRoadmap()"
         >
-          Genereeri tegevuskava
+          Generate roadmap
         </button>
         <button
           *ngIf="currentStep === 4"
@@ -674,14 +674,14 @@
           class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 md:w-auto"
           (click)="goToStep(3)"
         >
-          Tagasi analüüsi juurde
+          Back to analysis
         </button>
         <button
           type="button"
           class="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200 md:w-auto"
           (click)="goToDashboard()"
         >
-          Jätka
+          Continue
           <span aria-hidden="true">→</span>
         </button>
       </div>

@@ -53,10 +53,10 @@ interface FlowStep {
 })
 export class FutureproofStepperComponent implements OnInit, OnDestroy {
   steps: FlowStep[] = [
-    { key: 'overview', label: 'Profiil', path: '/futureproof/overview' },
-    { key: 'questions', label: 'Küsimused', path: '/futureproof/questions' },
-    { key: 'assessment', label: 'Analüüs', path: '/futureproof/assessment' },
-    { key: 'roadmap', label: 'Tegevuskava', path: '/futureproof/roadmap' }
+    { key: 'overview', label: 'Profile', path: '/futureproof/overview' },
+    { key: 'questions', label: 'Questions', path: '/futureproof/questions' },
+    { key: 'assessment', label: 'Analysis', path: '/futureproof/assessment' },
+    { key: 'roadmap', label: 'Roadmap', path: '/futureproof/roadmap' }
   ];
 
   activeKey: FlowStep['key'] = 'overview';

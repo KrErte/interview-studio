@@ -16,7 +16,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
           <a routerLink="/" class="font-extrabold tracking-tight text-slate-50 text-lg">
-            Tulevikukindlus
+            Futureproof
           </a>
 
           <div class="flex items-center gap-4">
@@ -58,7 +58,7 @@ import { UiModeService } from '../core/services/ui-mode.service';
                     routerLink="/futureproof"
                     routerLinkActive="text-emerald-300"
                     class="text-slate-300 hover:text-slate-50"
-                    >Tulevikukindlus</a
+                    >Futureproof</a
                   >
                   <ng-container *ngIf="loggedIn; else authLinks">
                     <button type="button" (click)="logout()"

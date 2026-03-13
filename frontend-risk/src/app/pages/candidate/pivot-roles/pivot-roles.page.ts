@@ -85,53 +85,53 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   planBlocks: Record<PlanDuration, PlanBlock[]> = {
     '7d': [
       {
-        title: 'Päevad 1-2',
-        summary: 'Koonda CV ja intervjuu signaalid ühte profiili.',
-        tasks: ['Lae CV ja märgi praegune roll', 'Märgi 3 peamist tugevust', 'Seadista nähtavus']
+        title: 'Days 1-2',
+        summary: 'Consolidate CV and interview signals into one profile.',
+        tasks: ['Upload CV and mark current role', 'Mark 3 main strengths', 'Set up visibility']
       },
       {
-        title: 'Päevad 3-5',
-        summary: 'Testi uusi töövooge ja mõõda valmidust.',
-        tasks: ['Katseta 2 uut tööriista', 'Dokumenteeri mõõdikud', 'Lisa õppimismärkmed']
+        title: 'Days 3-5',
+        summary: 'Test new workflows and measure readiness.',
+        tasks: ['Try 2 new tools', 'Document metrics', 'Add learning notes']
       },
       {
-        title: 'Päev 6-7',
-        summary: 'Vali üks pöördepositsioon ja lukusta mini-tegevuskava.',
-        tasks: ['Vali positsioon', 'Genereeri lühike tegevuskava', 'Jaga persona teatriga tagasisideks']
+        title: 'Days 6-7',
+        summary: 'Choose one pivot role and lock a mini roadmap.',
+        tasks: ['Choose a position', 'Generate a short roadmap', 'Share with persona theater for feedback']
       }
     ],
     '30d': [
       {
-        title: 'Nädal 1',
-        summary: 'Süsteemne profiili uuendus ja intervjuu signaalid.',
-        tasks: ['Täienda CV signaalid', 'Harjuta 2 mootorit', 'Kaardista lüngad']
+        title: 'Week 1',
+        summary: 'Systematic profile update and interview signals.',
+        tasks: ['Update CV signals', 'Practice 2 engines', 'Map gaps']
       },
       {
-        title: 'Nädalad 2-3',
-        summary: 'Sügav õppimine ja mõõtmine.',
-        tasks: ['Täida 3 mikroprojekti', 'Mõõda tulemusi', 'Tee kordusanalüüs']
+        title: 'Weeks 2-3',
+        summary: 'Deep learning and measurement.',
+        tasks: ['Complete 3 micro-projects', 'Measure results', 'Run repeat analysis']
       },
       {
-        title: 'Nädal 4',
-        summary: 'Valmisoleku lukustamine ja nähtavus.',
-        tasks: ['Värskenda nähtavust', 'Saada 2 taotlust', 'Kinnita tegevuskava järgmiseks kuuks']
+        title: 'Week 4',
+        summary: 'Lock readiness and visibility.',
+        tasks: ['Refresh visibility', 'Submit 2 applications', 'Confirm roadmap for next month']
       }
     ],
     '90d': [
       {
-        title: 'Kuu 1',
-        summary: 'Vundament ja tööriistad.',
-        tasks: ['CV ja portfoolio', 'Automatiseerimise praktilised harjutused', 'Valdkonna benchmark']
+        title: 'Month 1',
+        summary: 'Foundation and tools.',
+        tasks: ['CV and portfolio', 'Automation hands-on exercises', 'Field benchmark']
       },
       {
-        title: 'Kuu 2',
-        summary: 'Rakendus ja sügavus.',
-        tasks: ['3 päris-kasutusjuhtu', 'Jõudlusmõõdikud', 'Tiimikoostöö simulatsioon']
+        title: 'Month 2',
+        summary: 'Application and depth.',
+        tasks: ['3 real-world use cases', 'Performance metrics', 'Team collaboration simulation']
       },
       {
-        title: 'Kuu 3',
-        summary: 'Turuvalmidus.',
-        tasks: ['Persona teatrist tagasiside', 'Nähtavuse kampaania', 'Intervjuu dress rehearsal']
+        title: 'Month 3',
+        summary: 'Market readiness.',
+        tasks: ['Persona theater feedback', 'Visibility campaign', 'Interview dress rehearsal']
       }
     ]
   };
@@ -141,22 +141,22 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   planSelectionMessage: string | null = null;
 
   strengths: string[] = [
-    'Töötubade juhtimine',
-    'Arhitektuuri ülevaatused',
-    'Kiire prototüüpimine',
-    'Andmelugu ja otsustamine'
+    'Workshop facilitation',
+    'Architecture reviews',
+    'Rapid prototyping',
+    'Data storytelling and decision making'
   ];
 
   strengthsAboveBenchmark = [
-    { name: 'Kohanemisvõime', delta: '+8%' },
-    { name: 'Õppimiskiirus', delta: '+6%' }
+    { name: 'Adaptability', delta: '+8%' },
+    { name: 'Learning velocity', delta: '+6%' }
   ];
 
-  gaps: string[] = ['Mudelihindamine', 'Promptide ahel', 'Latency eelarvestamine', 'Vendorite võrdlus'];
+  gaps: string[] = ['Model evaluation', 'Prompt chaining', 'Latency budgeting', 'Vendor comparison'];
 
   gapsBelowBenchmark = [
-    { name: 'Automatiseerimise vastupidavus', delta: '-5%' },
-    { name: 'Süsteemne mõõtmine', delta: '-4%' }
+    { name: 'Automation resilience', delta: '-5%' },
+    { name: 'Systematic measurement', delta: '-4%' }
   ];
 
   private timers: ReturnType<typeof setTimeout>[] = [];
@@ -170,11 +170,11 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.navContext.setFutureproofNav([
-      { label: 'Ülevaade', key: 'OVERVIEW' },
-      { label: 'Profiil', key: 'PROFILE' },
-      { label: 'Küsimused', key: 'QUESTIONS' },
-      { label: 'Analüüs', key: 'ANALYSIS' },
-      { label: 'Tegevuskava', key: 'ROADMAP' }
+      { label: 'Overview', key: 'OVERVIEW' },
+      { label: 'Profile', key: 'PROFILE' },
+      { label: 'Questions', key: 'QUESTIONS' },
+      { label: 'Analysis', key: 'ANALYSIS' },
+      { label: 'Roadmap', key: 'ROADMAP' }
     ]);
 
     this.navContext.commands$
@@ -243,7 +243,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     this.lastSnapshotMessage = null;
     this.queueTimer(() => {
       this.snapshotBusy = false;
-      this.lastSnapshotMessage = 'Tulevikukindluse ülevaade värskendatud. Sobivused uuendatud.';
+      this.lastSnapshotMessage = 'Future-readiness overview updated. Matches refreshed.';
       this.currentStep = 3;
       this.activeNav = 'ANALYSIS';
       this.navContext.setActiveKey(this.activeNav);
@@ -253,12 +253,12 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   onTrackProgress(): void {
-    this.planSelectionMessage = 'Valmisoleku jälgimine avaneb peagi.';
+    this.planSelectionMessage = 'Readiness tracking coming soon.';
     this.router.navigateByUrl('/futureproof');
   }
 
   onGeneratePlan(match: PivotRoleMatch): void {
-    this.planSelectionMessage = `Lõime starditegevuskava positsioonile ${match.targetRole}.`;
+    this.planSelectionMessage = `Created a starter roadmap for ${match.targetRole}.`;
     this.goToRoadmap();
   }
 
@@ -296,7 +296,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
         visibilityThreshold: this.visibilityDraftThreshold
       };
       this.savingVisibility = false;
-      this.visibilitySavedMessage = 'Nähtavuse eelistused salvestatud sinu tulevikukindla profiili jaoks.';
+      this.visibilitySavedMessage = 'Visibility preferences saved for your future-proof profile.';
     }, 500);
   }
 

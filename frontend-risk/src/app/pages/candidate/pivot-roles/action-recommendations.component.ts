@@ -25,8 +25,8 @@ interface Resource {
   template: `
     <div class="recommendations-container">
       <div class="header">
-        <h2>🎯 Konkreetne tegevusplaan</h2>
-        <p class="subtitle">Mitte "õpi Python" vaid täpsed sammud konkreetsete ressurssidega</p>
+        <h2>🎯 Concrete Action Plan</h2>
+        <p class="subtitle">Not "learn Python" but exact steps with specific resources</p>
       </div>
 
       <div class="filters">
@@ -44,9 +44,9 @@ interface Resource {
           <div class="rec-card" [class]="rec.urgency">
             <div class="rec-header">
               <div class="urgency-badge" [class]="rec.urgency">
-                @if (rec.urgency === 'critical') { 🔴 Kriitiline }
-                @else if (rec.urgency === 'important') { 🟡 Oluline }
-                @else { 🟢 Kasulik }
+                @if (rec.urgency === 'critical') { 🔴 Critical }
+                @else if (rec.urgency === 'important') { 🟡 Important }
+                @else { 🟢 Nice to have }
               </div>
               <div class="time-badge">⏱ {{ rec.timeToLearn }}</div>
             </div>
@@ -60,7 +60,7 @@ interface Resource {
             </div>
 
             <div class="resources">
-              <h4>📚 Ressursid (alusta siit):</h4>
+              <h4>📚 Resources (start here):</h4>
               @for (resource of rec.resources; track resource.url) {
                 <a
                   [href]="resource.url"
@@ -73,7 +73,7 @@ interface Resource {
                   <span class="resource-meta">
                     <span class="duration">{{ resource.duration }}</span>
                     <span class="price-badge" [class]="resource.price">
-                      {{ resource.price === 'free' ? 'Tasuta' : 'Tasuline' }}
+                      {{ resource.price === 'free' ? 'Free' : 'Paid' }}
                     </span>
                   </span>
                   <svg class="external-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,9 +85,9 @@ interface Resource {
 
             <button class="start-btn" (click)="markStarted(rec.skill)">
               @if (startedSkills().includes(rec.skill)) {
-                ✓ Alustasin
+                ✓ Started
               } @else {
-                Alusta õppimist →
+                Start learning →
               }
             </button>
           </div>
@@ -96,7 +96,7 @@ interface Resource {
 
       @if (filteredRecommendations().length === 0) {
         <div class="empty-state">
-          <p>Selles kategoorias soovitusi pole. Vali teine filter.</p>
+          <p>No recommendations in this category. Choose a different filter.</p>
         </div>
       }
     </div>
@@ -343,22 +343,22 @@ export class ActionRecommendationsComponent {
   startedSkills = signal<string[]>([]);
 
   filters = [
-    { label: 'Kõik', value: 'all' },
-    { label: '🔴 Kriitilised', value: 'critical' },
-    { label: '🟡 Olulised', value: 'important' },
-    { label: '🟢 Kasulikud', value: 'nice-to-have' }
+    { label: 'All', value: 'all' },
+    { label: '🔴 Critical', value: 'critical' },
+    { label: '🟡 Important', value: 'important' },
+    { label: '🟢 Nice to have', value: 'nice-to-have' }
   ];
 
   recommendations: Recommendation[] = [
     {
-      skill: 'AI/ML põhitõed',
+      skill: 'AI/ML Fundamentals',
       urgency: 'critical',
-      timeToLearn: '4-6 nädalat',
-      reason: 'AI-ga töötamine on muutumas kohustuslikuks. Eesti AI/ML inseneride palk +35% võrreldes tavalise arendajaga (Palgainfo 2024).',
-      roi: '+40% palgakasv AI-seotud rollides (€5.8K median)',
+      timeToLearn: '4-6 weeks',
+      reason: 'Working with AI is becoming mandatory. AI/ML engineer salaries are +35% compared to regular developers (Palgainfo 2024).',
+      roi: '+40% salary growth in AI-related roles (€5.8K median)',
       resources: [
         {
-          name: 'TalTech - Masinõppe alused',
+          name: 'TalTech - Machine Learning Basics',
           type: 'course',
           url: 'https://taltech.ee/en/artificial-intelligence',
           price: 'free',
@@ -376,33 +376,33 @@ export class ActionRecommendationsComponent {
           type: 'course',
           url: 'https://course.fast.ai/',
           price: 'free',
-          duration: '7 nädalat'
+          duration: '7 weeks'
         },
         {
           name: 'Google ML Crash Course',
           type: 'course',
           url: 'https://developers.google.com/machine-learning/crash-course',
           price: 'free',
-          duration: '15 tundi'
+          duration: '15 hours'
         }
       ]
     },
     {
       skill: 'Prompt Engineering & AI Tools',
       urgency: 'critical',
-      timeToLearn: '1-2 nädalat',
-      reason: 'Bolt ja Wise nõuavad juba Copilot oskust. AI tööriistad suurendavad produktiivsust 2-3x.',
-      roi: '2-3x produktiivsuse kasv, konkurentsieelis',
+      timeToLearn: '1-2 weeks',
+      reason: 'Bolt and Wise already require Copilot skills. AI tools increase productivity 2-3x.',
+      roi: '2-3x productivity growth, competitive advantage',
       resources: [
         {
           name: 'Anthropic Prompt Engineering Guide',
           type: 'tutorial',
           url: 'https://docs.anthropic.com/claude/docs/prompt-engineering',
           price: 'free',
-          duration: '2-3 tundi'
+          duration: '2-3 hours'
         },
         {
-          name: 'GitHub Copilot (tasuta tudengitele)',
+          name: 'GitHub Copilot (free for students)',
           type: 'tutorial',
           url: 'https://education.github.com/pack',
           price: 'free',
@@ -413,30 +413,30 @@ export class ActionRecommendationsComponent {
           type: 'course',
           url: 'https://www.deeplearning.ai/short-courses/',
           price: 'free',
-          duration: '1-2 nädalat'
+          duration: '1-2 weeks'
         }
       ]
     },
     {
       skill: 'TypeScript mastery',
       urgency: 'critical',
-      timeToLearn: '2-3 nädalat',
-      reason: 'TypeScript on de facto standard. CV.ee andmetel nõutakse 78% Eesti tööpakkumistes.',
-      roi: '+25% rohkem tööpakkumisi',
+      timeToLearn: '2-3 weeks',
+      reason: 'TypeScript is the de facto standard. According to CV.ee data, it is required in 78% of Estonian job postings.',
+      roi: '+25% more job offers',
       resources: [
         {
           name: 'TypeScript Deep Dive',
           type: 'book',
           url: 'https://basarat.gitbook.io/typescript/',
           price: 'free',
-          duration: '1 nädal'
+          duration: '1 week'
         },
         {
           name: 'Total TypeScript (Matt Pocock)',
           type: 'course',
           url: 'https://www.totaltypescript.com/',
           price: 'paid',
-          duration: '40 tundi'
+          duration: '40 hours'
         },
         {
           name: 'Type Challenges',
@@ -450,23 +450,23 @@ export class ActionRecommendationsComponent {
     {
       skill: 'System Design',
       urgency: 'important',
-      timeToLearn: '4-8 nädalat',
-      reason: 'Bolt, Wise, Veriff intervjuudes alati küsitakse. Senior+ rollid nõuavad arhitektuurioskust.',
-      roi: 'Vajalik Staff+ rollidele (€5-8K/kuu)',
+      timeToLearn: '4-8 weeks',
+      reason: 'Always asked in Bolt, Wise, Veriff interviews. Senior+ roles require architecture skills.',
+      roi: 'Required for Staff+ roles (€5-8K/month)',
       resources: [
         {
           name: 'System Design Primer',
           type: 'tutorial',
           url: 'https://github.com/donnemartin/system-design-primer',
           price: 'free',
-          duration: '2-4 nädalat'
+          duration: '2-4 weeks'
         },
         {
           name: 'Designing Data-Intensive Applications',
           type: 'book',
           url: 'https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/',
           price: 'paid',
-          duration: '4-6 nädalat'
+          duration: '4-6 weeks'
         },
         {
           name: 'ByteByteGo Newsletter',
@@ -478,25 +478,25 @@ export class ActionRecommendationsComponent {
       ]
     },
     {
-      skill: 'Küberturvalisus',
+      skill: 'Cybersecurity',
       urgency: 'important',
-      timeToLearn: '8-12 nädalat',
-      reason: 'Eesti on e-riigina küberturvalisuse fookuses. RIA ja kaitsevägi otsivad pidevalt spetsialiste.',
-      roi: 'Turvarollid €4-7K/kuu, stabiilne nõudlus',
+      timeToLearn: '8-12 weeks',
+      reason: 'As an e-government leader, Estonia focuses on cybersecurity. RIA and defense forces constantly seek specialists.',
+      roi: 'Security roles €4-7K/month, stable demand',
       resources: [
         {
-          name: 'TalTech Küberkaitse magistriprogramm',
+          name: 'TalTech Cybersecurity Master\'s Program',
           type: 'course',
           url: 'https://taltech.ee/en/cyber-security',
           price: 'paid',
-          duration: '2 aastat'
+          duration: '2 years'
         },
         {
-          name: 'SANS CyberTalent (stipendiumid)',
+          name: 'SANS CyberTalent (scholarships)',
           type: 'certification',
           url: 'https://www.sans.org/cybertalent/',
           price: 'free',
-          duration: '3-6 kuud'
+          duration: '3-6 months'
         },
         {
           name: 'HackTheBox / TryHackMe',
@@ -508,74 +508,74 @@ export class ActionRecommendationsComponent {
       ]
     },
     {
-      skill: 'Cloud Sertifikaadid (AWS/GCP)',
+      skill: 'Cloud Certifications (AWS/GCP)',
       urgency: 'important',
-      timeToLearn: '6-8 nädalat',
-      reason: 'AWS on Eesti turul domineeriv (72% CV.ee pakkumistes). Sertifikaat annab konkreetse tõendi.',
-      roi: '+15-20% palgalisa (€600-900/kuu)',
+      timeToLearn: '6-8 weeks',
+      reason: 'AWS dominates the Estonian market (72% of CV.ee postings). Certification provides concrete proof of skills.',
+      roi: '+15-20% salary increase (€600-900/month)',
       resources: [
         {
-          name: 'AWS re/Start programm Eestis',
+          name: 'AWS re/Start Program in Estonia',
           type: 'course',
           url: 'https://aws.amazon.com/training/restart/',
           price: 'free',
-          duration: '12 nädalat'
+          duration: '12 weeks'
         },
         {
           name: 'AWS Solutions Architect (Cantrill)',
           type: 'course',
           url: 'https://learn.cantrill.io/',
           price: 'paid',
-          duration: '60+ tundi'
+          duration: '60+ hours'
         },
         {
           name: 'Google Cloud Skills Boost',
           type: 'course',
           url: 'https://www.cloudskillsboost.google/',
           price: 'free',
-          duration: '40+ tundi'
+          duration: '40+ hours'
         }
       ]
     },
     {
       skill: 'Kubernetes & DevOps',
       urgency: 'nice-to-have',
-      timeToLearn: '3-4 nädalat',
-      reason: 'K8s on standard Bolt, Wise jt suurfirmades. DevOps rollid +52% kasv Eestis (CV.ee).',
-      roi: 'DevOps €4.3K mediaanpalk (+18% YoY)',
+      timeToLearn: '3-4 weeks',
+      reason: 'K8s is standard at Bolt, Wise, and other large companies. DevOps roles +52% growth in Estonia (CV.ee).',
+      roi: 'DevOps €4.3K median salary (+18% YoY)',
       resources: [
         {
           name: 'Kubernetes the Hard Way',
           type: 'tutorial',
           url: 'https://github.com/kelseyhightower/kubernetes-the-hard-way',
           price: 'free',
-          duration: '1 nädal'
+          duration: '1 week'
         },
         {
-          name: 'CKA Sertifikaat',
+          name: 'CKA Certification',
           type: 'certification',
           url: 'https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/',
           price: 'paid',
-          duration: '4-6 nädalat'
+          duration: '4-6 weeks'
         }
       ]
     },
     {
-      skill: 'Eesti tech kogukond',
+      skill: 'Estonian Tech Community',
       urgency: 'nice-to-have',
       timeToLearn: 'Ongoing',
-      reason: 'Võrgustik on Eesti väikesel turul kriitiline. Sisemine värbamine on tavaline.',
-      roi: 'Parem juurdepääs töökohtadele, mentorlus',
+      reason: 'Networking is critical in Estonia\'s small market. Internal hiring is common.',
+      roi: 'Better access to jobs, mentorship',
       resources: [
         {
-          name: 'Garage48 hackathonid',
+          name: 'Garage48 Hackathons',
           type: 'project',
           url: 'https://garage48.org/',
           price: 'free',
-          duration: '48 tundi'
+          duration: '48 hours'
         },
         {
-          name: 'Startup Estonia kogukond',
+          name: 'Startup Estonia Community',
           type: 'tutorial',
           url: 'https://startupestonia.ee/',
           price: 'free',

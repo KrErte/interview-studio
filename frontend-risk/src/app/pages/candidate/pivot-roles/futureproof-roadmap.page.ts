@@ -36,11 +36,11 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.navContext.setFutureproofNav([
-      { label: 'Ülevaade', key: 'OVERVIEW' },
-      { label: 'Profiil', key: 'PROFILE' },
-      { label: 'Küsimused', key: 'QUESTIONS' },
-      { label: 'Analüüs', key: 'ANALYSIS' },
-      { label: 'Tegevuskava', key: 'ROADMAP' }
+      { label: 'Overview', key: 'OVERVIEW' },
+      { label: 'Profile', key: 'PROFILE' },
+      { label: 'Questions', key: 'QUESTIONS' },
+      { label: 'Analysis', key: 'ANALYSIS' },
+      { label: 'Roadmap', key: 'ROADMAP' }
     ]);
     this.navContext.setActiveKey('ROADMAP');
     this.navContext.commands$
@@ -104,7 +104,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
     const sid = this.sessionId;
     if (!sid) {
       this.loading = false;
-      this.error = 'Seanssi ei leitud. Alusta profiili täitmisest, et jõuda tegevuskavani.';
+      this.error = 'Session not found. Start by filling in your profile to reach the roadmap.';
       this.redirectToStart();
       return;
     }
@@ -129,7 +129,7 @@ export class FutureproofRoadmapPageComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.loading = false;
           this.generating = false;
-          this.error = err?.error?.message || 'Tegevuskava laadimine ebaõnnestus. Proovi uuesti.';
+          this.error = err?.error?.message || 'Failed to load roadmap. Please try again.';
         }
       });
   }

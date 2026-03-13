@@ -36,11 +36,11 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.navContext.setFutureproofNav([
-      { label: 'Ülevaade', key: 'OVERVIEW' },
-      { label: 'Profiil', key: 'PROFILE' },
-      { label: 'Küsimused', key: 'QUESTIONS' },
-      { label: 'Analüüs', key: 'ANALYSIS' },
-      { label: 'Tegevuskava', key: 'ROADMAP' }
+      { label: 'Overview', key: 'OVERVIEW' },
+      { label: 'Profile', key: 'PROFILE' },
+      { label: 'Questions', key: 'QUESTIONS' },
+      { label: 'Analysis', key: 'ANALYSIS' },
+      { label: 'Roadmap', key: 'ROADMAP' }
     ]);
     this.navContext.setActiveKey('QUESTIONS');
     this.startAssessment();
@@ -79,14 +79,14 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.loadingStart = false;
-          this.error = err?.error?.message || 'Ei saanud küsimusi alustada. Proovi uuesti.';
+          this.error = err?.error?.message || 'Could not start questions. Please try again.';
         }
       });
   }
 
   loadNextQuestion(): void {
     if (!this.sessionId) {
-      this.error = 'Seanssi ei leitud. Alusta uuesti.';
+      this.error = 'Session not found. Please start over.';
       return;
     }
     this.loadingQuestion = true;
@@ -108,7 +108,7 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
           if (this.questionIndex >= this.totalQuestions) {
             this.navigateToAssessment();
           } else {
-            this.error = 'Küsimust ei õnnestu laadida. Proovi uuesti.';
+            this.error = 'Could not load question. Please try again.';
           }
         }
       });
@@ -139,7 +139,7 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.submitting = false;
-          this.error = err?.error?.message || 'Vastus ei läinud läbi. Proovi uuesti.';
+          this.error = err?.error?.message || 'Answer submission failed. Please try again.';
         }
       });
   }
@@ -164,7 +164,7 @@ export class FutureproofQuestionsPageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.submitting = false;
-          this.error = err?.error?.message || 'Vahelejätmine ebaõnnestus. Proovi uuesti.';
+          this.error = err?.error?.message || 'Skip failed. Please try again.';
         }
       });
   }
