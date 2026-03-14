@@ -165,7 +165,11 @@ public class SecurityConfig {
             "http://127.0.0.1:4200",
             "http://127.0.0.1:4201",
             "http://127.0.0.1:4202",
-            "http://127.0.0.1:4203"
+            "http://127.0.0.1:4203",
+            "http://37.60.225.35:4200",
+            "http://37.60.225.35:4201",
+            "http://37.60.225.35:4202",
+            "http://37.60.225.35:4203"
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
