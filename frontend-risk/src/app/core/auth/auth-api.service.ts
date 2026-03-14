@@ -3,6 +3,7 @@ import { BehaviorSubject, map, tap } from 'rxjs';
 import { ApiClient } from '../api/api-client.service';
 import { TokenStorageService } from './token-storage.service';
 import { TierService } from '../services/tier.service';
+import { PaymentApiService } from '../services/payment-api.service';
 
 export interface AuthResponse {
   token?: string;
@@ -14,6 +15,7 @@ export interface AuthResponse {
 export class AuthService {
   private readonly tokenSubject: BehaviorSubject<string | null>;
   private readonly tierService = inject(TierService);
+  private readonly paymentApi = inject(PaymentApiService);
 
   readonly token$;
 
@@ -25,19 +27,26 @@ export class AuthService {
     // On startup, decode tier from existing JWT if present
     if (initialToken) {
       this.decodeTierFromToken(initialToken);
+      this.syncSubscriptionInfo();
     }
   }
 
   login(email: string, password: string) {
     return this.api.post<AuthResponse>('/auth/login', { email, password }).pipe(
-      tap((res) => this.persist(res)),
+      tap((res) => {
+        this.persist(res);
+        this.syncSubscriptionInfo();
+      }),
       map(() => void 0)
     );
   }
 
   register(email: string, password: string, fullName?: string) {
     return this.api.post<AuthResponse>('/auth/register', { email, password, fullName: fullName || 'User' }).pipe(
-      tap((res) => this.persist(res)),
+      tap((res) => {
+        this.persist(res);
+        this.syncSubscriptionInfo();
+      }),
       map(() => void 0)
     );
   }
@@ -57,6 +66,23 @@ export class AuthService {
     if (token) {
       this.decodeTierFromToken(token);
     }
+  }
+
+  syncSubscriptionInfo(): void {
+    if (!this.isAuthenticated()) return;
+    this.paymentApi.getCurrentTier().subscribe({
+      next: (res) => {
+        if (res.tier) {
+          this.tierService.setTier(res.tier);
+        }
+        this.tierService.setSubscription(
+          res.hasActiveSubscription ?? false,
+          res.subscriptionStatus ?? null,
+          res.subscriptionEndsAt ?? null
+        );
+      },
+      error: () => { /* silently ignore */ }
+    });
   }
 
   private persist(res: AuthResponse): void {

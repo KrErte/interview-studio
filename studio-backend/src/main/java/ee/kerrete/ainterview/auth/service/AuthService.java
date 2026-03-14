@@ -144,7 +144,7 @@ public class AuthService {
             user.getEmail(),
             user.getRole(),
             user.getId(),
-            user.getTier()
+            user.getEffectiveTier()
         );
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
@@ -157,7 +157,7 @@ public class AuthService {
             .fullName(user.getFullName())
             .role(user.getRole().name())  // String for backward compatibility
             .userId(user.getId())
-            .tier(user.getTier().name())
+            .tier(user.getEffectiveTier().name())
             .build();
     }
 }

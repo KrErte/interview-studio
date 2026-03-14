@@ -105,19 +105,36 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
   }
 
   private pollTier() {
+    const isSubscription = this.expectedTier.toUpperCase() === 'ARENA_PRO';
+
     this.pollTimer = setInterval(() => {
       this.pollCount++;
 
       this.paymentApi.getCurrentTier().subscribe({
         next: (res) => {
           const tier = res.tier || 'FREE';
-          if (tier !== 'FREE' && tier.toUpperCase() === this.expectedTier.toUpperCase()) {
-            this.tierService.setTier(tier);
+          let confirmed = false;
+
+          if (isSubscription) {
+            // For subscription, check hasActiveSubscription
+            confirmed = res.hasActiveSubscription === true;
+            if (confirmed) {
+              this.tierService.setTier(tier);
+              this.tierService.setSubscription(true, res.subscriptionStatus, res.subscriptionEndsAt);
+              this.tierName.set('Arena Pro');
+            }
+          } else {
+            confirmed = tier !== 'FREE' && tier.toUpperCase() === this.expectedTier.toUpperCase();
+            if (confirmed) {
+              this.tierService.setTier(tier);
+            }
+          }
+
+          if (confirmed) {
             this.verifying.set(false);
             this.success.set(true);
             if (this.pollTimer) clearInterval(this.pollTimer);
           } else if (this.pollCount >= 15) {
-            // Timeout after ~30 seconds
             this.verifying.set(false);
             if (this.pollTimer) clearInterval(this.pollTimer);
           }

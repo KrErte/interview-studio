@@ -9,5 +9,7 @@ public record PricingTier(
     String currency,
     List<String> features,
     boolean current,
-    boolean popular
+    boolean popular,
+    boolean subscription,
+    String billingInterval
 ) {}

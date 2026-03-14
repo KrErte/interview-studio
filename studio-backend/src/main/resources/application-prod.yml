@@ -47,4 +47,5 @@ app:
     essentials-variant-id: ${LEMONSQUEEZY_ESSENTIALS_VARIANT_ID}
     professional-variant-id: ${LEMONSQUEEZY_PROFESSIONAL_VARIANT_ID}
     lifetime-variant-id: ${LEMONSQUEEZY_LIFETIME_VARIANT_ID}
+    arena-pro-variant-id: ${LEMONSQUEEZY_ARENA_PRO_VARIANT_ID}
 

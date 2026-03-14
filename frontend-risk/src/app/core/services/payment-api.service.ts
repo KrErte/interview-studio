@@ -9,6 +9,9 @@ export interface CheckoutResponse {
 export interface TierResponse {
   tier: string;
   purchasedAt: string | null;
+  hasActiveSubscription: boolean;
+  subscriptionStatus: string | null;
+  subscriptionEndsAt: string | null;
 }
 
 export interface PricingTier {
@@ -19,6 +22,8 @@ export interface PricingTier {
   features: string[];
   current: boolean;
   popular: boolean;
+  subscription: boolean;
+  billingInterval: string | null;
 }
 
 @Injectable({ providedIn: 'root' })

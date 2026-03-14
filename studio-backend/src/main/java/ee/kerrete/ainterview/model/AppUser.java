@@ -62,6 +62,19 @@ public class AppUser implements UserDetails {
     @Column(name = "tier_purchased_at")
     private LocalDateTime tierPurchasedAt;
 
+    @Column(name = "subscription_id")
+    private String subscriptionId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "subscription_status", length = 20)
+    private SubscriptionStatus subscriptionStatus;
+
+    @Column(name = "subscription_ends_at")
+    private LocalDateTime subscriptionEndsAt;
+
+    @Column(name = "subscription_created_at")
+    private LocalDateTime subscriptionCreatedAt;
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -76,6 +89,28 @@ public class AppUser implements UserDetails {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // ================= Subscription helpers =================
+
+    public boolean hasActiveSubscription() {
+        if (subscriptionStatus == null) return false;
+        if (subscriptionStatus == SubscriptionStatus.ACTIVE) return true;
+        // CANCELLED but billing period not yet ended
+        if (subscriptionStatus == SubscriptionStatus.CANCELLED
+                && subscriptionEndsAt != null
+                && subscriptionEndsAt.isAfter(LocalDateTime.now())) {
+            return true;
+        }
+        return false;
+    }
+
+    public UserTier getEffectiveTier() {
+        if (hasActiveSubscription()) {
+            // Subscription grants PROFESSIONAL access; return whichever is higher
+            return tier.isAtLeast(UserTier.PROFESSIONAL) ? tier : UserTier.PROFESSIONAL;
+        }
+        return tier;
     }
 
     // ================= UserDetails =================

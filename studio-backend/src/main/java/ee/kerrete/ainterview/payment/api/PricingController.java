@@ -21,7 +21,7 @@ public class PricingController {
                     "Teaser action plan",
                     "Job Analyzer 1x/day"
                 ),
-                false, false
+                false, false, false, null
             ),
             new PricingTier(
                 "ESSENTIALS", "Essentials", 7, "USD",
@@ -31,7 +31,7 @@ public class PricingController {
                     "Skill vulnerability matrix",
                     "Market pulse signals"
                 ),
-                false, false
+                false, false, false, null
             ),
             new PricingTier(
                 "PROFESSIONAL", "Professional", 19, "USD",
@@ -41,7 +41,7 @@ public class PricingController {
                     "Career Roadmap",
                     "Unlimited Job Analyzer"
                 ),
-                false, true
+                false, true, false, null
             ),
             new PricingTier(
                 "LIFETIME", "Lifetime", 49, "USD",
@@ -51,7 +51,17 @@ public class PricingController {
                     "Priority support",
                     "Early access to new tools"
                 ),
-                false, false
+                false, false, false, null
+            ),
+            new PricingTier(
+                "ARENA_PRO", "Arena Pro", 10, "USD",
+                List.of(
+                    "Everything in Professional",
+                    "Cancel anytime",
+                    "Monthly billing",
+                    "All Arena tools unlocked"
+                ),
+                false, false, true, "month"
             )
         );
     }

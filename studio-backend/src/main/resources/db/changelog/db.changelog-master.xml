@@ -59,4 +59,7 @@
     <!-- Tiered Pricing -->
     <include file="changes/2026-03-13-add-user-tier-columns.xml" relativeToChangelogFile="true"/>
 
+    <!-- Arena Pro Subscription -->
+    <include file="changes/2026-03-14-add-subscription-columns.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

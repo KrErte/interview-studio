@@ -17,10 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ee.kerrete.ainterview.model.SubscriptionStatus;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HexFormat;
 
 @Service
@@ -46,12 +50,24 @@ public class PaymentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tier: " + request.tier());
         }
 
-        if (requestedTier == UserTier.FREE) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot purchase FREE tier");
-        }
+        // Handle ARENA_PRO subscription separately
+        boolean isSubscription = "ARENA_PRO".equalsIgnoreCase(request.tier());
 
-        if (user.getTier().isAtLeast(requestedTier)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Already at tier " + user.getTier().name() + " or higher");
+        if (!isSubscription) {
+            if (requestedTier == UserTier.FREE) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot purchase FREE tier");
+            }
+
+            if (user.getTier().isAtLeast(requestedTier)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already at tier " + user.getTier().name() + " or higher");
+            }
+        } else {
+            if (user.hasActiveSubscription()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already has an active subscription");
+            }
+            if (user.getTier().isAtLeast(UserTier.PROFESSIONAL)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already at PROFESSIONAL tier or higher");
+            }
         }
 
         String variantId = properties.variantIdForTier(request.tier());
@@ -84,8 +100,13 @@ public class PaymentService {
 
             log.info("Received Lemon Squeezy webhook: {}", eventName);
 
-            if ("order_created".equals(eventName)) {
-                handleOrderCreated(root);
+            switch (eventName) {
+                case "order_created" -> handleOrderCreated(root);
+                case "subscription_created" -> handleSubscriptionCreated(root);
+                case "subscription_updated" -> handleSubscriptionUpdated(root);
+                case "subscription_cancelled" -> handleSubscriptionCancelled(root);
+                case "subscription_expired" -> handleSubscriptionExpired(root);
+                default -> log.info("Ignoring unhandled webhook event: {}", eventName);
             }
         } catch (Exception e) {
             log.error("Failed to process webhook", e);
@@ -98,8 +119,11 @@ public class PaymentService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         return new TierResponse(
-            user.getTier().name(),
-            user.getTierPurchasedAt() != null ? user.getTierPurchasedAt().toString() : null
+            user.getEffectiveTier().name(),
+            user.getTierPurchasedAt() != null ? user.getTierPurchasedAt().toString() : null,
+            user.hasActiveSubscription(),
+            user.getSubscriptionStatus() != null ? user.getSubscriptionStatus().name() : null,
+            user.getSubscriptionEndsAt() != null ? user.getSubscriptionEndsAt().toString() : null
         );
     }
 
@@ -196,7 +220,96 @@ public class PaymentService {
         if (variantId.equals(properties.essentialsVariantId())) return "ESSENTIALS";
         if (variantId.equals(properties.professionalVariantId())) return "PROFESSIONAL";
         if (variantId.equals(properties.lifetimeVariantId())) return "LIFETIME";
+        if (variantId.equals(properties.arenaProVariantId())) return "ARENA_PRO";
         return "ESSENTIALS";
+    }
+
+    private void handleSubscriptionCreated(JsonNode root) {
+        JsonNode customData = root.path("meta").path("custom_data");
+        long userId = customData.path("user_id").asLong(0);
+
+        if (userId == 0) {
+            log.warn("subscription_created webhook missing user_id in custom_data");
+            return;
+        }
+
+        JsonNode attrs = root.path("data").path("attributes");
+        String subscriptionId = root.path("data").path("id").asText();
+        String status = attrs.path("status").asText("active");
+        String endsAt = attrs.path("renews_at").asText("");
+
+        appUserRepository.findById(userId).ifPresent(user -> {
+            user.setSubscriptionId(subscriptionId);
+            user.setSubscriptionStatus(parseSubscriptionStatus(status));
+            user.setSubscriptionCreatedAt(LocalDateTime.now());
+            if (!endsAt.isBlank()) {
+                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
+            }
+            appUserRepository.save(user);
+            log.info("Subscription created for user {}: {}", userId, subscriptionId);
+        });
+    }
+
+    private void handleSubscriptionUpdated(JsonNode root) {
+        JsonNode attrs = root.path("data").path("attributes");
+        String subscriptionId = root.path("data").path("id").asText();
+        String status = attrs.path("status").asText("");
+        String endsAt = attrs.path("renews_at").asText("");
+
+        appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
+            if (!status.isBlank()) {
+                user.setSubscriptionStatus(parseSubscriptionStatus(status));
+            }
+            if (!endsAt.isBlank()) {
+                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
+            }
+            appUserRepository.save(user);
+            log.info("Subscription updated for user {}: status={}", user.getId(), status);
+        });
+    }
+
+    private void handleSubscriptionCancelled(JsonNode root) {
+        String subscriptionId = root.path("data").path("id").asText();
+        JsonNode attrs = root.path("data").path("attributes");
+        String endsAt = attrs.path("ends_at").asText("");
+
+        appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
+            user.setSubscriptionStatus(SubscriptionStatus.CANCELLED);
+            if (!endsAt.isBlank()) {
+                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
+            }
+            appUserRepository.save(user);
+            log.info("Subscription cancelled for user {}, ends at {}", user.getId(), endsAt);
+        });
+    }
+
+    private void handleSubscriptionExpired(JsonNode root) {
+        String subscriptionId = root.path("data").path("id").asText();
+
+        appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
+            user.setSubscriptionStatus(SubscriptionStatus.EXPIRED);
+            appUserRepository.save(user);
+            log.info("Subscription expired for user {}", user.getId());
+        });
+    }
+
+    private SubscriptionStatus parseSubscriptionStatus(String status) {
+        return switch (status.toLowerCase()) {
+            case "active" -> SubscriptionStatus.ACTIVE;
+            case "cancelled" -> SubscriptionStatus.CANCELLED;
+            case "expired" -> SubscriptionStatus.EXPIRED;
+            case "past_due" -> SubscriptionStatus.PAST_DUE;
+            default -> SubscriptionStatus.ACTIVE;
+        };
+    }
+
+    private LocalDateTime parseIsoDateTime(String iso) {
+        try {
+            return OffsetDateTime.parse(iso, DateTimeFormatter.ISO_OFFSET_DATE_TIME).toLocalDateTime();
+        } catch (Exception e) {
+            log.warn("Failed to parse ISO datetime: {}", iso);
+            return null;
+        }
     }
 
     private boolean verifySignature(String payload, String signature) {

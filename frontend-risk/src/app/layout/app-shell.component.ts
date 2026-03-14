@@ -61,7 +61,11 @@ import { AuthService } from '../core/auth/auth-api.service';
           <!-- Right side: UI Mode Toggle + Navigation -->
           <div class="flex items-center gap-2 shrink-0">
             <!-- Tier Badge -->
-            <span *ngIf="auth.isAuthenticated() && !tierService.isFree()"
+            <span *ngIf="auth.isAuthenticated() && tierService.hasSubscription()"
+              class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300">
+              Arena Pro
+            </span>
+            <span *ngIf="auth.isAuthenticated() && !tierService.isFree() && !tierService.hasSubscription()"
               class="px-2.5 py-1 rounded-full text-xs font-bold"
               [ngClass]="{
                 'bg-emerald-500/20 text-emerald-300': tierService.tier() === 'ESSENTIALS',
