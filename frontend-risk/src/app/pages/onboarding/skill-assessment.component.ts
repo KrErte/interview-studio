@@ -308,12 +308,6 @@ interface AssessmentData {
         </div>
       }
 
-      <!-- Mock Data Button (dev only) -->
-      @if (isDevMode) {
-        <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
-          🧪 Mock
-        </button>
-      }
     </div>
   `,
   styles: [`
@@ -762,26 +756,6 @@ interface AssessmentData {
       cursor: not-allowed;
     }
 
-    .mock-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #8b5cf6;
-      border: none;
-      padding: 0.75rem 1.25rem;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-      z-index: 1000;
-      transition: all 0.2s;
-    }
-
-    .mock-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
-    }
 
     .toast-notification {
       position: fixed;
@@ -898,12 +872,12 @@ export class SkillAssessmentComponent {
     return this.assessment.skills.map(s => s.name);
   });
 
-  workBreakdownTotal = computed(() =>
-    this.assessment.workBreakdown.repetitiveTasks +
-    this.assessment.workBreakdown.problemSolving +
-    this.assessment.workBreakdown.communication +
-    this.assessment.workBreakdown.creativity
-  );
+  workBreakdownTotal(): number {
+    return this.assessment.workBreakdown.repetitiveTasks +
+      this.assessment.workBreakdown.problemSolving +
+      this.assessment.workBreakdown.communication +
+      this.assessment.workBreakdown.creativity;
+  }
 
   selectRole(role: string) {
     if (role.trim()) {

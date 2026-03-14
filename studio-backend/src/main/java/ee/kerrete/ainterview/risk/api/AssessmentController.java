@@ -19,13 +19,43 @@ public class AssessmentController {
 
     private final SessionIdParser sessionIdParser;
 
+    // Track question progress per session
+    private final java.util.concurrent.ConcurrentHashMap<String, Integer> sessionQuestionIndex = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static final List<Map<String, Object>> QUESTIONS = List.of(
+        Map.of(
+            "id", "q1",
+            "type", "TEXT",
+            "text", "Can you describe a recent professional challenge you faced and how you approached solving it?",
+            "title", "Problem-Solving",
+            "placeholder", "Describe the challenge, your approach, and the outcome...",
+            "required", true
+        ),
+        Map.of(
+            "id", "q2",
+            "type", "TEXT",
+            "text", "How do you typically stay updated with new skills and industry trends in your field?",
+            "title", "Continuous Learning",
+            "placeholder", "Share your learning strategies and recent skill acquisitions...",
+            "required", true
+        ),
+        Map.of(
+            "id", "q3",
+            "type", "TEXT",
+            "text", "Describe your experience collaborating with cross-functional teams. What communication practices work best for you?",
+            "title", "Team Collaboration",
+            "placeholder", "Discuss team dynamics, communication methods, and collaboration outcomes...",
+            "required", true
+        )
+    );
+
     /**
      * Start a new assessment session.
      */
     @PostMapping("/start")
     public ResponseEntity<StartAssessmentResponse> startAssessment(@RequestBody(required = false) StartAssessmentRequest request) {
-        // Generate a mock session ID
-        String sessionId = "mock-session-" + System.currentTimeMillis();
+        String sessionId = "session-" + System.currentTimeMillis();
+        sessionQuestionIndex.put(sessionId, 0);
         return ResponseEntity.ok(new StartAssessmentResponse(sessionId));
     }
 
@@ -34,7 +64,6 @@ public class AssessmentController {
      */
     @GetMapping("/{sessionId}")
     public ResponseEntity<AssessmentResultResponse> getAssessment(@PathVariable String sessionId) {
-        // Return mock assessment data
         return ResponseEntity.ok(createMockAssessment(sessionId));
     }
 
@@ -44,16 +73,22 @@ public class AssessmentController {
     @PostMapping("/next-question")
     public ResponseEntity<Map<String, Object>> getNextQuestion(@RequestBody Map<String, String> request) {
         String sessionId = request.get("sessionId");
+        int idx = sessionQuestionIndex.getOrDefault(sessionId, 0);
+
+        if (idx >= QUESTIONS.size()) {
+            return ResponseEntity.status(404).body(Map.of(
+                "sessionId", sessionId,
+                "error", "No more questions",
+                "complete", true
+            ));
+        }
+
+        Map<String, Object> question = QUESTIONS.get(idx);
         return ResponseEntity.ok(Map.of(
             "sessionId", sessionId,
-            "question", Map.of(
-                "id", "q1",
-                "text", "What is your primary programming language?",
-                "type", "single_choice",
-                "options", List.of("JavaScript", "Python", "Java", "TypeScript", "Other")
-            ),
-            "progress", 0.2,
-            "complete", false
+            "question", question,
+            "index", idx + 1,
+            "total", QUESTIONS.size()
         ));
     }
 
@@ -63,11 +98,11 @@ public class AssessmentController {
     @PostMapping("/submit-answer")
     public ResponseEntity<Map<String, Object>> submitAnswer(@RequestBody Map<String, Object> request) {
         String sessionId = (String) request.get("sessionId");
+        sessionQuestionIndex.merge(sessionId, 1, Integer::sum);
         return ResponseEntity.ok(Map.of(
             "sessionId", sessionId,
-            "accepted", true,
-            "progress", 0.4,
-            "complete", false
+            "success", true,
+            "confidenceImpact", 0
         ));
     }
 
@@ -77,11 +112,11 @@ public class AssessmentController {
     @PostMapping("/skip-question")
     public ResponseEntity<Map<String, Object>> skipQuestion(@RequestBody Map<String, Object> request) {
         String sessionId = (String) request.get("sessionId");
+        sessionQuestionIndex.merge(sessionId, 1, Integer::sum);
         return ResponseEntity.ok(Map.of(
             "sessionId", sessionId,
-            "skipped", true,
-            "progress", 0.4,
-            "complete", false
+            "success", true,
+            "confidenceImpact", -8
         ));
     }
 

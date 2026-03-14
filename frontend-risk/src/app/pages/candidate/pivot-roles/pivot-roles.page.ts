@@ -301,7 +301,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   goToDashboard(): void {
-    this.router.navigateByUrl('/careerrisk/overview');
+    this.router.navigateByUrl('/careerrisk/questions');
   }
 
   private applyNavCommand(key: CareerriskNavKey, fromQuery: boolean = false): void {

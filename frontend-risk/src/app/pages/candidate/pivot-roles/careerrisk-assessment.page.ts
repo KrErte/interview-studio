@@ -164,39 +164,58 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/careerrisk/questions');
   }
 
+  shareToastMessage = '';
+
   shareResults(): void {
-    const shareData = {
-      title: 'My CareerRisk Index',
-      text: `My career automation risk is ${this.assessment?.riskPercent}%. Check yours: `,
-      url: window.location.href
-    };
+    const text = `My CareerRisk Index: ${this.assessment?.riskPercent}% risk. Check yours: ${window.location.origin}/start`;
 
     if (navigator.share) {
-      navigator.share(shareData).catch(() => {
-        this.copyToClipboard();
+      navigator.share({
+        title: 'My CareerRisk Index',
+        text: `My career automation risk is ${this.assessment?.riskPercent}%. Check yours: `,
+        url: window.location.href
+      }).catch(() => {
+        this.copyToClipboard(text);
       });
     } else {
-      this.copyToClipboard();
+      this.copyToClipboard(text);
     }
   }
 
-  private copyToClipboard(): void {
-    const text = `My CareerRisk Index: ${this.assessment?.riskPercent}% risk. Check yours: ${window.location.origin}/start`;
-    navigator.clipboard.writeText(text).then(() => {
-      alert('Link copied!');
-    });
+  private copyToClipboard(text: string): void {
+    // Fallback for HTTP (non-HTTPS) environments
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.showShareToast('Link copied to clipboard!');
+    } catch {
+      this.showShareToast('Copy this link: ' + text);
+    }
+  }
+
+  private showShareToast(message: string): void {
+    this.shareToastMessage = message;
+    setTimeout(() => { this.shareToastMessage = ''; }, 3000);
   }
 
   downloadPDF(): void {
-    // Generate simple text report (real PDF would need library like jsPDF)
     const report = this.generateReport();
     const blob = new Blob([report], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `career-disruption-report-${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = `careerisk-report-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    this.showShareToast('Report downloaded!');
   }
 
   private generateReport(): string {

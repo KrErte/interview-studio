@@ -111,7 +111,9 @@ import { AuthService } from '../core/auth/auth-api.service';
                     </button>
                   </ng-container>
                   <ng-template #onboardingNavPlaceholder>
-                    <span class="text-xs text-slate-500">Onboarding</span>
+                    <a routerLink="/careerrisk/overview" class="text-xs text-slate-500 hover:text-emerald-400 transition-colors cursor-pointer">
+                      Onboarding — Start here
+                    </a>
                   </ng-template>
                   <button type="button" (click)="logout()"
                     class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">

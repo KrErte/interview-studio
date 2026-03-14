@@ -29,9 +29,9 @@ import { AnalyticsService } from '../../core/services/analytics.service';
           <h1 class="text-3xl font-bold text-white mb-2">What role are you targeting?</h1>
           <p class="text-slate-400 mb-8">Tell us the position you're preparing for</p>
 
-          <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
             @for (role of suggestedRoles; track role) {
-              <button (click)="targetRole = role"
+              <button (click)="targetRole = role; step.set(2)"
                 class="p-3 rounded-xl border text-sm text-left transition-all"
                 [class]="targetRole === role
                   ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
