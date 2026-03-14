@@ -204,6 +204,13 @@ export const routes: Routes = [
           import('./pages/candidate/pivot-roles/career-stress-test.component').then(
             (m) => m.CareerStressTestComponent
           )
+      },
+      {
+        path: 'autopsy',
+        loadComponent: () =>
+          import('./pages/candidate/pivot-roles/interview-autopsy.component').then(
+            (m) => m.InterviewAutopsyComponent
+          )
       }
     ]
   },
