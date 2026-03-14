@@ -166,7 +166,7 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
 
   shareResults(): void {
     const shareData = {
-      title: 'My Career Disruption Index',
+      title: 'My CareerRisk Index',
       text: `My career automation risk is ${this.assessment?.riskPercent}%. Check yours: `,
       url: window.location.href
     };
@@ -181,7 +181,7 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   private copyToClipboard(): void {
-    const text = `My Career Disruption Index: ${this.assessment?.riskPercent}% risk. Check yours: ${window.location.origin}/start`;
+    const text = `My CareerRisk Index: ${this.assessment?.riskPercent}% risk. Check yours: ${window.location.origin}/start`;
     navigator.clipboard.writeText(text).then(() => {
       alert('Link copied!');
     });

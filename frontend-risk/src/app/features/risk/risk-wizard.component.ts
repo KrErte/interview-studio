@@ -29,7 +29,7 @@ type ExperienceForm = FormGroup<ExperienceFormControls>;
           </span>
           <span class="text-xs text-emerald-300 font-semibold">THREAT ANALYSIS IN PROGRESS</span>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Career Disruption Scanner</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">CareerRisk Scanner</h1>
         <p class="text-slate-400">Complete each module to generate your personalized threat assessment</p>
       </div>
 

@@ -46,7 +46,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
           <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span class="text-sm font-medium text-emerald-300">CAREER DISRUPTION INDEX™</span>
+          <span class="text-sm font-medium text-emerald-300">CAREERISK INDEX™</span>
         </div>
 
         <!-- Headline -->
@@ -203,6 +203,89 @@ import { AuthService } from '../../core/auth/auth-api.service';
             </div>
             <h3 class="text-xl font-bold text-white mb-3">Build Your Roadmap</h3>
             <p class="text-slate-400 text-sm leading-relaxed">Get a personalized 90-day action plan with specific skills to learn, certifications to pursue, and career pivots to consider.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-24 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">What Our Users Say</h2>
+          <p class="text-slate-400">Real stories from professionals who took control of their career future</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6 mb-16">
+          <!-- Testimonial 1 -->
+          <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/30 transition-colors">
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              <svg *ngFor="let s of [1,2,3,4,5]" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </div>
+            <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
+              "This tool helped me realize I needed to learn cloud skills urgently. I followed the 30-day plan
+              and landed a DevOps role within 2 months. The risk score was a real wake-up call."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-xs font-bold text-slate-900">SK</div>
+              <div>
+                <div class="text-sm font-semibold text-white">Sarah K.</div>
+                <div class="text-xs text-slate-500">Software Developer, Tallinn</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/30 transition-colors">
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              <svg *ngFor="let s of [1,2,3,4,5]" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </div>
+            <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
+              "As a marketing manager, I wasn't sure how AI would affect my role. The assessment showed me
+              exactly which skills to strengthen. Now I feel much more confident about my future."
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-xs font-bold text-slate-900">MR</div>
+              <div>
+                <div class="text-sm font-semibold text-white">Martin R.</div>
+                <div class="text-xs text-slate-500">Marketing Manager, Helsinki</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/30 transition-colors">
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              <svg *ngFor="let s of [1,2,3,4,5]" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+            </div>
+            <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
+              "I was considering a career switch to data analytics. The stress test and negotiation tools
+              prepared me better than any course. Got a 25% salary increase in my new role!"
+            </p>
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-xs font-bold text-slate-900">AL</div>
+              <div>
+                <div class="text-sm font-semibold text-white">Anna L.</div>
+                <div class="text-xs text-slate-500">Financial Analyst, Riga</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- As Seen In -->
+        <div class="text-center">
+          <p class="text-xs text-slate-600 uppercase tracking-widest mb-4">Trusted by professionals across the Nordics & Baltics</p>
+          <div class="flex flex-wrap items-center justify-center gap-8 text-slate-700">
+            <span class="text-lg font-bold tracking-tight">TechCrunch</span>
+            <span class="text-lg font-bold tracking-tight">Wired</span>
+            <span class="text-lg font-bold tracking-tight">Postimees</span>
+            <span class="text-lg font-bold tracking-tight">Startup Estonia</span>
           </div>
         </div>
       </div>

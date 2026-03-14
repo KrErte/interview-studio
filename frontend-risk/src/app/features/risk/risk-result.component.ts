@@ -18,7 +18,7 @@ import { RiskAssessmentResult } from './risk.model';
           </svg>
           <span class="text-xs text-emerald-300 font-semibold">ANALYSIS COMPLETE</span>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2">Your Career Disruption Report</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">Your CareerRisk Report</h1>
         <p class="text-slate-400">Based on your profile, skills, and market trends</p>
       </div>
 
@@ -265,7 +265,7 @@ import { RiskAssessmentResult } from './risk.model';
           </svg>
         </div>
         <h2 class="text-2xl font-bold text-white mb-3">No Assessment Yet</h2>
-        <p class="text-slate-400 mb-8">Complete the Career Disruption Scanner to see your personalized risk report.</p>
+        <p class="text-slate-400 mb-8">Complete the CareerRisk Scanner to see your personalized risk report.</p>
         <button
           (click)="router.navigateByUrl('/risk')"
           class="px-8 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"

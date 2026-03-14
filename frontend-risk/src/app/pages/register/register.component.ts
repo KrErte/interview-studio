@@ -99,7 +99,7 @@ interface SkillTrend {
           <!-- Testimonial -->
           <div class="mt-8 p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20">
             <p class="text-sm text-slate-300 italic mb-3">
-              "The Career Disruption Index helped me identify skills I needed to stay relevant. I pivoted to AI product management and increased my salary by 40%."
+              "The CareerRisk Index helped me identify skills I needed to stay relevant. I pivoted to AI product management and increased my salary by 40%."
             </p>
             <div class="flex items-center gap-3">
               <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-xs font-bold text-slate-900">
@@ -275,14 +275,6 @@ interface SkillTrend {
         </div>
       </div>
 
-      <!-- Mock Data Button -->
-      <button
-        class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-lg bg-purple-500 text-white font-semibold shadow-lg shadow-purple-500/40 hover:bg-purple-600 hover:-translate-y-0.5 transition-all"
-        (click)="fillMockData()"
-        title="Fill with test data"
-      >
-        🧪 Mock
-      </button>
     </div>
   `
 })

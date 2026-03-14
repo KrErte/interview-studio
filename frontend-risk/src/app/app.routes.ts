@@ -249,6 +249,41 @@ export const routes: Routes = [
       }
     ]
   },
+  // Legal & info pages (public)
+  {
+    path: '',
+    component: PublicShellComponent,
+    children: [
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./pages/legal/about.component').then(
+            (m) => m.AboutComponent
+          )
+      },
+      {
+        path: 'privacy',
+        loadComponent: () =>
+          import('./pages/legal/privacy.component').then(
+            (m) => m.PrivacyComponent
+          )
+      },
+      {
+        path: 'terms',
+        loadComponent: () =>
+          import('./pages/legal/terms.component').then(
+            (m) => m.TermsComponent
+          )
+      },
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./pages/legal/contact.component').then(
+            (m) => m.ContactComponent
+          )
+      }
+    ]
+  },
   // Redirects
   { path: 'analysis', redirectTo: 'careerrisk/assessment', pathMatch: 'full' },
   { path: 'plans', redirectTo: 'pricing', pathMatch: 'full' },
