@@ -118,6 +118,12 @@ public class SecurityConfig {
                     // Interview Studio V2 - authenticated endpoints
                     .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/advanced").authenticated()
                     .requestMatchers(HttpMethod.GET, "/api/studio/v2/sessions/history").authenticated()
+                    // Career Sessions - public endpoints
+                    .requestMatchers(HttpMethod.POST, "/api/sessions").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/sessions/share/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/sessions/*").permitAll()
+                    // Career Sessions - authenticated endpoints
+                    .requestMatchers(HttpMethod.GET, "/api/sessions/history").authenticated()
                     .requestMatchers("/api/candidate/**").authenticated()
                     .requestMatchers("/api/studio/**").authenticated()
                     .anyRequest().authenticated();

@@ -22,6 +22,71 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent }
     ]
   },
+  // Session wizards (public, no auth for simple mode)
+  {
+    path: 'session',
+    component: PublicShellComponent,
+    children: [
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./pages/session/session-wizard.component').then(
+            (m) => m.SessionWizardComponent
+          )
+      },
+      {
+        path: 'new/advanced',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/session/session-wizard-advanced.component').then(
+            (m) => m.SessionWizardAdvancedComponent
+          )
+      }
+    ]
+  },
+  // Session result view (public - accessible by ID)
+  {
+    path: 'session/:id',
+    component: PublicShellComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/session/session-result.component').then(
+            (m) => m.SessionResultComponent
+          )
+      }
+    ]
+  },
+  // Shared report (public)
+  {
+    path: 'share/:shareId',
+    component: PublicShellComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/session/share-report.component').then(
+            (m) => m.ShareReportComponent
+          )
+      }
+    ]
+  },
+  // Session history (auth required)
+  {
+    path: 'history',
+    component: AppShellComponent,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/session/session-history.component').then(
+            (m) => m.SessionHistoryComponent
+          )
+      }
+    ]
+  },
   // Pricing (public, no auth required)
   {
     path: 'pricing',
@@ -51,7 +116,7 @@ export const routes: Routes = [
       }
     ]
   },
-  // NEW: Skill Assessment Onboarding (no auth, entry point)
+  // Skill Assessment Onboarding (no auth, entry point)
   {
     path: 'start',
     component: AppShellComponent,
@@ -65,7 +130,7 @@ export const routes: Routes = [
       }
     ]
   },
-  // NEW: Job Analyzer Tool (no auth, public tool)
+  // Job Analyzer Tool (no auth, public tool)
   {
     path: 'tools',
     component: AppShellComponent,
@@ -79,8 +144,7 @@ export const routes: Routes = [
       }
     ]
   },
-  // NEW: Arena - Interactive Training Tools (requires PROFESSIONAL tier)
-  // With Simple/Advanced mode-based routing
+  // Arena - Interactive Training Tools (requires PROFESSIONAL tier)
   {
     path: 'arena',
     component: AppShellComponent,
@@ -93,7 +157,6 @@ export const routes: Routes = [
             (m) => m.InterviewInterrogationComponent
           )
       },
-      // Salary Negotiation - Simple Mode
       {
         path: 'negotiation',
         canMatch: [uiModeCanMatch('simple')],
@@ -102,7 +165,6 @@ export const routes: Routes = [
             (m) => m.SalaryNegotiationDojoSimpleComponent
           )
       },
-      // Salary Negotiation - Advanced Mode
       {
         path: 'negotiation',
         canMatch: [uiModeCanMatch('advanced')],
@@ -111,7 +173,6 @@ export const routes: Routes = [
             (m) => m.SalaryNegotiationDojoComponent
           )
       },
-      // Brutal Truth - Simple Mode
       {
         path: 'truth',
         canMatch: [uiModeCanMatch('simple')],
@@ -120,7 +181,6 @@ export const routes: Routes = [
             (m) => m.BrutalTruthMachineSimpleComponent
           )
       },
-      // Brutal Truth - Advanced Mode
       {
         path: 'truth',
         canMatch: [uiModeCanMatch('advanced')],
@@ -129,7 +189,6 @@ export const routes: Routes = [
             (m) => m.BrutalTruthMachineComponent
           )
       },
-      // Career Stress Test - Simple Mode
       {
         path: 'stress-test',
         canMatch: [uiModeCanMatch('simple')],
@@ -138,7 +197,6 @@ export const routes: Routes = [
             (m) => m.CareerStressTestSimpleComponent
           )
       },
-      // Career Stress Test - Advanced Mode
       {
         path: 'stress-test',
         canMatch: [uiModeCanMatch('advanced')],
@@ -149,7 +207,7 @@ export const routes: Routes = [
       }
     ]
   },
-  // Assessment flow - NO auth required (public can do assessment)
+  // Assessment flow - NO auth required
   {
     path: 'careerrisk',
     component: AppShellComponent,
@@ -177,7 +235,6 @@ export const routes: Routes = [
             (m) => m.CareerIntelPage
           )
       },
-      // Roadmap requires auth + PROFESSIONAL tier
       {
         path: 'roadmap',
         component: CareerriskRoadmapPageComponent,
@@ -185,18 +242,9 @@ export const routes: Routes = [
       }
     ]
   },
-  // Redirect /analysis to careerrisk/assessment (for questionnaire completion)
-  {
-    path: 'analysis',
-    redirectTo: 'careerrisk/assessment',
-    pathMatch: 'full'
-  },
-  // Redirect /plans to /pricing (common alternative URL)
-  {
-    path: 'plans',
-    redirectTo: 'pricing',
-    pathMatch: 'full'
-  },
+  // Redirects
+  { path: 'analysis', redirectTo: 'careerrisk/assessment', pathMatch: 'full' },
+  { path: 'plans', redirectTo: 'pricing', pathMatch: 'full' },
   // 404
   { path: '**', component: NotFoundComponent }
 ];

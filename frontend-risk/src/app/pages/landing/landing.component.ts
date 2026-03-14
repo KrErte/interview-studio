@@ -108,24 +108,24 @@ import { AuthService } from '../../core/auth/auth-api.service';
 
         <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <button
-            type="button"
-            (click)="startAssessment()"
+          <a
+            routerLink="/session/new"
             class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300"
           >
             <span class="flex items-center gap-3">
-              Calculate My Risk Score
+              Quick Assessment (3 min)
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </span>
-          </button>
-          <a
-            routerLink="/login"
+          </a>
+          <button
+            type="button"
+            (click)="startAssessment()"
             class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all"
           >
-            Already have results? Sign in
-          </a>
+            Detailed Skill Assessment
+          </button>
         </div>
 
         <!-- Trust Indicators -->

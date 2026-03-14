@@ -18,12 +18,24 @@ import { AuthService } from '../core/auth/auth-api.service';
     <div class="min-h-screen bg-slate-950 text-slate-100">
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
-          <a routerLink="/careerrisk" class="font-extrabold tracking-tight text-slate-50 text-lg">
-            CareerRisk
-          </a>
+          <div class="flex items-center gap-3">
+            <!-- Mobile hamburger -->
+            <button (click)="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-slate-400 hover:text-white">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path *ngIf="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path *ngIf="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <a routerLink="/careerrisk" class="font-extrabold tracking-tight text-slate-50 text-lg">
+              CareerRisk
+            </a>
+          </div>
 
           <!-- Quick Tools Links -->
-          <div class="flex items-center gap-4 text-sm">
+          <div class="hidden md:flex items-center gap-4 text-sm">
+            <a routerLink="/session/new" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
+              ⚡ New Session
+            </a>
             <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               📝 Assess Skills
             </a>
@@ -124,6 +136,22 @@ import { AuthService } from '../core/auth/auth-api.service';
         </div>
       </header>
 
+      <!-- Mobile menu -->
+      <div *ngIf="mobileMenuOpen" class="md:hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur px-4 py-4 space-y-2">
+        <a routerLink="/session/new" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">⚡ New Session</a>
+        <a routerLink="/start" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📝 Assess Skills</a>
+        <a routerLink="/tools/job-analyzer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">🔬 Job X-Ray</a>
+        <a routerLink="/pricing" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">Pricing</a>
+        <a *ngIf="auth.isAuthenticated()" routerLink="/history" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📋 History</a>
+        <div *ngIf="auth.isAuthenticated() && tierService.canAccessArena()" class="pt-2 border-t border-slate-800">
+          <span class="text-xs text-slate-500 uppercase">Arena</span>
+          <a routerLink="/arena/interview" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Room</a>
+          <a routerLink="/arena/negotiation" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Dojo</a>
+          <a routerLink="/arena/truth" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🪞 Brutal Truth</a>
+          <a routerLink="/arena/stress-test" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔬 Stress Test</a>
+        </div>
+      </div>
+
       <main class="mx-auto max-w-7xl px-4 py-8">
         <app-careerrisk-stepper *ngIf="isCareerRiskRoute && isOnboarding"></app-careerrisk-stepper>
         <router-outlet />
@@ -136,6 +164,7 @@ export class AppShellComponent implements OnDestroy {
   activeCareerRiskKey: string | null = null;
   isCareerRiskRoute = false;
   isOnboarding = true;
+  mobileMenuOpen = false;
   private destroy$ = new Subject<void>();
 
   /** Expose UI mode service for template conditional rendering */
