@@ -52,7 +52,7 @@ import { AuthService } from '../../core/services/auth.service';
                 <input
                   type="text"
                   [(ngModel)]="form.targetRole"
-                  placeholder="e.g., Senior Backend Engineer"
+                  placeholder="e.g., Marketing Director, Senior Engineer, HR Lead"
                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   (keyup.enter)="form.targetRole && nextStep()"
                   autofocus
@@ -116,7 +116,7 @@ import { AuthService } from '../../core/services/auth.service';
                 <textarea
                   [(ngModel)]="form.recentWorkExamples"
                   rows="5"
-                  placeholder="e.g., Led a team of 5 to rebuild our payment system, reducing transaction failures by 40%..."
+                  placeholder="e.g., 'Increased quarterly sales by 30%' or 'Led a team of 5 to deliver a key project on time...'"
                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
                 ></textarea>
 
@@ -229,7 +229,7 @@ export class SessionAdvancedComponent implements OnInit {
 
   blockerOptions = [
     { value: 'cv', label: 'My CV doesn\'t represent me well', description: 'Positioning/presentation issue' },
-    { value: 'skills', label: 'I lack specific skills', description: 'Technical or domain gaps' },
+    { value: 'skills', label: 'I lack specific skills', description: 'Skill or knowledge gaps for this role' },
     { value: 'experience', label: 'Not enough relevant experience', description: 'Background mismatch' },
     { value: 'interviews', label: 'I struggle with interviews', description: 'Performance anxiety or preparation' },
     { value: 'market', label: 'The job market is tough', description: 'Few opportunities available' },

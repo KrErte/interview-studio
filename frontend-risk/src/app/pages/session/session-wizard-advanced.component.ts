@@ -27,7 +27,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       @if (step() === 1) {
         <div class="animate-fadeIn">
           <h1 class="text-3xl font-bold text-white mb-2">What role are you targeting?</h1>
-          <p class="text-slate-400 mb-8">Be specific — e.g. "Senior Frontend Engineer" or "Data Analyst"</p>
+          <p class="text-slate-400 mb-8">Be specific — e.g. "Senior Sales Manager" or "Data Analyst"</p>
           <input type="text" [(ngModel)]="targetRole" placeholder="Enter your target role..."
             class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none text-lg">
         </div>
@@ -74,7 +74,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
           <h1 class="text-3xl font-bold text-white mb-2">Describe recent relevant work</h1>
           <p class="text-slate-400 mb-8">Projects, achievements, or experience related to {{ targetRole }}</p>
           <textarea [(ngModel)]="recentWorkExamples" rows="6"
-            placeholder="E.g. 'Built a React dashboard that reduced load times by 40%...' or 'Led a team of 5 engineers to deliver...'"
+            placeholder="E.g. 'Increased quarterly sales by 30%...' or 'Led a team of 5 to deliver a key project on time...'"
             class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none resize-none"></textarea>
           <p class="text-xs text-slate-500 mt-2">Optional but helps us give better recommendations</p>
         </div>

@@ -50,7 +50,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
                 <input
                   type="text"
                   [(ngModel)]="form.targetRole"
-                  placeholder="e.g., Senior Frontend Developer"
+                  placeholder="e.g., Sales Manager, Project Lead, Developer"
                   class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                   (keyup.enter)="form.targetRole && nextStep()"
                   autofocus
@@ -178,9 +178,14 @@ export class SessionNewComponent implements OnInit {
   roleSuggestions = [
     'Software Engineer',
     'Product Manager',
+    'Sales Manager',
+    'Marketing Manager',
+    'Financial Analyst',
+    'HR Manager',
     'Data Scientist',
-    'UX Designer',
-    'DevOps Engineer',
+    'Project Manager',
+    'Teacher',
+    'Nurse',
   ];
 
   experienceOptions = [

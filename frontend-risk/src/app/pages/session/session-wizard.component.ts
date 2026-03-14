@@ -131,8 +131,9 @@ export class SessionWizardComponent {
   mainChallenge = '';
 
   suggestedRoles = [
-    'Software Engineer', 'Frontend Developer', 'Backend Developer', 'Full Stack Developer',
-    'DevOps Engineer', 'Data Analyst', 'Product Manager', 'UX Designer'
+    'Software Engineer', 'Product Manager', 'Data Analyst', 'UX Designer',
+    'Sales Manager', 'Marketing Manager', 'Financial Analyst', 'HR Manager',
+    'Project Manager', 'Business Analyst', 'Nurse', 'Teacher'
   ];
 
   experienceOptions = [
@@ -145,7 +146,7 @@ export class SessionWizardComponent {
   challengeOptions = [
     { value: 'cv', label: 'My CV doesn\'t stand out', hint: 'I have the skills but my CV isn\'t getting callbacks' },
     { value: 'positioning', label: 'Positioning myself', hint: 'I struggle to present my experience for this role' },
-    { value: 'skill_gap', label: 'Missing key skills', hint: 'I need to learn specific technologies or frameworks' },
+    { value: 'skill_gap', label: 'Missing key skills', hint: 'I need to develop specific skills or certifications for this role' },
     { value: 'career_switch', label: 'Career switch', hint: 'I\'m coming from a completely different field' },
     { value: 'interview_prep', label: 'Interview preparation', hint: 'I get interviews but don\'t convert them' }
   ];
