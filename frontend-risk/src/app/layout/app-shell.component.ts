@@ -24,17 +24,18 @@ import { AuthService } from '../core/auth/auth-api.service';
 
           <!-- Quick Tools Links -->
           <div class="flex items-center gap-4 text-sm">
-            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               📝 Assess Skills
             </a>
-            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               🔬 Job X-Ray
             </a>
-            <a routerLink="/pricing" class="text-slate-400 hover:text-emerald-400 transition-colors">
+            <a routerLink="/pricing" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               Pricing
             </a>
-            <div class="relative group">
-              <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1">
+            <!-- Arena: only show when user is authenticated + PROFESSIONAL tier -->
+            <div class="relative group" *ngIf="auth.isAuthenticated() && tierService.canAccessArena()">
+              <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1 whitespace-nowrap">
                 🏟️ Arena
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -58,7 +59,7 @@ import { AuthService } from '../core/auth/auth-api.service';
           </div>
 
           <!-- Right side: UI Mode Toggle + Navigation -->
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 shrink-0">
             <!-- Tier Badge -->
             <span *ngIf="auth.isAuthenticated() && !tierService.isFree()"
               class="px-2.5 py-1 rounded-full text-xs font-bold"
@@ -76,14 +77,14 @@ import { AuthService } from '../core/auth/auth-api.service';
             <!-- Separator -->
             <div class="h-5 w-px bg-slate-700"></div>
 
-            <nav class="flex flex-wrap items-center gap-3 text-sm" *ngIf="navState$ | async as nav">
+            <nav class="flex items-center gap-2 text-sm overflow-x-auto" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'careerrisk'">
                   <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
                     <button
                       *ngFor="let item of nav.items"
                       type="button"
-                      class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold"
+                      class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold whitespace-nowrap"
                       [ngClass]="{
                         'bg-emerald-500 text-slate-900': activeCareerRiskKey === item.key,
                         'text-slate-300 hover:text-slate-50 bg-slate-900': activeCareerRiskKey !== item.key

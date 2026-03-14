@@ -273,7 +273,18 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
   }
 
   get currentRole(): string {
-    return (this.assessment as any)?.currentRole || 'Software Engineer';
+    if ((this.assessment as any)?.currentRole) {
+      return (this.assessment as any).currentRole;
+    }
+    // Fallback: read from skill assessment stored in localStorage
+    try {
+      const stored = localStorage.getItem('careerAssessment');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.currentRole) return parsed.currentRole;
+      }
+    } catch {}
+    return 'Software Engineer';
   }
 
   private setInitialTimelineSelection(): void {
@@ -309,15 +320,31 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
 
     const sid = this.sessionId;
     if (!sid) {
+      // Read stored assessment data from skill assessment flow
+      let storedRole = '';
+      let storedYears = 0;
+      let storedIndustry = '';
+      let storedSkills = '';
+      try {
+        const stored = localStorage.getItem('careerAssessment');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          storedRole = parsed.currentRole || '';
+          storedYears = parsed.yearsExperience || 0;
+          storedIndustry = parsed.industryContext || '';
+          storedSkills = (parsed.skills || []).map((s: any) => s.name).join(', ');
+        }
+      } catch {}
+
       this.riskApi
         .startAssessment({
           cvFileId: undefined,
           experience: {
-            yearsOfExperience: 0,
-            currentRole: '',
+            yearsOfExperience: storedYears,
+            currentRole: storedRole,
             seniority: 'Mid',
-            industry: '',
-            stack: ''
+            industry: storedIndustry,
+            stack: storedSkills
           }
         })
         .pipe(takeUntil(this.destroy$))

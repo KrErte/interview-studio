@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -301,10 +301,19 @@ interface AssessmentData {
         }
       </div>
 
-      <!-- Mock Data Button -->
-      <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
-        🧪 Mock
-      </button>
+      <!-- Toast Notification -->
+      @if (toastMessage()) {
+        <div class="toast-notification">
+          {{ toastMessage() }}
+        </div>
+      }
+
+      <!-- Mock Data Button (dev only) -->
+      @if (isDevMode) {
+        <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
+          🧪 Mock
+        </button>
+      }
     </div>
   `,
   styles: [`
@@ -773,6 +782,30 @@ interface AssessmentData {
       transform: scale(1.05);
       box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
     }
+
+    .toast-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      z-index: 1000;
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s forwards;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-10px); }
+    }
   `]
 })
 export class SkillAssessmentComponent {
@@ -781,6 +814,10 @@ export class SkillAssessmentComponent {
   isSubmitting = signal(false);
   customRole = '';
   customSkill = '';
+  toastMessage = signal('');
+  isDevMode = isDevMode();
+  private skillsVersion = signal(0);
+  private toastTimer: any;
 
   roles = [
     'Software Engineer',
@@ -856,7 +893,10 @@ export class SkillAssessmentComponent {
 
   progressPercent = computed(() => (this.currentStep() / this.totalSteps) * 100);
 
-  selectedSkills = computed(() => this.assessment.skills.map(s => s.name));
+  selectedSkills = computed(() => {
+    this.skillsVersion(); // track mutations
+    return this.assessment.skills.map(s => s.name);
+  });
 
   workBreakdownTotal = computed(() =>
     this.assessment.workBreakdown.repetitiveTasks +
@@ -882,13 +922,23 @@ export class SkillAssessmentComponent {
     } else {
       this.assessment.skills.push({ name: skill, level: 3, yearsUsed: 1 });
     }
+    this.skillsVersion.update(v => v + 1);
   }
 
   addCustomSkill() {
     if (this.customSkill.trim() && !this.isSkillSelected(this.customSkill)) {
-      this.assessment.skills.push({ name: this.customSkill.trim(), level: 3, yearsUsed: 1 });
+      const skillName = this.customSkill.trim();
+      this.assessment.skills.push({ name: skillName, level: 3, yearsUsed: 1 });
       this.customSkill = '';
+      this.skillsVersion.update(v => v + 1);
+      this.showToast(`"${skillName}" added`);
     }
+  }
+
+  private showToast(message: string) {
+    clearTimeout(this.toastTimer);
+    this.toastMessage.set(message);
+    this.toastTimer = setTimeout(() => this.toastMessage.set(''), 2500);
   }
 
   setSkillLevel(skillName: string, level: number) {
@@ -958,6 +1008,7 @@ export class SkillAssessmentComponent {
       remoteWork: 80
     };
 
+    this.skillsVersion.update(v => v + 1);
     // Jump to last step
     this.currentStep.set(this.totalSteps);
   }
