@@ -72,13 +72,15 @@ public class DemoDataSeeder {
 
     private void createDemoUser(String email) {
         String fullName = getFullNameForEmail(email);
-        UserRole role = email.contains("admin") ? UserRole.ADMIN : UserRole.USER;
+        boolean isAdmin = email.contains("admin");
+        UserRole role = isAdmin ? UserRole.ADMIN : UserRole.USER;
 
         AppUser user = AppUser.builder()
                 .email(email)
                 .password(passwordEncoder.encode(DEMO_PASSWORD))
                 .fullName(fullName)
                 .role(role)
+                .tier(isAdmin ? UserTier.ARENA_PRO : UserTier.FREE)
                 .enabled(true)
                 .build();
 
