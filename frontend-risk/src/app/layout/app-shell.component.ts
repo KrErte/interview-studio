@@ -45,8 +45,8 @@ import { AuthService } from '../core/auth/auth-api.service';
             <a routerLink="/pricing" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
               Pricing
             </a>
-            <!-- Arena: only show when user is authenticated + PROFESSIONAL tier -->
-            <div class="relative group" *ngIf="auth.isAuthenticated() && tierService.canAccessArena()">
+            <!-- Arena -->
+            <div class="relative group">
               <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1 whitespace-nowrap">
                 🏟️ Arena
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,8 +63,11 @@ import { AuthService } from '../core/auth/auth-api.service';
                 <a routerLink="/arena/truth" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                   🪞 Brutal Truth
                 </a>
-                <a routerLink="/arena/stress-test" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                <a routerLink="/arena/stress-test" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                   🔬 Stress Test
+                </a>
+                <a routerLink="/arena/autopsy" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                  🔪 Interview Autopsy
                 </a>
               </div>
             </div>
@@ -145,12 +148,13 @@ import { AuthService } from '../core/auth/auth-api.service';
         <a routerLink="/tools/job-analyzer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">🔬 Job X-Ray</a>
         <a routerLink="/pricing" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">Pricing</a>
         <a *ngIf="auth.isAuthenticated()" routerLink="/history" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📋 History</a>
-        <div *ngIf="auth.isAuthenticated() && tierService.canAccessArena()" class="pt-2 border-t border-slate-800">
+        <div class="pt-2 border-t border-slate-800">
           <span class="text-xs text-slate-500 uppercase">Arena</span>
           <a routerLink="/arena/interview" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Room</a>
           <a routerLink="/arena/negotiation" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Dojo</a>
           <a routerLink="/arena/truth" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🪞 Brutal Truth</a>
           <a routerLink="/arena/stress-test" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔬 Stress Test</a>
+          <a routerLink="/arena/autopsy" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔪 Interview Autopsy</a>
         </div>
       </div>
 

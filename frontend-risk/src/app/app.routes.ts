@@ -144,11 +144,10 @@ export const routes: Routes = [
       }
     ]
   },
-  // Arena - Interactive Training Tools (requires PROFESSIONAL tier)
+  // Arena - Interactive Training Tools
   {
     path: 'arena',
     component: AppShellComponent,
-    canActivate: [authGuard, tierGuard('PROFESSIONAL')],
     children: [
       {
         path: 'interview',
