@@ -31,7 +31,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'org.apache.pdfbox:pdfbox:3.0.2'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.stripe:stripe-java:26.3.0'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'

@@ -16,13 +16,13 @@ public class SkillPlanService {
 
     private static final int DEFAULT_PLAN_LENGTH_DAYS = 21;
 
-    private final OpenAiClient openAiClient;
+    private final AiService aiService;
     private final ObjectMapper objectMapper;
 
     public SkillPlanResponse buildPlan(SkillPlanRequest request) {
         try {
             // GPT versioon
-            String json = openAiClient.generateSkillBoosterPlan(
+            String json = aiService.generateSkillBoosterPlan(
                     request.getJobMatcherSummary(),
                     request.getFocusSkills()
             );

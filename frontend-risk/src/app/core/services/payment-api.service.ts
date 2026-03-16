@@ -6,6 +6,10 @@ export interface CheckoutResponse {
   checkoutUrl: string;
 }
 
+export interface PortalResponse {
+  portalUrl: string;
+}
+
 export interface TierResponse {
   tier: string;
   purchasedAt: string | null;
@@ -36,6 +40,10 @@ export class PaymentApiService {
       successUrl,
       cancelUrl
     });
+  }
+
+  createPortalSession(): Observable<PortalResponse> {
+    return this.api.post<PortalResponse>('/payment/portal', {});
   }
 
   getCurrentTier(): Observable<TierResponse> {

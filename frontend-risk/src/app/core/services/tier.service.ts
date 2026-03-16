@@ -1,8 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 
-export type UserTier = 'FREE' | 'ESSENTIALS' | 'PROFESSIONAL' | 'LIFETIME';
+export type UserTier = 'FREE' | 'ARENA_PRO';
 
-const TIER_ORDER: UserTier[] = ['FREE', 'ESSENTIALS', 'PROFESSIONAL', 'LIFETIME'];
+const TIER_ORDER: UserTier[] = ['FREE', 'ARENA_PRO'];
 
 export interface TierFeatures {
   fullAssessmentTabs: boolean;
@@ -10,6 +10,9 @@ export interface TierFeatures {
   arenaTools: boolean;
   roadmap: boolean;
   jobAnalyzerUnlimited: boolean;
+  interviewSimulator: boolean;
+  salaryCoach: boolean;
+  cvOptimizer: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -25,14 +28,16 @@ export class TierService {
   readonly subscriptionEndsAt = this._subscriptionEndsAt.asReadonly();
 
   readonly features = computed<TierFeatures>(() => {
-    const t = this._tier();
-    const idx = TIER_ORDER.indexOf(t);
+    const isPro = this._tier() === 'ARENA_PRO';
     return {
-      fullAssessmentTabs: idx >= 1,   // ESSENTIALS+
-      actionPlan: idx >= 1,           // ESSENTIALS+
-      arenaTools: idx >= 2,           // PROFESSIONAL+
-      roadmap: idx >= 2,              // PROFESSIONAL+
-      jobAnalyzerUnlimited: idx >= 2  // PROFESSIONAL+
+      fullAssessmentTabs: isPro,
+      actionPlan: isPro,
+      arenaTools: isPro,
+      roadmap: isPro,
+      jobAnalyzerUnlimited: isPro,
+      interviewSimulator: isPro,
+      salaryCoach: isPro,
+      cvOptimizer: isPro
     };
   });
 
@@ -42,16 +47,19 @@ export class TierService {
   readonly canAccessUnlimitedAnalyzer = computed(() => this.features().jobAnalyzerUnlimited);
 
   readonly isFree = computed(() => this._tier() === 'FREE');
-  readonly isEssentials = computed(() => TIER_ORDER.indexOf(this._tier()) >= 1);
-  readonly isProfessional = computed(() => TIER_ORDER.indexOf(this._tier()) >= 2);
-  readonly isLifetime = computed(() => this._tier() === 'LIFETIME');
+  readonly isPro = computed(() => this._tier() === 'ARENA_PRO');
 
   setTier(tier: UserTier | string): void {
     const normalized = (tier || 'FREE').toUpperCase() as UserTier;
     if (TIER_ORDER.includes(normalized)) {
       this._tier.set(normalized);
     } else {
-      this._tier.set('FREE');
+      // Map old tiers to new ones
+      if (['ESSENTIALS', 'PROFESSIONAL', 'LIFETIME'].includes(normalized)) {
+        this._tier.set('ARENA_PRO');
+      } else {
+        this._tier.set('FREE');
+      }
     }
   }
 

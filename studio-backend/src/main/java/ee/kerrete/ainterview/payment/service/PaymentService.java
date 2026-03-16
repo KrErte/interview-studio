@@ -1,116 +1,122 @@
 package ee.kerrete.ainterview.payment.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stripe.exception.SignatureVerificationException;
+import com.stripe.model.*;
+import com.stripe.model.billingportal.Session;
+import com.stripe.net.Webhook;
+import com.stripe.param.CustomerCreateParams;
+import com.stripe.param.checkout.SessionCreateParams;
 import ee.kerrete.ainterview.model.AppUser;
+import ee.kerrete.ainterview.model.SubscriptionStatus;
 import ee.kerrete.ainterview.model.UserTier;
-import ee.kerrete.ainterview.payment.config.LemonSqueezyProperties;
+import ee.kerrete.ainterview.payment.config.StripeProperties;
 import ee.kerrete.ainterview.payment.dto.CheckoutRequest;
 import ee.kerrete.ainterview.payment.dto.CheckoutResponse;
 import ee.kerrete.ainterview.payment.dto.TierResponse;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import ee.kerrete.ainterview.model.SubscriptionStatus;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HexFormat;
+import java.time.ZoneOffset;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
 
-    private final LemonSqueezyProperties properties;
+    private final StripeProperties stripeProperties;
     private final AppUserRepository appUserRepository;
     private final ObjectMapper objectMapper;
-    private final OkHttpClient httpClient = new OkHttpClient();
-
-    private static final String LS_API_BASE = "https://api.lemonsqueezy.com/v1";
 
     public CheckoutResponse createCheckout(Long userId, CheckoutRequest request) {
         AppUser user = appUserRepository.findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        UserTier requestedTier;
-        try {
-            requestedTier = UserTier.valueOf(request.tier().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid tier: " + request.tier());
+        if (user.hasActiveSubscription()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Already has an active subscription");
         }
 
-        // Handle ARENA_PRO subscription separately
-        boolean isSubscription = "ARENA_PRO".equalsIgnoreCase(request.tier());
-
-        if (!isSubscription) {
-            if (requestedTier == UserTier.FREE) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot purchase FREE tier");
-            }
-
-            if (user.getTier().isAtLeast(requestedTier)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already at tier " + user.getTier().name() + " or higher");
-            }
-        } else {
-            if (user.hasActiveSubscription()) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already has an active subscription");
-            }
-            if (user.getTier().isAtLeast(UserTier.PROFESSIONAL)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Already at PROFESSIONAL tier or higher");
-            }
-        }
-
-        String variantId = properties.variantIdForTier(request.tier());
-
         try {
-            String checkoutUrl = createLemonSqueezyCheckout(
-                variantId,
-                user.getEmail(),
-                user.getId(),
-                request.successUrl(),
-                request.cancelUrl()
-            );
-            return new CheckoutResponse(checkoutUrl);
+            // Ensure user has a Stripe customer ID
+            String customerId = getOrCreateStripeCustomer(user);
+
+            SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+                .setCustomer(customerId)
+                .setSuccessUrl(request.successUrl() + "&session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl(request.cancelUrl())
+                .addLineItem(
+                    SessionCreateParams.LineItem.builder()
+                        .setPrice(stripeProperties.arenaProPriceId())
+                        .setQuantity(1L)
+                        .build()
+                )
+                .putMetadata("user_id", String.valueOf(user.getId()))
+                .build();
+
+            com.stripe.model.checkout.Session session =
+                com.stripe.model.checkout.Session.create(params);
+
+            return new CheckoutResponse(session.getUrl());
         } catch (Exception e) {
-            log.error("Failed to create Lemon Squeezy checkout", e);
+            log.error("Failed to create Stripe checkout session", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create checkout");
         }
     }
 
-    @Transactional
-    public void handleWebhook(String payload, String signature) {
-        if (!verifySignature(payload, signature)) {
-            log.warn("Invalid webhook signature");
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid signature");
+    public String createPortalSession(Long userId) {
+        AppUser user = appUserRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        if (user.getStripeCustomerId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Stripe customer found");
         }
 
         try {
-            JsonNode root = objectMapper.readTree(payload);
-            String eventName = root.path("meta").path("event_name").asText();
+            com.stripe.param.billingportal.SessionCreateParams params =
+                com.stripe.param.billingportal.SessionCreateParams.builder()
+                    .setCustomer(user.getStripeCustomerId())
+                    .setReturnUrl(System.getProperty("app.frontend.url", "http://localhost:4200") + "/pricing")
+                    .build();
 
-            log.info("Received Lemon Squeezy webhook: {}", eventName);
-
-            switch (eventName) {
-                case "order_created" -> handleOrderCreated(root);
-                case "subscription_created" -> handleSubscriptionCreated(root);
-                case "subscription_updated" -> handleSubscriptionUpdated(root);
-                case "subscription_cancelled" -> handleSubscriptionCancelled(root);
-                case "subscription_expired" -> handleSubscriptionExpired(root);
-                default -> log.info("Ignoring unhandled webhook event: {}", eventName);
-            }
+            Session portalSession = Session.create(params);
+            return portalSession.getUrl();
         } catch (Exception e) {
-            log.error("Failed to process webhook", e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to process webhook");
+            log.error("Failed to create Stripe portal session", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create portal session");
+        }
+    }
+
+    @Transactional
+    public void handleWebhook(String payload, String sigHeader) {
+        Event event;
+        try {
+            event = Webhook.constructEvent(payload, sigHeader, stripeProperties.webhookSecret());
+        } catch (SignatureVerificationException e) {
+            log.warn("Invalid Stripe webhook signature");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid signature");
+        } catch (Exception e) {
+            log.error("Failed to parse Stripe webhook", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to parse webhook");
+        }
+
+        String eventType = event.getType();
+        log.info("Received Stripe webhook: {}", eventType);
+
+        switch (eventType) {
+            case "checkout.session.completed" -> handleCheckoutCompleted(event);
+            case "customer.subscription.updated" -> handleSubscriptionUpdated(event);
+            case "customer.subscription.deleted" -> handleSubscriptionDeleted(event);
+            case "invoice.payment_failed" -> handlePaymentFailed(event);
+            default -> log.info("Ignoring unhandled Stripe event: {}", eventType);
         }
     }
 
@@ -127,210 +133,127 @@ public class PaymentService {
         );
     }
 
-    private void handleOrderCreated(JsonNode root) {
-        JsonNode customData = root.path("meta").path("custom_data");
-        long userId = customData.path("user_id").asLong(0);
-        String tier = customData.path("tier").asText("");
-
-        if (userId == 0 || tier.isBlank()) {
-            log.warn("Webhook missing user_id or tier in custom_data");
-            return;
+    private String getOrCreateStripeCustomer(AppUser user) throws Exception {
+        if (user.getStripeCustomerId() != null) {
+            return user.getStripeCustomerId();
         }
 
-        UserTier newTier;
-        try {
-            newTier = UserTier.valueOf(tier.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            log.warn("Invalid tier in webhook custom_data: {}", tier);
-            return;
-        }
-
-        appUserRepository.findById(userId).ifPresent(user -> {
-            if (newTier.isAtLeast(user.getTier())) {
-                user.setTier(newTier);
-                user.setTierPurchasedAt(LocalDateTime.now());
-                appUserRepository.save(user);
-                log.info("Upgraded user {} to tier {}", userId, newTier);
-            } else {
-                log.info("User {} already at tier {} (attempted {})", userId, user.getTier(), newTier);
-            }
-        });
-    }
-
-    private String createLemonSqueezyCheckout(
-        String variantId, String email, Long userId,
-        String successUrl, String cancelUrl
-    ) throws Exception {
-        // Determine tier from variant ID
-        String tier = tierFromVariantId(variantId);
-
-        String json = objectMapper.writeValueAsString(new java.util.LinkedHashMap<>() {{
-            put("data", new java.util.LinkedHashMap<>() {{
-                put("type", "checkouts");
-                put("attributes", new java.util.LinkedHashMap<>() {{
-                    put("checkout_data", new java.util.LinkedHashMap<>() {{
-                        put("email", email);
-                        put("custom", new java.util.LinkedHashMap<>() {{
-                            put("user_id", String.valueOf(userId));
-                            put("tier", tier);
-                        }});
-                    }});
-                    put("product_options", new java.util.LinkedHashMap<>() {{
-                        put("redirect_url", successUrl);
-                    }});
-                }});
-                put("relationships", new java.util.LinkedHashMap<>() {{
-                    put("store", new java.util.LinkedHashMap<>() {{
-                        put("data", new java.util.LinkedHashMap<>() {{
-                            put("type", "stores");
-                            put("id", properties.storeId());
-                        }});
-                    }});
-                    put("variant", new java.util.LinkedHashMap<>() {{
-                        put("data", new java.util.LinkedHashMap<>() {{
-                            put("type", "variants");
-                            put("id", variantId);
-                        }});
-                    }});
-                }});
-            }});
-        }});
-
-        Request request = new Request.Builder()
-            .url(LS_API_BASE + "/checkouts")
-            .header("Authorization", "Bearer " + properties.apiKey())
-            .header("Accept", "application/vnd.api+json")
-            .header("Content-Type", "application/vnd.api+json")
-            .post(RequestBody.create(json, MediaType.parse("application/vnd.api+json")))
+        CustomerCreateParams params = CustomerCreateParams.builder()
+            .setEmail(user.getEmail())
+            .setName(user.getFullName())
+            .putMetadata("user_id", String.valueOf(user.getId()))
             .build();
 
-        try (Response response = httpClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                String body = response.body() != null ? response.body().string() : "no body";
-                log.error("Lemon Squeezy checkout creation failed: {} - {}", response.code(), body);
-                throw new RuntimeException("Lemon Squeezy API error: " + response.code());
-            }
+        Customer customer = Customer.create(params);
+        user.setStripeCustomerId(customer.getId());
+        appUserRepository.save(user);
 
-            JsonNode respJson = objectMapper.readTree(response.body().string());
-            return respJson.path("data").path("attributes").path("url").asText();
-        }
+        return customer.getId();
     }
 
-    private String tierFromVariantId(String variantId) {
-        if (variantId.equals(properties.essentialsVariantId())) return "ESSENTIALS";
-        if (variantId.equals(properties.professionalVariantId())) return "PROFESSIONAL";
-        if (variantId.equals(properties.lifetimeVariantId())) return "LIFETIME";
-        if (variantId.equals(properties.arenaProVariantId())) return "ARENA_PRO";
-        return "ESSENTIALS";
-    }
-
-    private void handleSubscriptionCreated(JsonNode root) {
-        JsonNode customData = root.path("meta").path("custom_data");
-        long userId = customData.path("user_id").asLong(0);
-
-        if (userId == 0) {
-            log.warn("subscription_created webhook missing user_id in custom_data");
+    private void handleCheckoutCompleted(Event event) {
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        if (deserializer.getObject().isEmpty()) {
+            log.warn("checkout.session.completed: no data object");
             return;
         }
 
-        JsonNode attrs = root.path("data").path("attributes");
-        String subscriptionId = root.path("data").path("id").asText();
-        String status = attrs.path("status").asText("active");
-        String endsAt = attrs.path("renews_at").asText("");
+        com.stripe.model.checkout.Session session =
+            (com.stripe.model.checkout.Session) deserializer.getObject().get();
+
+        String subscriptionId = session.getSubscription();
+        Map<String, String> metadata = session.getMetadata();
+        long userId = Long.parseLong(metadata.getOrDefault("user_id", "0"));
+
+        if (userId == 0) {
+            log.warn("checkout.session.completed: missing user_id in metadata");
+            return;
+        }
 
         appUserRepository.findById(userId).ifPresent(user -> {
+            user.setTier(UserTier.ARENA_PRO);
+            user.setTierPurchasedAt(LocalDateTime.now());
             user.setSubscriptionId(subscriptionId);
-            user.setSubscriptionStatus(parseSubscriptionStatus(status));
+            user.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
             user.setSubscriptionCreatedAt(LocalDateTime.now());
-            if (!endsAt.isBlank()) {
-                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
+
+            if (user.getStripeCustomerId() == null && session.getCustomer() != null) {
+                user.setStripeCustomerId(session.getCustomer());
             }
+
             appUserRepository.save(user);
-            log.info("Subscription created for user {}: {}", userId, subscriptionId);
+            log.info("User {} upgraded to ARENA_PRO via Stripe checkout", userId);
         });
     }
 
-    private void handleSubscriptionUpdated(JsonNode root) {
-        JsonNode attrs = root.path("data").path("attributes");
-        String subscriptionId = root.path("data").path("id").asText();
-        String status = attrs.path("status").asText("");
-        String endsAt = attrs.path("renews_at").asText("");
+    private void handleSubscriptionUpdated(Event event) {
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        if (deserializer.getObject().isEmpty()) return;
+
+        Subscription subscription = (Subscription) deserializer.getObject().get();
+        String subscriptionId = subscription.getId();
+        String status = subscription.getStatus();
 
         appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
-            if (!status.isBlank()) {
-                user.setSubscriptionStatus(parseSubscriptionStatus(status));
+            user.setSubscriptionStatus(mapStripeStatus(status));
+
+            if (subscription.getCurrentPeriodEnd() != null) {
+                user.setSubscriptionEndsAt(
+                    LocalDateTime.ofInstant(
+                        Instant.ofEpochSecond(subscription.getCurrentPeriodEnd()),
+                        ZoneOffset.UTC
+                    )
+                );
             }
-            if (!endsAt.isBlank()) {
-                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
+
+            // If subscription is no longer active, downgrade
+            if ("canceled".equals(status) || "unpaid".equals(status)) {
+                user.setTier(UserTier.FREE);
             }
+
             appUserRepository.save(user);
-            log.info("Subscription updated for user {}: status={}", user.getId(), status);
+            log.info("Subscription {} updated: status={}", subscriptionId, status);
         });
     }
 
-    private void handleSubscriptionCancelled(JsonNode root) {
-        String subscriptionId = root.path("data").path("id").asText();
-        JsonNode attrs = root.path("data").path("attributes");
-        String endsAt = attrs.path("ends_at").asText("");
+    private void handleSubscriptionDeleted(Event event) {
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        if (deserializer.getObject().isEmpty()) return;
 
-        appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
-            user.setSubscriptionStatus(SubscriptionStatus.CANCELLED);
-            if (!endsAt.isBlank()) {
-                user.setSubscriptionEndsAt(parseIsoDateTime(endsAt));
-            }
-            appUserRepository.save(user);
-            log.info("Subscription cancelled for user {}, ends at {}", user.getId(), endsAt);
-        });
-    }
-
-    private void handleSubscriptionExpired(JsonNode root) {
-        String subscriptionId = root.path("data").path("id").asText();
+        Subscription subscription = (Subscription) deserializer.getObject().get();
+        String subscriptionId = subscription.getId();
 
         appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
             user.setSubscriptionStatus(SubscriptionStatus.EXPIRED);
+            user.setTier(UserTier.FREE);
             appUserRepository.save(user);
-            log.info("Subscription expired for user {}", user.getId());
+            log.info("Subscription {} deleted, user {} downgraded to FREE", subscriptionId, user.getId());
         });
     }
 
-    private SubscriptionStatus parseSubscriptionStatus(String status) {
-        return switch (status.toLowerCase()) {
-            case "active" -> SubscriptionStatus.ACTIVE;
-            case "cancelled" -> SubscriptionStatus.CANCELLED;
-            case "expired" -> SubscriptionStatus.EXPIRED;
-            case "past_due" -> SubscriptionStatus.PAST_DUE;
+    private void handlePaymentFailed(Event event) {
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        if (deserializer.getObject().isEmpty()) return;
+
+        Invoice invoice = (Invoice) deserializer.getObject().get();
+        String subscriptionId = invoice.getSubscription();
+
+        if (subscriptionId != null) {
+            appUserRepository.findBySubscriptionId(subscriptionId).ifPresent(user -> {
+                user.setSubscriptionStatus(SubscriptionStatus.PAST_DUE);
+                appUserRepository.save(user);
+                log.warn("Payment failed for subscription {}, user {}", subscriptionId, user.getId());
+            });
+        }
+    }
+
+    private SubscriptionStatus mapStripeStatus(String status) {
+        return switch (status) {
+            case "active", "trialing" -> SubscriptionStatus.ACTIVE;
+            case "canceled" -> SubscriptionStatus.CANCELLED;
+            case "unpaid", "incomplete_expired" -> SubscriptionStatus.EXPIRED;
+            case "past_due", "incomplete" -> SubscriptionStatus.PAST_DUE;
             default -> SubscriptionStatus.ACTIVE;
         };
-    }
-
-    private LocalDateTime parseIsoDateTime(String iso) {
-        try {
-            return OffsetDateTime.parse(iso, DateTimeFormatter.ISO_OFFSET_DATE_TIME).toLocalDateTime();
-        } catch (Exception e) {
-            log.warn("Failed to parse ISO datetime: {}", iso);
-            return null;
-        }
-    }
-
-    private boolean verifySignature(String payload, String signature) {
-        if (signature == null || signature.isBlank()) return false;
-        if (properties.webhookSecret() == null || properties.webhookSecret().isBlank()) {
-            log.warn("Webhook secret not configured, skipping verification");
-            return true;
-        }
-
-        try {
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(
-                properties.webhookSecret().getBytes(StandardCharsets.UTF_8),
-                "HmacSHA256"
-            ));
-            byte[] hash = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
-            String computed = HexFormat.of().formatHex(hash);
-            return computed.equalsIgnoreCase(signature);
-        } catch (Exception e) {
-            log.error("Signature verification failed", e);
-            return false;
-        }
     }
 }

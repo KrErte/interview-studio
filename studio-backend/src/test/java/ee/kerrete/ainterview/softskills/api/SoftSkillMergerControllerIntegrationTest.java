@@ -1,7 +1,7 @@
 package ee.kerrete.ainterview.softskills.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.kerrete.ainterview.service.OpenAiClient;
+import ee.kerrete.ainterview.service.AiService;
 import ee.kerrete.ainterview.softskills.dto.MergedDimensionScore;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillMergeRequest;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillMergeResponse;
@@ -41,11 +41,11 @@ class SoftSkillMergerControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @org.springframework.boot.test.mock.mockito.MockBean
-    private OpenAiClient openAiClient;
+    private AiService aiService;
 
     @Test
     void mergeSoftSkills_returnsStructuredMergedProfile() throws Exception {
-        when(openAiClient.createChatCompletion(anyString(), anyString()))
+        when(aiService.createChatCompletion(anyString(), anyString()))
             .thenReturn(sampleAiPayload());
 
         SoftSkillMergeRequest request = SoftSkillMergeRequest.builder()
@@ -109,7 +109,7 @@ class SoftSkillMergerControllerIntegrationTest {
                 .content(objectMapper.writeValueAsBytes(request)))
             .andExpect(status().isBadRequest());
 
-        verify(openAiClient, never()).createChatCompletion(anyString(), anyString());
+        verify(aiService, never()).createChatCompletion(anyString(), anyString());
     }
 
     private String sampleAiPayload() {

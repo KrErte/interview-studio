@@ -118,6 +118,9 @@ public class SecurityConfig {
                     // Interview Studio V2 - authenticated endpoints
                     .requestMatchers(HttpMethod.POST, "/api/studio/v2/sessions/advanced").authenticated()
                     .requestMatchers(HttpMethod.GET, "/api/studio/v2/sessions/history").authenticated()
+                    // Arena tools - Job X-Ray is public, rest require auth
+                    .requestMatchers(HttpMethod.POST, "/api/arena/job-xray/**").permitAll()
+                    .requestMatchers("/api/arena/**").authenticated()
                     // Career Sessions - public endpoints
                     .requestMatchers(HttpMethod.POST, "/api/sessions").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/sessions/share/**").permitAll()

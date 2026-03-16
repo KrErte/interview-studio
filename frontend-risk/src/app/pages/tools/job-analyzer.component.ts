@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TierService } from '../../core/services/tier.service';
+import { ArenaApiService, JobXrayResponse } from '../../core/services/arena-api.service';
 
 interface AnalysisResult {
   mustHave: string[];
@@ -216,10 +217,6 @@ Requirements:
         </div>
       }
 
-      <!-- Mock Data Button -->
-      <button class="mock-btn" (click)="fillMockData()" title="Fill with test data">
-        🧪 Mock
-      </button>
     </div>
   `,
   styles: [`
@@ -570,25 +567,6 @@ Requirements:
       }
     }
 
-    .mock-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #8b5cf6;
-      border: none;
-      padding: 0.75rem 1.25rem;
-      border-radius: 8px;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-      z-index: 1000;
-    }
-
-    .mock-btn:hover {
-      background: #7c3aed;
-      transform: translateY(-2px);
-    }
 
     .rate-limit-banner {
       text-align: center;
@@ -633,6 +611,7 @@ Requirements:
 })
 export class JobAnalyzerComponent {
   private readonly tierService = inject(TierService);
+  private readonly arenaApi = inject(ArenaApiService);
 
   jobText = '';
   isAnalyzing = signal(false);
@@ -677,13 +656,41 @@ export class JobAnalyzerComponent {
   analyzeJob() {
     this.isAnalyzing.set(true);
 
-    // Simulate API call with realistic analysis
-    setTimeout(() => {
-      const analysis = this.performAnalysis(this.jobText);
-      this.result.set(analysis);
-      this.isAnalyzing.set(false);
-      this.recordUsage();
-    }, 1500);
+    this.arenaApi.analyzeJob(this.jobText).subscribe({
+      next: (aiResult) => {
+        // Map AI response to local AnalysisResult format
+        const analysis = this.mapAiResult(aiResult);
+        this.result.set(analysis);
+        this.isAnalyzing.set(false);
+        this.recordUsage();
+      },
+      error: (err) => {
+        // Fallback to local analysis if API fails
+        const analysis = this.performAnalysis(this.jobText);
+        this.result.set(analysis);
+        this.isAnalyzing.set(false);
+        this.recordUsage();
+      }
+    });
+  }
+
+  private mapAiResult(ai: JobXrayResponse): AnalysisResult {
+    return {
+      mustHave: ai.realRequirements || [],
+      niceToHave: ai.hiddenRequirements || [],
+      redFlags: (ai.redFlags || []).map(f => ({ text: f, severity: 'medium' as const, explanation: '' })),
+      salaryEstimate: null,
+      experienceRequired: { min: 0, max: 0 },
+      remotePolicy: 'See analysis',
+      techStack: (ai.atsKeywords || []).map(kw => ({ name: kw, category: 'ATS', demand: 'stable' as const })),
+      companySignals: [
+        ...(ai.greenFlags || []).map(f => ({ type: 'positive' as const, text: f })),
+        ...(ai.redFlags || []).map(f => ({ type: 'negative' as const, text: f })),
+        ...(ai.cultureSignals ? [{ type: 'neutral' as const, text: ai.cultureSignals }] : [])
+      ],
+      matchScore: 0,
+      recommendations: ai.fitTips || []
+    };
   }
 
   private performAnalysis(text: string): AnalysisResult {

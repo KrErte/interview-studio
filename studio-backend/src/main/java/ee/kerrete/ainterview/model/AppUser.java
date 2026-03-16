@@ -107,8 +107,7 @@ public class AppUser implements UserDetails {
 
     public UserTier getEffectiveTier() {
         if (hasActiveSubscription()) {
-            // Subscription grants PROFESSIONAL access; return whichever is higher
-            return tier.isAtLeast(UserTier.PROFESSIONAL) ? tier : UserTier.PROFESSIONAL;
+            return UserTier.ARENA_PRO;
         }
         return tier;
     }

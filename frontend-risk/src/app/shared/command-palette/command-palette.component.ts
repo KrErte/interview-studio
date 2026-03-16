@@ -73,10 +73,9 @@ export class CommandPaletteComponent {
     { label: 'Job X-Ray', description: 'Analyze a job posting', path: '/tools/job-analyzer', icon: '🔍' },
     { label: 'Pricing', description: 'View plans and pricing', path: '/pricing', icon: '💰' },
     { label: 'Career Assessment', description: 'Full career risk analysis', path: '/careerrisk', icon: '📊' },
-    { label: 'Interview Room', description: 'Practice mock interviews', path: '/arena/interview', icon: '🎭', requiresTier: 'PROFESSIONAL' },
-    { label: 'Salary Dojo', description: 'Negotiation practice', path: '/arena/negotiation', icon: '💸', requiresTier: 'PROFESSIONAL' },
-    { label: 'Brutal Truth', description: 'Honest career feedback', path: '/arena/truth', icon: '🪞', requiresTier: 'PROFESSIONAL' },
-    { label: 'Stress Test', description: 'Career stress scenarios', path: '/arena/stress-test', icon: '🔬', requiresTier: 'PROFESSIONAL' },
+    { label: 'Interview Simulator', description: 'AI mock interviews', path: '/arena/interview-simulator', icon: '🎭', requiresTier: 'ARENA_PRO' },
+    { label: 'Salary Coach', description: 'Negotiation coaching', path: '/arena/salary-coach', icon: '💰', requiresTier: 'ARENA_PRO' },
+    { label: 'CV Optimizer', description: 'ATS score & improvements', path: '/arena/cv-optimizer', icon: '📄', requiresTier: 'ARENA_PRO' },
   ];
 
   filtered = signal<PaletteItem[]>(this.items);

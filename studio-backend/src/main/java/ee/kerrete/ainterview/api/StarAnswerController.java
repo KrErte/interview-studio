@@ -2,7 +2,7 @@ package ee.kerrete.ainterview.api;
 
 import ee.kerrete.ainterview.dto.StarAnswerRequest;
 import ee.kerrete.ainterview.dto.StarAnswerResponse;
-import ee.kerrete.ainterview.service.OpenAiClient;
+import ee.kerrete.ainterview.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class StarAnswerController {
 
-    private final OpenAiClient openAIClient;
+    private final AiService aiService;
 
     @PostMapping
     public ResponseEntity<StarAnswerResponse> generate(@RequestBody StarAnswerRequest req) {
@@ -40,7 +40,7 @@ public class StarAnswerController {
                 - Good interview flow.
                 """.formatted(req.getCvText(), req.getJobDescription(), req.getQuestion());
 
-        String response = openAIClient.complete(prompt);
+        String response = aiService.complete(prompt);
 
         return ResponseEntity.ok(
                 StarAnswerResponse.builder()

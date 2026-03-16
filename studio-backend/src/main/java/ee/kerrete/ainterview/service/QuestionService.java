@@ -12,14 +12,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionService {
 
-    private final OpenAiClient openAiClient; // <-- AI kliendi lisamine
+    private final AiService aiService;
 
     /**
      * DEFAULT küsimused (varuvariandi jaoks)
      */
 
     public List<Question> generateFromCv(String cvText, int techCount, int softCount) {
-        return openAiClient.generateQuestionsFromCv(cvText, techCount, softCount);
+        return aiService.generateQuestionsFromCv(cvText, techCount, softCount);
     }
     public List<Question> getDefaultQuestions() {
         List<Question> result = new ArrayList<>();
@@ -43,6 +43,6 @@ public class QuestionService {
         int tech = request.getTechnicalCount() > 0 ? request.getTechnicalCount() : 6;
         int soft = request.getSoftCount() > 0 ? request.getSoftCount() : 4;
 
-        return openAiClient.generateQuestionsFromCv(cvText, tech, soft);
+        return aiService.generateQuestionsFromCv(cvText, tech, soft);
     }
 }

@@ -6,7 +6,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { authGuard } from './core/auth/auth.guard';
-import { uiModeCanMatch } from './core/guards/ui-mode.guard';
 import { tierGuard } from './core/guards/tier.guard';
 import { PivotRolesPageComponent } from './pages/candidate/pivot-roles/pivot-roles.page';
 import { CareerriskRoadmapPageComponent } from './pages/candidate/pivot-roles/careerrisk-roadmap.page';
@@ -144,71 +143,33 @@ export const routes: Routes = [
       }
     ]
   },
-  // Arena - Interactive Training Tools
+  // Arena - AI-Powered Career Tools
   {
     path: 'arena',
     component: AppShellComponent,
     children: [
       {
-        path: 'interview',
+        path: 'interview-simulator',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
         loadComponent: () =>
-          import('./pages/candidate/pivot-roles/interview-interrogation.component').then(
-            (m) => m.InterviewInterrogationComponent
+          import('./pages/arena/interview-simulator.component').then(
+            (m) => m.InterviewSimulatorComponent
           )
       },
       {
-        path: 'negotiation',
-        canMatch: [uiModeCanMatch('simple')],
+        path: 'salary-coach',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
         loadComponent: () =>
-          import('./pages/candidate/pivot-roles/salary-negotiation-dojo-simple.component').then(
-            (m) => m.SalaryNegotiationDojoSimpleComponent
+          import('./pages/arena/salary-coach.component').then(
+            (m) => m.SalaryCoachComponent
           )
       },
       {
-        path: 'negotiation',
-        canMatch: [uiModeCanMatch('advanced')],
+        path: 'cv-optimizer',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
         loadComponent: () =>
-          import('./pages/candidate/pivot-roles/salary-negotiation-dojo.component').then(
-            (m) => m.SalaryNegotiationDojoComponent
-          )
-      },
-      {
-        path: 'truth',
-        canMatch: [uiModeCanMatch('simple')],
-        loadComponent: () =>
-          import('./pages/candidate/pivot-roles/brutal-truth-machine-simple.component').then(
-            (m) => m.BrutalTruthMachineSimpleComponent
-          )
-      },
-      {
-        path: 'truth',
-        canMatch: [uiModeCanMatch('advanced')],
-        loadComponent: () =>
-          import('./pages/candidate/pivot-roles/brutal-truth-machine.component').then(
-            (m) => m.BrutalTruthMachineComponent
-          )
-      },
-      {
-        path: 'stress-test',
-        canMatch: [uiModeCanMatch('simple')],
-        loadComponent: () =>
-          import('./pages/candidate/pivot-roles/career-stress-test-simple.component').then(
-            (m) => m.CareerStressTestSimpleComponent
-          )
-      },
-      {
-        path: 'stress-test',
-        canMatch: [uiModeCanMatch('advanced')],
-        loadComponent: () =>
-          import('./pages/candidate/pivot-roles/career-stress-test.component').then(
-            (m) => m.CareerStressTestComponent
-          )
-      },
-      {
-        path: 'autopsy',
-        loadComponent: () =>
-          import('./pages/candidate/pivot-roles/interview-autopsy.component').then(
-            (m) => m.InterviewAutopsyComponent
+          import('./pages/arena/cv-optimizer.component').then(
+            (m) => m.CvOptimizerComponent
           )
       }
     ]
@@ -244,7 +205,7 @@ export const routes: Routes = [
       {
         path: 'roadmap',
         component: CareerriskRoadmapPageComponent,
-        canActivate: [authGuard, tierGuard('PROFESSIONAL')]
+        canActivate: [authGuard, tierGuard('ARENA_PRO')]
       }
     ]
   },

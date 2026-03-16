@@ -54,20 +54,14 @@ import { AuthService } from '../core/auth/auth-api.service';
                 </svg>
               </button>
               <div class="absolute top-full left-0 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
-                <a routerLink="/arena/interview" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
-                  🎭 Interview Room
+                <a routerLink="/arena/interview-simulator" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
+                  🎭 Interview Simulator
                 </a>
-                <a routerLink="/arena/negotiation" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  💰 Salary Dojo
+                <a routerLink="/arena/salary-coach" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                  💰 Salary Coach
                 </a>
-                <a routerLink="/arena/truth" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🪞 Brutal Truth
-                </a>
-                <a routerLink="/arena/stress-test" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🔬 Stress Test
-                </a>
-                <a routerLink="/arena/autopsy" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
-                  🔪 Interview Autopsy
+                <a routerLink="/arena/cv-optimizer" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                  📄 CV Optimizer
                 </a>
               </div>
             </div>
@@ -76,18 +70,9 @@ import { AuthService } from '../core/auth/auth-api.service';
           <!-- Right side: UI Mode Toggle + Navigation -->
           <div class="flex items-center gap-2 shrink-0">
             <!-- Tier Badge -->
-            <span *ngIf="auth.isAuthenticated() && tierService.hasSubscription()"
+            <span *ngIf="auth.isAuthenticated() && tierService.isPro()"
               class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300">
               Arena Pro
-            </span>
-            <span *ngIf="auth.isAuthenticated() && !tierService.isFree() && !tierService.hasSubscription()"
-              class="px-2.5 py-1 rounded-full text-xs font-bold"
-              [ngClass]="{
-                'bg-emerald-500/20 text-emerald-300': tierService.tier() === 'ESSENTIALS',
-                'bg-violet-500/20 text-violet-300': tierService.tier() === 'PROFESSIONAL',
-                'bg-amber-500/20 text-amber-300': tierService.tier() === 'LIFETIME'
-              }">
-              {{ tierService.tier() }}
             </span>
 
             <!-- UI Mode Toggle (top-right) -->
@@ -150,11 +135,9 @@ import { AuthService } from '../core/auth/auth-api.service';
         <a *ngIf="auth.isAuthenticated()" routerLink="/history" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📋 History</a>
         <div class="pt-2 border-t border-slate-800">
           <span class="text-xs text-slate-500 uppercase">Arena</span>
-          <a routerLink="/arena/interview" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Room</a>
-          <a routerLink="/arena/negotiation" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Dojo</a>
-          <a routerLink="/arena/truth" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🪞 Brutal Truth</a>
-          <a routerLink="/arena/stress-test" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔬 Stress Test</a>
-          <a routerLink="/arena/autopsy" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔪 Interview Autopsy</a>
+          <a routerLink="/arena/interview-simulator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Simulator</a>
+          <a routerLink="/arena/salary-coach" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Coach</a>
+          <a routerLink="/arena/cv-optimizer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">📄 CV Optimizer</a>
         </div>
       </div>
 

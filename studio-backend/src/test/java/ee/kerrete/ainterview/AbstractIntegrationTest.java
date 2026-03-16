@@ -7,7 +7,7 @@ import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.model.UserRole;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import ee.kerrete.ainterview.service.AiEvaluationClient;
-import ee.kerrete.ainterview.service.OpenAiClient;
+import ee.kerrete.ainterview.service.AiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public abstract class AbstractIntegrationTest {
     protected AppUserRepository appUserRepository;
 
     @MockBean
-    protected OpenAiClient openAiClient;
+    protected AiService aiService;
 
     @MockBean
     protected AiEvaluationClient aiEvaluationClient;
@@ -55,7 +55,7 @@ public abstract class AbstractIntegrationTest {
     void setupBaseMocks() {
         appUserRepository.deleteAll();
 
-        when(openAiClient.generateQuestionsFromCv(anyString(), anyInt(), anyInt()))
+        when(aiService.generateQuestionsFromCv(anyString(), anyInt(), anyInt()))
             .thenReturn(List.of(new ee.kerrete.ainterview.model.Question(
                 "1",
                 "Describe your favorite project.",

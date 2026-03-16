@@ -1,8 +1,7 @@
 package ee.kerrete.ainterview.service;
 
-import ee.kerrete.ainterview.config.OpenAiProperties;
+import ee.kerrete.ainterview.config.ClaudeProperties;
 import ee.kerrete.ainterview.dto.AiHealthStatusDto;
-import ee.kerrete.ainterview.service.OpenAiClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AiHealthCheckService {
 
-    private final OpenAiClient openAiClient;
-    private final OpenAiProperties openAiProperties;
+    private final AiService aiService;
+    private final ClaudeProperties claudeProperties;
 
     private volatile AiHealthStatusDto cachedDeepResult;
     private volatile Instant cachedAt;
@@ -42,11 +41,11 @@ public class AiHealthCheckService {
         }
 
         long start = System.currentTimeMillis();
-        String model = openAiProperties.getModel();
+        String model = claudeProperties.getModel();
 
         try {
             String response = CompletableFuture.supplyAsync(() ->
-                            openAiClient.complete("Ping. Respond with 'pong'."))
+                            aiService.complete("Ping. Respond with 'pong'."))
                     .get(DEEP_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
             long latency = System.currentTimeMillis() - start;

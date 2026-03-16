@@ -22,7 +22,7 @@ import java.util.List;
  * - complete(...)              → lihtne "üks prompt" helper (kasutab StarAnswerController jms)
  */
 @Service
-public class OpenAiClient {
+public class OpenAiClient implements AiService {
 
     private final OpenAiProperties properties;
     private final RestTemplate restTemplate = new RestTemplate();
@@ -77,6 +77,7 @@ public class OpenAiClient {
        LIHTNE "ÜKS PROMPT" meetod – kasutavad uued kohad (nt STAR vastus)
        ======================================================================= */
 
+    @Override
     public String complete(String prompt) {
         List<ChatMessage> messages = List.of(
                 new ChatMessage("system", "You are a helpful AI assistant."),
@@ -94,6 +95,7 @@ public class OpenAiClient {
      * CandidatePlanService annab ette nii systemPrompti kui userPrompti,
      * meie ainult edastame need OpenAI-le.
      */
+    @Override
     public String createChatCompletion(String systemPrompt, String userPrompt) {
         List<ChatMessage> messages = List.of(
                 new ChatMessage("system", systemPrompt),
@@ -110,6 +112,7 @@ public class OpenAiClient {
      * Genereerib vastusehindamise JSON-i.
      * Tagastab JSON stringi, mida AnswerEvaluation.fromJson(...) parsetakse.
      */
+    @Override
     public String evaluateAnswer(String question, String answer) {
         String systemPrompt = """
                 You are a senior software engineering interviewer.
@@ -149,6 +152,7 @@ public class OpenAiClient {
      * Genereerib tehnilised + soft-skill küsimused CV põhjal.
      * Tagastab List<Question>, mille QuestionService juba ootab.
      */
+    @Override
     public List<Question> generateQuestionsFromCv(String cvText,
                                                   int technicalCount,
                                                   int softCount) {
@@ -222,6 +226,7 @@ public class OpenAiClient {
      * Genereerib 21-päevase oskuse arendamise plaani JSON-i
      * (SkillPlanResponse), mille SkillPlanService ise ObjectMapperiga parsetab.
      */
+    @Override
     public String generateSkillBoosterPlan(String jobMatcherSummary,
                                            List<String> focusSkills) {
 

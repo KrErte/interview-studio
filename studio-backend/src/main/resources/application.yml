@@ -28,6 +28,11 @@ openai:
   api-key: ${OPENAI_API_KEY:dummy-openai-key}
   model: gpt-4.1-mini
 
+claude:
+  base-url: https://api.anthropic.com/v1
+  api-key: ${ANTHROPIC_API_KEY:dummy}
+  model: claude-sonnet-4-20250514
+
 management:
   endpoints:
     web:
@@ -44,11 +49,8 @@ app:
     secret: ${JWT_SECRET:this-is-a-development-secret-key-min-32-chars}
     expiration-ms: 86400000        # 24 hours
     refresh-expiration-ms: 604800000  # 7 days
-  lemonsqueezy:
-    api-key: ${LEMONSQUEEZY_API_KEY:test_key}
-    webhook-secret: ${LEMONSQUEEZY_WEBHOOK_SECRET:test_secret}
-    store-id: ${LEMONSQUEEZY_STORE_ID:0}
-    essentials-variant-id: ${LEMONSQUEEZY_ESSENTIALS_VARIANT_ID:0}
-    professional-variant-id: ${LEMONSQUEEZY_PROFESSIONAL_VARIANT_ID:0}
-    lifetime-variant-id: ${LEMONSQUEEZY_LIFETIME_VARIANT_ID:0}
-    arena-pro-variant-id: ${LEMONSQUEEZY_ARENA_PRO_VARIANT_ID:0}
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY:sk_test_dummy}
+    publishable-key: ${STRIPE_PUBLISHABLE_KEY:pk_test_dummy}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_dummy}
+    arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID:price_dummy}

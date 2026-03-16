@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/payment")
 @RequiredArgsConstructor
@@ -30,14 +32,21 @@ public class PaymentController {
     @PostMapping("/webhook")
     public void handleWebhook(
         @RequestBody String payload,
-        @RequestHeader(value = "X-Signature", required = false) String signature
+        @RequestHeader(value = "Stripe-Signature", required = false) String sigHeader
     ) {
-        paymentService.handleWebhook(payload, signature);
+        paymentService.handleWebhook(payload, sigHeader);
     }
 
     @GetMapping("/tier")
     @PreAuthorize("isAuthenticated()")
     public TierResponse getCurrentTier(@AuthenticationPrincipal AuthenticatedUser user) {
         return paymentService.getUserTier(user.id());
+    }
+
+    @PostMapping("/portal")
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, String> createPortalSession(@AuthenticationPrincipal AuthenticatedUser user) {
+        String portalUrl = paymentService.createPortalSession(user.id());
+        return Map.of("portalUrl", portalUrl);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CandidatePlanService {
 
-    private final OpenAiClient openAiClient;
+    private final AiService aiService;
 
     // HOIAN AINULT VIIMAST PLAANI (ilma emailita)
     private volatile LearningPlan lastPlan;
@@ -50,7 +50,7 @@ public class CandidatePlanService {
                 request.getGoal()
         );
 
-        String gptResponse = openAiClient.createChatCompletion(systemPrompt, userPrompt);
+        String gptResponse = aiService.createChatCompletion(systemPrompt, userPrompt);
 
         try {
             ObjectMapper mapper = new ObjectMapper();

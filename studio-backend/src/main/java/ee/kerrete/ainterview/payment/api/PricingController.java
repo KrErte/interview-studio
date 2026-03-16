@@ -19,49 +19,24 @@ public class PricingController {
                 List.of(
                     "Risk score + 3 blockers",
                     "Teaser action plan",
-                    "Job Analyzer 1x/day"
-                ),
-                false, false, false, null
-            ),
-            new PricingTier(
-                "ESSENTIALS", "Essentials", 7, "USD",
-                List.of(
-                    "Full assessment (all tabs)",
-                    "Action plan",
-                    "Skill vulnerability matrix",
-                    "Market pulse signals"
-                ),
-                false, false, false, null
-            ),
-            new PricingTier(
-                "PROFESSIONAL", "Professional", 19, "USD",
-                List.of(
-                    "Everything in Essentials",
-                    "Arena tools (Interview, Negotiation, Truth, Stress Test)",
-                    "Career Roadmap",
-                    "Unlimited Job Analyzer"
-                ),
-                false, true, false, null
-            ),
-            new PricingTier(
-                "LIFETIME", "Lifetime", 49, "USD",
-                List.of(
-                    "Everything in Professional",
-                    "All future features forever",
-                    "Priority support",
-                    "Early access to new tools"
+                    "Job X-Ray (3x/month)",
+                    "Basic assessment"
                 ),
                 false, false, false, null
             ),
             new PricingTier(
                 "ARENA_PRO", "Arena Pro", 10, "USD",
                 List.of(
-                    "Everything in Professional",
-                    "Cancel anytime",
-                    "Monthly billing",
-                    "All Arena tools unlocked"
+                    "Everything in Free",
+                    "All Arena tools unlocked",
+                    "Interview Simulator (AI-powered)",
+                    "Salary Negotiation Coach",
+                    "CV/LinkedIn Optimizer",
+                    "Unlimited Job X-Ray",
+                    "Career Roadmap",
+                    "Cancel anytime"
                 ),
-                false, false, true, "month"
+                false, true, true, "month"
             )
         );
     }

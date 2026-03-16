@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 public class InterviewQuestionService {
 
-    private final OpenAiClient openAiClient;
+    private final AiService aiService;
 
     public List<Question> generateFromCv(GenerateQuestionsRequest request) {
         int tech = request.getTechnicalCount() > 0 ? request.getTechnicalCount() : 8;
         int soft = request.getSoftCount() > 0 ? request.getSoftCount() : 4;
 
-        return openAiClient.generateQuestionsFromCv(
+        return aiService.generateQuestionsFromCv(
                 request.getCvText(), tech, soft
         );
     }

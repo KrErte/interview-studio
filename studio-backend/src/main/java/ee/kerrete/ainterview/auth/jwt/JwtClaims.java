@@ -21,6 +21,6 @@ public final class JwtClaims {
     public static final String TYPE_ACCESS = "access";
     public static final String TYPE_REFRESH = "refresh";
 
-    /** User's subscription tier (e.g., "FREE", "ESSENTIALS", "PROFESSIONAL", "LIFETIME") */
+    /** User's subscription tier (e.g., "FREE", "ARENA_PRO") */
     public static final String TIER = "tier";
 }

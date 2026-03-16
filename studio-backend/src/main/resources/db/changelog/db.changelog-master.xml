@@ -62,4 +62,10 @@
     <!-- Arena Pro Subscription -->
     <include file="changes/2026-03-14-add-subscription-columns.xml" relativeToChangelogFile="true"/>
 
+    <!-- Consolidate tiers to FREE + ARENA_PRO -->
+    <include file="changes/2026-03-16-consolidate-tiers.xml" relativeToChangelogFile="true"/>
+
+    <!-- Arena tool tables -->
+    <include file="changes/2026-03-16-arena-tables.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

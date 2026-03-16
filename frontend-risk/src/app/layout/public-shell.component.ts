@@ -72,20 +72,17 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
                   </svg>
                 </button>
                 <div class="absolute top-full right-0 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
-                  <a routerLink="/arena/interview" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
-                    🎭 Interview Room
+                  <a routerLink="/tools/job-analyzer" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
+                    🔬 Job X-Ray
                   </a>
-                  <a routerLink="/arena/negotiation" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                    💰 Salary Dojo
+                  <a routerLink="/arena/interview-simulator" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    🎭 Interview Simulator
                   </a>
-                  <a routerLink="/arena/truth" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                    🪞 Brutal Truth
+                  <a routerLink="/arena/salary-coach" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    💰 Salary Coach
                   </a>
-                  <a routerLink="/arena/stress-test" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                    🔬 Stress Test
-                  </a>
-                  <a routerLink="/arena/autopsy" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
-                    🔪 Interview Autopsy
+                  <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                    📄 CV Optimizer
                   </a>
                 </div>
               </div>

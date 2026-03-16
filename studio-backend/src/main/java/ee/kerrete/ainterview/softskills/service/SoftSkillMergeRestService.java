@@ -1,7 +1,7 @@
 package ee.kerrete.ainterview.softskills.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ee.kerrete.ainterview.service.OpenAiClient;
+import ee.kerrete.ainterview.service.AiService;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillDimensionDto;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillMergeRequest;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillMergeResponse;
@@ -29,7 +29,7 @@ public class SoftSkillMergeRestService {
 
     private static final int MAX_LIST_ITEMS = 5;
 
-    private final OpenAiClient openAiClient;
+    private final AiService aiService;
     private final ObjectMapper objectMapper;
     private final SoftSkillMergeAiService aiService;
     private final SoftSkillMergedProfileRecordRepository mergedProfileRecordRepository;

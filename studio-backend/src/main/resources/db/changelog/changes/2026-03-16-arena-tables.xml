@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="2026-03-16-create-feature-usage" author="system">
+        <createTable tableName="feature_usage">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint"/>
+            <column name="feature" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="used_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="feature_usage" indexName="idx_feature_usage_user_feature">
+            <column name="user_id"/>
+            <column name="feature"/>
+            <column name="used_at"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2026-03-16-create-arena-session" author="system">
+        <createTable tableName="arena_session">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint"/>
+            <column name="tool_type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_data" type="text"/>
+            <column name="feedback" type="text"/>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+        <createIndex tableName="arena_session" indexName="idx_arena_session_user_tool">
+            <column name="user_id"/>
+            <column name="tool_type"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

@@ -36,7 +36,7 @@ public record AuthResponse(
     /** User's database ID */
     Long userId,
 
-    /** User's subscription tier (e.g., "FREE", "ESSENTIALS", "PROFESSIONAL", "LIFETIME") */
+    /** User's subscription tier (e.g., "FREE", "ARENA_PRO") */
     String tier
 ) {
     /**

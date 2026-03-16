@@ -40,12 +40,9 @@ app:
   cors:
     # Set from env FRONTEND_BASE_URL, e.g. https://your-domain.com
     allowed-origins: ${FRONTEND_BASE_URL:https://your-domain.com}
-  lemonsqueezy:
-    api-key: ${LEMONSQUEEZY_API_KEY}
-    webhook-secret: ${LEMONSQUEEZY_WEBHOOK_SECRET}
-    store-id: ${LEMONSQUEEZY_STORE_ID}
-    essentials-variant-id: ${LEMONSQUEEZY_ESSENTIALS_VARIANT_ID}
-    professional-variant-id: ${LEMONSQUEEZY_PROFESSIONAL_VARIANT_ID}
-    lifetime-variant-id: ${LEMONSQUEEZY_LIFETIME_VARIANT_ID}
-    arena-pro-variant-id: ${LEMONSQUEEZY_ARENA_PRO_VARIANT_ID}
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY}
+    publishable-key: ${STRIPE_PUBLISHABLE_KEY}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+    arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID}
 

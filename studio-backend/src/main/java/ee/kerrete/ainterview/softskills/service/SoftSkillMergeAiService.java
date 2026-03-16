@@ -3,7 +3,7 @@ package ee.kerrete.ainterview.softskills.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillMergedProfileDto;
 import ee.kerrete.ainterview.softskills.dto.SoftSkillSourceDto;
-import ee.kerrete.ainterview.service.OpenAiClient;
+import ee.kerrete.ainterview.service.AiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SoftSkillMergeAiService {
 
-    private final OpenAiClient openAiClient;
+    private final AiService aiService;
     private final ObjectMapper objectMapper;
 
     public SoftSkillMergedProfileDto callAi(List<SoftSkillSourceDto> sources, String jobContext, String email) {
         String systemPrompt = buildSystemPrompt();
         String userPrompt = buildUserPrompt(sources, jobContext, email);
 
-        String aiResponse = openAiClient.createChatCompletion(systemPrompt, userPrompt);
+        String aiResponse = aiService.createChatCompletion(systemPrompt, userPrompt);
         if (!StringUtils.hasText(aiResponse)) {
             log.error("Soft skill merge AI response empty");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "AI response invalid");
