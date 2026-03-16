@@ -9,7 +9,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
   imports: [CommonModule, RouterLink],
   template: `
     <!-- Animated Background Grid -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div class="absolute inset-0 opacity-20" style="background-image:
         linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
@@ -107,10 +107,10 @@ import { AuthService } from '../../core/auth/auth-api.service';
         </div>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+        <div class="relative z-20 flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <a
             routerLink="/session/new"
-            class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300"
+            class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <span class="flex items-center gap-3">
               Quick Assessment (3 min)
@@ -119,13 +119,12 @@ import { AuthService } from '../../core/auth/auth-api.service';
               </svg>
             </span>
           </a>
-          <button
-            type="button"
-            (click)="startAssessment()"
-            class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all"
+          <a
+            routerLink="/start"
+            class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all cursor-pointer"
           >
             Detailed Skill Assessment
-          </button>
+          </a>
         </div>
 
         <!-- Trust Indicators -->
@@ -354,16 +353,15 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <!-- Final CTA -->
     <section class="py-24 px-6 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent"></div>
-      <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="max-w-3xl mx-auto text-center relative z-20">
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Don't Wait Until It's Too Late</h2>
         <p class="text-slate-400 mb-8">The workforce is changing faster than ever. Know where you stand and take control of your career future.</p>
-        <button
-          type="button"
-          (click)="startAssessment()"
-          class="px-10 py-5 bg-white rounded-xl text-lg font-bold text-slate-900 shadow-2xl hover:shadow-white/25 hover:scale-105 transition-all duration-300"
+        <a
+          routerLink="/session/new"
+          class="inline-block px-10 py-5 bg-white rounded-xl text-lg font-bold text-slate-900 shadow-2xl hover:shadow-white/25 hover:scale-105 transition-all duration-300 cursor-pointer"
         >
           Start Free Assessment →
-        </button>
+        </a>
       </div>
     </section>
   `,

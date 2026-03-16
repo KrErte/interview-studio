@@ -9,7 +9,7 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent],
   template: `
     <!-- Animated Background -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
       <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div class="absolute inset-0 opacity-15" style="background-image:
         linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
