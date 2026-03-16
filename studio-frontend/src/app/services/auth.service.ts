@@ -1,7 +1,6 @@
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -35,7 +34,7 @@ export class AuthService {
   private readonly ROLE_KEY = 'auth_role';
   private readonly authUrl = `${environment.apiUrl}/api/auth`;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient) {}
 
   register(payload: RegisterPayload): Observable<LoginResponse> {
     return this.http
@@ -102,7 +101,7 @@ export class AuthService {
     localStorage.removeItem(this.EMAIL_KEY);
     localStorage.removeItem(this.NAME_KEY);
     localStorage.removeItem(this.ROLE_KEY);
-    this.router.navigate(['/login']);
+    window.location.href = '/login';
   }
 
   isLoggedIn(): boolean {
