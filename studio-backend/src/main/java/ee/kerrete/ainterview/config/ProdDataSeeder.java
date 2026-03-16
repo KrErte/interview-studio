@@ -27,6 +27,8 @@ import java.util.Objects;
 public class ProdDataSeeder implements CommandLineRunner {
 
     private static final String ADMIN_EMAIL = "admin@example.com";
+    private static final String TEST_ADMIN_EMAIL = "admin@local.test";
+    private static final String TEST_ADMIN_PASSWORD = "Test1234!";
     private static final String DEMO_EMAIL = "demo@example.com";
     private static final String DEMO_PASSWORD = "demo123!";
     private static final int ADMIN_PASSWORD_LENGTH = 32;
@@ -48,6 +50,7 @@ public class ProdDataSeeder implements CommandLineRunner {
         LocalDateTime now = LocalDateTime.now();
 
         String adminPassword = seedAdmin(now);
+        seedTestAdmin(now);
         seedDemoUser(now);
         seedDemoProfile(now);
         seedCvSummary(now);
@@ -87,12 +90,38 @@ public class ProdDataSeeder implements CommandLineRunner {
                 .fullName("Production Admin")
                 .password(passwordEncoder.encode(password))
                 .role(UserRole.ADMIN)
+                .tier(UserTier.ARENA_PRO)
                 .enabled(true)
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
         appUserRepository.save(Objects.requireNonNull(admin));
         return password;
+    }
+
+    private void seedTestAdmin(LocalDateTime now) {
+        AppUser existing = appUserRepository.findByEmail(TEST_ADMIN_EMAIL).orElse(null);
+        if (existing != null) {
+            boolean updated = false;
+            if (!existing.isEnabled()) { existing.setEnabled(true); updated = true; }
+            if (existing.getRole() != UserRole.ADMIN) { existing.setRole(UserRole.ADMIN); updated = true; }
+            if (existing.getTier() != UserTier.ARENA_PRO) { existing.setTier(UserTier.ARENA_PRO); updated = true; }
+            if (updated) { existing.setUpdatedAt(now); appUserRepository.save(existing); }
+            return;
+        }
+
+        AppUser testAdmin = AppUser.builder()
+                .email(TEST_ADMIN_EMAIL)
+                .fullName("Test Admin")
+                .password(passwordEncoder.encode(TEST_ADMIN_PASSWORD))
+                .role(UserRole.ADMIN)
+                .tier(UserTier.ARENA_PRO)
+                .enabled(true)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
+        appUserRepository.save(Objects.requireNonNull(testAdmin));
+        log.info("Seeded test admin user {}", TEST_ADMIN_EMAIL);
     }
 
     private void seedDemoUser(LocalDateTime now) {
