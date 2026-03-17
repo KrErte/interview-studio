@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./studio-backend
+      dockerfile: Dockerfile
+    container_name: interview-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_URL: ${DB_URL:-jdbc:h2:file:/data/interview-db}
+      DB_USER: ${DB_USER:-sa}
+      DB_PASS: ${DB_PASS:-}
+      JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-characters}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-dummy-key}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_dummy}
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-pk_test_dummy}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_dummy}
+      STRIPE_ARENA_PRO_PRICE_ID: ${STRIPE_ARENA_PRO_PRICE_ID:-price_dummy}
+      FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-https://careerrisk.ee}
+    volumes:
+      - backend_data:/data
+    ports:
+      - "8082:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend-risk
+      dockerfile: Dockerfile
+    container_name: interview-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  backend_data:
+
+networks:
+  app-network:
+    driver: bridge
