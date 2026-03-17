@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { authGuard, loginRedirectGuard } from './guards/auth.guard';
+import { arenaProGuard } from './guards/arena-pro.guard';
 
 export const appRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'interview-studio' },
@@ -78,6 +79,30 @@ export const appRoutes: Routes = [
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+  },
+  {
+    path: 'job-xray',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/arena/job-xray/job-xray.component').then(m => m.JobXrayComponent)
+  },
+  {
+    path: 'interview-sim',
+    canActivate: [arenaProGuard],
+    loadComponent: () =>
+      import('./pages/arena/interview-simulator/interview-simulator.component').then(m => m.InterviewSimulatorComponent)
+  },
+  {
+    path: 'salary-coach',
+    canActivate: [arenaProGuard],
+    loadComponent: () =>
+      import('./pages/arena/salary-coach/salary-coach.component').then(m => m.SalaryCoachComponent)
+  },
+  {
+    path: 'cv-optimizer',
+    canActivate: [arenaProGuard],
+    loadComponent: () =>
+      import('./pages/arena/cv-optimizer/cv-optimizer.component').then(m => m.CvOptimizerComponent)
   },
   {
     path: 'pricing',

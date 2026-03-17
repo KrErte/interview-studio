@@ -20,6 +20,7 @@ export interface LoginResponse {
   email: string;
   fullName: string;
   role: string;
+  tier?: string;
 }
 
 export type AuthResponse = LoginResponse;
@@ -32,6 +33,7 @@ export class AuthService {
   private readonly EMAIL_KEY = 'auth_email';
   private readonly NAME_KEY = 'auth_fullName';
   private readonly ROLE_KEY = 'auth_role';
+  private readonly TIER_KEY = 'auth_tier';
   private readonly authUrl = `${environment.apiUrl}/api/auth`;
 
   constructor(private http: HttpClient) {}
@@ -74,6 +76,10 @@ export class AuthService {
     if (res.role) {
       localStorage.setItem(this.ROLE_KEY, res.role);
     }
+
+    if (res.tier) {
+      localStorage.setItem(this.TIER_KEY, res.tier);
+    }
   }
 
   getToken(): string | null {
@@ -96,11 +102,20 @@ export class AuthService {
     localStorage.setItem(this.NAME_KEY, name);
   }
 
+  getCurrentUserTier(): string {
+    return localStorage.getItem(this.TIER_KEY) || 'FREE';
+  }
+
+  isArenaPro(): boolean {
+    return this.getCurrentUserTier() === 'ARENA_PRO';
+  }
+
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.EMAIL_KEY);
     localStorage.removeItem(this.NAME_KEY);
     localStorage.removeItem(this.ROLE_KEY);
+    localStorage.removeItem(this.TIER_KEY);
     window.location.href = '/login';
   }
 

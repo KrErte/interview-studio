@@ -63,6 +63,9 @@ export class LoginComponent implements OnInit {
         if (response.fullName) {
           localStorage.setItem('auth_fullName', response.fullName);
         }
+        if (response.tier) {
+          localStorage.setItem('auth_tier', response.tier);
+        }
 
         this.loading = false;
         this.router.navigate(['/dashboard']);

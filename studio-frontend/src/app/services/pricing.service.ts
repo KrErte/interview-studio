@@ -11,6 +11,8 @@ export interface PricingTier {
   features: string[];
   current: boolean;
   popular: boolean;
+  subscription: boolean;
+  billingInterval: string;
 }
 
 export interface TierResponse {
