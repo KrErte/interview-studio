@@ -42,7 +42,7 @@ if ! grep -q "careerrisk.ee" /etc/caddy/Caddyfile 2>/dev/null; then
   echo ">> Setting up Caddy reverse proxy..."
   cat > /etc/caddy/Caddyfile << 'CADDY'
 careerrisk.ee, www.careerrisk.ee {
-    reverse_proxy localhost:4200
+    reverse_proxy localhost:4201
 }
 CADDY
   systemctl reload caddy
