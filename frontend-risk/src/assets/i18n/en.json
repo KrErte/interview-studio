@@ -120,7 +120,7 @@
     "faqCancelTitle": "Can I cancel anytime?",
     "faqCancelDesc": "Yes! Cancel anytime from your Stripe billing portal. You'll keep access until the end of your billing period.",
     "faqBillingTitle": "How does billing work?",
-    "faqBillingDesc": "Arena Pro is billed monthly at $10/month via Stripe. Your subscription renews automatically unless you cancel."
+    "faqBillingDesc": "Arena Pro is billed monthly at €10/month via Stripe. Your subscription renews automatically unless you cancel."
   },
   "contact": {
     "title": "Get in Touch",

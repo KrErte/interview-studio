@@ -58,7 +58,7 @@ import { TranslateModule } from '@ngx-translate/core';
                     <span class="text-4xl font-bold text-slate-300">Free</span>
                     <span class="text-sm text-slate-500">forever</span>
                   } @else {
-                    <span class="text-4xl font-bold text-white">\${{ tier.price }}</span>
+                    <span class="text-4xl font-bold text-white">€{{ tier.price }}</span>
                     <span class="text-sm text-slate-500">/month</span>
                   }
                 </div>

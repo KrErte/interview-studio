@@ -53,17 +53,29 @@ import { RouterLink } from '@angular/router';
         <h2 class="text-2xl font-bold text-white text-center mb-8">What We Stand For</h2>
         <div class="grid sm:grid-cols-3 gap-6">
           <div class="text-center p-6">
-            <div class="text-3xl mb-3">&#x1f3af;</div>
+            <div class="w-12 h-12 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
             <h4 class="font-semibold text-white mb-2">Data-Driven</h4>
             <p class="text-sm text-slate-400">Every assessment is based on real market signals, not guesswork.</p>
           </div>
           <div class="text-center p-6">
-            <div class="text-3xl mb-3">&#x1f512;</div>
+            <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-500/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
             <h4 class="font-semibold text-white mb-2">Privacy First</h4>
             <p class="text-sm text-slate-400">Your data stays yours. We never sell or share personal information.</p>
           </div>
           <div class="text-center p-6">
-            <div class="text-3xl mb-3">&#x1f91d;</div>
+            <div class="w-12 h-12 mx-auto rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+            </div>
             <h4 class="font-semibold text-white mb-2">Actionable</h4>
             <p class="text-sm text-slate-400">We don't just show problems. Every report includes a concrete action plan.</p>
           </div>

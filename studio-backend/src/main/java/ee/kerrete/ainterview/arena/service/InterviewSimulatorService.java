@@ -147,9 +147,15 @@ public class InterviewSimulatorService {
 
     private InterviewSimResponse endSession(ArenaSession session, SessionState state) {
         String history = buildConversationHistory(state);
+        int answeredCount = state.answers.size();
+        boolean endedEarly = answeredCount < TOTAL_QUESTIONS;
+
         String systemPrompt = """
-            You are a professional interviewer. The interview is complete.
-            Provide a comprehensive evaluation of the candidate's performance.
+            You are a professional interviewer. The interview %s.
+            The candidate answered %d out of %d questions.
+            Evaluate the candidate BASED ON THE ANSWERS THEY ACTUALLY GAVE.
+            Even if the interview was short, analyze the specific content of each answer.
+            Do NOT give generic feedback — reference their actual responses.
             Return ONLY valid JSON (no markdown):
             {
               "overallScore": 0-100,
@@ -158,21 +164,43 @@ public class InterviewSimulatorService {
               "verdict": "STRONG_HIRE / HIRE / LEAN_HIRE / LEAN_NO_HIRE / NO_HIRE",
               "improvementPlan": "2-3 sentences of specific advice"
             }
-            """;
+            """.formatted(
+                endedEarly ? "was ended early by the candidate" : "is complete",
+                answeredCount,
+                TOTAL_QUESTIONS
+            );
 
-        String aiResponse = aiService.createChatCompletion(systemPrompt, history + "\n\nProvide your final evaluation.");
+        String aiResponse = aiService.createChatCompletion(systemPrompt, history + "\n\nProvide your final evaluation based on the answers given.");
 
         InterviewSimResponse.InterviewFeedback feedback;
         try {
             feedback = objectMapper.readValue(stripCodeFence(aiResponse.trim()),
                 InterviewSimResponse.InterviewFeedback.class);
         } catch (Exception e) {
+            log.warn("Failed to parse interview feedback AI response: {}", aiResponse, e);
+            // Build meaningful fallback based on actual answers
+            List<String> strengths = new ArrayList<>();
+            List<String> weaknesses = new ArrayList<>();
+            if (answeredCount > 0) {
+                strengths.add("Provided " + answeredCount + " answer(s) during the interview");
+                strengths.add("Showed willingness to engage with interview questions");
+            } else {
+                strengths.add("Initiated the interview process");
+            }
+            if (endedEarly) {
+                weaknesses.add("Interview ended early — only " + answeredCount + " of " + TOTAL_QUESTIONS + " questions answered");
+                weaknesses.add("More answers would provide a better evaluation");
+            } else {
+                weaknesses.add("Unable to generate detailed AI feedback for this session");
+            }
+            int score = Math.max(20, Math.min(70, answeredCount * 15 + 20));
+            String verdict = score >= 60 ? "LEAN_HIRE" : "LEAN_NO_HIRE";
             feedback = InterviewSimResponse.InterviewFeedback.builder()
-                .overallScore(50)
-                .strengths(List.of("Completed the interview"))
-                .weaknesses(List.of("Could not generate detailed feedback"))
-                .verdict("LEAN_HIRE")
-                .improvementPlan("Practice with more mock interviews and prepare STAR-format answers.")
+                .overallScore(score)
+                .strengths(strengths)
+                .weaknesses(weaknesses)
+                .verdict(verdict)
+                .improvementPlan("Complete all " + TOTAL_QUESTIONS + " questions for a thorough evaluation. Practice STAR-format answers for behavioral questions.")
                 .build();
         }
 

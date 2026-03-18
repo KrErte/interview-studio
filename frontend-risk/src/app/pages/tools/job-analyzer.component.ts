@@ -675,6 +675,10 @@ export class JobAnalyzerComponent {
   }
 
   private mapAiResult(ai: JobXrayResponse): AnalysisResult {
+    const techStack: TechItem[] = (ai.atsKeywords || []).map(kw => ({ name: kw, category: 'ATS', demand: 'stable' as const }));
+    const allRequirements = [...(ai.realRequirements || []), ...(ai.hiddenRequirements || []), ...(ai.atsKeywords || [])];
+    const matchScore = this.calculateMatchScore(techStack, allRequirements);
+
     return {
       mustHave: ai.realRequirements || [],
       niceToHave: ai.hiddenRequirements || [],
@@ -682,15 +686,43 @@ export class JobAnalyzerComponent {
       salaryEstimate: null,
       experienceRequired: { min: 0, max: 0 },
       remotePolicy: 'See analysis',
-      techStack: (ai.atsKeywords || []).map(kw => ({ name: kw, category: 'ATS', demand: 'stable' as const })),
+      techStack,
       companySignals: [
         ...(ai.greenFlags || []).map(f => ({ type: 'positive' as const, text: f })),
         ...(ai.redFlags || []).map(f => ({ type: 'negative' as const, text: f })),
         ...(ai.cultureSignals ? [{ type: 'neutral' as const, text: ai.cultureSignals }] : [])
       ],
-      matchScore: 0,
+      matchScore,
       recommendations: ai.fitTips || []
     };
+  }
+
+  private calculateMatchScore(techStack: TechItem[], requirements: string[]): number {
+    const savedAssessment = localStorage.getItem('careerAssessment');
+    if (!savedAssessment) return 65; // default when no profile
+
+    try {
+      const assessment = JSON.parse(savedAssessment);
+      const userSkills: string[] = (assessment.skills || []).map((s: any) => s.name.toLowerCase());
+      if (userSkills.length === 0) return 65;
+
+      // Match against tech stack names
+      const matchedTech = techStack.filter(t => userSkills.includes(t.name.toLowerCase()));
+
+      // Also match user skills against requirement text (broader matching)
+      const reqText = requirements.join(' ').toLowerCase();
+      const skillsInReqs = userSkills.filter(skill => reqText.includes(skill));
+
+      const totalMatches = new Set([
+        ...matchedTech.map(t => t.name.toLowerCase()),
+        ...skillsInReqs
+      ]).size;
+
+      const totalItems = Math.max(techStack.length, requirements.length, 1);
+      return Math.min(95, Math.round((totalMatches / totalItems) * 100) + 20);
+    } catch {
+      return 65;
+    }
   }
 
   private performAnalysis(text: string): AnalysisResult {
@@ -822,14 +854,7 @@ export class JobAnalyzerComponent {
     }
 
     // Match score based on user profile (if exists)
-    const savedAssessment = localStorage.getItem('careerAssessment');
-    let matchScore = 65; // default
-    if (savedAssessment) {
-      const assessment = JSON.parse(savedAssessment);
-      const userSkills = assessment.skills.map((s: any) => s.name.toLowerCase());
-      const matchedTech = techStack.filter(t => userSkills.includes(t.name.toLowerCase()));
-      matchScore = Math.min(95, Math.round((matchedTech.length / Math.max(techStack.length, 1)) * 100) + 20);
-    }
+    const matchScore = this.calculateMatchScore(techStack, [...mustHave, ...niceToHave]);
 
     // Recommendations
     const recommendations = this.generateRecommendations(techStack, mustHave, redFlags, matchScore);

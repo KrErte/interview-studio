@@ -133,6 +133,22 @@ interface AssessmentData {
             <button (click)="addCustomSkill()" [disabled]="!customSkill">Add</button>
           </div>
 
+          @if (customSkills().length > 0) {
+            <div class="skill-category">
+              <h3>Custom</h3>
+              <div class="skill-chips">
+                @for (skill of customSkills(); track skill) {
+                  <button
+                    class="skill-chip selected"
+                    (click)="toggleSkill(skill)">
+                    {{ skill }}
+                    <span class="check">✓</span>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
           <div class="selected-count">
             {{ selectedSkills().length }} skills selected
           </div>
@@ -165,8 +181,8 @@ interface AssessmentData {
                     min="0"
                     max="25"
                     [(ngModel)]="skill.yearsUsed"
-                    placeholder="a">
-                  <span>a</span>
+                    placeholder="0">
+                  <span>yrs</span>
                 </div>
               </div>
             }
@@ -271,6 +287,13 @@ interface AssessmentData {
               <span>{{ assessment.remoteWork }}% remote</span>
             </div>
           </div>
+        </div>
+      }
+
+      <!-- Validation message -->
+      @if (validationError()) {
+        <div class="validation-error">
+          {{ validationError() }}
         </div>
       }
 
@@ -780,6 +803,18 @@ interface AssessmentData {
       from { opacity: 1; transform: translateY(0); }
       to { opacity: 0; transform: translateY(-10px); }
     }
+
+    .validation-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
   `]
 })
 export class SkillAssessmentComponent {
@@ -789,9 +824,11 @@ export class SkillAssessmentComponent {
   customRole = '';
   customSkill = '';
   toastMessage = signal('');
+  validationError = signal('');
   isDevMode = isDevMode();
   private skillsVersion = signal(0);
   private toastTimer: any;
+  private validationTimer: any;
 
   roles = [
     'Software Engineer',
@@ -872,6 +909,14 @@ export class SkillAssessmentComponent {
     return this.assessment.skills.map(s => s.name);
   });
 
+  customSkills = computed(() => {
+    this.skillsVersion();
+    const allPredefined = this.skillCategories.flatMap(c => c.skills);
+    return this.assessment.skills
+      .filter(s => !allPredefined.includes(s.name))
+      .map(s => s.name);
+  });
+
   workBreakdownTotal(): number {
     return this.assessment.workBreakdown.repetitiveTasks +
       this.assessment.workBreakdown.problemSolving +
@@ -936,8 +981,24 @@ export class SkillAssessmentComponent {
 
   nextStep() {
     if (this.canProceed() && this.currentStep() < this.totalSteps) {
+      this.validationError.set('');
       this.currentStep.update(s => s + 1);
+    } else if (!this.canProceed()) {
+      this.showValidationError();
     }
+  }
+
+  private showValidationError() {
+    const messages: Record<number, string> = {
+      1: 'Please select or type your current role to continue.',
+      3: 'Please select at least 3 skills to continue.',
+      5: 'Work breakdown should total approximately 100%.',
+      6: 'Please select your industry and company size.'
+    };
+    const msg = messages[this.currentStep()] || 'Please complete this step to continue.';
+    clearTimeout(this.validationTimer);
+    this.validationError.set(msg);
+    this.validationTimer = setTimeout(() => this.validationError.set(''), 4000);
   }
 
   previousStep() {
