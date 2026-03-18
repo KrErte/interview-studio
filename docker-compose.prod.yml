@@ -7,10 +7,12 @@ services:
       dockerfile: Dockerfile
     container_name: interview-backend
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      DB_URL: ${DB_URL:-jdbc:h2:file:/data/interview-db}
-      DB_USER: ${DB_USER:-sa}
-      DB_PASS: ${DB_PASS:-}
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/studio-db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD:
+      SERVER_PORT: 8080
       JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-characters}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-dummy-key}
