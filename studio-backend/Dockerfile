@@ -43,8 +43,8 @@ RUN addgroup -g 1001 appgroup && adduser -u 1001 -G appgroup -D appuser
 # Copy the built JAR
 COPY --from=builder /app/build/libs/backend.jar app.jar
 
-# PostgreSQL JDBC driver is included via Spring Boot
-RUN chown -R appuser:appgroup /app
+# Create data directory for H2 and set permissions
+RUN mkdir -p /data && chown -R appuser:appgroup /app /data
 
 USER appuser
 
