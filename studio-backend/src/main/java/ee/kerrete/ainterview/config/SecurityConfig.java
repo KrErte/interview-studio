@@ -161,6 +161,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
+            "https://careerrisk.ee",
+            "https://www.careerrisk.ee",
             "http://localhost:4200",
             "http://localhost:4201",
             "http://localhost:4202",
