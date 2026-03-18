@@ -196,7 +196,9 @@ export class InterviewSimulatorComponent {
           if (res.feedback) {
             this.messages.update(msgs => [...msgs, { role: 'interviewer', content: res.feedback }]);
           }
-          this.messages.update(msgs => [...msgs, { role: 'interviewer', content: res.question }]);
+          if (res.question) {
+            this.messages.update(msgs => [...msgs, { role: 'interviewer', content: res.question }]);
+          }
           this.currentQuestion.set(res.questionNumber);
         }
         this.loading.set(false);

@@ -1,5 +1,6 @@
 package ee.kerrete.ainterview.arena.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import java.util.List;
 
@@ -11,7 +12,10 @@ public class InterviewSimResponse {
     private String feedback;
     private int questionNumber;
     private int totalQuestions;
+
+    @JsonProperty("isComplete")
     private boolean isComplete;
+
     private InterviewFeedback finalFeedback;
 
     @Getter @Setter
