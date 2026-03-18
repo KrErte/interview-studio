@@ -6,6 +6,7 @@ import { NavContextService, NavState } from '../core/services/nav-context.servic
 import { Observable } from 'rxjs';
 import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
 import { UiModeService } from '../core/services/ui-mode.service';
+import { AuthService } from '../core/auth/auth-api.service';
 
 @Component({
   selector: 'app-shell',
@@ -92,6 +93,8 @@ export class ShellComponent {
   /** Expose UI mode service for template conditional rendering */
   readonly uiMode = inject(UiModeService);
 
+  private readonly auth = inject(AuthService);
+
   constructor(
     private tokenStorage: TokenStorageService,
     private router: Router,
@@ -108,8 +111,8 @@ export class ShellComponent {
   }
 
   logout(): void {
-    this.tokenStorage.clear();
-    this.router.navigateByUrl('/login');
+    this.auth.logout();
+    window.location.href = '/login';
   }
 
   onCareerRiskNav(key: string): void {

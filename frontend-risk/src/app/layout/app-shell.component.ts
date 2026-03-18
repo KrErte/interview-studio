@@ -195,8 +195,8 @@ export class AppShellComponent implements OnDestroy {
   }
 
   logout(): void {
-    this.tokenStorage.clear();
-    this.router.navigateByUrl('/login');
+    this.auth.logout();
+    window.location.href = '/login';
   }
 
   onCareerRiskNav(key: string): void {
