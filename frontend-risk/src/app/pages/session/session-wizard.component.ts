@@ -4,18 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SessionApiService } from '../../core/services/session-api.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-session-wizard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   template: `
     <div class="max-w-2xl mx-auto px-4 py-12">
       <!-- Progress -->
       <div class="mb-8">
         <div class="flex items-center justify-between text-sm text-slate-400 mb-2">
-          <span>Step {{ step() }} of 3</span>
-          <span>Quick Assessment</span>
+          <span>{{ 'common.step' | translate }} {{ step() }} / 3</span>
+          <span>{{ 'wizard.quickAssessment' | translate }}</span>
         </div>
         <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
           <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all duration-300"
@@ -93,7 +94,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
         @if (step() > 1) {
           <button (click)="step.set(step() - 1)"
             class="px-6 py-3 rounded-xl border border-slate-700 text-slate-300 hover:border-slate-500 transition-colors">
-            Back
+            {{ 'common.back' | translate }}
           </button>
         } @else {
           <div></div>
@@ -102,12 +103,12 @@ import { AnalyticsService } from '../../core/services/analytics.service';
         @if (step() < 3) {
           <button (click)="step.set(step() + 1)" [disabled]="!canProceed()"
             class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
-            Next
+            {{ 'common.next' | translate }}
           </button>
         } @else {
           <button (click)="submit()" [disabled]="!canProceed() || submitting()"
             class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
-            @if (submitting()) { Analyzing... } @else { Get My Assessment }
+            @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
           </button>
         }
       </div>

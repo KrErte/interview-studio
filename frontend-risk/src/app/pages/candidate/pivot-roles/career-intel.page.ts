@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GitHubDNAComponent } from './github-dna.component';
 import { SkillArbitrageComponent } from './skill-arbitrage.component';
+import { ApiClient } from '../../../core/api/api-client.service';
 
 type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
 
@@ -83,8 +84,22 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                     placeholder="Google, Meta, Amazon..."
                     class="company-input"
                   />
-                  <button class="analyze-btn" (click)="analyzeCompany()">Analyze</button>
+                  <button class="analyze-btn" (click)="analyzeCompany()" [disabled]="companyLoading()">
+                    {{ companyLoading() ? 'Analyzing...' : 'Analyze' }}
+                  </button>
                 </div>
+                @if (companyLoading()) {
+                  <div style="text-align: center; padding: 2rem;">
+                    <div style="width: 2rem; height: 2rem; border: 3px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
+                    <p style="color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-size: 0.875rem;">Analyzing company health...</p>
+                  </div>
+                }
+                @if (companyError()) {
+                  <div style="text-align: center; padding: 1rem; color: #f87171; font-size: 0.875rem;">
+                    {{ companyError() }}
+                    <button (click)="analyzeCompany()" style="margin-left: 0.5rem; color: #a78bfa; text-decoration: underline; background: none; border: none; cursor: pointer;">Retry</button>
+                  </div>
+                }
                 @if (companyResult()) {
                   <div class="company-result">
                     <div class="result-header">
@@ -135,8 +150,22 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                     <option value="ML Engineer">ML Engineer</option>
                     <option value="DevOps Engineer">DevOps Engineer</option>
                   </select>
-                  <button class="analyze-btn" (click)="analyzeJobs()">X-Ray Market</button>
+                  <button class="analyze-btn" (click)="analyzeJobs()" [disabled]="jobLoading()">
+                    {{ jobLoading() ? 'Analyzing...' : 'X-Ray Market' }}
+                  </button>
                 </div>
+                @if (jobLoading()) {
+                  <div style="text-align: center; padding: 2rem;">
+                    <div style="width: 2rem; height: 2rem; border: 3px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
+                    <p style="color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-size: 0.875rem;">X-raying job market...</p>
+                  </div>
+                }
+                @if (jobError()) {
+                  <div style="text-align: center; padding: 1rem; color: #f87171; font-size: 0.875rem;">
+                    {{ jobError() }}
+                    <button (click)="analyzeJobs()" style="margin-left: 0.5rem; color: #a78bfa; text-decoration: underline; background: none; border: none; cursor: pointer;">Retry</button>
+                  </div>
+                }
                 @if (jobResult()) {
                   <div class="job-result">
                     <div class="market-timing">
@@ -642,6 +671,10 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       margin: 0;
     }
 
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     @media (max-width: 768px) {
       .tabs-container {
         grid-template-columns: repeat(2, 1fr);
@@ -658,11 +691,17 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
   `]
 })
 export class CareerIntelPage {
+  private readonly api = inject(ApiClient);
+
   activeTab = signal<TabType>('github');
   companyInput = '';
   selectedRole = 'Software Engineer';
   companyResult = signal<any>(null);
   jobResult = signal<any>(null);
+  companyLoading = signal(false);
+  jobLoading = signal(false);
+  companyError = signal('');
+  jobError = signal('');
 
   setTab(tab: TabType) {
     this.activeTab.set(tab);
@@ -671,17 +710,39 @@ export class CareerIntelPage {
   analyzeCompany() {
     if (!this.companyInput.trim()) return;
 
-    fetch(`${(window as any).env?.apiUrl || 'http://localhost:8080'}/api/career-intel/company/${this.companyInput.trim()}`)
-      .then(res => res.json())
-      .then(data => this.companyResult.set(data))
-      .catch(() => {});
+    this.companyLoading.set(true);
+    this.companyError.set('');
+    this.companyResult.set(null);
+
+    this.api.get<any>(`/career-intel/company/${encodeURIComponent(this.companyInput.trim())}`).subscribe({
+      next: (data) => {
+        this.companyResult.set(data);
+        this.companyLoading.set(false);
+      },
+      error: () => {
+        this.companyLoading.set(false);
+        this.companyError.set('Failed to analyze company. Please try again.');
+      }
+    });
   }
 
   analyzeJobs() {
-    fetch(`${(window as any).env?.apiUrl || 'http://localhost:8080'}/api/career-intel/jobs?role=${encodeURIComponent(this.selectedRole)}`)
-      .then(res => res.json())
-      .then(data => this.jobResult.set(data))
-      .catch(() => {});
+    this.jobLoading.set(true);
+    this.jobError.set('');
+    this.jobResult.set(null);
+
+    this.api.get<any>('/career-intel/jobs', {
+      params: { role: this.selectedRole }
+    }).subscribe({
+      next: (data) => {
+        this.jobResult.set(data);
+        this.jobLoading.set(false);
+      },
+      error: () => {
+        this.jobLoading.set(false);
+        this.jobError.set('Failed to analyze job market. Please try again.');
+      }
+    });
   }
 
   getHealthClass(): string {

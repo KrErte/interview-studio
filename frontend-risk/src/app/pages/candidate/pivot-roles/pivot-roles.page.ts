@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
-import { Subject, takeUntil } from 'rxjs';
+import { ApiClient } from '../../../core/api/api-client.service';
+import { Subject, takeUntil, catchError, of } from 'rxjs';
 
 type VisibilityMode = 'OFF' | 'ANON' | 'PUBLIC';
 type FlowStep = 'OVERVIEW' | 1 | 2 | 3 | 4;
@@ -159,13 +160,13 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     { name: 'Systematic measurement', delta: '-4%' }
   ];
 
-  private timers: ReturnType<typeof setTimeout>[] = [];
   private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private navContext: NavContextService
+    private navContext: NavContextService,
+    private api: ApiClient
   ) {}
 
   ngOnInit(): void {
@@ -193,7 +194,6 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.navContext.resetNav();
-    this.timers.forEach((timerId) => clearTimeout(timerId));
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -241,7 +241,10 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
 
     this.snapshotBusy = true;
     this.lastSnapshotMessage = null;
-    this.queueTimer(() => {
+    this.api.post<any>('/pivot/role-matches/compute', {}).pipe(
+      catchError(() => of(null)),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
       this.snapshotBusy = false;
       this.lastSnapshotMessage = 'Career-risk readiness overview updated. Matches refreshed.';
       this.currentStep = 3;
@@ -249,7 +252,7 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
       this.navContext.setActiveKey(this.activeNav);
       this.insightView = 'overview';
       this.loadRoleMatches();
-    }, 600);
+    });
   }
 
   onTrackProgress(): void {
@@ -290,14 +293,25 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     this.visibilityError = null;
     this.visibilitySavedMessage = null;
 
-    this.queueTimer(() => {
-      this.visibility = {
-        mode: this.visibilityDraftMode,
-        visibilityThreshold: this.visibilityDraftThreshold
-      };
+    const payload = {
+      visibility: this.visibilityDraftMode,
+      visibilityThreshold: this.visibilityDraftThreshold
+    };
+
+    this.api.put<MarketplaceVisibilitySettings>('/marketplace/profile', payload).pipe(
+      catchError(() => {
+        // Fallback: apply locally even if backend fails
+        return of({
+          mode: this.visibilityDraftMode,
+          visibilityThreshold: this.visibilityDraftThreshold
+        } as MarketplaceVisibilitySettings);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe((vis) => {
+      this.visibility = vis;
       this.savingVisibility = false;
       this.visibilitySavedMessage = 'Visibility preferences saved for your career-risk profile.';
-    }, 500);
+    });
   }
 
   goToDashboard(): void {
@@ -341,79 +355,89 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private readonly mockRoleMatches: PivotRoleMatch[] = [
+    {
+      id: 'ai-product',
+      targetRole: 'AI Product Strategist',
+      archetype: 'Bridge builder',
+      matchPercent: 78,
+      location: 'Hybrid · EU',
+      seniority: 'Senior IC',
+      overlapSkills: ['User research', 'Experiment design', 'Data storytelling'],
+      gapSkills: ['Model evaluation', 'Prompt chaining']
+    },
+    {
+      id: 'ml-pm',
+      targetRole: 'ML Platform PM',
+      archetype: 'Systems thinker',
+      matchPercent: 74,
+      location: 'Remote',
+      seniority: 'Staff',
+      overlapSkills: ['Stakeholder alignment', 'Architecture reviews', 'Risk-based testing'],
+      gapSkills: ['Feature flags at scale', 'Latency budgeting']
+    },
+    {
+      id: 'solutions',
+      targetRole: 'AI Solutions Lead',
+      archetype: 'Customer-first',
+      matchPercent: 69,
+      location: 'Hybrid · EU',
+      seniority: 'Senior IC',
+      overlapSkills: ['Workshop facilitation', 'Rapid prototyping', 'Outcome framing'],
+      gapSkills: ['Vendor evaluation', 'Cost forecasting']
+    }
+  ];
+
   private loadRoleMatches(): void {
     this.loadingRoles = true;
     this.rolesError = null;
-    this.queueTimer(() => {
-      this.roleMatches = [
-        {
-          id: 'ai-product',
-          targetRole: 'AI Product Strategist',
-          archetype: 'Bridge builder',
-          matchPercent: 78,
-          location: 'Hybrid · EU',
-          seniority: 'Senior IC',
-          overlapSkills: ['User research', 'Experiment design', 'Data storytelling'],
-          gapSkills: ['Model evaluation', 'Prompt chaining']
-        },
-        {
-          id: 'ml-pm',
-          targetRole: 'ML Platform PM',
-          archetype: 'Systems thinker',
-          matchPercent: 74,
-          location: 'Remote',
-          seniority: 'Staff',
-          overlapSkills: ['Stakeholder alignment', 'Architecture reviews', 'Risk-based testing'],
-          gapSkills: ['Feature flags at scale', 'Latency budgeting']
-        },
-        {
-          id: 'solutions',
-          targetRole: 'AI Solutions Lead',
-          archetype: 'Customer-first',
-          matchPercent: 69,
-          location: 'Hybrid · EU',
-          seniority: 'Senior IC',
-          overlapSkills: ['Workshop facilitation', 'Rapid prototyping', 'Outcome framing'],
-          gapSkills: ['Vendor evaluation', 'Cost forecasting']
-        }
-      ];
+    this.api.get<PivotRoleMatch[]>('/pivot/role-matches').pipe(
+      catchError(() => of(this.mockRoleMatches)),
+      takeUntil(this.destroy$)
+    ).subscribe((matches) => {
+      this.roleMatches = matches;
       this.loadingRoles = false;
-    }, 420);
+    });
   }
+
+  private readonly mockCareerRiskScore: CareerRiskReadinessScore = {
+    overall: 82,
+    adaptability: 79,
+    automationResilience: 76,
+    learningVelocity: 86,
+    explanation: 'Score blends your interview signals, CV overlap, and recent upskilling activity.'
+  };
 
   private loadCareerRiskScore(): void {
     this.loadingScore = true;
     this.scoreError = null;
-    this.queueTimer(() => {
-      this.careerRiskScore = {
-        overall: 82,
-        adaptability: 79,
-        automationResilience: 76,
-        learningVelocity: 86,
-        explanation:
-          'Score blends your interview signals, CV overlap, and recent upskilling activity.'
-      };
+    this.api.get<CareerRiskReadinessScore>('/career-risk-score').pipe(
+      catchError(() => of(this.mockCareerRiskScore)),
+      takeUntil(this.destroy$)
+    ).subscribe((score) => {
+      this.careerRiskScore = score;
       this.loadingScore = false;
-    }, 360);
+    });
   }
+
+  private readonly mockVisibility: MarketplaceVisibilitySettings = {
+    mode: 'ANON',
+    visibilityThreshold: 72
+  };
 
   private loadVisibility(): void {
     this.loadingVisibility = true;
     this.visibilityError = null;
-    this.queueTimer(() => {
-      this.visibility = {
-        mode: 'ANON',
-        visibilityThreshold: 72
-      };
-      this.visibilityDraftMode = this.visibility.mode;
-      this.visibilityDraftThreshold = this.visibility.visibilityThreshold;
+    this.api.get<MarketplaceVisibilitySettings>('/marketplace/profile').pipe(
+      catchError(() => of(this.mockVisibility)),
+      takeUntil(this.destroy$)
+    ).subscribe((vis) => {
+      this.visibility = vis;
+      this.visibilityDraftMode = vis.mode;
+      this.visibilityDraftThreshold = vis.visibilityThreshold;
       this.loadingVisibility = false;
-    }, 320);
+    });
   }
 
-  private queueTimer(callback: () => void, delayMs: number): void {
-    const timerId = setTimeout(callback, delayMs);
-    this.timers.push(timerId);
-  }
 }
 

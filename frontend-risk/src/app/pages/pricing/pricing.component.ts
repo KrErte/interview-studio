@@ -4,20 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth-api.service';
 import { TierService } from '../../core/services/tier.service';
 import { PaymentApiService, PricingTier } from '../../core/services/payment-api.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pricing',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div class="max-w-4xl mx-auto px-4 py-12">
       <!-- Header -->
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
-          Simple, transparent pricing
+          {{ 'pricing.title' | translate }}
         </h1>
         <p class="text-lg text-slate-400 max-w-2xl mx-auto">
-          Start free. Upgrade when you're ready for AI-powered career tools.
+          {{ 'pricing.subtitle' | translate }}
         </p>
       </div>
 
@@ -40,13 +41,13 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
 
               @if (tier.id === 'ARENA_PRO') {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-xs font-bold text-slate-900">
-                  RECOMMENDED
+                  {{ 'pricing.recommended' | translate }}
                 </div>
               }
 
               @if (currentTier() === tier.id) {
                 <div class="absolute -top-3 right-4 px-3 py-1 rounded-full bg-slate-700 text-xs font-semibold text-slate-200">
-                  CURRENT
+                  {{ 'pricing.current' | translate }}
                 </div>
               }
 
@@ -78,19 +79,19 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
                 <a
                   routerLink="/session/new"
                   class="w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-300 text-center block hover:bg-slate-800 transition-all">
-                  Get started free
+                  {{ 'pricing.getStartedFree' | translate }}
                 </a>
               } @else if (tierService.hasSubscription()) {
                 <button
                   (click)="manageSubscription()"
                   class="w-full py-3 rounded-xl border border-emerald-500/50 text-sm font-semibold text-emerald-400 hover:bg-emerald-500/10 transition-all">
-                  Manage subscription
+                  {{ 'pricing.manageSubscription' | translate }}
                 </button>
               } @else if (!auth.isAuthenticated()) {
                 <a
                   routerLink="/register"
                   class="w-full py-3 rounded-xl text-sm font-bold text-center block bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
-                  Sign up to subscribe
+                  {{ 'pricing.signUpToSubscribe' | translate }}
                 </a>
               } @else {
                 <button
@@ -98,9 +99,9 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
                   [disabled]="checkoutLoading()"
                   class="w-full py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all disabled:opacity-50">
                   @if (checkoutLoading()) {
-                    Processing...
+                    {{ 'pricing.processing' | translate }}
                   } @else {
-                    Subscribe to Arena Pro
+                    {{ 'pricing.subscribe' | translate }}
                   }
                 </button>
               }
@@ -111,23 +112,23 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
 
       <!-- FAQ -->
       <div class="mt-16 max-w-2xl mx-auto">
-        <h2 class="text-2xl font-bold text-white text-center mb-8">Frequently asked questions</h2>
+        <h2 class="text-2xl font-bold text-white text-center mb-8">{{ 'pricing.faq' | translate }}</h2>
         <div class="space-y-4">
           <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-            <h3 class="font-semibold text-white mb-2">What's included in Free?</h3>
-            <p class="text-sm text-slate-400">You get a career risk assessment, 3 blockers analysis, a teaser action plan, and 3 Job X-Ray analyses per month. No credit card required.</p>
+            <h3 class="font-semibold text-white mb-2">{{ 'pricing.faqFreeTitle' | translate }}</h3>
+            <p class="text-sm text-slate-400">{{ 'pricing.faqFreeDesc' | translate }}</p>
           </div>
           <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-            <h3 class="font-semibold text-white mb-2">What does Arena Pro unlock?</h3>
-            <p class="text-sm text-slate-400">Arena Pro gives you unlimited access to all AI-powered tools: Interview Simulator, Salary Negotiation Coach, CV/LinkedIn Optimizer, unlimited Job X-Ray, and more.</p>
+            <h3 class="font-semibold text-white mb-2">{{ 'pricing.faqProTitle' | translate }}</h3>
+            <p class="text-sm text-slate-400">{{ 'pricing.faqProDesc' | translate }}</p>
           </div>
           <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-            <h3 class="font-semibold text-white mb-2">Can I cancel anytime?</h3>
-            <p class="text-sm text-slate-400">Yes! Cancel anytime from your Stripe billing portal. You'll keep access until the end of your billing period.</p>
+            <h3 class="font-semibold text-white mb-2">{{ 'pricing.faqCancelTitle' | translate }}</h3>
+            <p class="text-sm text-slate-400">{{ 'pricing.faqCancelDesc' | translate }}</p>
           </div>
           <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-            <h3 class="font-semibold text-white mb-2">How does billing work?</h3>
-            <p class="text-sm text-slate-400">Arena Pro is billed monthly at $10/month via Stripe. Your subscription renews automatically unless you cancel.</p>
+            <h3 class="font-semibold text-white mb-2">{{ 'pricing.faqBillingTitle' | translate }}</h3>
+            <p class="text-sm text-slate-400">{{ 'pricing.faqBillingDesc' | translate }}</p>
           </div>
         </div>
       </div>

@@ -9,11 +9,12 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
 import { UiModeService } from '../core/services/ui-mode.service';
 import { TierService } from '../core/services/tier.service';
 import { AuthService } from '../core/auth/auth-api.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-app-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule],
   template: `
     <div class="min-h-screen bg-slate-950 text-slate-100">
       <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
@@ -74,6 +75,14 @@ import { AuthService } from '../core/auth/auth-api.service';
               class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300">
               Arena Pro
             </span>
+
+            <!-- Language Switcher -->
+            <button
+              (click)="toggleLanguage()"
+              class="px-2 py-1 rounded-md text-xs font-bold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+              [title]="currentLang === 'en' ? 'Switch to Estonian' : 'Switch to English'">
+              {{ currentLang === 'en' ? 'ET' : 'EN' }}
+            </button>
 
             <!-- UI Mode Toggle (top-right) -->
             <app-ui-mode-toggle />
@@ -154,6 +163,7 @@ export class AppShellComponent implements OnDestroy {
   isCareerRiskRoute = false;
   isOnboarding = true;
   mobileMenuOpen = false;
+  currentLang = 'en';
   private destroy$ = new Subject<void>();
 
   /** Expose UI mode service for template conditional rendering */
@@ -167,8 +177,14 @@ export class AppShellComponent implements OnDestroy {
     private navContext: NavContextService,
     uiModeService: UiModeService,
     tierService: TierService,
-    authService: AuthService
+    authService: AuthService,
+    private translateService: TranslateService
   ) {
+    const savedLang = localStorage.getItem('lang');
+    if (savedLang && ['en', 'et'].includes(savedLang)) {
+      this.currentLang = savedLang;
+      this.translateService.use(savedLang);
+    }
     this.uiMode = uiModeService;
     this.tierService = tierService;
     this.auth = authService;
@@ -192,6 +208,12 @@ export class AppShellComponent implements OnDestroy {
         this.updateCompletionState();
         this.syncActiveFromUrl(event.urlAfterRedirects as string);
       });
+  }
+
+  toggleLanguage(): void {
+    this.currentLang = this.currentLang === 'en' ? 'et' : 'en';
+    this.translateService.use(this.currentLang);
+    localStorage.setItem('lang', this.currentLang);
   }
 
   logout(): void {

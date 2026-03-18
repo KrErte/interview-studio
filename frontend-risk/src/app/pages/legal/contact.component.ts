@@ -1,18 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ApiClient } from '../../core/api/api-client.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
   template: `
     <div class="max-w-3xl mx-auto px-4 py-16">
       <div class="text-center mb-12">
-        <h1 class="text-3xl font-bold text-white mb-4">Get in Touch</h1>
+        <h1 class="text-3xl font-bold text-white mb-4">{{ 'contact.title' | translate }}</h1>
         <p class="text-slate-400 max-w-lg mx-auto">
-          Have a question, feedback, or need support? We'd love to hear from you.
+          {{ 'contact.subtitle' | translate }}
         </p>
       </div>
 
@@ -27,7 +29,7 @@ import { RouterLink } from '@angular/router';
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-white">Email</h3>
+                <h3 class="font-semibold text-white">{{ 'contact.emailLabel' | translate }}</h3>
                 <a href="mailto:info&#64;careerisk.ee" class="text-emerald-400 text-sm hover:underline">info&#64;careerisk.ee</a>
               </div>
             </div>
@@ -41,8 +43,8 @@ import { RouterLink } from '@angular/router';
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-white">Response Time</h3>
-                <p class="text-slate-400 text-sm">Usually within 24 hours on business days</p>
+                <h3 class="font-semibold text-white">{{ 'contact.responseTime' | translate }}</h3>
+                <p class="text-slate-400 text-sm">{{ 'contact.responseTimeDesc' | translate }}</p>
               </div>
             </div>
           </div>
@@ -56,8 +58,8 @@ import { RouterLink } from '@angular/router';
                 </svg>
               </div>
               <div>
-                <h3 class="font-semibold text-white">Location</h3>
-                <p class="text-slate-400 text-sm">Tallinn, Estonia</p>
+                <h3 class="font-semibold text-white">{{ 'contact.location' | translate }}</h3>
+                <p class="text-slate-400 text-sm">{{ 'contact.locationValue' | translate }}</p>
               </div>
             </div>
           </div>
@@ -72,41 +74,46 @@ import { RouterLink } from '@angular/router';
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-white mb-2">Message Sent!</h3>
-              <p class="text-slate-400">We'll get back to you as soon as possible.</p>
+              <h3 class="text-xl font-bold text-white mb-2">{{ 'contact.successTitle' | translate }}</h3>
+              <p class="text-slate-400">{{ 'contact.successDesc' | translate }}</p>
             </div>
           } @else {
             <div class="space-y-4">
               <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                <input type="text" [(ngModel)]="name" placeholder="Your name"
+                <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'contact.nameLabel' | translate }}</label>
+                <input type="text" [(ngModel)]="name" [placeholder]="'contact.namePlaceholder' | translate"
                   class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
               </div>
               <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                <input type="email" [(ngModel)]="email" placeholder="your&#64;email.com"
+                <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'contact.emailLabel' | translate }}</label>
+                <input type="email" [(ngModel)]="email" [placeholder]="'contact.emailPlaceholder' | translate"
                   class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
               </div>
               <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Subject</label>
+                <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'contact.subjectLabel' | translate }}</label>
                 <select [(ngModel)]="subject"
                   class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-white focus:border-emerald-500 focus:outline-none">
-                  <option value="">Select a topic</option>
-                  <option value="support">Technical Support</option>
-                  <option value="billing">Billing & Payments</option>
-                  <option value="feedback">Feedback</option>
-                  <option value="partnership">Partnership / B2B</option>
-                  <option value="other">Other</option>
+                  <option value="">{{ 'contact.subjectPlaceholder' | translate }}</option>
+                  <option value="support">{{ 'contact.subjectSupport' | translate }}</option>
+                  <option value="billing">{{ 'contact.subjectBilling' | translate }}</option>
+                  <option value="feedback">{{ 'contact.subjectFeedback' | translate }}</option>
+                  <option value="partnership">{{ 'contact.subjectPartnership' | translate }}</option>
+                  <option value="other">{{ 'contact.subjectOther' | translate }}</option>
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Message</label>
-                <textarea [(ngModel)]="message" rows="4" placeholder="How can we help?"
+                <label class="block text-sm font-medium text-slate-300 mb-1">{{ 'contact.messageLabel' | translate }}</label>
+                <textarea [(ngModel)]="message" rows="4" [placeholder]="'contact.messagePlaceholder' | translate"
                   class="w-full p-3 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none resize-none"></textarea>
               </div>
-              <button (click)="submitForm()" [disabled]="!canSubmit()"
+              @if (error()) {
+                <div class="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                  {{ error() }}
+                </div>
+              }
+              <button (click)="submitForm()" [disabled]="!canSubmit() || submitting()"
                 class="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all hover:shadow-emerald-500/25 shadow-lg">
-                Send Message
+                @if (submitting()) { {{ 'contact.sending' | translate }} } @else { {{ 'contact.send' | translate }} }
               </button>
             </div>
           }
@@ -116,19 +123,38 @@ import { RouterLink } from '@angular/router';
   `
 })
 export class ContactComponent {
+  private readonly api = inject(ApiClient);
+
   name = '';
   email = '';
   subject = '';
   message = '';
   submitted = signal(false);
+  submitting = signal(false);
+  error = signal('');
 
   canSubmit(): boolean {
     return !!this.name.trim() && !!this.email.trim() && !!this.subject && !!this.message.trim();
   }
 
   submitForm(): void {
-    // For now, just show success message
-    // TODO: integrate with backend email API
-    this.submitted.set(true);
+    this.submitting.set(true);
+    this.error.set('');
+
+    this.api.post<any>('/contact', {
+      name: this.name.trim(),
+      email: this.email.trim(),
+      subject: this.subject,
+      message: this.message.trim()
+    }).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.submitted.set(true);
+      },
+      error: () => {
+        this.submitting.set(false);
+        this.error.set('Failed to send message. Please try again or email us directly.');
+      }
+    });
   }
 }

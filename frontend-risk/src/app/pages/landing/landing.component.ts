@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <!-- Animated Background Grid -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -46,14 +47,14 @@ import { AuthService } from '../../core/auth/auth-api.service';
           <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span class="text-sm font-medium text-emerald-300">CAREERISK INDEX™</span>
+          <span class="text-sm font-medium text-emerald-300">{{ 'landing.badge' | translate }}</span>
         </div>
 
         <!-- Headline -->
         <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight">
-          Will AI Replace
+          {{ 'landing.headline' | translate }}
           <span class="relative inline-block">
-            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400">Your Career?</span>
+            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400">{{ 'landing.headlineHighlight' | translate }}</span>
             <span class="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 blur-2xl"></span>
           </span>
         </h1>
@@ -113,7 +114,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
             class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             <span class="flex items-center gap-3">
-              Quick Assessment (3 min)
+              {{ 'landing.ctaPrimary' | translate }}
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -123,7 +124,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
             routerLink="/start"
             class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all cursor-pointer"
           >
-            Detailed Skill Assessment
+            {{ 'landing.ctaSecondary' | translate }}
           </a>
         </div>
 
@@ -133,20 +134,20 @@ import { AuthService } from '../../core/auth/auth-api.service';
             <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
             </svg>
-            <span>Free assessment</span>
+            <span>{{ 'landing.trustFree' | translate }}</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
-            <span>Data never shared</span>
+            <span>{{ 'landing.trustPrivacy' | translate }}</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
             </svg>
-            <span>Personalized roadmap</span>
+            <span>{{ 'landing.trustRoadmap' | translate }}</span>
           </div>
         </div>
       </div>
@@ -163,8 +164,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <section class="py-24 px-6 bg-slate-900/50">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">How It Works</h2>
-          <p class="text-slate-400 max-w-2xl mx-auto">Three steps to understand your career's future and build a defense strategy</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ 'landing.howItWorks' | translate }}</h2>
+          <p class="text-slate-400 max-w-2xl mx-auto">{{ 'landing.howItWorksSubtitle' | translate }}</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
@@ -176,8 +177,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Upload Your Profile</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Share your CV or describe your role. Our AI analyzes your skills against 10,000+ job market data points.</p>
+            <h3 class="text-xl font-bold text-white mb-3">{{ 'landing.step1Title' | translate }}</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">{{ 'landing.step1Desc' | translate }}</p>
           </div>
 
           <!-- Step 2 -->
@@ -188,8 +189,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Get Your Risk Analysis</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Receive a detailed breakdown of automation risk, AI replacement probability, and market demand trends for your role.</p>
+            <h3 class="text-xl font-bold text-white mb-3">{{ 'landing.step2Title' | translate }}</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">{{ 'landing.step2Desc' | translate }}</p>
           </div>
 
           <!-- Step 3 -->
@@ -200,8 +201,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-3">Build Your Roadmap</h3>
-            <p class="text-slate-400 text-sm leading-relaxed">Get a personalized 90-day action plan with specific skills to learn, certifications to pursue, and career pivots to consider.</p>
+            <h3 class="text-xl font-bold text-white mb-3">{{ 'landing.step3Title' | translate }}</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">{{ 'landing.step3Desc' | translate }}</p>
           </div>
         </div>
       </div>
@@ -211,8 +212,8 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <section class="py-24 px-6">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">What Our Users Say</h2>
-          <p class="text-slate-400">Real stories from professionals who took control of their career future</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ 'landing.testimonials' | translate }}</h2>
+          <p class="text-slate-400">{{ 'landing.testimonialsSubtitle' | translate }}</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6 mb-16">
@@ -294,11 +295,11 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <section class="py-24 px-6">
       <div class="max-w-4xl mx-auto text-center">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 mb-6">
-          <span class="text-sm font-medium text-emerald-300">SIMPLE PRICING</span>
+          <span class="text-sm font-medium text-emerald-300">{{ 'landing.simplePricing' | translate }}</span>
         </div>
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Start free. Upgrade when ready.</h2>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ 'landing.startFree' | translate }}</h2>
         <p class="text-slate-400 mb-8 max-w-2xl mx-auto">
-          Get your risk score for free. Unlock the full action plan, career roadmap, and AI training arena with a one-time payment.
+          {{ 'landing.pricingDesc' | translate }}
         </p>
         <div class="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
           <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
@@ -318,7 +319,7 @@ import { AuthService } from '../../core/auth/auth-api.service';
           routerLink="/pricing"
           class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/10 transition-all"
         >
-          View all plans
+          {{ 'landing.viewPlans' | translate }}
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
@@ -354,13 +355,13 @@ import { AuthService } from '../../core/auth/auth-api.service';
     <section class="py-24 px-6 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-t from-emerald-500/10 to-transparent"></div>
       <div class="max-w-3xl mx-auto text-center relative z-20">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Don't Wait Until It's Too Late</h2>
-        <p class="text-slate-400 mb-8">The workforce is changing faster than ever. Know where you stand and take control of your career future.</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">{{ 'landing.finalCta' | translate }}</h2>
+        <p class="text-slate-400 mb-8">{{ 'landing.finalCtaDesc' | translate }}</p>
         <a
           routerLink="/session/new"
           class="inline-block px-10 py-5 bg-white rounded-xl text-lg font-bold text-slate-900 shadow-2xl hover:shadow-white/25 hover:scale-105 transition-all duration-300 cursor-pointer"
         >
-          Start Free Assessment →
+          {{ 'landing.startFreeAssessment' | translate }}
         </a>
       </div>
     </section>

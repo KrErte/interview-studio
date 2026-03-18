@@ -23,6 +23,10 @@ export class ApiClient {
     return this.http.post<T>(this.toUrl(path), body, options);
   }
 
+  put<T>(path: string, body: any, options: HttpOptions = {}): Observable<T> {
+    return this.http.put<T>(this.toUrl(path), body, options);
+  }
+
   postFormData<T>(path: string, formData: FormData): Observable<T> {
     return this.http.post<T>(this.toUrl(path), formData);
   }

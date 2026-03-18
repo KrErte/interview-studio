@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-public-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent, TranslateModule],
   template: `
     <!-- Animated Background -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -43,6 +44,14 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
 
           <!-- Navigation + UI Mode Toggle -->
           <div class="flex items-center gap-4">
+            <!-- Language Switcher -->
+            <button
+              (click)="toggleLanguage()"
+              class="px-2 py-1 rounded-md text-xs font-bold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+              [title]="currentLang === 'en' ? 'Switch to Estonian' : 'Switch to English'">
+              {{ currentLang === 'en' ? 'ET' : 'EN' }}
+            </button>
+
             <!-- UI Mode Toggle (top-right) -->
             <app-ui-mode-toggle />
 
@@ -55,13 +64,13 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
                 routerLinkActive="bg-slate-800/50 text-white"
                 [routerLinkActiveOptions]="{ exact: true }"
                 class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
-              >Home</a>
+              >{{ 'nav.home' | translate }}</a>
 
               <a
                 routerLink="/pricing"
                 routerLinkActive="bg-slate-800/50 text-white"
                 class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800/30 transition-colors"
-              >Pricing</a>
+              >{{ 'nav.pricing' | translate }}</a>
 
               <!-- Arena Dropdown -->
               <div class="relative group hidden sm:block">
@@ -93,13 +102,13 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
                 routerLink="/login"
                 routerLinkActive="text-emerald-400"
                 class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
-              >Sign In</a>
+              >{{ 'nav.signIn' | translate }}</a>
 
               <a
                 routerLink="/register"
                 routerLinkActive="ring-emerald-400"
                 class="ml-1 px-4 py-1.5 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all shadow-lg shadow-emerald-500/20"
-              >Get Started</a>
+              >{{ 'nav.getStarted' | translate }}</a>
             </nav>
           </div>
         </div>
@@ -131,36 +140,36 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
 
             <!-- Product -->
             <div>
-              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Product</h4>
+              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">{{ 'footer.product' | translate }}</h4>
               <div class="space-y-2">
-                <a routerLink="/session/new" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Assessment</a>
-                <a routerLink="/pricing" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Pricing</a>
-                <a routerLink="/start" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Skill Check</a>
+                <a routerLink="/session/new" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.assessment' | translate }}</a>
+                <a routerLink="/pricing" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'nav.pricing' | translate }}</a>
+                <a routerLink="/start" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.skillCheck' | translate }}</a>
               </div>
             </div>
 
             <!-- Company -->
             <div>
-              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Company</h4>
+              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">{{ 'footer.company' | translate }}</h4>
               <div class="space-y-2">
-                <a routerLink="/about" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">About</a>
-                <a routerLink="/contact" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Contact</a>
+                <a routerLink="/about" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.about' | translate }}</a>
+                <a routerLink="/contact" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.contact' | translate }}</a>
               </div>
             </div>
 
             <!-- Legal -->
             <div>
-              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Legal</h4>
+              <h4 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">{{ 'footer.legal' | translate }}</h4>
               <div class="space-y-2">
-                <a routerLink="/privacy" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Privacy Policy</a>
-                <a routerLink="/terms" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">Terms of Service</a>
+                <a routerLink="/privacy" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.privacy' | translate }}</a>
+                <a routerLink="/terms" class="block text-sm text-slate-500 hover:text-emerald-400 transition-colors">{{ 'footer.terms' | translate }}</a>
               </div>
             </div>
           </div>
 
           <!-- Bottom bar -->
           <div class="border-t border-slate-800/50 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p class="text-xs text-slate-600">&copy; 2026 CareerRisk Index. All rights reserved.</p>
+            <p class="text-xs text-slate-600">{{ 'footer.copyright' | translate }}</p>
             <div class="flex items-center gap-4">
               <!-- LinkedIn -->
               <a href="https://linkedin.com" target="_blank" rel="noopener" class="text-slate-600 hover:text-emerald-400 transition-colors">
@@ -181,4 +190,21 @@ import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.c
     </div>
   `
 })
-export class PublicShellComponent {}
+export class PublicShellComponent {
+  private readonly translate = inject(TranslateService);
+  currentLang = this.translate.currentLang || 'en';
+
+  toggleLanguage(): void {
+    this.currentLang = this.currentLang === 'en' ? 'et' : 'en';
+    this.translate.use(this.currentLang);
+    localStorage.setItem('lang', this.currentLang);
+  }
+
+  constructor() {
+    const saved = localStorage.getItem('lang');
+    if (saved && ['en', 'et'].includes(saved)) {
+      this.currentLang = saved;
+      this.translate.use(saved);
+    }
+  }
+}
