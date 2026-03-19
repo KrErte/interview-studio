@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: interview-backend
     environment:
-      SPRING_PROFILES_ACTIVE: local
+      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/studio-db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
       SPRING_DATASOURCE_USERNAME: sa
@@ -20,6 +20,10 @@ services:
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-pk_test_dummy}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-whsec_dummy}
       STRIPE_ARENA_PRO_PRICE_ID: ${STRIPE_ARENA_PRO_PRICE_ID:-price_dummy}
+      STRIPE_STARTER_MONTHLY_PRICE_ID: ${STRIPE_STARTER_MONTHLY_PRICE_ID:-price_starter_monthly_dummy}
+      STRIPE_STARTER_ANNUAL_PRICE_ID: ${STRIPE_STARTER_ANNUAL_PRICE_ID:-price_starter_annual_dummy}
+      STRIPE_PRO_MONTHLY_PRICE_ID: ${STRIPE_PRO_MONTHLY_PRICE_ID:-price_pro_monthly_dummy}
+      STRIPE_PRO_ANNUAL_PRICE_ID: ${STRIPE_PRO_ANNUAL_PRICE_ID:-price_pro_annual_dummy}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-https://careerrisk.ee}
     volumes:
       - backend_data:/data
