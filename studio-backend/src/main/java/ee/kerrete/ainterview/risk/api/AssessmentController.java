@@ -1,10 +1,16 @@
 package ee.kerrete.ainterview.risk.api;
 
+import ee.kerrete.ainterview.model.AppUser;
+import ee.kerrete.ainterview.model.UserTier;
+import ee.kerrete.ainterview.repository.AppUserRepository;
+import ee.kerrete.ainterview.security.AuthenticatedUser;
 import ee.kerrete.ainterview.support.SessionIdParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +24,7 @@ import java.util.Map;
 public class AssessmentController {
 
     private final SessionIdParser sessionIdParser;
+    private final AppUserRepository appUserRepository;
 
     // Track question progress per session
     private final java.util.concurrent.ConcurrentHashMap<String, Integer> sessionQuestionIndex = new java.util.concurrent.ConcurrentHashMap<>();
@@ -122,18 +129,38 @@ public class AssessmentController {
 
     /**
      * Get roadmap for the assessment.
+     * FREE users: only first 3 items (teaser) with teaser=true.
+     * STARTER+: full roadmap with teaser=false.
      */
     @PostMapping("/roadmap")
-    public ResponseEntity<Map<String, Object>> getRoadmap(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> getRoadmap(
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal AuthenticatedUser authUser) {
+
         String sessionId = request.get("sessionId");
-        return ResponseEntity.ok(Map.of(
-            "sessionId", sessionId,
-            "items", List.of(
-                Map.of("title", "Learn TypeScript", "description", "Master TypeScript for better job prospects", "priority", "HIGH", "weeks", 4),
-                Map.of("title", "Build AI Projects", "description", "Create portfolio projects with AI integration", "priority", "HIGH", "weeks", 6),
-                Map.of("title", "Get AWS Certified", "description", "Obtain AWS Solutions Architect certification", "priority", "MEDIUM", "weeks", 8)
-            )
-        ));
+
+        List<Map<String, Object>> allItems = List.of(
+            Map.of("title", "Learn TypeScript", "description", "Master TypeScript for better job prospects", "priority", "HIGH", "weeks", 4),
+            Map.of("title", "Build AI Projects", "description", "Create portfolio projects with AI integration", "priority", "HIGH", "weeks", 6),
+            Map.of("title", "Get AWS Certified", "description", "Obtain AWS Solutions Architect certification", "priority", "MEDIUM", "weeks", 8)
+        );
+
+        UserTier effectiveTier = UserTier.FREE;
+        if (authUser != null && authUser.id() != null) {
+            effectiveTier = appUserRepository.findById(authUser.id())
+                .map(AppUser::getEffectiveTier)
+                .orElse(UserTier.FREE);
+        }
+
+        boolean isTeaser = !effectiveTier.isAtLeast(UserTier.STARTER);
+        List<Map<String, Object>> items = isTeaser ? allItems.subList(0, Math.min(3, allItems.size())) : allItems;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("sessionId", sessionId);
+        result.put("items", items);
+        result.put("teaser", isTeaser);
+
+        return ResponseEntity.ok(result);
     }
 
     private AssessmentResultResponse createMockAssessment(String sessionId) {

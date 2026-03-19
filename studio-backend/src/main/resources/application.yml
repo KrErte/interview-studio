@@ -54,3 +54,7 @@ app:
     publishable-key: ${STRIPE_PUBLISHABLE_KEY:pk_test_dummy}
     webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_dummy}
     arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID:price_dummy}
+    starter-monthly-price-id: ${STRIPE_STARTER_MONTHLY_PRICE_ID:price_starter_monthly_dummy}
+    starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID:price_starter_annual_dummy}
+    pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID:price_pro_monthly_dummy}
+    pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID:price_pro_annual_dummy}

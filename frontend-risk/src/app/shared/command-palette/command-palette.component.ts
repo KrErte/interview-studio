@@ -71,6 +71,7 @@ export class CommandPaletteComponent {
     { label: 'Session History', description: 'View past assessments', path: '/history', icon: '📋', requiresAuth: true },
     { label: 'Skill Assessment', description: 'Detailed skill evaluation', path: '/start', icon: '📝' },
     { label: 'Job X-Ray', description: 'Analyze a job posting', path: '/tools/job-analyzer', icon: '🔍' },
+    { label: 'Career Roadmap', description: 'Your 30-day action plan', path: '/careerrisk/roadmap', icon: '🗺️', requiresTier: 'STARTER' },
     { label: 'Pricing', description: 'View plans and pricing', path: '/pricing', icon: '💰' },
     { label: 'Career Assessment', description: 'Full career risk analysis', path: '/careerrisk', icon: '📊' },
     { label: 'Interview Simulator', description: 'AI mock interviews', path: '/arena/interview-simulator', icon: '🎭', requiresTier: 'ARENA_PRO' },

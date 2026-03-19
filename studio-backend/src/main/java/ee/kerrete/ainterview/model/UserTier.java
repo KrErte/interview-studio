@@ -2,6 +2,7 @@ package ee.kerrete.ainterview.model;
 
 public enum UserTier {
     FREE,
+    STARTER,
     ARENA_PRO;
 
     public boolean isAtLeast(UserTier required) {

@@ -45,8 +45,8 @@ public class PaymentService {
         }
 
         try {
-            // Ensure user has a Stripe customer ID
             String customerId = getOrCreateStripeCustomer(user);
+            String priceId = resolvePriceId(request.tier(), request.billingInterval());
 
             SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
@@ -55,11 +55,12 @@ public class PaymentService {
                 .setCancelUrl(request.cancelUrl())
                 .addLineItem(
                     SessionCreateParams.LineItem.builder()
-                        .setPrice(stripeProperties.arenaProPriceId())
+                        .setPrice(priceId)
                         .setQuantity(1L)
                         .build()
                 )
                 .putMetadata("user_id", String.valueOf(user.getId()))
+                .putMetadata("tier", request.tier())
                 .build();
 
             com.stripe.model.checkout.Session session =
@@ -133,6 +134,35 @@ public class PaymentService {
         );
     }
 
+    private String resolvePriceId(String tier, String interval) {
+        String normalizedTier = (tier != null) ? tier.toUpperCase() : "STARTER";
+        String normalizedInterval = (interval != null) ? interval.toLowerCase() : "month";
+
+        return switch (normalizedTier) {
+            case "STARTER" -> "year".equals(normalizedInterval)
+                ? stripeProperties.starterAnnualPriceId()
+                : stripeProperties.starterMonthlyPriceId();
+            case "ARENA_PRO" -> "year".equals(normalizedInterval)
+                ? stripeProperties.proAnnualPriceId()
+                : stripeProperties.proMonthlyPriceId();
+            default -> stripeProperties.starterMonthlyPriceId();
+        };
+    }
+
+    private UserTier resolveTierFromPriceId(String priceId) {
+        if (priceId == null) return UserTier.FREE;
+        if (priceId.equals(stripeProperties.starterMonthlyPriceId())
+                || priceId.equals(stripeProperties.starterAnnualPriceId())) {
+            return UserTier.STARTER;
+        }
+        if (priceId.equals(stripeProperties.proMonthlyPriceId())
+                || priceId.equals(stripeProperties.proAnnualPriceId())
+                || priceId.equals(stripeProperties.arenaProPriceId())) {
+            return UserTier.ARENA_PRO;
+        }
+        return UserTier.FREE;
+    }
+
     private String getOrCreateStripeCustomer(AppUser user) throws Exception {
         if (user.getStripeCustomerId() != null) {
             return user.getStripeCustomerId();
@@ -170,8 +200,18 @@ public class PaymentService {
             return;
         }
 
+        // Read tier from metadata, fallback to ARENA_PRO for backwards compatibility
+        String tierStr = metadata.getOrDefault("tier", "ARENA_PRO");
+        UserTier purchasedTier;
+        try {
+            purchasedTier = UserTier.valueOf(tierStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            purchasedTier = UserTier.ARENA_PRO;
+        }
+
+        final UserTier finalTier = purchasedTier;
         appUserRepository.findById(userId).ifPresent(user -> {
-            user.setTier(UserTier.ARENA_PRO);
+            user.setTier(finalTier);
             user.setTierPurchasedAt(LocalDateTime.now());
             user.setSubscriptionId(subscriptionId);
             user.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
@@ -182,7 +222,7 @@ public class PaymentService {
             }
 
             appUserRepository.save(user);
-            log.info("User {} upgraded to ARENA_PRO via Stripe checkout", userId);
+            log.info("User {} upgraded to {} via Stripe checkout", userId, finalTier);
         });
     }
 
@@ -206,13 +246,23 @@ public class PaymentService {
                 );
             }
 
+            // Resolve tier from the subscription's price ID
+            if (subscription.getItems() != null && subscription.getItems().getData() != null
+                    && !subscription.getItems().getData().isEmpty()) {
+                String priceId = subscription.getItems().getData().get(0).getPrice().getId();
+                UserTier resolvedTier = resolveTierFromPriceId(priceId);
+                if (resolvedTier != UserTier.FREE) {
+                    user.setTier(resolvedTier);
+                }
+            }
+
             // If subscription is no longer active, downgrade
             if ("canceled".equals(status) || "unpaid".equals(status)) {
                 user.setTier(UserTier.FREE);
             }
 
             appUserRepository.save(user);
-            log.info("Subscription {} updated: status={}", subscriptionId, status);
+            log.info("Subscription {} updated: status={}, tier={}", subscriptionId, status, user.getTier());
         });
     }
 

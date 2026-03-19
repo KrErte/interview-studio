@@ -68,4 +68,7 @@
     <!-- Arena tool tables -->
     <include file="changes/2026-03-16-arena-tables.xml" relativeToChangelogFile="true"/>
 
+    <!-- 3-Tier Pricing: Add STARTER tier -->
+    <include file="changes/2026-03-18-add-starter-tier.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

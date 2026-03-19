@@ -75,12 +75,18 @@ public class DemoDataSeeder {
         boolean isAdmin = email.contains("admin");
         UserRole role = isAdmin ? UserRole.ADMIN : UserRole.USER;
 
+        UserTier tier = switch (email) {
+            case "admin@local.test" -> UserTier.ARENA_PRO;
+            case "user@local.test" -> UserTier.STARTER;
+            default -> UserTier.FREE;
+        };
+
         AppUser user = AppUser.builder()
                 .email(email)
                 .password(passwordEncoder.encode(DEMO_PASSWORD))
                 .fullName(fullName)
                 .role(role)
-                .tier(isAdmin ? UserTier.ARENA_PRO : UserTier.FREE)
+                .tier(tier)
                 .enabled(true)
                 .build();
 

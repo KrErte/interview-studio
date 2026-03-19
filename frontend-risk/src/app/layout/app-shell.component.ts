@@ -73,7 +73,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
             <!-- Tier Badge -->
             <span *ngIf="auth.isAuthenticated() && tierService.isPro()"
               class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300">
-              Arena Pro
+              Pro
+            </span>
+            <span *ngIf="auth.isAuthenticated() && !tierService.isPro() && tierService.isStarter()"
+              class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300">
+              Starter
             </span>
 
             <!-- Language Switcher -->

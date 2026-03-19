@@ -21,26 +21,40 @@ import { AuthService } from '../../core/auth/auth-api.service';
       } @else if (success()) {
         <!-- Success -->
         <div class="mb-8">
-          <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/20 flex items-center justify-center animate-bounce">
-            <svg class="w-10 h-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="w-20 h-20 mx-auto rounded-full flex items-center justify-center animate-bounce"
+            [class]="isProTier ? 'bg-purple-500/20' : 'bg-emerald-500/20'">
+            <svg class="w-10 h-10" [class]="isProTier ? 'text-purple-400' : 'text-emerald-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
         </div>
         <h1 class="text-3xl font-bold text-white mb-3">Welcome to {{ tierName() }}!</h1>
-        <p class="text-slate-400 mb-8">Your account has been upgraded. All features are now unlocked.</p>
+        <p class="text-slate-400 mb-8">Your account has been upgraded. All {{ tierName() }} features are now unlocked.</p>
 
         <div class="space-y-3">
-          <a
-            routerLink="/careerrisk/assessment"
-            class="block w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
-            Go to Assessment
-          </a>
-          <a
-            routerLink="/arena/interview"
-            class="block w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-300 hover:border-slate-500 transition-colors">
-            Try Arena Tools
-          </a>
+          @if (isProTier) {
+            <a
+              routerLink="/arena/interview-simulator"
+              class="block w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-base font-bold text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all">
+              Try Interview Simulator
+            </a>
+            <a
+              routerLink="/careerrisk/roadmap"
+              class="block w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-300 hover:border-slate-500 transition-colors">
+              View Your Roadmap
+            </a>
+          } @else {
+            <a
+              routerLink="/careerrisk/roadmap"
+              class="block w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
+              View Your Roadmap
+            </a>
+            <a
+              routerLink="/history"
+              class="block w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-300 hover:border-slate-500 transition-colors">
+              Session History
+            </a>
+          }
         </div>
       } @else {
         <!-- Error/timeout -->
@@ -75,6 +89,7 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
   readonly verifying = signal(true);
   readonly success = signal(false);
   readonly tierName = signal('');
+  isProTier = false;
 
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private pollCount = 0;
@@ -82,6 +97,7 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.expectedTier = this.route.snapshot.queryParamMap.get('tier') || '';
+    this.isProTier = this.expectedTier.toUpperCase() === 'ARENA_PRO';
     this.tierName.set(this.formatTierName(this.expectedTier));
 
     if (!this.auth.isAuthenticated()) {
@@ -105,8 +121,6 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
   }
 
   private pollTier() {
-    const isSubscription = this.expectedTier.toUpperCase() === 'ARENA_PRO';
-
     this.pollTimer = setInterval(() => {
       this.pollCount++;
 
@@ -115,18 +129,12 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
           const tier = res.tier || 'FREE';
           let confirmed = false;
 
-          if (isSubscription) {
-            // For subscription, check hasActiveSubscription
-            confirmed = res.hasActiveSubscription === true;
+          if (res.hasActiveSubscription === true) {
+            confirmed = tier.toUpperCase() === this.expectedTier.toUpperCase();
             if (confirmed) {
               this.tierService.setTier(tier);
               this.tierService.setSubscription(true, res.subscriptionStatus, res.subscriptionEndsAt);
-              this.tierName.set('Arena Pro');
-            }
-          } else {
-            confirmed = tier !== 'FREE' && tier.toUpperCase() === this.expectedTier.toUpperCase();
-            if (confirmed) {
-              this.tierService.setTier(tier);
+              this.tierName.set(this.formatTierName(tier));
             }
           }
 
@@ -151,6 +159,9 @@ export class PaymentSuccessComponent implements OnInit, OnDestroy {
 
   private formatTierName(tier: string): string {
     if (!tier) return '';
+    const upper = tier.toUpperCase();
+    if (upper === 'STARTER') return 'Starter';
+    if (upper === 'ARENA_PRO') return 'Pro';
     return tier.charAt(0).toUpperCase() + tier.slice(1).toLowerCase();
   }
 }

@@ -205,7 +205,7 @@ export const routes: Routes = [
       {
         path: 'roadmap',
         component: CareerriskRoadmapPageComponent,
-        canActivate: [authGuard, tierGuard('ARENA_PRO')]
+        canActivate: [authGuard, tierGuard('STARTER')]
       }
     ]
   },

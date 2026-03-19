@@ -101,7 +101,7 @@ public class AuthController {
         String tier = UserTier.FREE.name();
         if (authentication.getPrincipal() instanceof AuthenticatedUser au && au.id() != null) {
             tier = appUserRepository.findById(au.id())
-                .map(u -> u.getTier().name())
+                .map(u -> u.getEffectiveTier().name())
                 .orElse(UserTier.FREE.name());
         }
 

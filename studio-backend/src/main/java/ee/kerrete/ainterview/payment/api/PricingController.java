@@ -15,28 +15,43 @@ public class PricingController {
     public List<PricingTier> getPricing() {
         return List.of(
             new PricingTier(
-                "FREE", "Free", 0, "USD",
+                "FREE", "Free", 0, "EUR",
                 List.of(
-                    "Risk score + 3 blockers",
-                    "Teaser action plan",
+                    "Risk assessment + blockers",
+                    "Teaser plan (first 3 days)",
                     "Job X-Ray (3x/month)",
                     "Basic assessment"
                 ),
-                false, false, false, null
+                false, false, false, null,
+                null, null, null
             ),
             new PricingTier(
-                "ARENA_PRO", "Arena Pro", 10, "USD",
+                "STARTER", "Starter", 7, "EUR",
                 List.of(
                     "Everything in Free",
-                    "All Arena tools unlocked",
-                    "Interview Simulator (AI-powered)",
-                    "Salary Negotiation Coach",
-                    "CV/LinkedIn Optimizer",
-                    "Unlimited Job X-Ray",
-                    "Career Roadmap",
+                    "Full 30-day roadmap + tasks",
+                    "Task tracking & progress",
+                    "Session history",
+                    "Shareable reports",
+                    "Job X-Ray (3x/month)",
                     "Cancel anytime"
                 ),
-                false, true, true, "month"
+                false, true, true, "month",
+                58, 4.83, "MOST POPULAR"
+            ),
+            new PricingTier(
+                "ARENA_PRO", "Pro", 15, "EUR",
+                List.of(
+                    "Everything in Starter",
+                    "Interview Simulator (AI)",
+                    "Salary Negotiation Coach",
+                    "CV/LinkedIn Optimizer",
+                    "Priority AI processing",
+                    "Unlimited Job X-Ray",
+                    "Cancel anytime"
+                ),
+                false, false, true, "month",
+                150, 12.50, "BEST VALUE"
             )
         );
     }

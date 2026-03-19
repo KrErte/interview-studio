@@ -28,17 +28,21 @@ export interface PricingTier {
   popular: boolean;
   subscription: boolean;
   billingInterval: string | null;
+  annualPrice: number | null;
+  annualMonthlyPrice: number | null;
+  badge: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class PaymentApiService {
   constructor(private api: ApiClient) {}
 
-  createCheckout(tier: string, successUrl: string, cancelUrl: string): Observable<CheckoutResponse> {
+  createCheckout(tier: string, successUrl: string, cancelUrl: string, billingInterval: string = 'month'): Observable<CheckoutResponse> {
     return this.api.post<CheckoutResponse>('/payment/checkout', {
       tier,
       successUrl,
-      cancelUrl
+      cancelUrl,
+      billingInterval
     });
   }
 

@@ -1,8 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 
-export type UserTier = 'FREE' | 'ARENA_PRO';
+export type UserTier = 'FREE' | 'STARTER' | 'ARENA_PRO';
 
-const TIER_ORDER: UserTier[] = ['FREE', 'ARENA_PRO'];
+const TIER_ORDER: UserTier[] = ['FREE', 'STARTER', 'ARENA_PRO'];
 
 export interface TierFeatures {
   fullAssessmentTabs: boolean;
@@ -13,6 +13,9 @@ export interface TierFeatures {
   interviewSimulator: boolean;
   salaryCoach: boolean;
   cvOptimizer: boolean;
+  taskTracking: boolean;
+  sessionHistory: boolean;
+  shareableReports: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -28,16 +31,20 @@ export class TierService {
   readonly subscriptionEndsAt = this._subscriptionEndsAt.asReadonly();
 
   readonly features = computed<TierFeatures>(() => {
+    const isStarter = TIER_ORDER.indexOf(this._tier()) >= TIER_ORDER.indexOf('STARTER');
     const isPro = this._tier() === 'ARENA_PRO';
     return {
-      fullAssessmentTabs: isPro,
-      actionPlan: isPro,
+      fullAssessmentTabs: isStarter,
+      actionPlan: isStarter,
       arenaTools: isPro,
-      roadmap: isPro,
+      roadmap: isStarter,
       jobAnalyzerUnlimited: isPro,
       interviewSimulator: isPro,
       salaryCoach: isPro,
-      cvOptimizer: isPro
+      cvOptimizer: isPro,
+      taskTracking: isStarter,
+      sessionHistory: isStarter,
+      shareableReports: isStarter
     };
   });
 
@@ -47,6 +54,7 @@ export class TierService {
   readonly canAccessUnlimitedAnalyzer = computed(() => this.features().jobAnalyzerUnlimited);
 
   readonly isFree = computed(() => this._tier() === 'FREE');
+  readonly isStarter = computed(() => TIER_ORDER.indexOf(this._tier()) >= TIER_ORDER.indexOf('STARTER'));
   readonly isPro = computed(() => this._tier() === 'ARENA_PRO');
 
   setTier(tier: UserTier | string): void {

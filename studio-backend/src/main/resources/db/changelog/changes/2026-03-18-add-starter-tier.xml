@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <!-- No schema change needed: tier column is VARCHAR(20) and already accepts STARTER.
+         This changeset is a documentation marker for the 3-tier pricing migration. -->
+    <changeSet id="2026-03-18-add-starter-tier-marker" author="system">
+        <comment>Add STARTER tier to pricing model. No schema change — VARCHAR(20) column supports it.</comment>
+        <sql>SELECT 1</sql>
+    </changeSet>
+
+</databaseChangeLog>

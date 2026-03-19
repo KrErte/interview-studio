@@ -107,9 +107,9 @@ public class AppUser implements UserDetails {
 
     public UserTier getEffectiveTier() {
         if (hasActiveSubscription()) {
-            return UserTier.ARENA_PRO;
+            return tier;
         }
-        return tier;
+        return UserTier.FREE;
     }
 
     // ================= UserDetails =================

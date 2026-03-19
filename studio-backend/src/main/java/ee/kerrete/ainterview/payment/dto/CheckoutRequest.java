@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 public record CheckoutRequest(
     @NotBlank String tier,
     @NotBlank String successUrl,
-    @NotBlank String cancelUrl
+    @NotBlank String cancelUrl,
+    String billingInterval
 ) {}

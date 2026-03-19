@@ -11,5 +11,8 @@ public record PricingTier(
     boolean current,
     boolean popular,
     boolean subscription,
-    String billingInterval
+    String billingInterval,
+    Integer annualPrice,
+    Double annualMonthlyPrice,
+    String badge
 ) {}

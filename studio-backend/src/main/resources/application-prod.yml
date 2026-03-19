@@ -45,4 +45,8 @@ app:
     publishable-key: ${STRIPE_PUBLISHABLE_KEY}
     webhook-secret: ${STRIPE_WEBHOOK_SECRET}
     arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID}
+    starter-monthly-price-id: ${STRIPE_STARTER_MONTHLY_PRICE_ID}
+    starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID}
+    pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID}
+    pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID}
 

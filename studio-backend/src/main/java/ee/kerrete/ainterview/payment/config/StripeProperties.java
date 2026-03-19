@@ -7,5 +7,9 @@ public record StripeProperties(
     String secretKey,
     String publishableKey,
     String webhookSecret,
-    String arenaProPriceId
+    String arenaProPriceId,
+    String starterMonthlyPriceId,
+    String starterAnnualPriceId,
+    String proMonthlyPriceId,
+    String proAnnualPriceId
 ) {}

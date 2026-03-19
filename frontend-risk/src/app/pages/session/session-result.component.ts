@@ -118,10 +118,10 @@ import { AnalyticsService } from '../../core/services/analytics.service';
           <div class="rounded-2xl border border-slate-700 bg-gradient-to-b from-slate-900 to-slate-950 p-8 text-center mb-6">
             <div class="text-4xl mb-4">🔒</div>
             <h2 class="text-xl font-bold text-white mb-2">Unlock your full plan</h2>
-            <p class="text-slate-400 mb-6">Get your complete 30-day action plan, CV rewrite suggestions, roles to avoid, and pivot strategy.</p>
+            <p class="text-slate-400 mb-6">Get your complete 30-day action plan, task tracking, session history, and shareable reports.</p>
             <a routerLink="/pricing"
               class="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
-              View Plans
+              Upgrade to Starter &mdash; &euro;7/mo
             </a>
           </div>
         }
