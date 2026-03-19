@@ -71,3 +71,12 @@ coverage/
 # H2 database files
 *.mv.db
 *.trace.db
+
+# Deploy / debug artifacts
+*.stackdump
+deploy_out.txt
+deploy_err.txt
+ssh_output.txt
+**/gradle_out.txt
+**/output.txt
+.claude/
