@@ -1,6 +1,22 @@
-version: '3.8'
-
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: interview-postgres
+    environment:
+      POSTGRES_DB: ai
+      POSTGRES_USER: ${DB_USER:-ai}
+      POSTGRES_PASSWORD: ${DB_PASS:-ai123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ai} -d ai"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+
   backend:
     build:
       context: ./studio-backend
@@ -8,10 +24,9 @@ services:
     container_name: interview-backend
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/studio-db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
-      SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD:
+      DB_URL: jdbc:postgresql://postgres:5432/ai
+      DB_USER: ${DB_USER:-ai}
+      DB_PASS: ${DB_PASS:-ai123}
       SERVER_PORT: 8080
       JWT_SECRET: ${JWT_SECRET:-your-production-secret-key-min-32-characters}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-dummy-key}
@@ -25,8 +40,9 @@ services:
       STRIPE_PRO_MONTHLY_PRICE_ID: ${STRIPE_PRO_MONTHLY_PRICE_ID:-price_pro_monthly_dummy}
       STRIPE_PRO_ANNUAL_PRICE_ID: ${STRIPE_PRO_ANNUAL_PRICE_ID:-price_pro_annual_dummy}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-https://careerrisk.ee}
-    volumes:
-      - backend_data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "8082:8080"
     healthcheck:
@@ -54,7 +70,7 @@ services:
       - app-network
 
 volumes:
-  backend_data:
+  postgres_data:
 
 networks:
   app-network:
