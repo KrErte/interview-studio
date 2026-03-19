@@ -54,6 +54,13 @@ export const routes: Routes = [
           import('./pages/session/session-result.component').then(
             (m) => m.SessionResultComponent
           )
+      },
+      {
+        path: 'mock-interview',
+        loadComponent: () =>
+          import('./pages/session/mock-interview.component').then(
+            (m) => m.MockInterviewComponent
+          )
       }
     ]
   },

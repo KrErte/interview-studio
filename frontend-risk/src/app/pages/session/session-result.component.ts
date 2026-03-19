@@ -52,6 +52,32 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 
         <!-- Paid Content OR Upgrade CTA -->
         @if (session()!.paid) {
+
+          <!-- Mock Interview CTA -->
+          <div class="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 to-cyan-950/40 p-6 mb-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                </svg>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h2 class="text-base font-bold text-white mb-1">Practice your interview</h2>
+                <p class="text-sm text-slate-400 mb-3">
+                  5 questions tailored to your blockers. Each question targets a specific gap we identified — with live AI feedback.
+                </p>
+                <a [routerLink]="['/session', session()!.id, 'mock-interview']"
+                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-emerald-500 text-slate-900 hover:bg-emerald-400 transition-all">
+                  Start Mock Interview
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
           <!-- 30-Day Plan -->
           @if (session()!.plan?.length) {
             <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 mb-6">

@@ -65,4 +65,57 @@ export class SessionApiService {
   getSharedSession(shareId: string): Observable<SessionResponse> {
     return this.api.get<SessionResponse>(`/sessions/share/${shareId}`);
   }
+
+  // ─── Mock Interview ───────────────────────────────────────────────────────
+
+  startMockInterview(sessionId: number): Observable<MockInterviewStartResponse> {
+    return this.api.post<MockInterviewStartResponse>(
+      `/sessions/${sessionId}/mock-interview/start`, {}
+    );
+  }
+
+  respondMockInterview(sessionId: number, arenaSessionId: number, answer: string): Observable<MockInterviewRespondResponse> {
+    return this.api.post<MockInterviewRespondResponse>(
+      `/sessions/${sessionId}/mock-interview/${arenaSessionId}/respond`, { answer }
+    );
+  }
+}
+
+// ─── Mock Interview DTOs ───────────────────────────────────────────────────
+
+export interface MockInterviewStartResponse {
+  arenaSessionId: number;
+  question: string;
+  questionNumber: number;
+  totalQuestions: number;
+  targetedBlocker: string | null;
+  role: string;
+  status: 'RED' | 'YELLOW' | 'GREEN';
+}
+
+export interface MockInterviewRespondResponse {
+  arenaSessionId: number;
+  isComplete: boolean;
+  question: string | null;
+  questionNumber: number;
+  totalQuestions: number;
+  targetedBlocker: string | null;
+  feedback: string | null;
+  blockerFeedback: string | null;
+  summary: MockInterviewSummary | null;
+}
+
+export interface MockInterviewSummary {
+  overallScore: number;
+  blockerResolutions: BlockerResolution[];
+  strengths: string[];
+  weaknesses: string[];
+  verdict: string;
+  improvementPlan: string;
+}
+
+export interface BlockerResolution {
+  blocker: string;
+  resolution: 'ADDRESSED' | 'PARTIAL' | 'MISSED';
+  note: string;
 }
