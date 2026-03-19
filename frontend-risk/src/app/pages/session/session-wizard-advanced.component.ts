@@ -157,8 +157,13 @@ import { TranslateModule } from '@ngx-translate/core';
           <div></div>
         }
 
+        <div class="flex items-center gap-3">
+          @if (!canProceed() && showHint()) {
+            <span class="text-sm text-amber-400">{{ hintMessage() }}</span>
+          }
+        </div>
         @if (step() < 6) {
-          <button (click)="step.set(step() + 1)" [disabled]="!canProceed()"
+          <button (click)="onNext()" [disabled]="!canProceed()"
             class="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold disabled:opacity-40 transition-all">
             {{ 'common.next' | translate }}
           </button>
@@ -192,6 +197,7 @@ export class SessionWizardAdvancedComponent {
 
   step = signal(1);
   submitting = signal(false);
+  showHint = signal(false);
 
   targetRole = '';
   lastWorkedInRole = '';
@@ -236,6 +242,25 @@ export class SessionWizardAdvancedComponent {
       case 6: return true; // optional CV upload
       default: return false;
     }
+  }
+
+  hintMessage(): string {
+    switch (this.step()) {
+      case 1: return 'Please enter a target role';
+      case 2: return 'Please select when you last worked in this role';
+      case 3: return 'Please select your urgency level';
+      case 5: return 'Please select your main blocker';
+      default: return '';
+    }
+  }
+
+  onNext(): void {
+    if (!this.canProceed()) {
+      this.showHint.set(true);
+      return;
+    }
+    this.showHint.set(false);
+    this.step.set(this.step() + 1);
   }
 
   onDragOver(event: DragEvent): void {

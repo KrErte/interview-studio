@@ -27,8 +27,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Step 1: Target Role -->
       @if (step() === 1) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">What role are you targeting?</h1>
-          <p class="text-slate-400 mb-8">Tell us the position you're preparing for</p>
+          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.targetRoleTitle' | translate }}</h1>
+          <p class="text-slate-400 mb-8">{{ 'wizard.targetRoleHint' | translate }}</p>
 
           <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
             @for (role of suggestedRoles; track role) {
@@ -42,7 +42,7 @@ import { TranslateModule } from '@ngx-translate/core';
             }
           </div>
 
-          <input type="text" [(ngModel)]="targetRole" placeholder="Or type your target role..."
+          <input type="text" [(ngModel)]="targetRole" [placeholder]="'wizard.targetRolePlaceholder' | translate"
             class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
         </div>
       }
@@ -50,8 +50,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Step 2: Experience Level -->
       @if (step() === 2) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">Your experience with this role?</h1>
-          <p class="text-slate-400 mb-8">How familiar are you with <span class="text-emerald-400">{{ targetRole }}</span>?</p>
+          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.experienceTitle' | translate }}</h1>
+          <p class="text-slate-400 mb-8">{{ 'wizard.experienceHint' | translate }} <span class="text-emerald-400">{{ targetRole }}</span>?</p>
 
           <div class="space-y-3">
             @for (opt of experienceOptions; track opt.value) {
@@ -71,8 +71,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Step 3: Main Challenge -->
       @if (step() === 3) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">What's your biggest challenge?</h1>
-          <p class="text-slate-400 mb-8">What's holding you back from landing <span class="text-emerald-400">{{ targetRole }}</span>?</p>
+          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.challengeTitle' | translate }}</h1>
+          <p class="text-slate-400 mb-8">{{ 'wizard.challengeHint' | translate }} <span class="text-emerald-400">{{ targetRole }}</span>?</p>
 
           <div class="space-y-3">
             @for (opt of challengeOptions; track opt.value) {
@@ -100,17 +100,22 @@ import { TranslateModule } from '@ngx-translate/core';
           <div></div>
         }
 
-        @if (step() < 3) {
-          <button (click)="step.set(step() + 1)" [disabled]="!canProceed()"
-            class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
-            {{ 'common.next' | translate }}
-          </button>
-        } @else {
-          <button (click)="submit()" [disabled]="!canProceed() || submitting()"
-            class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
-            @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
-          </button>
-        }
+        <div class="flex items-center gap-3">
+          @if (!canProceed() && showHint()) {
+            <span class="text-sm text-amber-400">{{ hintMessage() }}</span>
+          }
+          @if (step() < 3) {
+            <button (click)="onNext()" [disabled]="!canProceed()"
+              class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
+              {{ 'common.next' | translate }}
+            </button>
+          } @else {
+            <button (click)="submit()" [disabled]="!canProceed() || submitting()"
+              class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
+              @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
+            </button>
+          }
+        </div>
       </div>
     </div>
   `,
@@ -126,6 +131,7 @@ export class SessionWizardComponent {
 
   step = signal(1);
   submitting = signal(false);
+  showHint = signal(false);
 
   targetRole = '';
   experienceLevel = '';
@@ -159,6 +165,24 @@ export class SessionWizardComponent {
       case 3: return !!this.mainChallenge;
       default: return false;
     }
+  }
+
+  hintMessage(): string {
+    switch (this.step()) {
+      case 1: return 'Please enter a target role';
+      case 2: return 'Please select your experience level';
+      case 3: return 'Please select your main challenge';
+      default: return '';
+    }
+  }
+
+  onNext(): void {
+    if (!this.canProceed()) {
+      this.showHint.set(true);
+      return;
+    }
+    this.showHint.set(false);
+    this.step.set(this.step() + 1);
   }
 
   submit() {

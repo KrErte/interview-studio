@@ -13,6 +13,11 @@ export interface TierFeatures {
   interviewSimulator: boolean;
   salaryCoach: boolean;
   cvOptimizer: boolean;
+  careerMentor: boolean;
+  companyPrep: boolean;
+  linkedinGenerator: boolean;
+  coverLetterGenerator: boolean;
+  salaryBenchmark: boolean;
   taskTracking: boolean;
   sessionHistory: boolean;
   shareableReports: boolean;
@@ -42,6 +47,11 @@ export class TierService {
       interviewSimulator: isPro,
       salaryCoach: isPro,
       cvOptimizer: isPro,
+      careerMentor: isPro,
+      companyPrep: isPro,
+      linkedinGenerator: isPro,
+      coverLetterGenerator: isPro,
+      salaryBenchmark: isPro,
       taskTracking: isStarter,
       sessionHistory: isStarter,
       shareableReports: isStarter

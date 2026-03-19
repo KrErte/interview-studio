@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../core/auth/auth-api.service';
 
 @Component({
   selector: 'app-public-shell',
@@ -90,25 +91,51 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                   <a routerLink="/arena/salary-coach" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                     💰 Salary Coach
                   </a>
-                  <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                  <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                     📄 CV Optimizer
+                  </a>
+                  <a routerLink="/arena/career-mentor" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    🧠 Career Mentor
+                  </a>
+                  <a routerLink="/arena/company-prep" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    🏢 Company Prep
+                  </a>
+                  <a routerLink="/arena/linkedin-generator" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    🔗 LinkedIn Generator
+                  </a>
+                  <a routerLink="/arena/cover-letter" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                    ✉️ Cover Letter
+                  </a>
+                  <a routerLink="/arena/salary-benchmark" class="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                    📊 Salary Benchmark
                   </a>
                 </div>
               </div>
 
               <div class="h-4 w-px bg-slate-800 mx-1 hidden sm:block"></div>
 
-              <a
-                routerLink="/login"
-                routerLinkActive="text-emerald-400"
-                class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
-              >{{ 'nav.signIn' | translate }}</a>
+              @if (!auth.isAuthenticated()) {
+                <a
+                  routerLink="/login"
+                  routerLinkActive="text-emerald-400"
+                  class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
+                >{{ 'nav.signIn' | translate }}</a>
 
-              <a
-                routerLink="/register"
-                routerLinkActive="ring-emerald-400"
-                class="ml-1 px-4 py-1.5 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all shadow-lg shadow-emerald-500/20"
-              >{{ 'nav.getStarted' | translate }}</a>
+                <a
+                  routerLink="/register"
+                  routerLinkActive="ring-emerald-400"
+                  class="ml-1 px-4 py-1.5 rounded-lg text-sm font-semibold text-slate-900 bg-gradient-to-r from-emerald-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 transition-all shadow-lg shadow-emerald-500/20"
+                >{{ 'nav.getStarted' | translate }}</a>
+              } @else {
+                <a
+                  routerLink="/careerrisk"
+                  class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
+                >Dashboard</a>
+                <button
+                  (click)="logout()"
+                  class="px-3 py-1.5 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
+                >{{ 'auth.logout' | translate }}</button>
+              }
             </nav>
           </div>
         </div>
@@ -192,12 +219,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class PublicShellComponent {
   private readonly translate = inject(TranslateService);
+  private readonly router = inject(Router);
+  readonly auth = inject(AuthService);
   currentLang = this.translate.currentLang || 'en';
 
   toggleLanguage(): void {
     this.currentLang = this.currentLang === 'en' ? 'et' : 'en';
     this.translate.use(this.currentLang);
     localStorage.setItem('lang', this.currentLang);
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/']);
   }
 
   constructor() {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import ee.kerrete.ainterview.security.AuthenticatedUser;
 import ee.kerrete.ainterview.security.CurrentUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,12 @@ public class CareerRiskScoreController {
 
     @GetMapping
     @PreAuthorize("hasRole('JOBSEEKER')")
-    public CareerRiskScoreResponse latest(@CurrentUser AuthenticatedUser user) {
-        return careerRiskScoreService.getLatestForUser(user.id());
+    public ResponseEntity<CareerRiskScoreResponse> latest(@CurrentUser AuthenticatedUser user) {
+        CareerRiskScoreResponse response = careerRiskScoreService.getLatestForUser(user.id());
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
     }
 }
 

@@ -31,12 +31,12 @@ import { TranslateModule } from '@ngx-translate/core';
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span>{{ liveAssessments | number }} assessments today</span>
+          <span>{{ liveAssessments | number }} {{ 'landing.liveAssessments' | translate }}</span>
         </div>
         <div class="hidden sm:block h-3 w-px bg-slate-700"></div>
         <div class="hidden sm:flex items-center gap-2">
           <span class="text-amber-400">⚡</span>
-          <span>{{ jobsAtRisk }}% of jobs disrupted by 2030</span>
+          <span>{{ jobsAtRisk }}% {{ 'landing.jobsDisrupted' | translate }}</span>
         </div>
       </div>
 
@@ -60,9 +60,7 @@ import { TranslateModule } from '@ngx-translate/core';
         </h1>
 
         <!-- Subheadline -->
-        <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
-          Get your personalized <span class="text-white font-semibold">Disruption Risk Score</span> in 3 minutes.
-          Based on real market data, AI advancement trends, and your unique skill profile.
+        <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed" [innerHTML]="'landing.subheadline' | translate">
         </p>
 
         <!-- Risk Meter Preview -->
@@ -102,7 +100,7 @@ import { TranslateModule } from '@ngx-translate/core';
             </svg>
             <div class="absolute inset-x-0 bottom-0 text-center">
               <span class="text-3xl font-bold text-white">{{ displayScore }}%</span>
-              <span class="block text-xs text-slate-500 mt-1">Average Risk Score</span>
+              <span class="block text-xs text-slate-500 mt-1">{{ 'landing.averageRiskScore' | translate }}</span>
             </div>
           </div>
         </div>
@@ -225,14 +223,13 @@ import { TranslateModule } from '@ngx-translate/core';
               </svg>
             </div>
             <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
-              "This tool helped me realize I needed to learn cloud skills urgently. I followed the 30-day plan
-              and landed a DevOps role within 2 months. The risk score was a real wake-up call."
+              "{{ 'landing.testimonial1Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-xs font-bold text-slate-900">SK</div>
               <div>
-                <div class="text-sm font-semibold text-white">Sarah K.</div>
-                <div class="text-xs text-slate-500">Software Developer, Tallinn</div>
+                <div class="text-sm font-semibold text-white">{{ 'landing.testimonial1Name' | translate }}</div>
+                <div class="text-xs text-slate-500">{{ 'landing.testimonial1Role' | translate }}</div>
               </div>
             </div>
           </div>
@@ -245,14 +242,13 @@ import { TranslateModule } from '@ngx-translate/core';
               </svg>
             </div>
             <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
-              "As a marketing manager, I wasn't sure how AI would affect my role. The assessment showed me
-              exactly which skills to strengthen. Now I feel much more confident about my future."
+              "{{ 'landing.testimonial2Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-xs font-bold text-slate-900">MR</div>
               <div>
-                <div class="text-sm font-semibold text-white">Martin R.</div>
-                <div class="text-xs text-slate-500">Marketing Manager, Helsinki</div>
+                <div class="text-sm font-semibold text-white">{{ 'landing.testimonial2Name' | translate }}</div>
+                <div class="text-xs text-slate-500">{{ 'landing.testimonial2Role' | translate }}</div>
               </div>
             </div>
           </div>
@@ -265,14 +261,13 @@ import { TranslateModule } from '@ngx-translate/core';
               </svg>
             </div>
             <p class="text-slate-300 text-sm leading-relaxed mb-4 italic">
-              "I was considering a career switch to data analytics. The stress test and negotiation tools
-              prepared me better than any course. Got a 25% salary increase in my new role!"
+              "{{ 'landing.testimonial3Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-xs font-bold text-slate-900">AL</div>
               <div>
-                <div class="text-sm font-semibold text-white">Anna L.</div>
-                <div class="text-xs text-slate-500">Financial Analyst, Riga</div>
+                <div class="text-sm font-semibold text-white">{{ 'landing.testimonial3Name' | translate }}</div>
+                <div class="text-xs text-slate-500">{{ 'landing.testimonial3Role' | translate }}</div>
               </div>
             </div>
           </div>
@@ -280,7 +275,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <!-- As Seen In -->
         <div class="text-center">
-          <p class="text-xs text-slate-600 uppercase tracking-widest mb-4">Trusted by professionals across the Nordics & Baltics</p>
+          <p class="text-xs text-slate-600 uppercase tracking-widest mb-4">{{ 'landing.trustedBy' | translate }}</p>
           <div class="flex flex-wrap items-center justify-center gap-8 text-slate-700">
             <span class="text-lg font-bold tracking-tight">TechCrunch</span>
             <span class="text-lg font-bold tracking-tight">Wired</span>
@@ -303,16 +298,16 @@ import { TranslateModule } from '@ngx-translate/core';
         </p>
         <div class="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
           <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-            <div class="text-2xl font-bold text-slate-300">Free</div>
-            <div class="text-xs text-slate-500 mt-1">Risk score + blockers</div>
+            <div class="text-2xl font-bold text-slate-300">{{ 'landing.priceFree' | translate }}</div>
+            <div class="text-xs text-slate-500 mt-1">{{ 'landing.priceFreeDesc' | translate }}</div>
           </div>
           <div class="rounded-xl border border-emerald-500/50 bg-slate-900/50 p-5 shadow-lg shadow-emerald-500/5">
-            <div class="text-2xl font-bold text-white">From $7</div>
-            <div class="text-xs text-emerald-400 mt-1">Full assessment + plan</div>
+            <div class="text-2xl font-bold text-white">&euro;7.99/{{ 'pricing.perMonth' | translate }}</div>
+            <div class="text-xs text-emerald-400 mt-1">{{ 'landing.priceStarterDesc' | translate }}</div>
           </div>
-          <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-            <div class="text-2xl font-bold text-slate-300">$49</div>
-            <div class="text-xs text-slate-500 mt-1">Lifetime access</div>
+          <div class="rounded-xl border border-purple-500/50 bg-slate-900/50 p-5 shadow-lg shadow-purple-500/5">
+            <div class="text-2xl font-bold text-white">&euro;15.99/{{ 'pricing.perMonth' | translate }}</div>
+            <div class="text-xs text-purple-400 mt-1">{{ 'landing.priceProDesc' | translate }}</div>
           </div>
         </div>
         <a
@@ -333,19 +328,19 @@ import { TranslateModule } from '@ngx-translate/core';
         <div class="grid md:grid-cols-4 gap-8 text-center">
           <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">85M</div>
-            <div class="text-sm text-slate-500 mt-2">Jobs displaced by 2025</div>
+            <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsJobsDisplaced' | translate }}</div>
           </div>
           <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">47%</div>
-            <div class="text-sm text-slate-500 mt-2">Of US jobs at high risk</div>
+            <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsJobsAtRisk' | translate }}</div>
           </div>
           <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">97M</div>
-            <div class="text-sm text-slate-500 mt-2">New roles emerging</div>
+            <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsNewRoles' | translate }}</div>
           </div>
           <div>
             <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">3 min</div>
-            <div class="text-sm text-slate-500 mt-2">To know your risk</div>
+            <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsTimeToKnow' | translate }}</div>
           </div>
         </div>
       </div>

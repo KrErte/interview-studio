@@ -13,13 +13,31 @@ import { TranslateModule } from '@ngx-translate/core';
   template: `
     <div class="max-w-5xl mx-auto px-4 py-12">
       <!-- Header -->
-      <div class="text-center mb-12">
+      <div class="text-center mb-8">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
           {{ 'pricing.title' | translate }}
         </h1>
         <p class="text-lg text-slate-400 max-w-2xl mx-auto">
           {{ 'pricing.subtitle' | translate }}
         </p>
+      </div>
+
+      <!-- Social Proof Bar -->
+      <div class="flex flex-wrap items-center justify-center gap-6 mb-10 py-4 px-6 rounded-xl bg-slate-900/60 border border-slate-800">
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-emerald-400 font-bold">2,500+</span>
+          <span class="text-slate-400">professionals</span>
+        </div>
+        <div class="w-px h-4 bg-slate-700 hidden sm:block"></div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-yellow-400">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="text-slate-400">4.8/5 rating</span>
+        </div>
+        <div class="w-px h-4 bg-slate-700 hidden sm:block"></div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-cyan-400 font-bold">40+</span>
+          <span class="text-slate-400">countries</span>
+        </div>
       </div>
 
       <!-- Billing Toggle -->
@@ -78,7 +96,9 @@ import { TranslateModule } from '@ngx-translate/core';
               }
 
               <div class="mb-6">
-                <h3 class="text-xl font-bold text-white mb-2">{{ tier.name }}</h3>
+                <h3 class="text-xl font-bold text-white mb-1">{{ tier.name }}</h3>
+                <!-- Feature count -->
+                <div class="text-xs text-slate-500 mb-2">{{ tier.features.length }} features included</div>
                 <div class="flex items-baseline gap-1">
                   @if (tier.price === 0) {
                     <span class="text-4xl font-bold text-slate-300">{{ 'pricing.free' | translate }}</span>
@@ -99,16 +119,66 @@ import { TranslateModule } from '@ngx-translate/core';
                 }
               </div>
 
-              <ul class="space-y-3 mb-8 flex-1">
-                @for (feature of tier.features; track feature) {
-                  <li class="flex items-start gap-2 text-sm text-slate-300">
-                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" [class]="tierCheckClass(tier)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {{ feature }}
-                  </li>
-                }
-              </ul>
+              <!-- Pro tier gets category headers -->
+              @if (tier.id === 'ARENA_PRO') {
+                <div class="space-y-4 mb-8 flex-1">
+                  <!-- Base -->
+                  <ul class="space-y-2">
+                    @for (feature of getProBaseFeatures(tier); track feature) {
+                      <li class="flex items-start gap-2 text-sm text-slate-300">
+                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {{ feature }}
+                      </li>
+                    }
+                  </ul>
+
+                  <!-- AI Tools category -->
+                  <div>
+                    <div class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2 mt-3">AI Tools</div>
+                    <ul class="space-y-2">
+                      @for (feature of getProAiFeatures(tier); track feature) {
+                        <li class="flex items-start gap-2 text-sm text-slate-300">
+                          <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          @if (isNewFeature(feature)) {
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/30 text-purple-300 mr-1">NEW</span>
+                          }
+                          {{ stripNewPrefix(feature) }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+
+                  <!-- Analytics & Unlimited category -->
+                  <div>
+                    <div class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2 mt-3">Analytics & Unlimited</div>
+                    <ul class="space-y-2">
+                      @for (feature of getProExtraFeatures(tier); track feature) {
+                        <li class="flex items-start gap-2 text-sm text-slate-300">
+                          <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {{ feature }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                </div>
+              } @else {
+                <ul class="space-y-3 mb-8 flex-1">
+                  @for (feature of tier.features; track feature) {
+                    <li class="flex items-start gap-2 text-sm text-slate-300">
+                      <svg class="w-5 h-5 flex-shrink-0 mt-0.5" [class]="tierCheckClass(tier)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {{ feature }}
+                    </li>
+                  }
+                </ul>
+              }
 
               @if (tier.id === 'FREE') {
                 <a
@@ -229,6 +299,29 @@ export class PricingComponent implements OnInit {
     if (tier.id === 'STARTER') return 'text-emerald-400';
     if (tier.id === 'ARENA_PRO') return 'text-purple-400';
     return 'text-slate-500';
+  }
+
+  isNewFeature(feature: string): boolean {
+    return feature.startsWith('NEW:');
+  }
+
+  stripNewPrefix(feature: string): string {
+    return feature.startsWith('NEW:') ? feature.substring(4) : feature;
+  }
+
+  getProBaseFeatures(tier: PricingTier): string[] {
+    return tier.features.filter(f => f === 'Everything in Starter');
+  }
+
+  getProAiFeatures(tier: PricingTier): string[] {
+    const aiKeywords = ['Interview Simulator', 'Salary Negotiation', 'CV/LinkedIn', 'Career Mentor', 'Company-Specific', 'LinkedIn Summary', 'Cover Letter', 'Salary Benchmark'];
+    return tier.features.filter(f => aiKeywords.some(k => f.includes(k)));
+  }
+
+  getProExtraFeatures(tier: PricingTier): string[] {
+    const base = this.getProBaseFeatures(tier);
+    const ai = this.getProAiFeatures(tier);
+    return tier.features.filter(f => !base.includes(f) && !ai.includes(f));
   }
 
   checkout(tierId: string) {

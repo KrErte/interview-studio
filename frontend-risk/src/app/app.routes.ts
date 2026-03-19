@@ -171,6 +171,46 @@ export const routes: Routes = [
           import('./pages/arena/cv-optimizer.component').then(
             (m) => m.CvOptimizerComponent
           )
+      },
+      {
+        path: 'career-mentor',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/career-mentor.component').then(
+            (m) => m.CareerMentorComponent
+          )
+      },
+      {
+        path: 'company-prep',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/company-prep.component').then(
+            (m) => m.CompanyPrepComponent
+          )
+      },
+      {
+        path: 'linkedin-generator',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/linkedin-generator.component').then(
+            (m) => m.LinkedinGeneratorComponent
+          )
+      },
+      {
+        path: 'cover-letter',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/cover-letter.component').then(
+            (m) => m.CoverLetterComponent
+          )
+      },
+      {
+        path: 'salary-benchmark',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/salary-benchmark.component').then(
+            (m) => m.SalaryBenchmarkComponent
+          )
       }
     ]
   },

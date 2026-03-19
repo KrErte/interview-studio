@@ -114,15 +114,47 @@ import { AnalyticsService } from '../../core/services/analytics.service';
             </div>
           }
         } @else {
-          <!-- Upgrade CTA -->
-          <div class="rounded-2xl border border-slate-700 bg-gradient-to-b from-slate-900 to-slate-950 p-8 text-center mb-6">
-            <div class="text-4xl mb-4">🔒</div>
-            <h2 class="text-xl font-bold text-white mb-2">Unlock your full plan</h2>
-            <p class="text-slate-400 mb-6">Get your complete 30-day action plan, task tracking, session history, and shareable reports.</p>
-            <a routerLink="/pricing"
-              class="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
-              Upgrade to Starter &mdash; &euro;7/mo
-            </a>
+          <!-- Contextual Upgrade Messaging -->
+          <div class="rounded-2xl border border-slate-700 bg-gradient-to-b from-slate-900 to-slate-950 p-8 mb-6">
+            <div class="text-center mb-6">
+              <div class="text-4xl mb-4">🔒</div>
+              <h2 class="text-xl font-bold text-white mb-2">{{ upgradeTitle() }}</h2>
+              <p class="text-slate-400">{{ upgradeMessage() }}</p>
+            </div>
+
+            <!-- Dual CTA -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <a routerLink="/pricing"
+                class="block px-6 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-center shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
+                <div class="text-slate-900 font-bold">Starter</div>
+                <div class="text-slate-800 text-sm">&euro;7.99/mo &mdash; Full roadmap + tracking</div>
+              </a>
+              <a routerLink="/pricing"
+                class="block px-6 py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-center shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all">
+                <div class="text-white font-bold">Pro</div>
+                <div class="text-purple-100 text-sm">&euro;15.99/mo &mdash; 8 AI tools + unlimited</div>
+              </a>
+            </div>
+
+            <!-- Locked Feature Previews -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="rounded-xl border border-slate-800 bg-slate-800/30 p-3 text-center opacity-60 blur-[1px]">
+                <div class="text-lg mb-1">🧠</div>
+                <div class="text-xs text-slate-400">Career Mentor</div>
+              </div>
+              <div class="rounded-xl border border-slate-800 bg-slate-800/30 p-3 text-center opacity-60 blur-[1px]">
+                <div class="text-lg mb-1">🎭</div>
+                <div class="text-xs text-slate-400">Interview Sim</div>
+              </div>
+              <div class="rounded-xl border border-slate-800 bg-slate-800/30 p-3 text-center opacity-60 blur-[1px]">
+                <div class="text-lg mb-1">📄</div>
+                <div class="text-xs text-slate-400">PDF Export</div>
+              </div>
+              <div class="rounded-xl border border-slate-800 bg-slate-800/30 p-3 text-center opacity-60 blur-[1px]">
+                <div class="text-lg mb-1">📊</div>
+                <div class="text-xs text-slate-400">Salary Data</div>
+              </div>
+            </div>
           </div>
         }
 
@@ -190,9 +222,23 @@ export class SessionResultComponent implements OnInit {
 
   statusLabel(): string {
     const s = this.session()?.status;
-    if (s === 'RED') return 'High Risk — Significant gaps detected';
-    if (s === 'GREEN') return 'Low Risk — Strong alignment';
-    return 'Medium Risk — Some areas need work';
+    if (s === 'RED') return 'High Risk \u2014 Significant gaps detected';
+    if (s === 'GREEN') return 'Low Risk \u2014 Strong alignment';
+    return 'Medium Risk \u2014 Some areas need work';
+  }
+
+  upgradeTitle(): string {
+    const s = this.session()?.status;
+    if (s === 'RED') return 'You need a plan \u2014 urgently';
+    if (s === 'GREEN') return 'You\'re close \u2014 get the edge';
+    return 'Unlock your full action plan';
+  }
+
+  upgradeMessage(): string {
+    const s = this.session()?.status;
+    if (s === 'RED') return 'Your assessment shows significant gaps. Get a full 30-day roadmap with step-by-step tasks, AI career tools, and interview prep to close those gaps fast.';
+    if (s === 'GREEN') return 'You have strong alignment! Unlock your full plan to refine your positioning, optimize your CV, and practice with AI interview simulation.';
+    return 'Get your complete 30-day action plan, task tracking, session history, shareable reports, and 8 AI-powered career tools.';
   }
 
   copyShareLink() {

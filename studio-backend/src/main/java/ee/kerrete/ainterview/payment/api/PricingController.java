@@ -20,38 +20,49 @@ public class PricingController {
                     "Risk assessment + blockers",
                     "Teaser plan (first 3 days)",
                     "Job X-Ray (3x/month)",
-                    "Basic assessment"
+                    "Basic assessment",
+                    "No credit card needed"
                 ),
                 false, false, false, null,
                 null, null, null
             ),
             new PricingTier(
-                "STARTER", "Starter", 7, "EUR",
+                "STARTER", "Starter", 7.99, "EUR",
                 List.of(
                     "Everything in Free",
                     "Full 30-day roadmap + tasks",
                     "Task tracking & progress",
                     "Session history",
                     "Shareable reports",
+                    "Progress analytics",
+                    "Email reminders",
                     "Job X-Ray (3x/month)",
                     "Cancel anytime"
                 ),
                 false, true, true, "month",
-                58, 4.83, "MOST POPULAR"
+                79.90, 6.66, "MOST POPULAR"
             ),
             new PricingTier(
-                "ARENA_PRO", "Pro", 15, "EUR",
+                "ARENA_PRO", "Pro", 15.99, "EUR",
                 List.of(
                     "Everything in Starter",
-                    "Interview Simulator (AI)",
-                    "Salary Negotiation Coach",
-                    "CV/LinkedIn Optimizer",
-                    "Priority AI processing",
+                    "NEW:Interview Simulator (AI)",
+                    "NEW:Salary Negotiation Coach",
+                    "NEW:CV/LinkedIn Optimizer",
+                    "NEW:AI Career Mentor",
+                    "NEW:Company-Specific Prep",
+                    "NEW:LinkedIn Summary Generator",
+                    "NEW:Cover Letter Generator",
+                    "NEW:Salary Benchmark Dashboard",
+                    "Interview score tracking",
+                    "PDF report export",
                     "Unlimited Job X-Ray",
+                    "Priority AI processing",
+                    "Multiple CV sessions",
                     "Cancel anytime"
                 ),
                 false, false, true, "month",
-                150, 12.50, "BEST VALUE"
+                159.90, 13.33, "BEST VALUE"
             )
         );
     }

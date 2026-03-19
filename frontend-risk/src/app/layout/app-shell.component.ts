@@ -61,8 +61,23 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                 <a routerLink="/arena/salary-coach" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                   💰 Salary Coach
                 </a>
-                <a routerLink="/arena/cv-optimizer" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                <a routerLink="/arena/cv-optimizer" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
                   📄 CV Optimizer
+                </a>
+                <a routerLink="/arena/career-mentor" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                  🧠 Career Mentor
+                </a>
+                <a routerLink="/arena/company-prep" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                  🏢 Company Prep
+                </a>
+                <a routerLink="/arena/linkedin-generator" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                  🔗 LinkedIn Generator
+                </a>
+                <a routerLink="/arena/cover-letter" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
+                  ✉️ Cover Letter
+                </a>
+                <a routerLink="/arena/salary-benchmark" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
+                  📊 Salary Benchmark
                 </a>
               </div>
             </div>
@@ -151,6 +166,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           <a routerLink="/arena/interview-simulator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Simulator</a>
           <a routerLink="/arena/salary-coach" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Coach</a>
           <a routerLink="/arena/cv-optimizer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">📄 CV Optimizer</a>
+          <a routerLink="/arena/career-mentor" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🧠 Career Mentor</a>
+          <a routerLink="/arena/company-prep" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🏢 Company Prep</a>
+          <a routerLink="/arena/linkedin-generator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔗 LinkedIn Generator</a>
+          <a routerLink="/arena/cover-letter" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">✉️ Cover Letter</a>
+          <a routerLink="/arena/salary-benchmark" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">📊 Salary Benchmark</a>
         </div>
       </div>
 

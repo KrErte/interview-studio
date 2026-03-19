@@ -21,6 +21,14 @@ public class MarketplaceProfileService {
     private final TransitionProfileRepository transitionProfileRepository;
     private final EntityManager entityManager;
 
+    @Transactional(readOnly = true)
+    public MarketplaceProfileResponse getForUser(Long userId) {
+        return transitionProfileRepository.findByJobseekerId(userId)
+            .flatMap(profile -> marketplaceProfileRepository.findByProfileId(profile.getId()))
+            .map(MarketplaceProfileResponse::from)
+            .orElse(null);
+    }
+
     @Transactional
     public MarketplaceProfileResponse upsert(Long userId, MarketplaceProfileUpdateRequest request) {
         TransitionProfile profile = transitionProfileRepository.findByJobseekerId(userId)

@@ -10,6 +10,7 @@ import ee.kerrete.ainterview.security.AuthenticatedUser;
 import ee.kerrete.ainterview.security.CurrentUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,16 @@ public class MarketplaceController {
 
     private final MarketplaceProfileService marketplaceProfileService;
     private final CandidateSearchService candidateSearchService;
+
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('JOBSEEKER')")
+    public ResponseEntity<MarketplaceProfileResponse> getProfile(@CurrentUser AuthenticatedUser user) {
+        MarketplaceProfileResponse response = marketplaceProfileService.getForUser(user.id());
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(response);
+    }
 
     @PutMapping("/profile")
     @PreAuthorize("hasRole('JOBSEEKER')")

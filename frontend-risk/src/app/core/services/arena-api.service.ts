@@ -50,6 +50,56 @@ export interface CvOptimizerResponse {
   overallSummary: string;
 }
 
+export interface CareerMentorResponse {
+  sessionId: number;
+  message: string;
+  actionItems: string[];
+  resourceLinks: string[];
+  careerOutlook: string;
+}
+
+export interface CompanyPrepResponse {
+  sessionId: number;
+  companyOverview: string;
+  cultureInsights: string;
+  commonQuestions: string[];
+  whatTheyValue: string[];
+  prepTips: string[];
+  redFlags: string[];
+}
+
+export interface LinkedinGeneratorResponse {
+  sessionId: number;
+  headline: string;
+  aboutSection: string;
+  experienceBullets: string[];
+  skillsToHighlight: string[];
+  summary: string;
+}
+
+export interface CoverLetterResponse {
+  sessionId: number;
+  coverLetter: string;
+  highlights: string[];
+  tone: string;
+  summary: string;
+}
+
+export interface SalaryBenchmarkResponse {
+  sessionId: number;
+  role: string;
+  location: string;
+  currency: string;
+  minSalary: number;
+  medianSalary: number;
+  maxSalary: number;
+  p25: number;
+  p75: number;
+  locationComparisons: { location: string; medianSalary: number; costOfLivingIndex: string }[];
+  marketInsights: string;
+  negotiationTips: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class ArenaApiService {
   constructor(private api: ApiClient) {}
@@ -108,5 +158,59 @@ export class ArenaApiService {
       formData.append('targetRole', targetRole);
     }
     return this.api.postFormData<CvOptimizerResponse>('/arena/cv-optimizer/analyze', formData);
+  }
+
+  // Career Mentor
+  startCareerMentor(data: {
+    targetRole: string;
+    currentStatus?: string;
+    experienceLevel?: string;
+    mainChallenge?: string;
+  }): Observable<CareerMentorResponse> {
+    return this.api.post<CareerMentorResponse>('/arena/career-mentor/start', data);
+  }
+
+  messageCareerMentor(sessionId: number, message: string): Observable<CareerMentorResponse> {
+    return this.api.post<CareerMentorResponse>('/arena/career-mentor/message', {
+      sessionId,
+      message
+    });
+  }
+
+  // Company Prep
+  analyzeCompany(data: {
+    companyName: string;
+    targetRole: string;
+    experienceLevel?: string;
+  }): Observable<CompanyPrepResponse> {
+    return this.api.post<CompanyPrepResponse>('/arena/company-prep/analyze', data);
+  }
+
+  // LinkedIn Generator
+  generateLinkedin(data: {
+    targetRole: string;
+    experience?: string;
+    skills?: string;
+    tone?: string;
+  }): Observable<LinkedinGeneratorResponse> {
+    return this.api.post<LinkedinGeneratorResponse>('/arena/linkedin-generator/generate', data);
+  }
+
+  // Cover Letter Generator
+  generateCoverLetter(data: {
+    jobDescription: string;
+    keyExperience?: string;
+    tone?: string;
+  }): Observable<CoverLetterResponse> {
+    return this.api.post<CoverLetterResponse>('/arena/cover-letter/generate', data);
+  }
+
+  // Salary Benchmark
+  analyzeSalaryBenchmark(data: {
+    targetRole: string;
+    location: string;
+    experienceLevel?: string;
+  }): Observable<SalaryBenchmarkResponse> {
+    return this.api.post<SalaryBenchmarkResponse>('/arena/salary-benchmark/analyze', data);
   }
 }
