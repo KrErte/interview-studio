@@ -236,7 +236,7 @@ type Phase = 'loading' | 'context' | 'interview' | 'summary';
             <div class="text-slate-400 mb-3">Overall Score</div>
             <span class="px-4 py-1.5 rounded-full text-sm font-bold"
               [class]="verdictClass(summary()!.verdict)">
-              {{ summary()!.verdict.replace(/_/g, ' ') }}
+              {{ formatVerdict(summary()!.verdict) }}
             </span>
           </div>
 
@@ -434,6 +434,10 @@ export class MockInterviewComponent implements OnInit {
     this.currentQuestionNum.set(1);
     this.targetedBlockerLabel.set(null);
     this.phase.set('context');
+  }
+
+  formatVerdict(verdict: string): string {
+    return verdict.split('_').join(' ');
   }
 
   verdictClass(verdict: string): string {
