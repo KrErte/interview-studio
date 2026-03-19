@@ -226,7 +226,7 @@ import { TranslateModule } from '@ngx-translate/core';
               "{{ 'landing.testimonial1Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-xs font-bold text-slate-900">SK</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-xs font-bold text-slate-900">KT</div>
               <div>
                 <div class="text-sm font-semibold text-white">{{ 'landing.testimonial1Name' | translate }}</div>
                 <div class="text-xs text-slate-500">{{ 'landing.testimonial1Role' | translate }}</div>
@@ -245,7 +245,7 @@ import { TranslateModule } from '@ngx-translate/core';
               "{{ 'landing.testimonial2Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-xs font-bold text-slate-900">MR</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-xs font-bold text-slate-900">MJ</div>
               <div>
                 <div class="text-sm font-semibold text-white">{{ 'landing.testimonial2Name' | translate }}</div>
                 <div class="text-xs text-slate-500">{{ 'landing.testimonial2Role' | translate }}</div>
