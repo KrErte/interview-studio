@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StreakService } from '../../services/streak.service';
 import { InterviewSessionApiService } from '../../core/services/interview-session-api.service';
 import {
   InterviewProgressResponse,
@@ -118,6 +119,11 @@ export class InterviewStudioPageComponent implements OnInit {
 
   private static readonly FIT_READY_STORAGE_KEY = 'aiInterview.fitReadySessions';
   private static readonly fitReadySeenSessionUuids = new Set<string>();
+  private static readonly SESSION_PERSIST_KEY = 'is.savedSession';
+
+  /** Saved session loaded from localStorage on init — shown as resume banner. */
+  savedSession: { roleTitle: string; companyName: string; progressPct: number } | null = null;
+  private _savedSessionRaw: any = null;
 
   /**
    * Dev-only helper message shown when we automatically resync session state
@@ -131,11 +137,13 @@ export class InterviewStudioPageComponent implements OnInit {
     private debugState: InterviewDebugStateService,
     private observerLog: ObserverLogService,
     private candidateSummaryState: CandidateSummaryStateService,
-    private interviewProfileState: InterviewProfileStateService
+    private interviewProfileState: InterviewProfileStateService,
+    private streak: StreakService
   ) {}
 
   ngOnInit(): void {
     this.loadDimensions();
+    this.checkSavedSession();
 
     // Keep local CV profile in sync with shared state so the candidate
     // preview reflects uploads even across minor re-renders.
@@ -154,6 +162,82 @@ export class InterviewStudioPageComponent implements OnInit {
 
   get effectiveQuestionCount(): number {
     return this.vm.progress?.questionCount ?? this.vm.questionCount ?? this.currentQuestionNumber ?? 0;
+  }
+
+  /** Progress bar width — minimum 15% (Endowed Progress Effect: user already feels invested). */
+  get progressBarWidth(): number {
+    const answered = (this.vm.questionCount || this.currentQuestionNumber) ?? 0;
+    const total = this.totalQuestions || 1;
+    const real = (answered / total) * 100;
+    return Math.max(15, real);
+  }
+
+  /**
+   * Identity label computed from role title + seniority (Point 3 — Identity Anchoring).
+   * Shown as a badge below the role input once the user has typed 3+ characters.
+   */
+  get identityLabel(): string | null {
+    const role = this.roleTitle.trim().toLowerCase();
+    if (role.length < 3) return null;
+    const s = this.seniority;
+
+    if (s === 'JUNIOR') {
+      if (role.includes('engineer') || role.includes('developer') || role.includes('dev')) return 'Rising Engineer';
+      if (role.includes('manager') || role.includes('lead')) return 'Aspiring Leader';
+      if (role.includes('designer')) return 'Creative Starter';
+      if (role.includes('analyst')) return 'Junior Analyst';
+      return 'Rising Talent';
+    }
+    if (s === 'SENIOR') {
+      if (role.includes('engineer') || role.includes('developer') || role.includes('dev')) return 'Senior Tech Leader';
+      if (role.includes('manager')) return 'Seasoned Manager';
+      if (role.includes('product')) return 'Product Strategist';
+      if (role.includes('designer')) return 'Senior Creative';
+      if (role.includes('analyst') || role.includes('data')) return 'Senior Analyst';
+      return 'Senior Specialist';
+    }
+    // MID
+    if (role.includes('engineer') || role.includes('developer') || role.includes('dev')) return 'Mid-Level Builder';
+    if (role.includes('manager')) return 'Emerging Manager';
+    if (role.includes('analyst') || role.includes('data')) return 'Data-Driven Thinker';
+    if (role.includes('designer')) return 'Creative Professional';
+    if (role.includes('product')) return 'Product Thinker';
+    return 'Career Professional';
+  }
+
+  /** Resume banner: dismiss and clear localStorage. */
+  dismissSavedSession(): void {
+    this.savedSession = null;
+    this._savedSessionRaw = null;
+    try { localStorage.removeItem(InterviewStudioPageComponent.SESSION_PERSIST_KEY); } catch { /* ignore */ }
+  }
+
+  /** Resume banner: restore form + session state, then fetch current question. */
+  resumeSavedSession(): void {
+    const raw = this._savedSessionRaw;
+    if (!raw) return;
+
+    this.roleTitle = raw.roleTitle ?? '';
+    this.companyName = raw.companyName ?? '';
+    this.candidateEmail = raw.candidateEmail ?? '';
+    this.seniority = raw.seniority ?? 'MID';
+    this.interviewerStyle = raw.interviewerStyle ?? 'HR';
+    this.currentSessionId = raw.sessionId ?? null;
+    this.displaySessionId = raw.displaySessionId ?? null;
+    this.totalQuestions = raw.totalQuestions ?? null;
+    this.currentQuestionNumber = raw.questionNumber ?? null;
+    this.vm = {
+      ...this.vm,
+      transcript: raw.transcript ?? [],
+      questionCount: raw.questionNumber ?? null,
+    };
+
+    this.savedSession = null;
+    this._savedSessionRaw = null;
+
+    if (this.currentSessionId) {
+      this.requestNextQuestionWithoutAnswer();
+    }
   }
 
   /**
@@ -300,6 +384,9 @@ export class InterviewStudioPageComponent implements OnInit {
         this.currentSessionId = canonicalId;
         this.displaySessionId = String(res.sessionId ?? canonicalId);
         this.currentQuestionNumber = null;
+        this.streak.recordActivity();
+        this.savedSession = null;
+        this._savedSessionRaw = null;
 
         const debugInfo: InterviewDebugSessionInfo = {
           sessionId: this.displaySessionId,
@@ -383,6 +470,10 @@ export class InterviewStudioPageComponent implements OnInit {
 
           // Update candidate summary from backend, if provided.
           this.candidateSummaryState.setSummary(res.candidateSummary ?? null);
+
+          // Persist progress and record streak activity after each answer.
+          this.streak.recordActivity();
+          this.persistSession();
 
           // Optional dev-only observer log when fit becomes ready
           const q = this.effectiveQuestionCount;
@@ -473,6 +564,51 @@ export class InterviewStudioPageComponent implements OnInit {
     });
   }
 
+  /** Persist current session state to localStorage so user can resume after page close (Point 4). */
+  private persistSession(): void {
+    if (!this.currentSessionId) return;
+    const answered = (this.vm.questionCount || this.currentQuestionNumber) ?? 0;
+    const total = this.totalQuestions || 1;
+    const progressPct = Math.round((answered / total) * 100);
+    const data = {
+      sessionId: this.currentSessionId,
+      displaySessionId: this.displaySessionId,
+      roleTitle: this.roleTitle,
+      companyName: this.companyName,
+      candidateEmail: this.candidateEmail,
+      seniority: this.seniority,
+      interviewerStyle: this.interviewerStyle,
+      questionNumber: answered,
+      totalQuestions: total,
+      transcript: this.vm.transcript,
+      progressPct,
+      savedAt: new Date().toISOString()
+    };
+    try { localStorage.setItem(InterviewStudioPageComponent.SESSION_PERSIST_KEY, JSON.stringify(data)); } catch { /* ignore */ }
+  }
+
+  /** On init: check if there is a paused session in localStorage and show resume banner. */
+  private checkSavedSession(): void {
+    try {
+      const raw = localStorage.getItem(InterviewStudioPageComponent.SESSION_PERSIST_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (!data?.sessionId || !data?.roleTitle) return;
+      // Only offer resume if session was saved recently (< 24h)
+      const savedAt = new Date(data.savedAt).getTime();
+      if (Date.now() - savedAt > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(InterviewStudioPageComponent.SESSION_PERSIST_KEY);
+        return;
+      }
+      this._savedSessionRaw = data;
+      this.savedSession = {
+        roleTitle: data.roleTitle,
+        companyName: data.companyName,
+        progressPct: data.progressPct ?? 0
+      };
+    } catch { /* ignore */ }
+  }
+
   private resetSessionState(resetForm: boolean): void {
     this.currentSessionId = null;
     this.displaySessionId = null;
@@ -507,6 +643,9 @@ export class InterviewStudioPageComponent implements OnInit {
 
     // Reset candidate summary state for new / cleared session.
     this.candidateSummaryState.reset();
+
+    // Clear persisted session so resume banner doesn't show stale data.
+    try { localStorage.removeItem(InterviewStudioPageComponent.SESSION_PERSIST_KEY); } catch { /* ignore */ }
   }
 
   /**

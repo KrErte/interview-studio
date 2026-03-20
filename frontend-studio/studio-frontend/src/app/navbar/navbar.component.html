@@ -50,6 +50,16 @@
 
       <div class="flex flex-1"></div>
 
+      <!-- Streak counter — Point 5: järjepidevuse ahel -->
+      <div
+        *ngIf="streak.count > 0"
+        class="flex items-center gap-1 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-300"
+        title="Päevade streak — harjutad järjest!"
+      >
+        <span>🔥</span>
+        <span>{{ streak.count }}{{ streak.count === 1 ? ' päev' : ' päeva' }}</span>
+      </div>
+
       <ng-container *ngIf="!auth.isLoggedIn()">
         <a routerLink="/login" class="nav-pill">Login</a>
         <a routerLink="/register" class="nav-pill border border-emerald-400/60 text-emerald-200">

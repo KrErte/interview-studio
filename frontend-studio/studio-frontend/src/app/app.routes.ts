@@ -3,7 +3,17 @@ import { provideRouter } from '@angular/router';
 import { authGuard, loginRedirectGuard } from './guards/auth.guard';
 
 export const appRoutes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'interview-studio' },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () =>
+      import('./pages/landing/landing.component').then(m => m.LandingComponent)
+  },
+  {
+    path: 'session/new',
+    loadComponent: () =>
+      import('./pages/landing/landing.component').then(m => m.LandingComponent)
+  },
   {
     path: 'login',
     canActivate: [loginRedirectGuard],
