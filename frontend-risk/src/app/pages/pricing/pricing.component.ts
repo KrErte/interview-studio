@@ -224,6 +224,15 @@ import { TranslateModule } from '@ngx-translate/core';
         </div>
       }
 
+      <!-- Checkout stub banner -->
+      @if (checkoutError === 'payments_coming_soon') {
+        <div class="mt-6 max-w-xl mx-auto rounded-xl border border-amber-500/40 bg-amber-500/10 px-5 py-4 text-center">
+          <p class="text-sm font-semibold text-amber-300 mb-1">Maksed on varsti saadaval</p>
+          <p class="text-xs text-slate-400">Stripe integratsioon on seadistamisel. Saadame sulle e-kirja, kui tellimused avanevad.</p>
+          <button (click)="checkoutError = ''" class="mt-3 text-xs text-slate-500 hover:text-slate-300 underline">Sulge</button>
+        </div>
+      }
+
       <!-- FAQ -->
       <div class="mt-16 max-w-2xl mx-auto">
         <h2 class="text-2xl font-bold text-white text-center mb-8">{{ 'pricing.faq' | translate }}</h2>
@@ -324,8 +333,11 @@ export class PricingComponent implements OnInit {
     return tier.features.filter(f => !base.includes(f) && !ai.includes(f));
   }
 
+  checkoutError = '';
+
   checkout(tierId: string) {
     this.checkoutLoading.set(true);
+    this.checkoutError = '';
     const billingInterval = this.isAnnual() ? 'year' : 'month';
     const successUrl = `${window.location.origin}/payment/success?tier=${tierId}`;
     const cancelUrl = `${window.location.origin}/pricing`;
@@ -336,7 +348,7 @@ export class PricingComponent implements OnInit {
       },
       error: () => {
         this.checkoutLoading.set(false);
-        alert('Failed to create checkout. Please try again.');
+        this.checkoutError = 'payments_coming_soon';
       }
     });
   }
@@ -347,7 +359,7 @@ export class PricingComponent implements OnInit {
         window.location.href = res.portalUrl;
       },
       error: () => {
-        alert('Failed to open billing portal. Please try again.');
+        this.checkoutError = 'payments_coming_soon';
       }
     });
   }
