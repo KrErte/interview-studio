@@ -98,6 +98,32 @@ export class InterviewStudioPageComponent implements OnInit {
   /** Latest CV-derived interview profile, if any. */
   cvProfile: InterviewProfileDto | null = null;
 
+  // ── Variable Reward Schedule (Skinner) ───────────────────────────────────
+  variableReward: { message: string; type: 'insight' | 'challenge' | 'nudge' } | null = null;
+
+  private readonly rewardPools = {
+    insight: [
+      'Sinu kommunikatsioonistiil on selge — see on suur pluss.',
+      'Struktureeritud mõtlemine tuleb läbi. Jätka nii.',
+      'AI märkas midagi huvitavat sinu vastuses.',
+      'See vastus andis rohkem signaale kui arvad.',
+      'Tugev fookus — seda hindavad intervjueerijad.',
+    ],
+    challenge: [
+      'Kas saaksid seda konkreetsema näitega illustreerida?',
+      'Intervjueerija oleks siinkohal küsinud: "Miks just nii?"',
+      'Tugev punkt — aga puudub mõõdetav tulemus.',
+      'Väldi abstraktsust — konkreetsed numbrid veenvad rohkem.',
+      'Hea suund, aga vastus jäi veidi pealiskaudseks.',
+    ],
+    nudge: [
+      'Oled juba üle poole teel — ära peatu nüüd.',
+      'Huvitav suund — järgmine küsimus läheb sügavamale.',
+      'Sinu profiil kujuneb — jätka vastamist.',
+      'Iga vastus täpsustab sinu sobivuspilti.',
+    ],
+  };
+
   vm: InterviewStudioVm = {
     currentQuestion: null,
     decision: null,
@@ -348,6 +374,60 @@ export class InterviewStudioPageComponent implements OnInit {
     this.isFitExplainOpen = false;
   }
 
+  // ── Zeigarnik Effect — dimensiooniuurija ─────────────────────────────────
+  /**
+   * Returns all known dimensions with explored/unexplored status.
+   * Unexplored dims create the "unfinished task" feeling (Zeigarnik).
+   */
+  get zeigarnikAreas(): { key: string; label: string; explored: boolean; scorePercent: number | null }[] {
+    const allKeys = Object.keys(this.dimensionsMap);
+    const breakdown = this.vm.fitBreakdown;
+    const exploredMap = new Map<string, number | null>();
+
+    if (breakdown?.dimensions) {
+      for (const d of breakdown.dimensions) {
+        if (d.scorePercent !== null && d.scorePercent !== undefined) {
+          exploredMap.set(d.key, d.scorePercent);
+        }
+      }
+    }
+
+    return allKeys.slice(0, 7).map(key => ({
+      key,
+      label: this.dimensionsMap[key]?.label ?? key,
+      explored: exploredMap.has(key),
+      scorePercent: exploredMap.get(key) ?? null,
+    }));
+  }
+
+  get zeigarnikExploredCount(): number {
+    return this.zeigarnikAreas.filter(a => a.explored).length;
+  }
+
+  get zeigarnikTotalCount(): number {
+    return this.zeigarnikAreas.length;
+  }
+
+  // ── Variable Reward — pick after each answer ─────────────────────────────
+  private pickVariableReward(questionCount: number): void {
+    // Variable interval schedule: NOT every answer gets feedback.
+    // Pattern per question mod 8: insight=1,4 | challenge=2,6 | nudge=5 | nothing=0,3,7
+    const n = questionCount % 8;
+    if (n === 1 || n === 4) {
+      const pool = this.rewardPools.insight;
+      this.variableReward = { message: pool[Math.floor(Math.random() * pool.length)], type: 'insight' };
+    } else if (n === 2 || n === 6) {
+      const pool = this.rewardPools.challenge;
+      this.variableReward = { message: pool[Math.floor(Math.random() * pool.length)], type: 'challenge' };
+    } else if (n === 5) {
+      const pool = this.rewardPools.nudge;
+      this.variableReward = { message: pool[Math.floor(Math.random() * pool.length)], type: 'nudge' };
+    } else {
+      // No reward — silence makes the rewarded turns feel special
+      this.variableReward = null;
+    }
+  }
+
   /* ========================= */
 
   runInterview(): void {
@@ -474,6 +554,7 @@ export class InterviewStudioPageComponent implements OnInit {
           // Persist progress and record streak activity after each answer.
           this.streak.recordActivity();
           this.persistSession();
+          this.pickVariableReward(this.vm.questionCount ?? 0);
 
           // Optional dev-only observer log when fit becomes ready
           const q = this.effectiveQuestionCount;
