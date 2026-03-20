@@ -39,6 +39,10 @@ interface Blocker {
             class="text-sm text-slate-400 hover:text-white transition px-3 py-1.5 rounded-md hover:bg-slate-800">
             Uus analüüs
           </a>
+          <a routerLink="/history"
+            class="text-sm text-slate-400 hover:text-white transition px-3 py-1.5 rounded-md hover:bg-slate-800">
+            Ajalugu
+          </a>
           <a routerLink="/register"
             class="text-sm bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-1.5 rounded-md font-medium transition">
             Salvesta tulemused

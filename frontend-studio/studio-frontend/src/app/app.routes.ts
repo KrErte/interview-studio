@@ -15,9 +15,25 @@ export const appRoutes: Routes = [
       import('./pages/session/session-wizard.component').then(m => m.SessionWizardComponent)
   },
   {
+    path: 'session/new/advanced',
+    loadComponent: () =>
+      import('./pages/session/session-wizard-advanced.component').then(m => m.SessionWizardAdvancedComponent)
+  },
+  {
     path: 'session/:id',
     loadComponent: () =>
       import('./pages/session/session-result.component').then(m => m.SessionResultComponent)
+  },
+  {
+    path: 'history',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/session/session-history.component').then(m => m.SessionHistoryComponent)
+  },
+  {
+    path: 'share/:shareId',
+    loadComponent: () =>
+      import('./pages/session/session-share.component').then(m => m.SessionShareComponent)
   },
   {
     path: 'pricing',

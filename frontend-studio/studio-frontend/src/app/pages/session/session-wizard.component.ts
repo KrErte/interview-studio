@@ -179,6 +179,22 @@ export class SessionWizardComponent {
   submit(): void {
     const session = this.buildSession();
     sessionStorage.setItem('session_' + session.id, JSON.stringify(session));
+    localStorage.setItem('session_full_' + session.id, JSON.stringify(session));
+
+    // Save to history (all sessions, guest + auth)
+    const raw = localStorage.getItem('interview_history');
+    const history = raw ? JSON.parse(raw) : [];
+    history.unshift({
+      id: session.id,
+      role: session.role,
+      score: session.score,
+      verdict: session.verdict,
+      createdAt: session.createdAt,
+      paid: session.paid,
+      mode: 'simple'
+    });
+    localStorage.setItem('interview_history', JSON.stringify(history));
+
     this.router.navigate(['/session', session.id]);
   }
 
