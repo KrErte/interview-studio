@@ -371,9 +371,9 @@ import { TranslateModule } from '@ngx-translate/core';
 export class LandingComponent implements OnInit, OnDestroy {
   liveAssessments = 1247;
   jobsAtRisk = 47;
-  meterProgress = 0;
-  displayScore = 0;
-  needleAngle = -90;
+  meterProgress = 5;
+  displayScore = 5;
+  needleAngle = -81;
 
   private animationInterval: any;
   private counterInterval: any;
@@ -381,10 +381,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Animate the meter on load
-    setTimeout(() => {
-      this.animateMeter();
-    }, 500);
+    // Animate the meter on load — no delay so 0% never flashes
+    this.animateMeter();
 
     // Simulate live assessments counter
     this.counterInterval = setInterval(() => {

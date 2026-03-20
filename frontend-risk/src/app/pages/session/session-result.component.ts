@@ -18,8 +18,27 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       }
 
       @if (!loading() && session()) {
-        <!-- Status Badge -->
+        <!-- Status Badge + Risk Score -->
         <div class="text-center mb-8">
+          <!-- Risk Score Ring -->
+          <div class="flex justify-center mb-5">
+            <div class="relative w-36 h-36">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke-width="10" class="text-slate-800" stroke="currentColor"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke-width="10"
+                  [attr.stroke]="riskColor()"
+                  stroke-linecap="round"
+                  [attr.stroke-dasharray]="314"
+                  [attr.stroke-dashoffset]="314 - (314 * riskPercent() / 100)"
+                  class="transition-all duration-1000"
+                />
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-3xl font-black text-white">{{ riskPercent() }}%</span>
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider">Risk Score</span>
+              </div>
+            </div>
+          </div>
           <div class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl border mb-4"
             [class]="statusClasses()">
             <div class="w-4 h-4 rounded-full" [class]="dotClass()"></div>
@@ -230,6 +249,22 @@ export class SessionResultComponent implements OnInit {
     } else {
       this.loading.set(false);
     }
+  }
+
+  /** Deterministic risk % from status + blocker count for slight variation. */
+  riskPercent(): number {
+    const s = this.session()?.status;
+    const blockers = this.session()?.blockers?.length ?? 0;
+    if (s === 'RED') return Math.min(95, 72 + blockers * 4);
+    if (s === 'GREEN') return Math.max(10, 22 - blockers * 3);
+    return Math.min(68, 44 + blockers * 4);
+  }
+
+  riskColor(): string {
+    const s = this.session()?.status;
+    if (s === 'RED') return '#ef4444';
+    if (s === 'GREEN') return '#10b981';
+    return '#f59e0b';
   }
 
   statusClasses(): string {
