@@ -12,7 +12,17 @@ export const appRoutes: Routes = [
   {
     path: 'session/new',
     loadComponent: () =>
-      import('./pages/landing/landing.component').then(m => m.LandingComponent)
+      import('./pages/session/session-wizard.component').then(m => m.SessionWizardComponent)
+  },
+  {
+    path: 'session/:id',
+    loadComponent: () =>
+      import('./pages/session/session-result.component').then(m => m.SessionResultComponent)
+  },
+  {
+    path: 'pricing',
+    loadComponent: () =>
+      import('./pages/pricing/pricing.component').then(m => m.PricingComponent)
   },
   {
     path: 'login',
@@ -94,7 +104,7 @@ export const appRoutes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./pages/practice/practice.component').then(m => m.PracticeComponent)
   },
-  { path: '**', redirectTo: 'interview-studio' },
+  { path: '**', redirectTo: '' },
 ];
 
 export default provideRouter(appRoutes);
