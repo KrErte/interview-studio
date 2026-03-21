@@ -16,8 +16,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule],
   template: `
-    <div class="min-h-screen bg-slate-950 text-slate-100">
-      <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+    <div class="min-h-screen bg-[#0a0f1a] text-slate-100">
+      <header class="border-b border-slate-800 bg-[#0a0f1a]/80 backdrop-blur">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
           <div class="flex items-center gap-3">
             <!-- Mobile hamburger -->
@@ -54,7 +54,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="absolute top-full left-0 mt-1 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
+              <div class="absolute top-full left-0 mt-1 bg-slate-800/30 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
                 <a routerLink="/arena/interview-simulator" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
                   🎭 Interview Simulator
                 </a>
@@ -119,7 +119,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                       class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold whitespace-nowrap"
                       [ngClass]="{
                         'bg-emerald-500 text-slate-900': activeCareerRiskKey === item.key,
-                        'text-slate-300 hover:text-slate-50 bg-slate-900': activeCareerRiskKey !== item.key
+                        'text-slate-300 hover:text-slate-50 bg-slate-800/30': activeCareerRiskKey !== item.key
                       }"
                       (click)="onCareerRiskNav(item.key)"
                     >
@@ -155,7 +155,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       </header>
 
       <!-- Mobile menu -->
-      <div *ngIf="mobileMenuOpen" class="md:hidden border-b border-slate-800 bg-slate-950/95 backdrop-blur px-4 py-4 space-y-2">
+      <div *ngIf="mobileMenuOpen" class="md:hidden border-b border-slate-800 bg-[#0a0f1a]/95 backdrop-blur px-4 py-4 space-y-2">
         <a routerLink="/session/new" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">⚡ New Session</a>
         <a routerLink="/start" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📝 Assess Skills</a>
         <a routerLink="/tools/job-analyzer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">🔬 Job X-Ray</a>
