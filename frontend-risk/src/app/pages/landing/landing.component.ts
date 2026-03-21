@@ -24,6 +24,10 @@ import { TranslateModule } from '@ngx-translate/core';
 
     <!-- Hero Section -->
     <section class="min-h-screen flex flex-col items-center justify-center px-6 relative">
+      <!-- Decorative accents -->
+      <span class="absolute top-[138px] right-[18%] text-2xl text-emerald-400/30 rotate-12 pointer-events-none select-none">✦</span>
+      <span class="absolute top-[210px] left-[11%] text-sm text-cyan-400/25 -rotate-6 pointer-events-none select-none">◆</span>
+      <span class="absolute bottom-[220px] right-[9%] text-xs text-slate-500/40 rotate-3 pointer-events-none select-none">✦</span>
       <!-- Live Stats Bar -->
       <div class="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-6 text-xs text-slate-400">
         <div class="flex items-center gap-2">
@@ -194,8 +198,8 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Step 3 -->
           <div class="group relative p-8 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/50 transition-all duration-300">
             <div class="absolute -top-4 left-8 px-3 py-1 bg-emerald-500 rounded-full text-sm font-bold text-slate-900">03</div>
-            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-6">
-              <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mb-6">
+              <svg class="w-7 h-7 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
             </div>
@@ -289,8 +293,8 @@ import { TranslateModule } from '@ngx-translate/core';
     <!-- Pricing Teaser -->
     <section class="py-24 px-6">
       <div class="max-w-4xl mx-auto text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 mb-6">
-          <span class="text-sm font-medium text-emerald-300">{{ 'landing.simplePricing' | translate }}</span>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/5 mb-6">
+          <span class="text-sm font-medium text-blue-300">{{ 'landing.simplePricing' | translate }}</span>
         </div>
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">{{ 'landing.startFree' | translate }}</h2>
         <p class="text-slate-400 mb-8 max-w-2xl mx-auto">
