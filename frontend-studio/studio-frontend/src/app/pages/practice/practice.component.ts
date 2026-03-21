@@ -21,45 +21,45 @@ interface AnsweredQuestion {
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="min-h-screen bg-gray-950 text-white px-4 py-10">
+    <div class="min-h-screen bg-[#0a0f1a] text-white px-4 py-10">
       <div class="max-w-2xl mx-auto">
 
         <!-- Header -->
         <div class="mb-8">
           <h1 class="text-2xl font-bold text-white">Harjutused</h1>
-          <p class="text-gray-400 mt-1 text-sm">Küsimused on kohandatud sinu nõrkuste põhjal</p>
+          <p class="text-slate-400 mt-1 text-sm">Küsimused on kohandatud sinu nõrkuste põhjal</p>
         </div>
 
         <!-- SETUP: vali blockerid + roll -->
         <div *ngIf="stage === 'setup'" class="space-y-6">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Sihtroll</label>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Sihtroll</label>
             <input
               [(ngModel)]="targetRole"
               type="text"
               placeholder="nt. Product Manager, Senior Dev, UX Designer"
-              class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+              class="w-full bg-slate-800/30 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-3">Millised on su peamised takistused?</label>
+            <label class="block text-sm font-medium text-slate-300 mb-3">Millised on su peamised takistused?</label>
             <div class="space-y-2">
               <label
                 *ngFor="let blocker of allBlockers"
                 class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors"
-                [class.border-indigo-500]="selectedBlockers.includes(blocker)"
-                [class.bg-indigo-950]="selectedBlockers.includes(blocker)"
-                [class.border-gray-700]="!selectedBlockers.includes(blocker)"
-                [class.bg-gray-900]="!selectedBlockers.includes(blocker)"
+                [class.border-emerald-500]="selectedBlockers.includes(blocker)"
+                [class.bg-emerald-950]="selectedBlockers.includes(blocker)"
+                [class.border-slate-700]="!selectedBlockers.includes(blocker)"
+                [class.bg-slate-900]="!selectedBlockers.includes(blocker)"
               >
                 <input
                   type="checkbox"
                   [checked]="selectedBlockers.includes(blocker)"
                   (change)="toggleBlocker(blocker)"
-                  class="w-4 h-4 accent-indigo-500"
+                  class="w-4 h-4 accent-emerald-500"
                 />
-                <span class="text-sm text-gray-200">{{ blockerLabel(blocker) }}</span>
+                <span class="text-sm text-slate-200">{{ blockerLabel(blocker) }}</span>
               </label>
             </div>
           </div>
@@ -67,7 +67,7 @@ interface AnsweredQuestion {
           <button
             (click)="startSession()"
             [disabled]="loading || selectedBlockers.length === 0 || !targetRole.trim()"
-            class="w-full py-3 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            class="w-full py-3 rounded-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {{ loading ? 'Laen küsimusi...' : 'Alusta harjutust' }}
           </button>
@@ -79,26 +79,26 @@ interface AnsweredQuestion {
         <div *ngIf="stage === 'question'" class="space-y-6">
 
           <!-- Progress -->
-          <div class="flex items-center justify-between text-sm text-gray-400 mb-2">
+          <div class="flex items-center justify-between text-sm text-slate-400 mb-2">
             <span>Küsimus {{ currentIndex + 1 }} / {{ questions.length }}</span>
-            <span class="text-indigo-400">{{ answeredQuestions.length }} vastatud</span>
+            <span class="text-emerald-400">{{ answeredQuestions.length }} vastatud</span>
           </div>
-          <div class="w-full bg-gray-800 rounded-full h-1.5">
+          <div class="w-full bg-slate-800 rounded-full h-1.5">
             <div
-              class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500"
+              class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500"
               [style.width.%]="progressPercent"
             ></div>
           </div>
 
           <!-- Küsimus -->
-          <div class="bg-gray-900 border border-gray-700 rounded-xl p-6">
+          <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-6">
             <div class="flex items-center gap-2 mb-4">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-900 text-indigo-300 font-medium">
+              <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-900 text-emerald-300 font-medium">
                 {{ blockerLabel(currentQuestion!.blocker) }}
               </span>
             </div>
             <p class="text-lg text-white font-medium leading-relaxed">{{ currentQuestion?.text }}</p>
-            <div class="mt-4 flex items-start gap-2 text-sm text-gray-500">
+            <div class="mt-4 flex items-start gap-2 text-sm text-slate-500">
               <span>💡</span>
               <span>{{ currentQuestion?.tip }}</span>
             </div>
@@ -106,19 +106,19 @@ interface AnsweredQuestion {
 
           <!-- Vastus -->
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Sinu vastus</label>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Sinu vastus</label>
             <textarea
               [(ngModel)]="currentAnswer"
               rows="5"
               placeholder="Kirjuta oma vastus siia... Kasuta konkreetseid näiteid."
-              class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 resize-none"
+              class="w-full bg-slate-800/30 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"
             ></textarea>
           </div>
 
           <button
             (click)="submitAnswer()"
             [disabled]="submitting || !currentAnswer.trim()"
-            class="w-full py-3 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            class="w-full py-3 rounded-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {{ submitting ? 'Hindan vastust...' : 'Esita vastus' }}
           </button>
@@ -134,25 +134,25 @@ interface AnsweredQuestion {
               [class.text-yellow-400]="lastResult.score === 3"
               [class.text-green-400]="lastResult.score >= 4"
             >
-              {{ lastResult.score }}<span class="text-2xl text-gray-500">/5</span>
+              {{ lastResult.score }}<span class="text-2xl text-slate-500">/5</span>
             </div>
             <div class="flex justify-center gap-1 mt-2">
               <span *ngFor="let star of [1,2,3,4,5]" class="text-2xl"
                 [class.text-yellow-400]="star <= lastResult.score"
-                [class.text-gray-700]="star > lastResult.score"
+                [class.text-slate-700]="star > lastResult.score"
               >★</span>
             </div>
           </div>
 
           <!-- Feedback -->
-          <div class="bg-gray-900 border border-gray-700 rounded-xl p-5 space-y-4">
+          <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-5 space-y-4">
             <div>
-              <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Tagasiside</h3>
-              <p class="text-gray-200 text-sm leading-relaxed">{{ lastResult.feedback }}</p>
+              <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">Tagasiside</h3>
+              <p class="text-slate-200 text-sm leading-relaxed">{{ lastResult.feedback }}</p>
             </div>
-            <div class="border-t border-gray-800 pt-4">
-              <h3 class="text-sm font-semibold text-indigo-400 uppercase tracking-wide mb-2">Soovitus</h3>
-              <p class="text-gray-300 text-sm leading-relaxed">{{ lastResult.suggestion }}</p>
+            <div class="border-t border-slate-800 pt-4">
+              <h3 class="text-sm font-semibold text-emerald-400 uppercase tracking-wide mb-2">Soovitus</h3>
+              <p class="text-slate-300 text-sm leading-relaxed">{{ lastResult.suggestion }}</p>
             </div>
           </div>
 
@@ -160,7 +160,7 @@ interface AnsweredQuestion {
             <button
               *ngIf="currentIndex < questions.length - 1"
               (click)="nextQuestion()"
-              class="flex-1 py-3 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+              class="flex-1 py-3 rounded-lg font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors"
             >
               Järgmine küsimus →
             </button>
@@ -179,30 +179,30 @@ interface AnsweredQuestion {
           <div class="text-center py-6">
             <div class="text-4xl mb-3">🎯</div>
             <h2 class="text-xl font-bold text-white">Harjutus lõpetatud!</h2>
-            <p class="text-gray-400 mt-1 text-sm">Keskmiskoor: <span class="text-white font-semibold">{{ averageScore.toFixed(1) }}/5</span></p>
+            <p class="text-slate-400 mt-1 text-sm">Keskmiskoor: <span class="text-white font-semibold">{{ averageScore.toFixed(1) }}/5</span></p>
           </div>
 
           <!-- Küsimuste kokkuvõte -->
           <div class="space-y-3">
             <div
               *ngFor="let item of answeredQuestions; let i = index"
-              class="bg-gray-900 border border-gray-800 rounded-xl p-4"
+              class="bg-slate-800/30 border border-slate-800 rounded-xl p-4"
             >
               <div class="flex items-start justify-between gap-4 mb-2">
-                <p class="text-sm text-gray-300 flex-1">{{ item.question.text }}</p>
+                <p class="text-sm text-slate-300 flex-1">{{ item.question.text }}</p>
                 <span class="text-lg font-bold shrink-0"
                   [class.text-red-400]="item.result.score <= 2"
                   [class.text-yellow-400]="item.result.score === 3"
                   [class.text-green-400]="item.result.score >= 4"
                 >{{ item.result.score }}/5</span>
               </div>
-              <p class="text-xs text-gray-500 italic">{{ item.result.suggestion }}</p>
+              <p class="text-xs text-slate-500 italic">{{ item.result.suggestion }}</p>
             </div>
           </div>
 
           <button
             (click)="reset()"
-            class="w-full py-3 rounded-lg font-semibold text-white bg-gray-700 hover:bg-gray-600 transition-colors"
+            class="w-full py-3 rounded-lg font-semibold text-white bg-slate-700 hover:bg-slate-600 transition-colors"
           >
             Uus harjutussessioon
           </button>

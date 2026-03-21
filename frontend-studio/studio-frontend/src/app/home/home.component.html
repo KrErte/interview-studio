@@ -1,19 +1,25 @@
-<section class="hero">
-  <img src="assets/mimg.png" class="bg-ai">
+<section class="relative min-h-[60vh] flex flex-col items-center justify-center text-center px-6 py-20">
+  <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+    AI, mis annab sulle <span class="bg-gradient-to-r from-emerald-400 to-teal-600 bg-clip-text text-transparent">INTERVJUU VÕIMU.</span>
+  </h1>
+  <p class="mt-4 max-w-xl text-slate-400 text-lg">
+    Sinu isiklik AI-intervjuu mentor, kes loeb su CV-d, leiab nõrgad kohad ja treenib sind päris lead developer stiilis.
+  </p>
 
-  <h1>AI, mis annab sulle <span>INTERVJUU VÕIMU.</span></h1>
-  <p>Sinu isiklik AI-intervjuu mentor, kes loeb su CV-d, leiab nõrgad kohad ja treenib sind päris lead developer stiilis.</p>
-
-  <div class="buttons">
-    <a routerLink="/interviewer" class="btn-primary">Alusta intervjueerija vaates</a>
-    <a routerLink="/candidate/roadmap" class="btn-secondary">Vaata kandidaadi vaadet</a>
+  <div class="mt-10 flex flex-wrap gap-4 justify-center">
+    <a routerLink="/interviewer" class="rounded-lg bg-amber-400 px-6 py-3 font-bold text-slate-900 hover:bg-amber-300 transition">Alusta intervjueerija vaates</a>
+    <a routerLink="/candidate/roadmap" class="rounded-lg border border-slate-700 px-6 py-3 font-semibold text-slate-200 hover:border-emerald-400 transition">Vaata kandidaadi vaadet</a>
   </div>
 
-  <div style="margin-top: 3rem">
-    <button (click)="pingBackend()" [disabled]="loading">
+  <div class="mt-12">
+    <button
+      (click)="pingBackend()"
+      [disabled]="loading"
+      class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:border-emerald-400 transition disabled:opacity-50"
+    >
       {{ loading ? 'Pinging...' : 'Ping backend' }}
     </button>
-    <span *ngIf="pingResult" style="margin-left:15px; color: green;">{{ pingResult }}</span>
-    <span *ngIf="pingError" style="margin-left:15px; color: red;">{{ pingError }}</span>
+    <span *ngIf="pingResult" class="ml-3 text-sm text-emerald-400">{{ pingResult }}</span>
+    <span *ngIf="pingError" class="ml-3 text-sm text-red-400">{{ pingError }}</span>
   </div>
 </section>
