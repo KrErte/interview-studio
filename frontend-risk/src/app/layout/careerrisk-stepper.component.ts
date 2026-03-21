@@ -14,16 +14,16 @@ interface FlowStep {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="mb-6 rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <div class="mb-6 border border-stone-200 bg-white px-4 py-3">
       <div class="flex flex-wrap items-center gap-3">
         <ng-container *ngFor="let step of steps; let idx = index">
           <button
             type="button"
-            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition"
+            class="flex items-center gap-2 px-3 py-2 text-sm font-semibold transition"
             [ngClass]="{
-              'bg-emerald-500 text-slate-900 shadow': status(step) === 'completed',
-              'border border-emerald-400 text-emerald-200 bg-slate-900': status(step) === 'active',
-              'bg-slate-900 text-slate-500 border border-slate-800 cursor-not-allowed': status(step) === 'upcoming'
+              'bg-stone-900 text-white': status(step) === 'completed',
+              'border border-stone-900 text-stone-900': status(step) === 'active',
+              'text-stone-400 border border-stone-200 cursor-not-allowed': status(step) === 'upcoming'
             }"
             [disabled]="status(step) !== 'completed'"
             (click)="navigate(step)"
@@ -31,21 +31,21 @@ interface FlowStep {
             [attr.aria-disabled]="status(step) !== 'completed'"
           >
             <span
-              class="flex h-6 w-6 items-center justify-center rounded-full border"
+              class="flex h-6 w-6 items-center justify-center border text-xs font-bold"
               [ngClass]="{
-                'border-emerald-700 bg-emerald-600 text-slate-900': status(step) === 'completed',
-                'border-emerald-400 text-emerald-200': status(step) === 'active',
-                'border-slate-700 text-slate-500': status(step) === 'upcoming'
+                'border-stone-700 bg-stone-900 text-white': status(step) === 'completed',
+                'border-stone-900 text-stone-900': status(step) === 'active',
+                'border-stone-300 text-stone-400': status(step) === 'upcoming'
               }"
             >
               <ng-container [ngSwitch]="status(step)">
-                <span *ngSwitchCase="'completed'">✓</span>
+                <span *ngSwitchCase="'completed'">&#10003;</span>
                 <span *ngSwitchDefault>{{ idx + 1 }}</span>
               </ng-container>
             </span>
             <span>{{ step.label }}</span>
           </button>
-          <span *ngIf="idx < steps.length - 1" class="text-slate-600">—</span>
+          <span *ngIf="idx < steps.length - 1" class="text-stone-300">—</span>
         </ng-container>
       </div>
     </div>

@@ -16,89 +16,77 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule],
   template: `
-    <div class="min-h-screen bg-[#0a0f1a] text-slate-100">
-      <header class="border-b border-slate-800 bg-[#0a0f1a]/80 backdrop-blur">
+    <div class="min-h-screen bg-stone-50 text-stone-900 flex flex-col">
+      <header class="border-b border-stone-200 bg-white sticky top-0 z-50">
         <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
           <div class="flex items-center gap-3">
             <!-- Mobile hamburger -->
-            <button (click)="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-slate-400 hover:text-white">
+            <button (click)="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-stone-500 hover:text-stone-900">
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path *ngIf="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 <path *ngIf="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <a routerLink="/careerrisk" class="font-extrabold tracking-tight text-slate-50 text-lg">
-              CareerRisk
+            <a routerLink="/careerrisk" class="flex items-center gap-2">
+              <div class="w-7 h-7 bg-stone-900 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <span class="font-black text-stone-900 text-sm tracking-tight">CareerRisk</span>
+              <span class="text-red-600 text-sm font-black">Index</span>
             </a>
           </div>
 
           <!-- Quick Tools Links -->
-          <div class="hidden md:flex items-center gap-4 text-sm">
-            <a routerLink="/session/new" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
-              ⚡ New Session
+          <div class="hidden md:flex items-center gap-1 text-sm">
+            <a routerLink="/session/new" class="px-3 py-1.5 text-stone-500 hover:text-stone-900 transition-colors whitespace-nowrap">
+              New Session
             </a>
-            <a routerLink="/start" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
-              📝 Assess Skills
+            <a routerLink="/start" class="px-3 py-1.5 text-stone-500 hover:text-stone-900 transition-colors whitespace-nowrap">
+              Assess Skills
             </a>
-            <a routerLink="/tools/job-analyzer" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
-              🔬 Job X-Ray
-            </a>
-            <a routerLink="/pricing" class="text-slate-400 hover:text-emerald-400 transition-colors whitespace-nowrap">
+            <a routerLink="/pricing" class="px-3 py-1.5 text-stone-500 hover:text-stone-900 transition-colors whitespace-nowrap">
               Pricing
             </a>
             <!-- Arena -->
             <div class="relative group">
-              <button class="text-slate-400 hover:text-purple-400 transition-colors flex items-center gap-1 whitespace-nowrap">
-                🏟️ Arena
+              <button class="px-3 py-1.5 text-stone-500 hover:text-stone-900 transition-colors flex items-center gap-1 whitespace-nowrap">
+                Arena
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div class="absolute top-full left-0 mt-1 bg-slate-800/30 border border-slate-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
-                <a routerLink="/arena/interview-simulator" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-t-lg">
-                  🎭 Interview Simulator
-                </a>
-                <a routerLink="/arena/salary-coach" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  💰 Salary Coach
-                </a>
-                <a routerLink="/arena/cv-optimizer" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  📄 CV Optimizer
-                </a>
-                <a routerLink="/arena/career-mentor" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🧠 Career Mentor
-                </a>
-                <a routerLink="/arena/company-prep" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🏢 Company Prep
-                </a>
-                <a routerLink="/arena/linkedin-generator" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  🔗 LinkedIn Generator
-                </a>
-                <a routerLink="/arena/cover-letter" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400">
-                  ✉️ Cover Letter
-                </a>
-                <a routerLink="/arena/salary-benchmark" class="block px-4 py-2 text-slate-300 hover:bg-slate-800 hover:text-purple-400 rounded-b-lg">
-                  📊 Salary Benchmark
-                </a>
+              <div class="absolute top-full right-0 mt-1 bg-white border border-stone-200 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
+                <a routerLink="/tools/job-analyzer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Job X-Ray</a>
+                <a routerLink="/arena/interview-simulator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Interview Simulator</a>
+                <a routerLink="/arena/salary-coach" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Salary Coach</a>
+                <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">CV Optimizer</a>
+                <a routerLink="/arena/career-mentor" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Career Mentor</a>
+                <a routerLink="/arena/company-prep" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Company Prep</a>
+                <a routerLink="/arena/linkedin-generator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">LinkedIn Generator</a>
+                <a routerLink="/arena/cover-letter" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Cover Letter</a>
+                <a routerLink="/arena/salary-benchmark" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Salary Benchmark</a>
               </div>
             </div>
           </div>
 
-          <!-- Right side: UI Mode Toggle + Navigation -->
+          <!-- Right side -->
           <div class="flex items-center gap-2 shrink-0">
             <!-- Tier Badge -->
             <span *ngIf="auth.isAuthenticated() && tierService.isPro()"
-              class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300">
+              class="px-2.5 py-1 text-xs font-bold bg-red-50 text-red-700 border border-red-200">
               Pro
             </span>
             <span *ngIf="auth.isAuthenticated() && !tierService.isPro() && tierService.isStarter()"
-              class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300">
+              class="px-2.5 py-1 text-xs font-bold bg-stone-100 text-stone-700 border border-stone-300">
               Starter
             </span>
 
             <!-- Language Switcher -->
             <button
               (click)="toggleLanguage()"
-              class="px-2 py-1 rounded-md text-xs font-bold border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+              class="px-2 py-1 text-xs font-bold border border-stone-300 text-stone-500 hover:border-stone-900 hover:text-stone-900 transition-colors"
               [title]="currentLang === 'en' ? 'Switch to Estonian' : 'Switch to English'">
               {{ currentLang === 'en' ? 'ET' : 'EN' }}
             </button>
@@ -107,19 +95,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
             <app-ui-mode-toggle />
 
             <!-- Separator -->
-            <div class="h-5 w-px bg-slate-700"></div>
+            <div class="h-4 w-px bg-stone-200 mx-1"></div>
 
-            <nav class="flex items-center gap-2 text-sm overflow-x-auto" *ngIf="navState$ | async as nav">
+            <nav class="flex items-center gap-1 text-sm overflow-x-auto" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'careerrisk'">
                   <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
                     <button
                       *ngFor="let item of nav.items"
                       type="button"
-                      class="rounded-lg border border-slate-700 px-3 py-1 text-sm font-semibold whitespace-nowrap"
+                      class="px-3 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors"
                       [ngClass]="{
-                        'bg-emerald-500 text-slate-900': activeCareerRiskKey === item.key,
-                        'text-slate-300 hover:text-slate-50 bg-slate-800/30': activeCareerRiskKey !== item.key
+                        'bg-stone-900 text-white': activeCareerRiskKey === item.key,
+                        'text-stone-500 hover:text-stone-900': activeCareerRiskKey !== item.key
                       }"
                       (click)="onCareerRiskNav(item.key)"
                     >
@@ -127,24 +115,24 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                     </button>
                   </ng-container>
                   <ng-template #onboardingNavPlaceholder>
-                    <a routerLink="/careerrisk/overview" class="text-xs text-slate-500 hover:text-emerald-400 transition-colors cursor-pointer">
-                      Onboarding — Start here
+                    <a routerLink="/careerrisk/overview" class="text-xs text-stone-500 hover:text-stone-900 transition-colors cursor-pointer">
+                      Onboarding
                     </a>
                   </ng-template>
                   <button type="button" (click)="logout()"
-                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
+                    class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">
                     Logout
                   </button>
                 </ng-container>
                 <ng-container *ngSwitchDefault>
                   <a
                     routerLink="/careerrisk"
-                    routerLinkActive="text-emerald-300"
-                    class="text-slate-300 hover:text-slate-50"
-                    >CareerRisk</a
+                    routerLinkActive="text-stone-900 font-bold"
+                    class="text-stone-500 hover:text-stone-900"
+                    >Dashboard</a
                   >
                   <button type="button" (click)="logout()"
-                    class="rounded-lg border border-slate-700 px-3 py-1 text-sm text-slate-200 hover:border-emerald-400">
+                    class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">
                     Logout
                   </button>
                 </ng-container>
@@ -155,26 +143,26 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       </header>
 
       <!-- Mobile menu -->
-      <div *ngIf="mobileMenuOpen" class="md:hidden border-b border-slate-800 bg-[#0a0f1a]/95 backdrop-blur px-4 py-4 space-y-2">
-        <a routerLink="/session/new" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">⚡ New Session</a>
-        <a routerLink="/start" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📝 Assess Skills</a>
-        <a routerLink="/tools/job-analyzer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">🔬 Job X-Ray</a>
-        <a routerLink="/pricing" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">Pricing</a>
-        <a *ngIf="auth.isAuthenticated()" routerLink="/history" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-emerald-400">📋 History</a>
-        <div class="pt-2 border-t border-slate-800">
-          <span class="text-xs text-slate-500 uppercase">Arena</span>
-          <a routerLink="/arena/interview-simulator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🎭 Interview Simulator</a>
-          <a routerLink="/arena/salary-coach" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">💰 Salary Coach</a>
-          <a routerLink="/arena/cv-optimizer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">📄 CV Optimizer</a>
-          <a routerLink="/arena/career-mentor" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🧠 Career Mentor</a>
-          <a routerLink="/arena/company-prep" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🏢 Company Prep</a>
-          <a routerLink="/arena/linkedin-generator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">🔗 LinkedIn Generator</a>
-          <a routerLink="/arena/cover-letter" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">✉️ Cover Letter</a>
-          <a routerLink="/arena/salary-benchmark" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-slate-300 hover:text-purple-400">📊 Salary Benchmark</a>
+      <div *ngIf="mobileMenuOpen" class="md:hidden border-b border-stone-200 bg-white px-4 py-4 space-y-2">
+        <a routerLink="/session/new" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">New Session</a>
+        <a routerLink="/start" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Assess Skills</a>
+        <a routerLink="/tools/job-analyzer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Job X-Ray</a>
+        <a routerLink="/pricing" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Pricing</a>
+        <a *ngIf="auth.isAuthenticated()" routerLink="/history" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">History</a>
+        <div class="pt-2 border-t border-stone-200">
+          <span class="text-xs text-stone-400 uppercase tracking-wider">Arena</span>
+          <a routerLink="/arena/interview-simulator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Interview Simulator</a>
+          <a routerLink="/arena/salary-coach" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Salary Coach</a>
+          <a routerLink="/arena/cv-optimizer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">CV Optimizer</a>
+          <a routerLink="/arena/career-mentor" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Career Mentor</a>
+          <a routerLink="/arena/company-prep" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Company Prep</a>
+          <a routerLink="/arena/linkedin-generator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">LinkedIn Generator</a>
+          <a routerLink="/arena/cover-letter" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Cover Letter</a>
+          <a routerLink="/arena/salary-benchmark" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Salary Benchmark</a>
         </div>
       </div>
 
-      <main class="mx-auto max-w-7xl px-4 py-8">
+      <main class="flex-1 mx-auto max-w-7xl w-full px-4 py-8">
         <app-careerrisk-stepper *ngIf="isCareerRiskRoute && isOnboarding"></app-careerrisk-stepper>
         <router-outlet />
       </main>
