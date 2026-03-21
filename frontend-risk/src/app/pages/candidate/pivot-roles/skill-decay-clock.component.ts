@@ -15,14 +15,14 @@ interface SkillDecay {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden">
+    <div class="border border-stone-200 bg-white shadow-sm overflow-hidden">
       <!-- Header -->
-      <div class="px-5 pt-5 pb-4 border-b border-slate-800">
+      <div class="px-5 pt-5 pb-4 border-b border-stone-200">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="relative w-10 h-10">
               <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-800"/>
+                <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" stroke-width="2" class="text-stone-200"/>
                 <circle
                   cx="18" cy="18" r="16" fill="none"
                   stroke="url(#decayGradient)"
@@ -40,19 +40,19 @@ interface SkillDecay {
                 </defs>
               </svg>
               <div class="absolute inset-0 flex items-center justify-center">
-                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Skill Decay Clock</h3>
-              <p class="text-xs text-slate-500">How long until your skills lose relevance</p>
+              <h3 class="text-sm font-black text-stone-900 uppercase tracking-widest">Skill Decay Clock</h3>
+              <p class="text-xs text-stone-500">How long until your skills lose relevance</p>
             </div>
           </div>
           <div class="text-right">
             <div class="text-2xl font-mono font-bold" [ngClass]="overallHealthColor">{{ overallHealth }}%</div>
-            <div class="text-[10px] text-slate-500 uppercase">skill freshness</div>
+            <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold">skill freshness</div>
           </div>
         </div>
       </div>
@@ -61,14 +61,14 @@ interface SkillDecay {
       <div class="p-5 space-y-3">
         <div *ngFor="let skill of skills; let i = index" class="relative">
           <div
-            class="p-4 rounded-xl border transition-all duration-300"
+            class="p-4 border transition-all duration-300"
             [ngClass]="getSkillClasses(skill)"
           >
             <div class="flex items-start justify-between gap-4">
               <!-- Skill info -->
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1">
-                  <span class="text-sm font-semibold text-white">{{ skill.skill }}</span>
+                  <span class="text-sm font-bold text-stone-900">{{ skill.skill }}</span>
                   <span
                     class="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded"
                     [ngClass]="getDecayBadgeClasses(skill.decayRate)"
@@ -76,7 +76,7 @@ interface SkillDecay {
                     {{ skill.decayRate }} decay
                   </span>
                 </div>
-                <p class="text-xs text-slate-400">Last practiced: {{ skill.lastUpdated }}</p>
+                <p class="text-xs text-stone-500">Last practiced: {{ skill.lastUpdated }}</p>
               </div>
 
               <!-- Countdown timer style display -->
@@ -85,21 +85,21 @@ interface SkillDecay {
                   <span class="text-2xl font-mono font-bold" [ngClass]="getRelevanceColor(skill)">
                     {{ skill.halfLife }}
                   </span>
-                  <span class="text-xs text-slate-500">mo</span>
+                  <span class="text-xs text-stone-500">mo</span>
                 </div>
-                <div class="text-[10px] text-slate-500">half-life</div>
+                <div class="text-[10px] text-stone-400">half-life</div>
               </div>
             </div>
 
             <!-- Decay visualization -->
             <div class="mt-3">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-[10px] text-slate-500">Current relevance</span>
+                <span class="text-[10px] text-stone-500">Current relevance</span>
                 <span class="text-xs font-mono" [ngClass]="getRelevanceColor(skill)">{{ skill.currentRelevance }}%</span>
               </div>
-              <div class="relative h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div class="relative h-2 bg-stone-200 rounded-full overflow-hidden">
                 <!-- Decay gradient background -->
-                <div class="absolute inset-0 bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 opacity-20"></div>
+                <div class="absolute inset-0 bg-stone-100 opacity-20"></div>
                 <!-- Current level -->
                 <div
                   class="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
@@ -112,17 +112,17 @@ interface SkillDecay {
                   [style.left.%]="getProjectedRelevance(skill)"
                 ></div>
               </div>
-              <div class="flex justify-between mt-1 text-[9px] text-slate-600">
+              <div class="flex justify-between mt-1 text-[9px] text-stone-500">
                 <span>Obsolete</span>
-                <span class="text-slate-400">↓ in 6mo</span>
+                <span class="text-stone-400">↓ in 6mo</span>
                 <span>Current</span>
               </div>
             </div>
 
             <!-- Renewal action -->
-            <div class="mt-3 flex items-center justify-between p-2 rounded-lg bg-slate-900/50">
-              <span class="text-xs text-slate-400">{{ skill.renewalAction }}</span>
-              <button class="text-xs font-medium text-emerald-400 hover:text-emerald-300">
+            <div class="mt-3 flex items-center justify-between p-2 border border-stone-200 bg-stone-50">
+              <span class="text-xs text-stone-500">{{ skill.renewalAction }}</span>
+              <button class="text-xs font-bold text-red-600 hover:text-red-700">
                 Renew →
               </button>
             </div>
@@ -131,23 +131,23 @@ interface SkillDecay {
       </div>
 
       <!-- Summary -->
-      <div class="px-5 py-4 border-t border-slate-800">
+      <div class="px-5 py-4 border-t border-stone-200">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
             <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
-              <span class="text-xs text-slate-400">{{ criticalCount }} critical</span>
+              <div class="w-3 h-3 rounded-full bg-red-600 animate-pulse"></div>
+              <span class="text-xs text-stone-500">{{ criticalCount }} critical</span>
             </div>
             <div class="flex items-center gap-2">
               <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-              <span class="text-xs text-slate-400">{{ warningCount }} warning</span>
+              <span class="text-xs text-stone-500">{{ warningCount }} warning</span>
             </div>
             <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span class="text-xs text-slate-400">{{ healthyCount }} healthy</span>
+              <div class="w-3 h-3 rounded-full bg-stone-900"></div>
+              <span class="text-xs text-stone-500">{{ healthyCount }} healthy</span>
             </div>
           </div>
-          <button class="text-xs font-medium text-violet-400 hover:text-violet-300">
+          <button class="text-xs font-bold text-red-600 hover:text-red-700">
             Renewal Plan →
           </button>
         </div>
@@ -208,9 +208,9 @@ export class SkillDecayClockComponent implements OnInit {
 
   get overallHealthColor(): string {
     const health = this.overallHealth;
-    if (health >= 70) return 'text-emerald-400';
-    if (health >= 50) return 'text-amber-400';
-    return 'text-rose-400';
+    if (health >= 70) return 'text-stone-900';
+    if (health >= 50) return 'text-amber-700';
+    return 'text-red-600';
   }
 
   get criticalCount(): number {
@@ -227,32 +227,32 @@ export class SkillDecayClockComponent implements OnInit {
 
   getSkillClasses(skill: SkillDecay): string {
     if (skill.currentRelevance < 40) {
-      return 'border-rose-500/30 bg-rose-500/5';
+      return 'border-red-200 bg-red-50';
     }
     if (skill.currentRelevance < 70) {
-      return 'border-amber-500/30 bg-amber-500/5';
+      return 'border-amber-200 bg-amber-50';
     }
-    return 'border-emerald-500/30 bg-emerald-500/5';
+    return 'border-stone-200 bg-stone-50';
   }
 
   getDecayBadgeClasses(rate: SkillDecay['decayRate']): string {
     switch (rate) {
-      case 'fast': return 'bg-rose-500/20 text-rose-300';
-      case 'medium': return 'bg-amber-500/20 text-amber-300';
-      case 'slow': return 'bg-emerald-500/20 text-emerald-300';
+      case 'fast': return 'bg-red-50 text-red-700 border border-red-200';
+      case 'medium': return 'bg-amber-50 text-amber-700 border border-amber-200';
+      case 'slow': return 'bg-stone-100 text-stone-700 border border-stone-300';
     }
   }
 
   getRelevanceColor(skill: SkillDecay): string {
-    if (skill.currentRelevance < 40) return 'text-rose-400';
-    if (skill.currentRelevance < 70) return 'text-amber-400';
-    return 'text-emerald-400';
+    if (skill.currentRelevance < 40) return 'text-red-600';
+    if (skill.currentRelevance < 70) return 'text-amber-700';
+    return 'text-stone-900';
   }
 
   getRelevanceBarColor(skill: SkillDecay): string {
-    if (skill.currentRelevance < 40) return 'bg-rose-500';
+    if (skill.currentRelevance < 40) return 'bg-red-600';
     if (skill.currentRelevance < 70) return 'bg-amber-500';
-    return 'bg-emerald-500';
+    return 'bg-stone-900';
   }
 
   getProjectedRelevance(skill: SkillDecay): number {

@@ -57,25 +57,25 @@ export class DisruptionTimelineComponent implements OnInit {
   tileClasses(point: DisruptionPoint): string {
     const active = this.activePoint?.year === point.year;
     return [
-      active ? 'border-emerald-500/60 bg-emerald-500/5 shadow shadow-emerald-500/20' : 'border-slate-800 bg-slate-900/70',
-      'hover:border-emerald-400 hover:shadow hover:shadow-emerald-500/10'
+      active ? 'border-red-600 bg-stone-50 shadow-sm' : 'border-stone-200 bg-white',
+      'hover:border-stone-900 hover:shadow-sm'
     ].join(' ');
   }
 
   textClasses(point: DisruptionPoint): string {
     const risk = point.automationRisk;
-    if (risk <= 25) return 'text-emerald-300';
-    if (risk <= 45) return 'text-amber-300';
-    if (risk <= 65) return 'text-orange-300';
-    return 'text-rose-300';
+    if (risk <= 25) return 'text-stone-900';
+    if (risk <= 45) return 'text-amber-700';
+    if (risk <= 65) return 'text-orange-700';
+    return 'text-red-600';
   }
 
   badgeClasses(point: DisruptionPoint): string {
     const risk = point.automationRisk;
-    if (risk <= 25) return 'bg-emerald-500/15 text-emerald-200 border border-emerald-500/40';
-    if (risk <= 45) return 'bg-amber-500/15 text-amber-200 border border-amber-500/40';
-    if (risk <= 65) return 'bg-orange-500/15 text-orange-200 border border-orange-500/40';
-    return 'bg-rose-500/15 text-rose-200 border border-rose-500/40';
+    if (risk <= 25) return 'bg-stone-900 text-white';
+    if (risk <= 45) return 'bg-amber-50 text-amber-700 border border-amber-200';
+    if (risk <= 65) return 'bg-orange-50 text-orange-700 border border-orange-200';
+    return 'bg-red-50 text-red-700 border border-red-200';
   }
 }
 

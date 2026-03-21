@@ -234,7 +234,7 @@ interface LanguageStats {
             <div class="skills-grid">
               <!-- Dominant -->
               <div class="skills-column dominant">
-                <h4>🟢 DOMINANT SKILLS</h4>
+                <h4>● DOMINANT SKILLS</h4>
                 <p class="column-desc">Your strongest, most-used skills</p>
                 @for (skill of dna()!.dominantSkills; track skill.skill) {
                   <div class="skill-bar">
@@ -255,7 +255,7 @@ interface LanguageStats {
 
               <!-- Recessive -->
               <div class="skills-column recessive">
-                <h4>🟡 RECESSIVE SKILLS</h4>
+                <h4>◐ RECESSIVE SKILLS</h4>
                 <p class="column-desc">Present but underutilized</p>
                 @for (skill of dna()!.recessiveSkills; track skill.skill) {
                   <div class="skill-bar">
@@ -268,8 +268,8 @@ interface LanguageStats {
                       <span class="bar-value">{{ skill.strength }}%</span>
                     </div>
                     <div class="activation-potential" [class]="'potential-' + skill.activationPotential">
-                      {{ skill.activationPotential === 'high' ? '🚀 High activation potential' :
-                         skill.activationPotential === 'medium' ? '💡 Medium potential' : '⏸️ Low priority' }}
+                      {{ skill.activationPotential === 'high' ? '→ High activation potential' :
+                         skill.activationPotential === 'medium' ? '→ Medium potential' : '→ Low priority' }}
                     </div>
                   </div>
                 }
@@ -326,9 +326,9 @@ interface LanguageStats {
             </div>
             <div class="trajectory-card" [class]="'trajectory-' + dna()!.trajectory.type">
               <div class="trajectory-type">
-                {{ dna()!.trajectory.type === 'growth' ? '📈 GROWTH' :
-                   dna()!.trajectory.type === 'stable' ? '➡️ STABLE' :
-                   dna()!.trajectory.type === 'legacy-maintenance' ? '⚠️ LEGACY PATH' : '📊 ANALYZING' }}
+                {{ dna()!.trajectory.type === 'growth' ? '↑ GROWTH' :
+                   dna()!.trajectory.type === 'stable' ? '→ STABLE' :
+                   dna()!.trajectory.type === 'legacy-maintenance' ? '⚠ LEGACY PATH' : '— ANALYZING' }}
               </div>
               <div class="trajectory-details">
                 <div class="detail-row">
@@ -348,14 +348,14 @@ interface LanguageStats {
               </div>
               <div class="skill-lists">
                 <div class="growing-skills">
-                  <h5>🟢 Growing Skills</h5>
+                  <h5>● Growing Skills</h5>
                   @for (skill of dna()!.trajectory.growingSkills; track skill) {
                     <span class="skill-tag growing">{{ skill }}</span>
                   }
                 </div>
                 @if (dna()!.trajectory.atRiskSkills.length > 0) {
                   <div class="atrisk-skills">
-                    <h5>🔴 At-Risk Skills</h5>
+                    <h5>● At-Risk Skills</h5>
                     @for (skill of dna()!.trajectory.atRiskSkills; track skill) {
                       <span class="skill-tag atrisk">{{ skill }}</span>
                     }
@@ -387,9 +387,9 @@ interface LanguageStats {
   styles: [`
     .github-dna-container {
       padding: 1.5rem;
-      background: linear-gradient(180deg, rgba(16, 24, 40, 0.95) 0%, rgba(16, 24, 40, 0.98) 100%);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: white;
+      border: 1px solid #e7e5e4;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
 
     .search-section {
@@ -400,43 +400,40 @@ interface LanguageStats {
       display: flex;
       align-items: center;
       gap: 1rem;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
       padding: 0.75rem 1rem;
     }
 
     .search-icon {
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
     }
 
     .search-input {
       flex: 1;
       background: transparent;
       border: none;
-      color: white;
+      color: #1c1917;
       font-size: 1rem;
       outline: none;
     }
 
     .search-input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
     }
 
     .analyze-btn {
-      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      background: #dc2626;
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .analyze-btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      background: #b91c1c;
     }
 
     .analyze-btn:disabled {
@@ -447,6 +444,7 @@ interface LanguageStats {
     .loading-state {
       text-align: center;
       padding: 4rem;
+      color: #57534e;
     }
 
     .dna-helix {
@@ -466,11 +464,11 @@ interface LanguageStats {
     }
 
     .strand-1 {
-      border-color: #8b5cf6 transparent transparent transparent;
+      border-color: #dc2626 transparent transparent transparent;
     }
 
     .strand-2 {
-      border-color: transparent transparent #06b6d4 transparent;
+      border-color: transparent transparent #57534e transparent;
       animation-delay: -1s;
     }
 
@@ -481,7 +479,7 @@ interface LanguageStats {
     .error-state {
       text-align: center;
       padding: 2rem;
-      color: #f87171;
+      color: #dc2626;
     }
 
     .profile-header {
@@ -489,8 +487,8 @@ interface LanguageStats {
       align-items: center;
       gap: 1.5rem;
       padding: 1.5rem;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
       margin-bottom: 1.5rem;
     }
 
@@ -498,7 +496,7 @@ interface LanguageStats {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 3px solid rgba(139, 92, 246, 0.5);
+      border: 3px solid #e7e5e4;
     }
 
     .profile-info {
@@ -507,22 +505,23 @@ interface LanguageStats {
 
     .profile-info h2 {
       margin: 0 0 0.5rem;
-      color: white;
+      color: #1c1917;
       font-size: 1.5rem;
     }
 
     .profile-stats {
       display: flex;
       gap: 1rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 0.875rem;
       margin-bottom: 0.5rem;
     }
 
     .profile-link {
-      color: #8b5cf6;
+      color: #dc2626;
       text-decoration: none;
       font-size: 0.875rem;
+      font-weight: 600;
     }
 
     .market-fit-score {
@@ -541,37 +540,37 @@ interface LanguageStats {
     }
 
     .score-circle.high {
-      border-color: #10b981;
-      background: rgba(16, 185, 129, 0.1);
+      border-color: #1c1917;
+      background: #fafaf9;
     }
 
     .score-circle.medium {
       border-color: #f59e0b;
-      background: rgba(245, 158, 11, 0.1);
+      background: #fffbeb;
     }
 
     .score-circle.low {
-      border-color: #ef4444;
-      background: rgba(239, 68, 68, 0.1);
+      border-color: #dc2626;
+      background: #fef2f2;
     }
 
     .score-value {
       font-size: 2rem;
       font-weight: 700;
-      color: white;
+      color: #1c1917;
     }
 
     .score-label {
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #a8a29e;
     }
 
     .section {
       margin-bottom: 1.5rem;
       padding: 1.5rem;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: white;
+      border: 1px solid #e7e5e4;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
 
     .section-header {
@@ -587,7 +586,7 @@ interface LanguageStats {
 
     .section-header h3 {
       margin: 0;
-      color: white;
+      color: #1c1917;
       font-size: 0.875rem;
       letter-spacing: 0.1em;
     }
@@ -595,18 +594,17 @@ interface LanguageStats {
     .section-badge {
       font-size: 0.7rem;
       padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .section-badge.rare {
-      background: rgba(139, 92, 246, 0.2);
-      color: #a78bfa;
+      background: #fef2f2;
+      color: #dc2626;
     }
 
     .section-badge.danger {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
+      background: #fef2f2;
+      color: #dc2626;
     }
 
     .mutations-grid {
@@ -615,9 +613,8 @@ interface LanguageStats {
     }
 
     .mutation-card {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.05));
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      border-radius: 12px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
       padding: 1.25rem;
     }
 
@@ -629,28 +626,27 @@ interface LanguageStats {
     }
 
     .mutation-name {
-      color: #a78bfa;
+      color: #dc2626;
       font-weight: 600;
       font-size: 1.1rem;
     }
 
     .rarity-badge {
-      background: rgba(139, 92, 246, 0.3);
-      color: white;
+      background: #fef2f2;
+      color: #dc2626;
       padding: 0.25rem 0.75rem;
-      border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
     }
 
     .mutation-desc {
-      color: rgba(255, 255, 255, 0.7);
+      color: #57534e;
       font-size: 0.875rem;
       margin: 0 0 0.75rem;
     }
 
     .salary-impact {
-      color: #10b981;
+      color: #1c1917;
       font-weight: 600;
     }
 
@@ -662,10 +658,10 @@ interface LanguageStats {
     }
 
     .path-tag {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.8);
+      background: #fafaf9;
+      color: #57534e;
       padding: 0.25rem 0.75rem;
-      border-radius: 4px;
+      border: 1px solid #e7e5e4;
       font-size: 0.75rem;
     }
 
@@ -684,36 +680,35 @@ interface LanguageStats {
       font-size: 2rem;
       font-weight: 700;
       padding: 0.5rem 1.5rem;
-      border-radius: 8px;
     }
 
     .level-hyperspeed {
-      background: linear-gradient(135deg, #8b5cf6, #ec4899);
-      color: white;
+      background: #fef2f2;
+      color: #dc2626;
     }
 
     .level-fast {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
+      background: #fafaf9;
+      color: #1c1917;
     }
 
     .level-steady {
-      background: rgba(6, 182, 212, 0.2);
-      color: #06b6d4;
+      background: #fafaf9;
+      color: #57534e;
     }
 
     .level-moderate {
-      background: rgba(245, 158, 11, 0.2);
-      color: #f59e0b;
+      background: #fffbeb;
+      color: #b45309;
     }
 
     .level-slow {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
+      background: #fef2f2;
+      color: #dc2626;
     }
 
     .percentile {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
     }
 
     .velocity-stats {
@@ -729,11 +724,11 @@ interface LanguageStats {
       display: block;
       font-size: 1.5rem;
       font-weight: 700;
-      color: white;
+      color: #1c1917;
     }
 
     .stat-label {
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
       font-size: 0.75rem;
     }
 
@@ -750,19 +745,18 @@ interface LanguageStats {
 
     .chart-bars .bar {
       flex: 1;
-      background: linear-gradient(to top, #8b5cf6, #a78bfa);
-      border-radius: 2px 2px 0 0;
+      background: linear-gradient(to top, #dc2626, #f87171);
       min-height: 4px;
       transition: all 0.3s;
     }
 
     .chart-bars .bar:hover {
-      background: #a78bfa;
+      background: #dc2626;
     }
 
     .chart-label {
       text-align: center;
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
       font-size: 0.75rem;
       margin-top: 0.5rem;
     }
@@ -775,12 +769,12 @@ interface LanguageStats {
 
     .skills-column h4 {
       margin: 0 0 0.25rem;
-      color: white;
+      color: #1c1917;
       font-size: 0.875rem;
     }
 
     .column-desc {
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
       font-size: 0.75rem;
       margin: 0 0 1rem;
     }
@@ -796,12 +790,12 @@ interface LanguageStats {
     }
 
     .skill-name {
-      color: white;
+      color: #1c1917;
       font-weight: 500;
     }
 
     .skill-repos, .skill-last-used {
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
       font-size: 0.75rem;
     }
 
@@ -810,19 +804,17 @@ interface LanguageStats {
       align-items: center;
       gap: 0.5rem;
       height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      background: #f5f5f4;
       overflow: hidden;
     }
 
     .bar-fill {
       height: 100%;
-      border-radius: 4px;
       transition: width 0.5s ease;
     }
 
     .dominant-fill {
-      background: linear-gradient(90deg, #10b981, #34d399);
+      background: linear-gradient(90deg, #1c1917, #44403c);
     }
 
     .recessive-fill {
@@ -830,7 +822,7 @@ interface LanguageStats {
     }
 
     .bar-value {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 0.75rem;
       min-width: 35px;
     }
@@ -840,13 +832,13 @@ interface LanguageStats {
       margin-top: 0.25rem;
     }
 
-    .market-indicator.high { color: #10b981; }
-    .market-indicator.medium { color: #f59e0b; }
-    .market-indicator.low { color: #ef4444; }
+    .market-indicator.high { color: #1c1917; }
+    .market-indicator.medium { color: #b45309; }
+    .market-indicator.low { color: #dc2626; }
 
-    .potential-high { color: #10b981; }
-    .potential-medium { color: #f59e0b; }
-    .potential-low { color: rgba(255, 255, 255, 0.4); }
+    .potential-high { color: #1c1917; }
+    .potential-medium { color: #b45309; }
+    .potential-low { color: #a8a29e; }
 
     .extinction-list {
       display: grid;
@@ -854,9 +846,8 @@ interface LanguageStats {
     }
 
     .extinction-card {
-      background: rgba(239, 68, 68, 0.05);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      border-radius: 12px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
       padding: 1.25rem;
     }
 
@@ -868,7 +859,7 @@ interface LanguageStats {
     }
 
     .risk-skill {
-      color: #f87171;
+      color: #dc2626;
       font-weight: 600;
       font-size: 1.1rem;
     }
@@ -885,82 +876,80 @@ interface LanguageStats {
     .meter-label {
       display: block;
       font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
       margin-bottom: 0.25rem;
     }
 
     .meter-bar {
       width: 60px;
       height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
+      background: #e7e5e4;
       overflow: hidden;
     }
 
     .meter-fill.threat {
-      background: #ef4444;
+      background: #dc2626;
       height: 100%;
     }
 
     .meter-fill.market {
-      background: #10b981;
+      background: #1c1917;
       height: 100%;
     }
 
     .meter-value {
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
     }
 
     .risk-reason {
-      color: rgba(255, 255, 255, 0.7);
+      color: #57534e;
       font-size: 0.875rem;
       margin: 0 0 0.75rem;
     }
 
     .survival-strategy {
-      background: rgba(0, 0, 0, 0.2);
+      background: #fafaf9;
       padding: 0.75rem;
-      border-radius: 8px;
+      border: 1px solid #e7e5e4;
     }
 
     .strategy-label {
-      color: #10b981;
+      color: #1c1917;
       font-weight: 600;
       font-size: 0.75rem;
     }
 
     .survival-strategy p {
-      color: rgba(255, 255, 255, 0.8);
+      color: #57534e;
       font-size: 0.875rem;
       margin: 0.25rem 0 0;
     }
 
     .trajectory-card {
       padding: 1.5rem;
-      border-radius: 12px;
     }
 
     .trajectory-growth {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.05));
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
     }
 
     .trajectory-stable {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.05));
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
     }
 
     .trajectory-legacy-maintenance {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.05));
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
 
     .trajectory-type {
       font-size: 1.25rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: white;
+      color: #1c1917;
     }
 
     .trajectory-details {
@@ -976,41 +965,40 @@ interface LanguageStats {
     }
 
     .detail-label {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 0.875rem;
     }
 
     .confidence-bar {
       width: 100px;
       height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 3px;
+      background: #e7e5e4;
       overflow: hidden;
     }
 
     .confidence-bar .bar-fill {
-      background: #8b5cf6;
+      background: #dc2626;
       height: 100%;
     }
 
     .detail-value {
-      color: white;
+      color: #1c1917;
       font-weight: 600;
     }
 
     .detail-value.years {
-      color: #06b6d4;
+      color: #57534e;
     }
 
     .trajectory-recommendation {
-      background: rgba(0, 0, 0, 0.2);
+      background: #fafaf9;
       padding: 1rem;
-      border-radius: 8px;
+      border: 1px solid #e7e5e4;
       margin-bottom: 1rem;
     }
 
     .trajectory-recommendation p {
-      color: rgba(255, 255, 255, 0.9);
+      color: #44403c;
       margin: 0;
       font-size: 0.95rem;
     }
@@ -1021,7 +1009,7 @@ interface LanguageStats {
     }
 
     .skill-lists h5 {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 0.75rem;
       margin: 0 0 0.5rem;
     }
@@ -1029,20 +1017,21 @@ interface LanguageStats {
     .skill-tag {
       display: inline-block;
       padding: 0.25rem 0.75rem;
-      border-radius: 4px;
       font-size: 0.75rem;
       margin-right: 0.5rem;
       margin-bottom: 0.25rem;
     }
 
     .skill-tag.growing {
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
+      background: #fafaf9;
+      color: #1c1917;
+      border: 1px solid #e7e5e4;
     }
 
     .skill-tag.atrisk {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
     }
 
     .patterns-grid {
@@ -1053,9 +1042,9 @@ interface LanguageStats {
     .pattern-card {
       flex: 1;
       text-align: center;
-      background: rgba(0, 0, 0, 0.2);
+      background: #fafaf9;
       padding: 1.25rem;
-      border-radius: 12px;
+      border: 1px solid #e7e5e4;
     }
 
     .pattern-icon {
@@ -1068,13 +1057,13 @@ interface LanguageStats {
       display: block;
       font-size: 1.25rem;
       font-weight: 700;
-      color: white;
+      color: #1c1917;
     }
 
     .pattern-label {
       display: block;
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
       margin-top: 0.25rem;
     }
 

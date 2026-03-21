@@ -1,25 +1,25 @@
 <section class="space-y-6 max-w-3xl mx-auto px-4">
   <header class="space-y-2">
-    <p class="text-xs uppercase tracking-wide text-slate-400">Questions</p>
-    <h1 class="text-2xl font-bold text-slate-50">Clarifying Questions</h1>
-    <p class="text-sm text-slate-400">
+    <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Questions</p>
+    <h1 class="text-2xl font-black text-stone-900">Clarifying Questions</h1>
+    <p class="text-sm text-stone-500">
       Answers refine your readiness assessment. Each skipped question reduces confidence.
     </p>
   </header>
 
-  <div *ngIf="loadingStart || loadingQuestion" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5">
-    <div class="flex items-center gap-3 text-sm text-slate-300">
-      <span class="h-4 w-4 animate-spin rounded-full border-2 border-slate-700 border-t-emerald-400"></span>
+  <div *ngIf="loadingStart || loadingQuestion" class="border border-stone-200 bg-white p-5">
+    <div class="flex items-center gap-3 text-sm text-stone-600">
+      <span class="h-4 w-4 animate-spin rounded-full border-2 border-stone-300 border-t-stone-900"></span>
       Loading question...
     </div>
   </div>
 
-  <div *ngIf="error" class="rounded-2xl border border-rose-500/40 bg-rose-950/50 p-4 text-sm text-rose-100">
+  <div *ngIf="error" class="border border-red-200 bg-red-50 p-4 text-sm text-red-700">
     <div class="flex items-center justify-between">
       <p>{{ error }}</p>
       <button
         type="button"
-        class="rounded-lg border border-rose-400 px-3 py-1 text-xs font-semibold text-rose-100 hover:border-rose-300"
+        class="border border-red-300 px-3 py-1 text-xs font-bold text-red-700 hover:border-red-600"
         (click)="loadNextQuestion()"
       >
         Try again
@@ -29,29 +29,29 @@
 
   <div
     *ngIf="!loadingQuestion && !loadingStart && !error && question"
-    class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-lg"
+    class="border border-stone-200 bg-white p-5 shadow-sm"
   >
-    <div class="flex items-center justify-between text-xs text-slate-400">
+    <div class="flex items-center justify-between text-xs text-stone-400">
       <span>Question {{ questionIndex }} / {{ totalQuestions }}</span>
       <span>Skipping reduces confidence</span>
     </div>
-    <div class="mt-3 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-sm text-slate-200">
-      <p class="font-medium text-slate-100">
+    <div class="mt-3 border border-stone-200 bg-stone-50 p-3 text-sm text-stone-700">
+      <p class="font-bold text-stone-900">
         These answers help us assess your adaptability, learning drive, and collaboration style. This improves analysis accuracy.
       </p>
-      <p class="mt-1 text-xs text-slate-400">You can skip, but it reduces confidence.</p>
+      <p class="mt-1 text-xs text-stone-500">You can skip, but it reduces confidence.</p>
     </div>
     <div class="mt-3 space-y-2">
-      <p class="text-sm font-semibold text-emerald-200">{{ question.title || 'Question' }}</p>
-      <p class="text-base text-slate-100">{{ question.text }}</p>
+      <p class="text-sm font-bold text-red-600">{{ question.title || 'Question' }}</p>
+      <p class="text-base text-stone-900">{{ question.text }}</p>
     </div>
 
     <div class="mt-4">
-      <label class="text-sm text-slate-300">Your answer</label>
+      <label class="text-sm text-stone-700 font-medium">Your answer</label>
       <textarea
         [(ngModel)]="answerText"
         rows="4"
-        class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:border-emerald-400 focus:outline-none"
+        class="mt-2 w-full border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 focus:border-stone-900 focus:outline-none"
         placeholder="Describe briefly (you can include examples and metrics)."
       ></textarea>
     </div>
@@ -59,20 +59,20 @@
     <div class="mt-4 flex flex-wrap gap-3">
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-900 shadow hover:bg-emerald-400 disabled:opacity-70"
+        class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50"
         (click)="submitAnswer()"
         [disabled]="submitting || !answerText.trim()"
       >
         <span *ngIf="!submitting">Submit answer</span>
         <span *ngIf="submitting" class="flex items-center gap-2">
-          <span class="h-3 w-3 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700"></span>
+          <span class="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-red-300"></span>
           Processing...
         </span>
       </button>
 
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 hover:border-emerald-400 hover:text-emerald-200 disabled:opacity-70"
+        class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors disabled:opacity-50"
         (click)="skipQuestion()"
         [disabled]="submitting"
       >
@@ -83,9 +83,8 @@
 
   <div
     *ngIf="!loadingQuestion && !loadingStart && !error && !question && questionIndex >= totalQuestions"
-    class="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 text-sm text-slate-300"
+    class="border border-stone-200 bg-white p-4 text-sm text-stone-600"
   >
     <p>All questions answered. Redirecting to analysis...</p>
   </div>
 </section>
-

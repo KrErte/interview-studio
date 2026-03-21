@@ -1,13 +1,13 @@
-<div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-4 md:p-5">
+<div class="border border-stone-200 bg-white shadow-sm p-4 md:p-5">
   <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
     <div>
-      <p class="text-[11px] uppercase tracking-wide text-slate-400">Automation Timeline</p>
-      <h3 class="text-lg font-semibold text-slate-50">Future Outlook for Your Role</h3>
-      <p class="text-sm text-slate-400">{{ currentRole || 'Your Role' }}</p>
+      <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Automation Timeline</p>
+      <h3 class="text-lg font-black text-stone-900">Future Outlook for Your Role</h3>
+      <p class="text-sm text-stone-600">{{ currentRole || 'Your Role' }}</p>
     </div>
     <div *ngIf="activePoint" class="text-right">
-      <p class="text-xs text-slate-400">Selected Year</p>
-      <p class="text-sm font-semibold text-emerald-300">{{ activePoint.year }}</p>
+      <p class="text-xs text-stone-500">Selected Year</p>
+      <p class="text-sm font-bold text-red-600">{{ activePoint.year }}</p>
     </div>
   </div>
 
@@ -15,40 +15,40 @@
     <button
       *ngFor="let point of timeline; let idx = index"
       type="button"
-      class="group flex flex-col gap-2 rounded-xl border px-3 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+      class="group flex flex-col gap-2 border px-3 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-white"
       [ngClass]="tileClasses(point)"
       (mouseenter)="setActive(point)"
       (mouseleave)="resetActive()"
       (click)="setActive(point)"
     >
       <div class="flex items-center justify-between">
-        <div class="text-sm font-semibold text-slate-100">{{ point.year }}</div>
+        <div class="text-sm font-bold text-stone-900">{{ point.year }}</div>
         <span
-          class="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+          class="px-2 py-0.5 text-[11px] font-bold"
           [ngClass]="badgeClasses(point)"
         >
           {{ riskLabel(point.automationRisk) }}
         </span>
       </div>
       <div class="flex items-end gap-2">
-        <div class="text-2xl font-bold" [ngClass]="textClasses(point)">
+        <div class="text-2xl font-black" [ngClass]="textClasses(point)">
           {{ point.automationRisk }}%
         </div>
-        <div class="text-xs text-slate-400">automation risk</div>
+        <div class="text-xs text-stone-500">automation risk</div>
       </div>
-      <p class="text-sm text-slate-300 line-clamp-3">{{ point.insight }}</p>
+      <p class="text-sm text-stone-600 line-clamp-3">{{ point.insight }}</p>
     </button>
   </div>
 
-  <div class="mt-4 rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3">
-    <p class="text-xs uppercase tracking-wide text-slate-400">Forecast</p>
-    <p class="mt-1 text-sm text-slate-200">
+  <div class="mt-4 border border-stone-200 bg-stone-50 px-4 py-3">
+    <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Forecast</p>
+    <p class="mt-1 text-sm text-stone-600">
       {{ activePoint?.insight || 'Select a year from the timeline to see detailed forecast.' }}
     </p>
-    <p *ngIf="riskHint(activePoint)" class="mt-1 text-xs text-amber-200">
+    <p *ngIf="riskHint(activePoint)" class="mt-1 text-xs text-amber-700">
       {{ riskHint(activePoint) }}
     </p>
-    <p class="mt-2 text-xs text-slate-400">
+    <p class="mt-2 text-xs text-stone-400">
       Forecast based on your role, AI trends, and labor market data. Estimates are updated over time.
     </p>
   </div>

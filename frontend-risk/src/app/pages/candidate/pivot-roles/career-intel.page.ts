@@ -15,7 +15,7 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     <div class="career-intel-page">
       <!-- Hero Section -->
       <div class="hero">
-        <div class="hero-badge">🔮 CAREER INTELLIGENCE</div>
+        <div class="hero-badge">CAREER INTELLIGENCE</div>
         <h1>Your Unfair Advantage</h1>
         <p class="hero-subtitle">
           Real data. Real insights. Not generic advice.
@@ -90,14 +90,14 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                 </div>
                 @if (companyLoading()) {
                   <div style="text-align: center; padding: 2rem;">
-                    <div style="width: 2rem; height: 2rem; border: 3px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
-                    <p style="color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-size: 0.875rem;">Analyzing company health...</p>
+                    <div style="width: 2rem; height: 2rem; border: 3px solid #fecaca; border-top-color: #dc2626; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
+                    <p style="color: #a8a29e; margin-top: 0.75rem; font-size: 0.875rem;">Analyzing company health...</p>
                   </div>
                 }
                 @if (companyError()) {
-                  <div style="text-align: center; padding: 1rem; color: #f87171; font-size: 0.875rem;">
+                  <div style="text-align: center; padding: 1rem; color: #dc2626; font-size: 0.875rem;">
                     {{ companyError() }}
-                    <button (click)="analyzeCompany()" style="margin-left: 0.5rem; color: #a78bfa; text-decoration: underline; background: none; border: none; cursor: pointer;">Retry</button>
+                    <button (click)="analyzeCompany()" style="margin-left: 0.5rem; color: #dc2626; text-decoration: underline; background: none; border: none; cursor: pointer; font-weight: 700;">Retry</button>
                   </div>
                 }
                 @if (companyResult()) {
@@ -156,14 +156,14 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                 </div>
                 @if (jobLoading()) {
                   <div style="text-align: center; padding: 2rem;">
-                    <div style="width: 2rem; height: 2rem; border: 3px solid rgba(139,92,246,0.2); border-top-color: #8b5cf6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
-                    <p style="color: rgba(255,255,255,0.5); margin-top: 0.75rem; font-size: 0.875rem;">X-raying job market...</p>
+                    <div style="width: 2rem; height: 2rem; border: 3px solid #fecaca; border-top-color: #dc2626; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
+                    <p style="color: #a8a29e; margin-top: 0.75rem; font-size: 0.875rem;">X-raying job market...</p>
                   </div>
                 }
                 @if (jobError()) {
-                  <div style="text-align: center; padding: 1rem; color: #f87171; font-size: 0.875rem;">
+                  <div style="text-align: center; padding: 1rem; color: #dc2626; font-size: 0.875rem;">
                     {{ jobError() }}
-                    <button (click)="analyzeJobs()" style="margin-left: 0.5rem; color: #a78bfa; text-decoration: underline; background: none; border: none; cursor: pointer;">Retry</button>
+                    <button (click)="analyzeJobs()" style="margin-left: 0.5rem; color: #dc2626; text-decoration: underline; background: none; border: none; cursor: pointer; font-weight: 700;">Retry</button>
                   </div>
                 }
                 @if (jobResult()) {
@@ -189,18 +189,18 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                       }
                     </div>
 
-                    <h4>🎭 Wishlist Items (ignore these):</h4>
+                    <h4>Wishlist Items (ignore these):</h4>
                     <div class="wishlist">
                       @for (item of jobResult().wishlistItems; track item.requirement) {
                         <div class="wishlist-card">
                           <span class="wishlist-req">{{ item.requirement }}</span>
                           <p class="wishlist-reality">{{ item.reality }}</p>
-                          <p class="wishlist-strategy">💡 {{ item.strategy }}</p>
+                          <p class="wishlist-strategy">→ {{ item.strategy }}</p>
                         </div>
                       }
                     </div>
 
-                    <h4>🚀 Emerging Skills:</h4>
+                    <h4>Emerging Skills:</h4>
                     <div class="emerging">
                       @for (skill of jobResult().emergingSkills; track skill.name) {
                         <div class="emerging-card">
@@ -211,12 +211,12 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
                       }
                     </div>
 
-                    <h4>🚩 Red Flags to Watch:</h4>
+                    <h4>Red Flags to Watch:</h4>
                     <div class="redflags">
                       @for (flag of jobResult().redFlags; track flag.phrase) {
                         <div class="redflag-card">
                           <span class="flag-phrase">"{{ flag.phrase }}"</span>
-                          <span class="flag-danger">⚠️ {{ flag.dangerScore }}% danger</span>
+                          <span class="flag-danger">⚠ {{ flag.dangerScore }}% danger</span>
                           <p class="flag-meaning">{{ flag.meaning }}</p>
                         </div>
                       }
@@ -261,7 +261,7 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
 
     .career-intel-page {
       min-height: 100vh;
-      background: linear-gradient(180deg, #0a0f1a 0%, #111827 100%);
+      background: #fafaf9;
       padding: 2rem;
     }
 
@@ -272,28 +272,26 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
 
     .hero-badge {
       display: inline-block;
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));
-      border: 1px solid rgba(139, 92, 246, 0.3);
+      background: #fef2f2;
+      border: 1px solid #fecaca;
       padding: 0.5rem 1.25rem;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      color: #a78bfa;
+      font-size: 0.75rem;
+      color: #dc2626;
       margin-bottom: 1rem;
       letter-spacing: 0.1em;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .hero h1 {
       font-size: 3rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #fff, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #1c1917;
       margin: 0 0 0.5rem;
     }
 
     .hero-subtitle {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 1.25rem;
       margin: 0;
     }
@@ -311,22 +309,20 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       flex-direction: column;
       align-items: center;
       padding: 1.5rem;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+      background: white;
+      border: 1px solid #e7e5e4;
       cursor: pointer;
       transition: all 0.3s;
     }
 
     .tab:hover {
-      background: rgba(0, 0, 0, 0.4);
-      border-color: rgba(139, 92, 246, 0.3);
-      transform: translateY(-2px);
+      background: #fafaf9;
+      border-color: #d6d3d1;
     }
 
     .tab.active {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.1));
-      border-color: rgba(139, 92, 246, 0.5);
+      background: #fef2f2;
+      border-color: #fecaca;
     }
 
     .tab-icon {
@@ -335,13 +331,13 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .tab-label {
-      color: white;
-      font-weight: 600;
+      color: #1c1917;
+      font-weight: 700;
       margin-bottom: 0.25rem;
     }
 
     .tab-desc {
-      color: rgba(255, 255, 255, 0.4);
+      color: #a8a29e;
       font-size: 0.75rem;
     }
 
@@ -351,9 +347,9 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .coming-soon {
-      background: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+      background: white;
+      border: 1px solid #e7e5e4;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       padding: 2rem;
     }
 
@@ -368,12 +364,12 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .coming-soon h2 {
-      color: white;
+      color: #1c1917;
       margin: 0 0 0.5rem;
     }
 
     .coming-soon p {
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
       margin: 0 0 1.5rem;
     }
 
@@ -385,39 +381,36 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .company-input, .role-dropdown {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
+      background: white;
+      border: 1px solid #e7e5e4;
+      color: #1c1917;
       padding: 0.75rem 1.25rem;
-      border-radius: 8px;
       font-size: 1rem;
       width: 250px;
     }
 
     .company-input::placeholder {
-      color: rgba(255, 255, 255, 0.3);
+      color: #a8a29e;
     }
 
     .analyze-btn {
-      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      background: #dc2626;
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .analyze-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      background: #b91c1c;
     }
 
     .company-result, .job-result {
       text-align: left;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
       padding: 1.5rem;
       margin-top: 1rem;
     }
@@ -430,7 +423,7 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .result-header h3 {
-      color: white;
+      color: #1c1917;
       margin: 0;
     }
 
@@ -438,19 +431,18 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       font-size: 1.5rem;
       font-weight: 700;
       padding: 0.5rem 1rem;
-      border-radius: 8px;
     }
 
-    .health-score.high { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .health-score.medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-    .health-score.low { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .health-score.high { background: #fafaf9; color: #1c1917; border: 1px solid #e7e5e4; }
+    .health-score.medium { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .health-score.low { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 
     .layoff-risk {
       margin-bottom: 1rem;
     }
 
     .risk-label {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       margin-right: 0.5rem;
     }
 
@@ -458,13 +450,13 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       font-weight: 600;
     }
 
-    .risk-low { color: #10b981; }
-    .risk-moderate { color: #f59e0b; }
-    .risk-elevated { color: #f97316; }
-    .risk-high, .risk-critical { color: #ef4444; }
+    .risk-low { color: #1c1917; }
+    .risk-moderate { color: #b45309; }
+    .risk-elevated { color: #b45309; }
+    .risk-high, .risk-critical { color: #dc2626; }
 
     .summary {
-      color: rgba(255, 255, 255, 0.8);
+      color: #57534e;
       margin: 0 0 1rem;
       font-size: 0.95rem;
     }
@@ -481,19 +473,18 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      border-radius: 8px;
       font-size: 0.85rem;
     }
 
-    .signal-positive { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .signal-negative { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); }
-    .signal-neutral { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .signal-positive { background: #fafaf9; border: 1px solid #e7e5e4; }
+    .signal-negative { background: #fef2f2; border: 1px solid #fecaca; }
+    .signal-neutral { background: #fafaf9; border: 1px solid #e7e5e4; }
 
-    .signal-name { color: white; }
-    .signal-sentiment { color: rgba(255, 255, 255, 0.5); font-size: 0.75rem; }
+    .signal-name { color: #1c1917; }
+    .signal-sentiment { color: #a8a29e; font-size: 0.75rem; }
 
     .recommendations h4 {
-      color: white;
+      color: #1c1917;
       margin: 1rem 0 0.5rem;
       font-size: 0.9rem;
     }
@@ -504,7 +495,7 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .recommendations li {
-      color: rgba(255, 255, 255, 0.7);
+      color: #57534e;
       margin-bottom: 0.25rem;
       font-size: 0.9rem;
     }
@@ -512,22 +503,22 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     .market-timing {
       margin-bottom: 1rem;
       padding: 0.75rem;
-      background: rgba(16, 185, 129, 0.1);
-      border-radius: 8px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
     }
 
     .timing-label {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       margin-right: 0.5rem;
     }
 
     .timing-value {
-      color: #10b981;
+      color: #1c1917;
       font-weight: 600;
     }
 
     .job-result h4 {
-      color: white;
+      color: #1c1917;
       margin: 1.5rem 0 0.75rem;
       font-size: 0.95rem;
     }
@@ -542,18 +533,17 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       justify-content: space-between;
       align-items: center;
       padding: 0.75rem 1rem;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 8px;
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
     }
 
     .req-skill {
-      color: white;
+      color: #1c1917;
       font-weight: 500;
     }
 
     .req-freq {
-      color: rgba(255, 255, 255, 0.6);
+      color: #57534e;
       font-size: 0.85rem;
     }
 
@@ -562,30 +552,29 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       font-size: 0.85rem;
     }
 
-    .req-change.positive { color: #10b981; }
+    .req-change.positive { color: #1c1917; }
 
     .wishlist-card {
       padding: 1rem;
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-      border-radius: 8px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
     }
 
     .wishlist-req {
-      color: #f59e0b;
+      color: #b45309;
       font-weight: 600;
       display: block;
       margin-bottom: 0.5rem;
     }
 
     .wishlist-reality {
-      color: rgba(255, 255, 255, 0.7);
+      color: #57534e;
       font-size: 0.85rem;
       margin: 0 0 0.5rem;
     }
 
     .wishlist-strategy {
-      color: #10b981;
+      color: #1c1917;
       font-size: 0.85rem;
       margin: 0;
     }
@@ -595,47 +584,45 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       justify-content: space-between;
       align-items: center;
       padding: 0.75rem 1rem;
-      background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.2);
-      border-radius: 8px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
 
     .emerging-name {
-      color: #a78bfa;
+      color: #dc2626;
       font-weight: 600;
     }
 
     .emerging-growth {
-      color: #10b981;
+      color: #1c1917;
       font-weight: 600;
     }
 
     .emerging-time {
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
       font-size: 0.85rem;
     }
 
     .redflag-card {
       padding: 1rem;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      border-radius: 8px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
     }
 
     .flag-phrase {
-      color: #f87171;
+      color: #dc2626;
       font-weight: 600;
       display: block;
       margin-bottom: 0.25rem;
     }
 
     .flag-danger {
-      color: #f87171;
+      color: #dc2626;
       font-size: 0.8rem;
     }
 
     .flag-meaning {
-      color: rgba(255, 255, 255, 0.7);
+      color: #57534e;
       font-size: 0.85rem;
       margin: 0.5rem 0 0;
     }
@@ -647,7 +634,7 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
       max-width: 1200px;
       margin: 3rem auto 0;
       padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid #e7e5e4;
     }
 
     .prop {
@@ -661,12 +648,12 @@ type TabType = 'github' | 'arbitrage' | 'company' | 'jobs';
     }
 
     .prop h4 {
-      color: white;
+      color: #1c1917;
       margin: 0 0 0.25rem;
     }
 
     .prop p {
-      color: rgba(255, 255, 255, 0.5);
+      color: #a8a29e;
       font-size: 0.85rem;
       margin: 0;
     }

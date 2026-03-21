@@ -25,42 +25,42 @@ interface MarketMetric {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden">
+    <div class="border border-stone-200 bg-white overflow-hidden">
       <!-- Header with live indicator -->
-      <div class="px-5 pt-5 pb-4 border-b border-slate-800">
+      <div class="px-5 pt-5 pb-4 border-b border-stone-200">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="relative">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+              <div class="w-10 h-10 bg-stone-900 flex items-center justify-center">
                 <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
-              <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-slate-950 animate-pulse"></div>
+              <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-600 border-2 border-white animate-pulse"></div>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Market Pulse</h3>
-              <p class="text-xs text-slate-500">Live signals relevant to your profile</p>
+              <h3 class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Market Pulse</h3>
+              <p class="text-xs text-stone-500">Live signals relevant to your profile</p>
             </div>
           </div>
-          <div class="flex items-center gap-2 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span class="text-[10px] font-semibold text-emerald-400">LIVE</span>
+          <div class="flex items-center gap-2 px-2 py-1 bg-red-50 border border-red-200">
+            <div class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
+            <span class="text-[10px] font-bold text-red-600 uppercase tracking-widest">LIVE</span>
           </div>
         </div>
       </div>
 
       <!-- Quick metrics bar -->
-      <div class="px-5 py-3 border-b border-slate-800 bg-slate-900/30">
+      <div class="px-5 py-3 border-b border-stone-200 bg-stone-50">
         <div class="grid grid-cols-4 gap-4">
           <div *ngFor="let metric of metrics" class="text-center">
             <div class="text-lg font-mono font-bold" [ngClass]="getMetricColor(metric)">
               {{ metric.value }}
             </div>
             <div class="flex items-center justify-center gap-1 text-[10px]">
-              <span class="text-slate-500">{{ metric.label }}</span>
+              <span class="text-stone-400">{{ metric.label }}</span>
               <span [ngClass]="getTrendColor(metric.trend)">
-                {{ metric.trend === 'up' ? '↑' : metric.trend === 'down' ? '↓' : '→' }}
+                {{ metric.trend === 'up' ? '&#8593;' : metric.trend === 'down' ? '&#8595;' : '&#8594;' }}
                 {{ metric.change > 0 ? '+' : '' }}{{ metric.change }}%
               </span>
             </div>
@@ -69,17 +69,17 @@ interface MarketMetric {
       </div>
 
       <!-- Signal feed -->
-      <div class="divide-y divide-slate-800">
+      <div class="divide-y divide-stone-200">
         <div
           *ngFor="let signal of signals; let i = index"
-          class="px-5 py-4 hover:bg-slate-900/30 transition-colors cursor-pointer"
+          class="px-5 py-4 hover:bg-stone-50 transition-colors cursor-pointer"
           [class.animate-slideIn]="i < 3"
           [style.animation-delay]="i * 100 + 'ms'"
         >
           <div class="flex items-start gap-3">
             <!-- Signal type icon -->
             <div
-              class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
+              class="flex-shrink-0 w-8 h-8 flex items-center justify-center"
               [ngClass]="getSignalIconClasses(signal.type)"
             >
               <span class="text-sm">{{ getSignalIcon(signal.type) }}</span>
@@ -89,11 +89,11 @@ interface MarketMetric {
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
                 <div>
-                  <p class="text-sm font-medium text-white">{{ signal.title }}</p>
+                  <p class="text-sm font-medium text-stone-900">{{ signal.title }}</p>
                   <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-xs text-slate-500">{{ signal.source }}</span>
-                    <span class="text-slate-700">•</span>
-                    <span class="text-xs text-slate-500">{{ signal.timeAgo }}</span>
+                    <span class="text-xs text-stone-400">{{ signal.source }}</span>
+                    <span class="text-stone-300">&bull;</span>
+                    <span class="text-xs text-stone-400">{{ signal.timeAgo }}</span>
                   </div>
                 </div>
                 <div class="flex items-center gap-1">
@@ -101,16 +101,16 @@ interface MarketMetric {
                     class="w-2 h-2 rounded-full"
                     [ngClass]="getRelevanceColor(signal.relevanceScore)"
                   ></div>
-                  <span class="text-[10px] text-slate-500">{{ signal.relevanceScore }}% match</span>
+                  <span class="text-[10px] text-stone-400">{{ signal.relevanceScore }}% match</span>
                 </div>
               </div>
 
-              <p class="mt-2 text-xs text-slate-400">{{ signal.details }}</p>
+              <p class="mt-2 text-xs text-stone-500">{{ signal.details }}</p>
 
               <!-- Actionable button -->
               <button
                 *ngIf="signal.actionable"
-                class="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors"
+                class="mt-2 inline-flex items-center gap-1 px-2 py-1 text-xs font-bold transition-colors"
                 [ngClass]="getActionButtonClasses(signal.type)"
               >
                 {{ signal.action || 'View Details' }}
@@ -124,12 +124,12 @@ interface MarketMetric {
       </div>
 
       <!-- Footer -->
-      <div class="px-5 py-3 border-t border-slate-800 flex items-center justify-between">
-        <span class="text-xs text-slate-500">
+      <div class="px-5 py-3 border-t border-stone-200 flex items-center justify-between">
+        <span class="text-xs text-stone-400">
           Showing {{ signals.length }} signals from last 24h
         </span>
-        <button class="text-xs font-medium text-cyan-400 hover:text-cyan-300">
-          Configure Alerts →
+        <button class="text-xs font-bold text-red-600 hover:text-red-700">
+          Configure Alerts
         </button>
       </div>
     </div>
@@ -235,48 +235,48 @@ export class MarketPulseComponent implements OnInit {
 
   getSignalIcon(type: MarketSignal['type']): string {
     switch (type) {
-      case 'opportunity': return '💼';
-      case 'warning': return '⚠️';
-      case 'trend': return '📈';
-      case 'layoff': return '🔴';
+      case 'opportunity': return '>';
+      case 'warning': return '!';
+      case 'trend': return '^';
+      case 'layoff': return 'x';
     }
   }
 
   getSignalIconClasses(type: MarketSignal['type']): string {
     switch (type) {
-      case 'opportunity': return 'bg-emerald-500/20';
-      case 'warning': return 'bg-amber-500/20';
-      case 'trend': return 'bg-cyan-500/20';
-      case 'layoff': return 'bg-rose-500/20';
+      case 'opportunity': return 'bg-stone-50 border border-stone-200';
+      case 'warning': return 'bg-amber-50 border border-amber-200';
+      case 'trend': return 'bg-stone-50 border border-stone-200';
+      case 'layoff': return 'bg-red-50 border border-red-200';
     }
   }
 
   getMetricColor(metric: MarketMetric): string {
-    if (metric.trend === 'up' && metric.change > 0) return 'text-emerald-400';
-    if (metric.trend === 'down' && metric.change < 0) return 'text-rose-400';
-    return 'text-white';
+    if (metric.trend === 'up' && metric.change > 0) return 'text-stone-900';
+    if (metric.trend === 'down' && metric.change < 0) return 'text-red-600';
+    return 'text-stone-900';
   }
 
   getTrendColor(trend: MarketMetric['trend']): string {
     switch (trend) {
-      case 'up': return 'text-emerald-400';
-      case 'down': return 'text-rose-400';
-      case 'stable': return 'text-slate-400';
+      case 'up': return 'text-stone-900';
+      case 'down': return 'text-red-600';
+      case 'stable': return 'text-stone-400';
     }
   }
 
   getRelevanceColor(score: number): string {
-    if (score >= 80) return 'bg-emerald-500';
+    if (score >= 80) return 'bg-stone-900';
     if (score >= 60) return 'bg-amber-500';
-    return 'bg-slate-500';
+    return 'bg-stone-400';
   }
 
   getActionButtonClasses(type: MarketSignal['type']): string {
     switch (type) {
-      case 'opportunity': return 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20';
-      case 'warning': return 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20';
-      case 'trend': return 'bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20';
-      case 'layoff': return 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20';
+      case 'opportunity': return 'bg-stone-50 text-stone-900 hover:bg-stone-100 border border-stone-200';
+      case 'warning': return 'bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200';
+      case 'trend': return 'bg-stone-50 text-stone-600 hover:bg-stone-100 border border-stone-200';
+      case 'layoff': return 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200';
     }
   }
 }

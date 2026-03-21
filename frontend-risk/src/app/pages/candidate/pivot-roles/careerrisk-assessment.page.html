@@ -1,75 +1,61 @@
 <section class="space-y-6 max-w-6xl mx-auto px-4 pb-8">
-  <!-- Hero header with gradient -->
-  <header class="relative overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-6 md:p-8">
-    <!-- Animated grid background -->
-    <div class="absolute inset-0 opacity-20">
-      <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="assessment-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="rgba(16, 185, 129, 0.3)" stroke-width="0.5"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#assessment-grid)" />
-      </svg>
-    </div>
-
-    <div class="relative z-10">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span class="text-xs uppercase tracking-widest text-emerald-400 font-semibold">Live Analysis</span>
-          </div>
-          <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">CareerRisk Index</h1>
-          <p class="text-slate-400 max-w-xl">
-            Real-time assessment of your career vulnerability to AI automation, market shifts, and technological disruption.
-          </p>
+  <!-- Hero header -->
+  <header class="border border-stone-200 bg-white p-6 md:p-8 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
+          <span class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Live Analysis</span>
         </div>
+        <h1 class="text-3xl md:text-4xl font-black text-stone-900 mb-2">CareerRisk Index</h1>
+        <p class="text-stone-500 max-w-xl">
+          Real-time assessment of your career vulnerability to AI automation, market shifts, and technological disruption.
+        </p>
+      </div>
 
-        <!-- Overall score display -->
-        <div *ngIf="assessment" class="flex-shrink-0 text-center md:text-right">
-          <div class="inline-block p-6 rounded-2xl bg-slate-950/50 border border-slate-700">
-            <div class="text-5xl font-mono font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              {{ assessment.riskPercent }}<span class="text-2xl">%</span>
-            </div>
-            <div class="text-xs uppercase tracking-wide text-slate-400 mt-1">Disruption Risk</div>
-            <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                 [ngClass]="{
-                   'bg-emerald-500/20 text-emerald-300': riskBandLabel === 'Low',
-                   'bg-amber-500/20 text-amber-300': riskBandLabel === 'Medium',
-                   'bg-rose-500/20 text-rose-300': riskBandLabel === 'High'
-                 }">
-              <span class="w-1.5 h-1.5 rounded-full"
-                    [ngClass]="{
-                      'bg-emerald-400': riskBandLabel === 'Low',
-                      'bg-amber-400': riskBandLabel === 'Medium',
-                      'bg-rose-400': riskBandLabel === 'High'
-                    }"></span>
-              {{ riskBandLabel }} Risk
-            </div>
-            <!-- Share/Export buttons -->
-            <div class="mt-3 flex gap-2 justify-center md:justify-end">
-              <button
-                type="button"
-                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition-colors"
-                (click)="shareResults()"
-                title="Share results">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                Share
-              </button>
-              <button
-                type="button"
-                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1.5 transition-colors"
-                (click)="downloadPDF()"
-                title="Download PDF">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                PDF
-              </button>
-            </div>
+      <!-- Overall score display -->
+      <div *ngIf="assessment" class="flex-shrink-0 text-center md:text-right">
+        <div class="inline-block p-6 border border-stone-200 bg-stone-50">
+          <div class="text-5xl font-mono font-black text-stone-900">
+            {{ assessment.riskPercent }}<span class="text-2xl text-stone-400">%</span>
+          </div>
+          <div class="text-[10px] uppercase tracking-widest text-stone-400 mt-1">Disruption Risk</div>
+          <div class="mt-2 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold"
+               [ngClass]="{
+                 'bg-stone-100 text-stone-700 border border-stone-300': riskBandLabel === 'Low',
+                 'bg-amber-50 text-amber-700 border border-amber-200': riskBandLabel === 'Medium',
+                 'bg-red-50 text-red-700 border border-red-200': riskBandLabel === 'High'
+               }">
+            <span class="w-1.5 h-1.5 rounded-full"
+                  [ngClass]="{
+                    'bg-stone-500': riskBandLabel === 'Low',
+                    'bg-amber-500': riskBandLabel === 'Medium',
+                    'bg-red-600': riskBandLabel === 'High'
+                  }"></span>
+            {{ riskBandLabel }} Risk
+          </div>
+          <!-- Share/Export buttons -->
+          <div class="mt-3 flex gap-2 justify-center md:justify-end">
+            <button
+              type="button"
+              class="px-3 py-1.5 border border-stone-300 hover:border-stone-900 text-xs text-stone-600 flex items-center gap-1.5 transition-colors"
+              (click)="shareResults()"
+              title="Share results">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              Share
+            </button>
+            <button
+              type="button"
+              class="px-3 py-1.5 border border-stone-300 hover:border-stone-900 text-xs text-stone-600 flex items-center gap-1.5 transition-colors"
+              (click)="downloadPDF()"
+              title="Download PDF">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              PDF
+            </button>
           </div>
         </div>
       </div>
@@ -77,33 +63,33 @@
   </header>
 
   <!-- Loading state -->
-  <div *ngIf="loading" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-8">
+  <div *ngIf="loading" class="border border-stone-200 bg-white p-8">
     <div class="flex flex-col items-center justify-center gap-4">
       <div class="relative w-16 h-16">
-        <div class="absolute inset-0 rounded-full border-4 border-slate-700"></div>
-        <div class="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-stone-200"></div>
+        <div class="absolute inset-0 rounded-full border-4 border-stone-900 border-t-transparent animate-spin"></div>
       </div>
       <div class="text-center">
-        <p class="text-slate-200 font-medium">Analyzing your career data...</p>
-        <p class="text-xs text-slate-500 mt-1">Scanning threat vectors and skill vulnerabilities</p>
+        <p class="text-stone-900 font-bold">Analyzing your career data...</p>
+        <p class="text-xs text-stone-500 mt-1">Scanning threat vectors and skill vulnerabilities</p>
       </div>
     </div>
   </div>
 
   <!-- Error state -->
-  <div *ngIf="error" class="rounded-2xl border border-rose-500/40 bg-rose-950/50 p-6">
+  <div *ngIf="error" class="border border-red-200 bg-red-50 p-6">
     <div class="flex items-start gap-4">
-      <div class="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-        <svg class="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="w-10 h-10 bg-red-100 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
       <div class="flex-1">
-        <h3 class="text-rose-100 font-semibold">Analysis Failed</h3>
-        <p class="text-rose-200/70 text-sm mt-1">{{ error }}</p>
+        <h3 class="text-red-900 font-bold">Analysis Failed</h3>
+        <p class="text-red-700 text-sm mt-1">{{ error }}</p>
         <button
           type="button"
-          class="mt-3 px-4 py-2 rounded-lg border border-rose-400/50 text-sm font-medium text-rose-100 hover:bg-rose-500/10 transition-colors"
+          class="mt-3 px-4 py-2 border border-red-300 text-sm font-bold text-red-700 hover:border-red-600 transition-colors"
           (click)="retry()"
         >
           Retry Analysis
@@ -113,19 +99,19 @@
   </div>
 
   <!-- No assessment state -->
-  <div *ngIf="!loading && !error && !assessment" class="rounded-2xl border border-slate-800 bg-slate-900/80 p-8 text-center">
-    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-4">
-      <svg class="w-8 h-8 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <div *ngIf="!loading && !error && !assessment" class="border border-stone-200 bg-white p-8 text-center">
+    <div class="w-16 h-16 mx-auto bg-stone-900 flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
       </svg>
     </div>
-    <h3 class="text-xl font-bold text-white mb-2">Start Your Assessment</h3>
-    <p class="text-slate-400 max-w-md mx-auto mb-6">
+    <h3 class="text-xl font-black text-stone-900 mb-2">Start Your Assessment</h3>
+    <p class="text-stone-500 max-w-md mx-auto mb-6">
       Complete the questionnaire to generate your personalized career disruption analysis.
     </p>
     <button
       type="button"
-      class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all"
+      class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
       (click)="goToQuestions()"
     >
       Begin Assessment
@@ -135,55 +121,54 @@
     </button>
   </div>
 
-  <!-- Main assessment content - SIMPLIFIED VIEW -->
+  <!-- Main assessment content -->
   <div *ngIf="assessment" class="space-y-6">
 
-    <!-- SECTION 1: Top 3 Actions (most important - what user should DO) -->
-    <div class="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-slate-900 to-emerald-950/30 p-6">
+    <!-- SECTION 1: Top 3 Actions -->
+    <div class="border border-stone-200 bg-white p-6 shadow-sm">
       <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-          <span class="text-xl">🎯</span>
+        <div class="w-10 h-10 bg-stone-900 flex items-center justify-center">
+          <span class="text-xl text-white">1</span>
         </div>
         <div>
-          <h2 class="text-lg font-bold text-white">What you should do</h2>
-          <p class="text-xs text-slate-400">Your 3 most important steps</p>
+          <h2 class="text-lg font-black text-stone-900">What you should do</h2>
+          <p class="text-xs text-stone-500">Your 3 most important steps</p>
         </div>
       </div>
 
-      <!-- Inline top 3 actions -->
       <div class="space-y-3">
-        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-emerald-500/30 transition-colors">
-          <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-sm font-bold text-slate-900 flex-shrink-0">1</div>
+        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
+          <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">1</div>
           <div class="flex-1">
-            <h3 class="font-semibold text-white">Learn to use AI tools</h3>
-            <p class="text-sm text-slate-400 mt-1">GitHub Copilot, ChatGPT, Claude - these are your allies, not competitors</p>
+            <h3 class="font-bold text-stone-900">Learn to use AI tools</h3>
+            <p class="text-sm text-stone-500 mt-1">GitHub Copilot, ChatGPT, Claude - these are your allies, not competitors</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs">High priority</span>
-              <span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">~2h/week</span>
+              <span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 text-xs font-bold">High priority</span>
+              <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 text-xs">~2h/week</span>
             </div>
           </div>
         </div>
 
-        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-emerald-500/30 transition-colors">
-          <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-sm font-bold text-slate-900 flex-shrink-0">2</div>
+        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
+          <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">2</div>
           <div class="flex-1">
-            <h3 class="font-semibold text-white">Develop "human" skills</h3>
-            <p class="text-sm text-slate-400 mt-1">Client communication, teamwork, understanding problems - AI can't replace this</p>
+            <h3 class="font-bold text-stone-900">Develop "human" skills</h3>
+            <p class="text-sm text-stone-500 mt-1">Client communication, teamwork, understanding problems - AI can't replace this</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-300 text-xs">Medium priority</span>
-              <span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">Ongoing</span>
+              <span class="px-2 py-1 bg-stone-100 text-stone-700 border border-stone-300 text-xs font-bold">Medium priority</span>
+              <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 text-xs">Ongoing</span>
             </div>
           </div>
         </div>
 
-        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-emerald-500/30 transition-colors">
-          <div class="w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center text-sm font-bold text-slate-900 flex-shrink-0">3</div>
+        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
+          <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">3</div>
           <div class="flex-1">
-            <h3 class="font-semibold text-white">Specialize in higher-level work</h3>
-            <p class="text-sm text-slate-400 mt-1">Architecture, system design, business logic - AI handles routine, you handle strategy</p>
+            <h3 class="font-bold text-stone-900">Specialize in higher-level work</h3>
+            <p class="text-sm text-stone-500 mt-1">Architecture, system design, business logic - AI handles routine, you handle strategy</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span class="px-2 py-1 rounded bg-violet-500/20 text-violet-300 text-xs">Long-term</span>
-              <span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">6-12 months</span>
+              <span class="px-2 py-1 bg-stone-100 text-stone-700 border border-stone-300 text-xs font-bold">Long-term</span>
+              <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 text-xs">6-12 months</span>
             </div>
           </div>
         </div>
@@ -191,7 +176,7 @@
 
       <button
         type="button"
-        class="mt-4 w-full py-3 rounded-xl border border-emerald-500/30 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/10 transition-colors flex items-center justify-center gap-2"
+        class="mt-4 w-full py-3 border border-stone-300 text-sm font-bold text-stone-700 hover:border-stone-900 hover:text-stone-900 transition-colors flex items-center justify-center gap-2"
         (click)="setActiveTab('actions'); showAdvanced = true"
       >
         View full action plan
@@ -201,42 +186,42 @@
       </button>
     </div>
 
-    <!-- SECTION 2: Timeline (when things will change) -->
+    <!-- SECTION 2: Timeline -->
     <app-disruption-timeline
       [currentRole]="currentRole"
       [timeline]="timelinePoints"
     ></app-disruption-timeline>
 
-    <!-- SECTION 3: One Case Study (proof this is real) -->
-    <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6" *ngIf="disruptedRoles.length > 0">
+    <!-- SECTION 3: Case Study -->
+    <div class="border border-stone-200 bg-white p-6 shadow-sm" *ngIf="disruptedRoles.length > 0">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-          <span class="text-xl">📖</span>
+        <div class="w-10 h-10 bg-stone-900 flex items-center justify-center">
+          <span class="text-lg text-white">!</span>
         </div>
         <div>
-          <h2 class="text-lg font-bold text-white">Lesson from history</h2>
-          <p class="text-xs text-slate-400">What happened to other roles</p>
+          <h2 class="text-lg font-black text-stone-900">Lesson from history</h2>
+          <p class="text-xs text-stone-500">What happened to other roles</p>
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+      <div class="p-4 border border-stone-200 bg-stone-50">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h3 class="font-semibold text-white">{{ disruptedRoles[0].title }}</h3>
-            <p class="text-sm text-slate-400 mt-1">
+            <h3 class="font-bold text-stone-900">{{ disruptedRoles[0].title }}</h3>
+            <p class="text-sm text-stone-500 mt-1">
               Peak {{ disruptedRoles[0].peakYear }}: {{ disruptedRoles[0].peakEmployment }} →
               Now: {{ disruptedRoles[0].currentEmployment }}
             </p>
           </div>
           <div class="text-right flex-shrink-0">
-            <div class="text-2xl font-mono font-bold text-rose-400">-{{ disruptedRoles[0].decline }}%</div>
-            <div class="text-xs text-slate-500">decline</div>
+            <div class="text-2xl font-mono font-black text-red-600">-{{ disruptedRoles[0].decline }}%</div>
+            <div class="text-xs text-stone-400">decline</div>
           </div>
         </div>
 
-        <div class="mt-3 pt-3 border-t border-slate-700">
-          <p class="text-sm text-slate-300">
-            <span class="text-amber-400 font-semibold">Lesson:</span>
+        <div class="mt-3 pt-3 border-t border-stone-200">
+          <p class="text-sm text-stone-600">
+            <span class="text-red-600 font-bold">Lesson:</span>
             {{ disruptedRoles[0].lessons?.[0] || 'Technology change came faster than expected.' }}
           </p>
         </div>
@@ -244,29 +229,29 @@
 
       <button
         type="button"
-        class="mt-4 text-sm text-slate-400 hover:text-slate-200 flex items-center gap-1"
+        class="mt-4 text-sm text-stone-500 hover:text-stone-900 flex items-center gap-1 transition-colors"
         (click)="setActiveTab('autopsy'); showAdvanced = true"
       >
         See more examples →
       </button>
     </div>
 
-    <!-- SECTION 4: "Show more" - Advanced Features Toggle -->
-    <div class="rounded-2xl border border-slate-800 bg-slate-900/80 overflow-hidden">
+    <!-- SECTION 4: Advanced Features Toggle -->
+    <div class="border border-stone-200 bg-white overflow-hidden shadow-sm">
       <button
         type="button"
-        class="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-slate-800/50 transition-colors"
+        class="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-stone-50 transition-colors"
         (click)="showAdvanced = !showAdvanced"
         [attr.aria-expanded]="showAdvanced"
       >
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center text-violet-400">
+          <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-white font-bold text-sm">
             {{ showAdvanced ? '−' : '+' }}
           </div>
-          <span class="font-semibold text-slate-100">{{ showAdvanced ? 'Hide detailed analysis' : 'Show more' }}</span>
-          <span class="text-xs text-slate-500">(threat radar, skill matrix, simulators...)</span>
+          <span class="font-bold text-stone-900">{{ showAdvanced ? 'Hide detailed analysis' : 'Show more' }}</span>
+          <span class="text-xs text-stone-400">(threat radar, skill matrix, simulators...)</span>
         </div>
-        <svg class="w-5 h-5 text-slate-400 transition-transform" [class.rotate-180]="showAdvanced" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 text-stone-400 transition-transform" [class.rotate-180]="showAdvanced" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -274,39 +259,37 @@
       <!-- Advanced tabs and content -->
       <div *ngIf="showAdvanced" class="px-5 pb-5 space-y-4 animate-fadeIn">
 
-        <!-- FREE tier: Upgrade CTA instead of tabs -->
+        <!-- FREE tier: Upgrade CTA -->
         <div *ngIf="tierService.isFree()" class="relative">
-          <!-- Blurred preview behind -->
           <div class="filter blur-sm pointer-events-none select-none opacity-50">
-            <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-800/50 border border-slate-700/50">
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">◉ Overview</span>
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">🎯 Action Plan</span>
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">◎ Threats</span>
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">▦ Skills</span>
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">🔮 What-If</span>
-              <span class="px-3 py-2 rounded-lg text-xs font-medium text-slate-500">📡 Market</span>
+            <div class="flex flex-wrap gap-2 p-1 border border-stone-200 bg-stone-50">
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">Overview</span>
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">Action Plan</span>
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">Threats</span>
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">Skills</span>
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">What-If</span>
+              <span class="px-3 py-2 text-xs font-medium text-stone-400">Market</span>
             </div>
             <div class="mt-4 grid gap-4 md:grid-cols-3">
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5 h-32"></div>
+              <div class="border border-stone-200 bg-stone-50 p-5 h-32"></div>
+              <div class="border border-stone-200 bg-stone-50 p-5 h-32"></div>
+              <div class="border border-stone-200 bg-stone-50 p-5 h-32"></div>
             </div>
           </div>
 
-          <!-- Upgrade overlay -->
           <div class="absolute inset-0 flex items-center justify-center">
-            <div class="text-center p-8 rounded-2xl bg-slate-900/95 border border-emerald-500/30 shadow-2xl max-w-md">
-              <div class="w-14 h-14 mx-auto rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
-                <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="text-center p-8 bg-white border border-stone-300 shadow-lg max-w-md">
+              <div class="w-14 h-14 mx-auto bg-stone-900 flex items-center justify-center mb-4">
+                <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-bold text-white mb-2">Unlock Full Analysis</h3>
-              <p class="text-sm text-slate-400 mb-5">
+              <h3 class="text-xl font-black text-stone-900 mb-2">Unlock Full Analysis</h3>
+              <p class="text-sm text-stone-500 mb-5">
                 Get detailed threat radar, skill matrix, what-if simulator, market signals, and your personalized action plan.
               </p>
               <a routerLink="/pricing"
-                class="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all">
+                class="inline-block px-8 py-3 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors">
                 Upgrade from &euro;7.99/mo
               </a>
             </div>
@@ -315,8 +298,7 @@
 
         <!-- Arena Pro tier: Full tab content -->
         <ng-container *ngIf="!tierService.isFree()">
-          <!-- Tab navigation for advanced features -->
-          <div class="flex flex-wrap gap-2 p-1 rounded-xl bg-slate-800/50 border border-slate-700/50">
+          <div class="flex flex-wrap gap-2 p-1 border border-stone-200 bg-stone-50">
             <button
               *ngFor="let tab of [
                 { id: 'overview', label: 'Overview', icon: '◉' },
@@ -328,10 +310,10 @@
                 { id: 'autopsy', label: 'Examples', icon: '🔍' }
               ]"
               type="button"
-              class="px-3 py-2 rounded-lg text-xs font-medium transition-all"
+              class="px-3 py-2 text-xs font-bold transition-all"
               [ngClass]="activeTab === tab.id
-                ? 'bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-violet-300 border border-violet-500/30'
-                : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'"
+                ? 'bg-stone-900 text-white'
+                : 'text-stone-500 hover:text-stone-900 hover:bg-stone-100'"
               (click)="setActiveTab(tab.id)"
             >
               <span class="mr-1">{{ tab.icon }}</span>
@@ -339,59 +321,56 @@
             </button>
           </div>
 
-          <!-- Overview Tab (detailed stats) -->
+          <!-- Overview Tab -->
           <div *ngIf="activeTab === 'overview'" class="space-y-4 animate-fadeIn">
             <div class="grid gap-4 md:grid-cols-3">
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <div class="border border-stone-200 bg-stone-50 p-5">
                 <div class="flex items-center justify-between mb-3">
-                  <span class="text-xs uppercase tracking-wide text-slate-400">Disruption Risk</span>
-                  <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">◉</span>
+                  <span class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Disruption Risk</span>
                 </div>
-                <div class="text-4xl font-mono font-bold text-emerald-400">{{ assessment.riskPercent }}%</div>
-                <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all" [style.width.%]="assessment.riskPercent"></div>
+                <div class="text-4xl font-mono font-black text-stone-900">{{ assessment.riskPercent }}%</div>
+                <div class="mt-2 h-1.5 bg-stone-200 overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-stone-300 via-amber-400 to-red-600" [style.width.%]="assessment.riskPercent"></div>
                 </div>
-                <div class="mt-3 text-xs text-slate-400">
-                  <span class="text-emerald-400 font-semibold">{{ getPercentileSaferThan() }}%</span>
+                <div class="mt-3 text-xs text-stone-500">
+                  <span class="text-stone-900 font-bold">{{ getPercentileSaferThan() }}%</span>
                   of other {{ currentRole }} roles have higher risk
                 </div>
               </div>
 
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <div class="border border-stone-200 bg-stone-50 p-5">
                 <div class="flex items-center justify-between mb-3">
-                  <span class="text-xs uppercase tracking-wide text-slate-400">Analysis Confidence</span>
-                  <span class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400">◎</span>
+                  <span class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Analysis Confidence</span>
                 </div>
-                <div class="text-4xl font-mono font-bold text-cyan-400">{{ confidencePercent }}%</div>
-                <div class="mt-2 h-2 bg-slate-800 rounded-full overflow-hidden">
-                  <div class="h-full bg-cyan-500 rounded-full transition-all" [style.width.%]="confidencePercent"></div>
+                <div class="text-4xl font-mono font-black text-stone-900">{{ confidencePercent }}%</div>
+                <div class="mt-2 h-1.5 bg-stone-200 overflow-hidden">
+                  <div class="h-full bg-stone-900" [style.width.%]="confidencePercent"></div>
                 </div>
               </div>
 
-              <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
+              <div class="border border-stone-200 bg-stone-50 p-5">
                 <div class="flex items-center justify-between mb-3">
-                  <span class="text-xs uppercase tracking-wide text-slate-400">Time to Adapt</span>
-                  <span class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">⏱</span>
+                  <span class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Time to Adapt</span>
                 </div>
-                <div class="text-4xl font-mono font-bold text-amber-400">18<span class="text-lg">mo</span></div>
-                <p class="text-xs text-slate-400 mt-2">Recommended preparation time</p>
+                <div class="text-4xl font-mono font-black text-stone-900">18<span class="text-lg">mo</span></div>
+                <p class="text-xs text-stone-500 mt-2">Recommended preparation time</p>
               </div>
             </div>
 
             <!-- Pivot Roles -->
-            <div class="rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-              <h3 class="font-semibold text-white mb-4">Recommended alternative roles</h3>
+            <div class="border border-stone-200 bg-stone-50 p-5">
+              <h3 class="font-bold text-stone-900 mb-4">Recommended alternative roles</h3>
               <div class="space-y-2" *ngIf="topPivotRoles.length; else noRoles">
-                <div *ngFor="let role of topPivotRoles; let i = index" class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
+                <div *ngFor="let role of topPivotRoles; let i = index" class="flex items-center justify-between p-3 border border-stone-200 bg-white">
                   <div class="flex items-center gap-3">
-                    <span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-bold text-emerald-400">{{ i + 1 }}</span>
-                    <span class="font-medium text-slate-200">{{ role }}</span>
+                    <span class="w-6 h-6 bg-stone-900 flex items-center justify-center text-xs font-bold text-white">{{ i + 1 }}</span>
+                    <span class="font-medium text-stone-900">{{ role }}</span>
                   </div>
-                  <span class="text-xs text-emerald-400 font-medium">Good fit</span>
+                  <span class="text-xs text-stone-500 font-bold">Good fit</span>
                 </div>
               </div>
               <ng-template #noRoles>
-                <p class="text-sm text-slate-400">Complete your profile to get recommendations.</p>
+                <p class="text-sm text-stone-500">Complete your profile to get recommendations.</p>
               </ng-template>
             </div>
           </div>
@@ -436,15 +415,12 @@
 
 <!-- Registration Prompt Modal -->
 <div *ngIf="showRegisterPrompt" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-  <!-- Backdrop -->
-  <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm" (click)="closeRegisterPrompt()"></div>
+  <div class="absolute inset-0 bg-stone-900/80 backdrop-blur-sm" (click)="closeRegisterPrompt()"></div>
 
-  <!-- Modal -->
-  <div class="relative w-full max-w-lg rounded-2xl border border-slate-700 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 p-8 shadow-2xl">
-    <!-- Close button -->
+  <div class="relative w-full max-w-lg bg-white border border-stone-200 p-8 shadow-2xl">
     <button
       type="button"
-      class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center transition-colors"
+      class="absolute top-4 right-4 w-8 h-8 border border-stone-300 text-stone-400 hover:text-stone-900 hover:border-stone-900 flex items-center justify-center transition-colors"
       (click)="closeRegisterPrompt()"
     >
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -452,77 +428,60 @@
       </svg>
     </button>
 
-    <!-- Content -->
     <div class="text-center">
-      <!-- Icon -->
-      <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30">
-        <svg class="w-10 h-10 text-slate-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <div class="w-20 h-20 mx-auto bg-stone-900 flex items-center justify-center mb-6">
+        <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       </div>
 
-      <h3 class="text-2xl font-bold text-white mb-3">Unlock Your Roadmap</h3>
-      <p class="text-slate-400 mb-6">
+      <h3 class="text-2xl font-black text-stone-900 mb-3">Unlock Your Roadmap</h3>
+      <p class="text-stone-500 mb-6">
         Create a free account to access your personalized action plan and track your progress.
       </p>
 
-      <!-- Assessment Preview -->
-      <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700 mb-6 text-left">
+      <div class="p-5 border border-stone-200 bg-stone-50 mb-6 text-left">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-sm text-slate-400">Your Disruption Score</span>
-          <span class="text-3xl font-mono font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+          <span class="text-sm text-stone-500">Your Disruption Score</span>
+          <span class="text-3xl font-mono font-black text-stone-900">
             {{ assessment?.riskPercent || 0 }}%
           </span>
         </div>
-        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+        <div class="h-1.5 bg-stone-200 overflow-hidden">
           <div
-            class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full"
+            class="h-full bg-gradient-to-r from-stone-300 via-amber-400 to-red-600"
             [style.width.%]="assessment?.riskPercent || 0"
           ></div>
         </div>
-        <p class="text-xs text-slate-500 mt-2">Your analysis is ready. Sign up to see your action plan.</p>
+        <p class="text-xs text-stone-400 mt-2">Your analysis is ready. Sign up to see your action plan.</p>
       </div>
 
-      <!-- Benefits -->
       <div class="text-left mb-6 space-y-3">
-        <div class="flex items-center gap-3 text-sm text-slate-300">
-          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
+        <div class="flex items-center gap-3 text-sm text-stone-600">
+          <span class="text-red-600 font-bold">→</span>
           <span>90-day personalized adaptation roadmap</span>
         </div>
-        <div class="flex items-center gap-3 text-sm text-slate-300">
-          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
+        <div class="flex items-center gap-3 text-sm text-stone-600">
+          <span class="text-red-600 font-bold">→</span>
           <span>Priority skill recommendations with learning paths</span>
         </div>
-        <div class="flex items-center gap-3 text-sm text-slate-300">
-          <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-            <svg class="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-          </div>
+        <div class="flex items-center gap-3 text-sm text-stone-600">
+          <span class="text-red-600 font-bold">→</span>
           <span>Track progress and update your risk profile</span>
         </div>
       </div>
 
-      <!-- Actions -->
       <div class="space-y-3">
         <button
           type="button"
-          class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition-all"
+          class="w-full py-4 text-base font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
           (click)="goToRegister()"
         >
           Create Free Account
         </button>
         <button
           type="button"
-          class="w-full py-3 rounded-xl border border-slate-700 text-sm font-semibold text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
+          class="w-full py-3 border border-stone-300 text-sm font-bold text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors"
           (click)="goToLogin()"
         >
           Already have an account? Sign in
@@ -535,7 +494,7 @@
 <!-- Share/Download Toast -->
 <div
   *ngIf="shareToastMessage"
-  class="fixed bottom-6 right-6 z-50 rounded-lg border border-emerald-500/40 bg-slate-950/90 px-5 py-3 text-sm text-emerald-50 shadow-lg shadow-emerald-500/20 animate-fadeIn"
+  class="fixed bottom-6 right-6 z-50 border border-stone-300 bg-white px-5 py-3 text-sm text-stone-900 shadow-lg animate-fadeIn"
 >
   {{ shareToastMessage }}
 </div>

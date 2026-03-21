@@ -19,30 +19,30 @@ interface DisruptedRole {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden">
+    <div class="border border-stone-200 bg-white shadow-sm overflow-hidden">
       <!-- Header -->
-      <div class="px-5 pt-5 pb-4 border-b border-slate-800">
+      <div class="px-5 pt-5 pb-4 border-b border-stone-200">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
+          <div class="w-10 h-10 bg-red-600 flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
           </div>
           <div>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Disruption Autopsy</h3>
-            <p class="text-xs text-slate-500">Learn from roles that faced disruption before</p>
+            <h3 class="text-[10px] font-bold text-stone-900 uppercase tracking-widest">Disruption Autopsy</h3>
+            <p class="text-xs text-stone-400">Learn from roles that faced disruption before</p>
           </div>
         </div>
       </div>
 
       <!-- Role selector -->
-      <div class="px-5 py-3 border-b border-slate-800 flex gap-2 overflow-x-auto">
+      <div class="px-5 py-3 border-b border-stone-200 flex gap-2 overflow-x-auto">
         <button
           *ngFor="let role of disruptedRoles"
-          class="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
+          class="flex-shrink-0 px-3 py-1.5 text-xs font-bold transition-colors"
           [ngClass]="selectedRole?.title === role.title
-            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50'
-            : 'bg-slate-800 text-slate-400 hover:text-slate-200'"
+            ? 'bg-red-50 text-red-600 border border-red-200'
+            : 'bg-stone-50 text-stone-500 hover:text-stone-900 border border-stone-200'"
           (click)="selectRole(role)"
         >
           {{ role.title }}
@@ -54,11 +54,11 @@ interface DisruptedRole {
         <!-- Status header -->
         <div class="flex items-center justify-between">
           <div>
-            <h4 class="text-xl font-bold text-white">{{ selectedRole.title }}</h4>
-            <p class="text-sm text-slate-400">Peak: {{ selectedRole.peakYear }}</p>
+            <h4 class="text-xl font-bold text-stone-900">{{ selectedRole.title }}</h4>
+            <p class="text-sm text-stone-400">Peak: {{ selectedRole.peakYear }}</p>
           </div>
           <div
-            class="px-3 py-1.5 rounded-full text-xs font-bold uppercase"
+            class="px-3 py-1.5 text-xs font-bold uppercase"
             [ngClass]="getStatusClasses(selectedRole.currentStatus)"
           >
             {{ selectedRole.currentStatus }}
@@ -67,27 +67,27 @@ interface DisruptedRole {
 
         <!-- Impact stats -->
         <div class="grid grid-cols-3 gap-4">
-          <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-            <div class="text-xs text-slate-500 mb-1">Peak Employment</div>
-            <div class="text-lg font-mono font-bold text-slate-300">{{ selectedRole.peakEmployment }}</div>
+          <div class="p-3 bg-stone-50 border border-stone-200">
+            <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold mb-1">Peak Employment</div>
+            <div class="text-lg font-mono font-bold text-stone-600">{{ selectedRole.peakEmployment }}</div>
           </div>
-          <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800">
-            <div class="text-xs text-slate-500 mb-1">Current</div>
-            <div class="text-lg font-mono font-bold text-slate-300">{{ selectedRole.currentEmployment }}</div>
+          <div class="p-3 bg-stone-50 border border-stone-200">
+            <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold mb-1">Current</div>
+            <div class="text-lg font-mono font-bold text-stone-600">{{ selectedRole.currentEmployment }}</div>
           </div>
-          <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30">
-            <div class="text-xs text-rose-400 mb-1">Decline</div>
-            <div class="text-lg font-mono font-bold text-rose-400">-{{ selectedRole.decline }}%</div>
+          <div class="p-3 bg-red-50 border border-red-200">
+            <div class="text-[10px] text-red-600 uppercase tracking-widest font-bold mb-1">Decline</div>
+            <div class="text-lg font-mono font-bold text-red-600">-{{ selectedRole.decline }}%</div>
           </div>
         </div>
 
         <!-- Disruptors -->
         <div>
-          <div class="text-xs text-slate-500 uppercase tracking-wide mb-2">What Disrupted This Role</div>
+          <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold mb-2">What Disrupted This Role</div>
           <div class="flex flex-wrap gap-2">
             <span
               *ngFor="let disruptor of selectedRole.disruptors"
-              class="px-2 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300"
+              class="px-2 py-1 bg-red-50 border border-red-200 text-xs text-red-600"
             >
               {{ disruptor }}
             </span>
@@ -96,22 +96,22 @@ interface DisruptedRole {
 
         <!-- Timeline -->
         <div>
-          <div class="text-xs text-slate-500 uppercase tracking-wide mb-3">How It Happened</div>
-          <div class="relative pl-4 border-l border-slate-700 space-y-4">
+          <div class="text-[10px] text-stone-400 uppercase tracking-widest font-bold mb-3">How It Happened</div>
+          <div class="relative pl-4 border-l border-stone-300 space-y-4">
             <div *ngFor="let event of selectedRole.timeline" class="relative">
-              <div class="absolute -left-[21px] w-3 h-3 rounded-full bg-slate-800 border-2 border-slate-600"></div>
-              <div class="text-xs text-slate-500">{{ event.year }}</div>
-              <div class="text-sm text-slate-300">{{ event.event }}</div>
+              <div class="absolute -left-[21px] w-3 h-3 rounded-full bg-white border-2 border-stone-400"></div>
+              <div class="text-xs text-stone-400">{{ event.year }}</div>
+              <div class="text-sm text-stone-600">{{ event.event }}</div>
             </div>
           </div>
         </div>
 
         <!-- Survivors -->
-        <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
-          <div class="text-xs text-emerald-400 uppercase tracking-wide mb-2">How Survivors Adapted</div>
+        <div class="p-4 bg-stone-50 border border-stone-200">
+          <div class="text-[10px] text-stone-900 uppercase tracking-widest font-bold mb-2">How Survivors Adapted</div>
           <ul class="space-y-2">
-            <li *ngFor="let survival of selectedRole.survivors" class="flex items-start gap-2 text-sm text-slate-300">
-              <svg class="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <li *ngFor="let survival of selectedRole.survivors" class="flex items-start gap-2 text-sm text-stone-600">
+              <svg class="w-4 h-4 text-stone-900 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
               {{ survival }}
@@ -120,11 +120,11 @@ interface DisruptedRole {
         </div>
 
         <!-- Lessons -->
-        <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
-          <div class="text-xs text-amber-400 uppercase tracking-wide mb-2">Key Lessons for You</div>
+        <div class="p-4 bg-amber-50 border border-amber-200">
+          <div class="text-[10px] text-amber-700 uppercase tracking-widest font-bold mb-2">Key Lessons for You</div>
           <ul class="space-y-2">
-            <li *ngFor="let lesson of selectedRole.lessons" class="flex items-start gap-2 text-sm text-slate-300">
-              <span class="text-amber-400 mt-0.5">→</span>
+            <li *ngFor="let lesson of selectedRole.lessons" class="flex items-start gap-2 text-sm text-stone-600">
+              <span class="text-amber-700 mt-0.5">→</span>
               {{ lesson }}
             </li>
           </ul>
@@ -258,9 +258,9 @@ export class DisruptionAutopsyComponent {
 
   getStatusClasses(status: DisruptedRole['currentStatus']): string {
     switch (status) {
-      case 'disrupted': return 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
-      case 'transformed': return 'bg-amber-500/20 text-amber-300 border border-amber-500/30';
-      case 'declining': return 'bg-orange-500/20 text-orange-300 border border-orange-500/30';
+      case 'disrupted': return 'bg-red-50 text-red-600 border border-red-200';
+      case 'transformed': return 'bg-amber-50 text-amber-700 border border-amber-200';
+      case 'declining': return 'bg-amber-50 text-amber-700 border border-amber-200';
     }
   }
 }
