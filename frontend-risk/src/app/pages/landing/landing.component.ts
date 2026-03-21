@@ -56,29 +56,29 @@ import { TranslateModule } from '@ngx-translate/core';
           </p>
 
           <!-- CTA -->
-          <div class="flex flex-col sm:flex-row gap-3 pt-1">
+          <div class="flex flex-row gap-3 pt-1">
             <a
               routerLink="/session/new"
-              class="group px-7 py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-2"
+              class="group whitespace-nowrap px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-2"
             >
               {{ 'landing.ctaPrimary' | translate }}
-              <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="w-4 h-4 shrink-0 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
             <a
               routerLink="/start"
-              class="px-5 py-3.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white border border-slate-800 hover:border-slate-600 transition-all cursor-pointer"
+              class="whitespace-nowrap px-5 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white border border-slate-800 hover:border-slate-600 transition-all cursor-pointer flex items-center"
             >
               {{ 'landing.ctaSecondary' | translate }}
             </a>
           </div>
 
           <!-- Trust -->
-          <div class="flex flex-wrap gap-5 text-sm text-slate-500 pt-1">
-            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustFree' | translate }}</span>
-            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustPrivacy' | translate }}</span>
-            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustRoadmap' | translate }}</span>
+          <div class="flex flex-row flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500 pt-1">
+            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustFree' | translate }}</span>
+            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustPrivacy' | translate }}</span>
+            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustRoadmap' | translate }}</span>
           </div>
         </div>
 
