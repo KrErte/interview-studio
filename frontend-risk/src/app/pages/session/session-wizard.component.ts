@@ -11,15 +11,15 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   template: `
-    <div class="max-w-2xl mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto px-6 py-12">
       <!-- Progress -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between text-sm text-slate-400 mb-2">
-          <span>{{ 'common.step' | translate }} {{ step() }} / 3</span>
+      <div class="mb-10">
+        <div class="flex items-center justify-between text-xs text-stone-400 mb-3">
+          <span class="uppercase tracking-widest">{{ 'common.step' | translate }} {{ step() }} / 3</span>
           <span>{{ 'wizard.quickAssessment' | translate }}</span>
         </div>
-        <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-          <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all duration-300"
+        <div class="h-0.5 bg-stone-200 overflow-hidden">
+          <div class="h-full bg-stone-900 transition-all duration-300"
             [style.width.%]="(step() / 3) * 100"></div>
         </div>
       </div>
@@ -27,41 +27,41 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Step 1: Target Role -->
       @if (step() === 1) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.targetRoleTitle' | translate }}</h1>
-          <p class="text-slate-400 mb-8">{{ 'wizard.targetRoleHint' | translate }}</p>
+          <h1 class="text-3xl font-black text-stone-900 mb-2">{{ 'wizard.targetRoleTitle' | translate }}</h1>
+          <p class="text-stone-500 mb-8">{{ 'wizard.targetRoleHint' | translate }}</p>
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
             @for (role of suggestedRoles; track role) {
               <button (click)="targetRole = role; step.set(2)"
-                class="p-3 rounded-xl border text-sm text-left transition-all"
+                class="p-3 border text-sm text-left transition-all"
                 [class]="targetRole === role
-                  ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
-                  : 'border-slate-700 bg-slate-900/50 text-slate-300 hover:border-slate-600'">
+                  ? 'border-stone-900 bg-stone-900 text-white'
+                  : 'border-stone-200 bg-white text-stone-600 hover:border-stone-400'">
                 {{ role }}
               </button>
             }
           </div>
 
           <input type="text" [(ngModel)]="targetRole" [placeholder]="'wizard.targetRolePlaceholder' | translate"
-            class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none">
+            class="w-full p-4 bg-white border border-stone-300 text-stone-900 placeholder-stone-400 focus:border-stone-900 focus:outline-none">
         </div>
       }
 
       <!-- Step 2: Experience Level -->
       @if (step() === 2) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.experienceTitle' | translate }}</h1>
-          <p class="text-slate-400 mb-8">{{ 'wizard.experienceHint' | translate }} <span class="text-emerald-400">{{ targetRole }}</span>?</p>
+          <h1 class="text-3xl font-black text-stone-900 mb-2">{{ 'wizard.experienceTitle' | translate }}</h1>
+          <p class="text-stone-500 mb-8">{{ 'wizard.experienceHint' | translate }} <span class="font-semibold text-stone-900">{{ targetRole }}</span>?</p>
 
-          <div class="space-y-3">
+          <div class="space-y-2">
             @for (opt of experienceOptions; track opt.value) {
               <button (click)="experienceLevel = opt.value"
-                class="w-full p-4 rounded-xl border text-left transition-all"
+                class="w-full p-4 border text-left transition-all"
                 [class]="experienceLevel === opt.value
-                  ? 'border-emerald-500 bg-emerald-500/10'
-                  : 'border-slate-700 bg-slate-900/50 hover:border-slate-600'">
-                <div class="font-semibold text-white">{{ opt.label }}</div>
-                <div class="text-sm text-slate-400 mt-1">{{ opt.hint }}</div>
+                  ? 'border-stone-900 bg-stone-900 text-white'
+                  : 'border-stone-200 bg-white hover:border-stone-400'">
+                <div class="font-semibold" [class]="experienceLevel === opt.value ? 'text-white' : 'text-stone-900'">{{ opt.label }}</div>
+                <div class="text-sm mt-0.5" [class]="experienceLevel === opt.value ? 'text-stone-300' : 'text-stone-400'">{{ opt.hint }}</div>
               </button>
             }
           </div>
@@ -71,18 +71,18 @@ import { TranslateModule } from '@ngx-translate/core';
       <!-- Step 3: Main Challenge -->
       @if (step() === 3) {
         <div class="animate-fadeIn">
-          <h1 class="text-3xl font-bold text-white mb-2">{{ 'wizard.challengeTitle' | translate }}</h1>
-          <p class="text-slate-400 mb-8">{{ 'wizard.challengeHint' | translate }} <span class="text-emerald-400">{{ targetRole }}</span>?</p>
+          <h1 class="text-3xl font-black text-stone-900 mb-2">{{ 'wizard.challengeTitle' | translate }}</h1>
+          <p class="text-stone-500 mb-8">{{ 'wizard.challengeHint' | translate }} <span class="font-semibold text-stone-900">{{ targetRole }}</span>?</p>
 
-          <div class="space-y-3">
+          <div class="space-y-2">
             @for (opt of challengeOptions; track opt.value) {
               <button (click)="mainChallenge = opt.value"
-                class="w-full p-4 rounded-xl border text-left transition-all"
+                class="w-full p-4 border text-left transition-all"
                 [class]="mainChallenge === opt.value
-                  ? 'border-emerald-500 bg-emerald-500/10'
-                  : 'border-slate-700 bg-slate-900/50 hover:border-slate-600'">
-                <div class="font-semibold text-white">{{ opt.label }}</div>
-                <div class="text-sm text-slate-400 mt-1">{{ opt.hint }}</div>
+                  ? 'border-stone-900 bg-stone-900 text-white'
+                  : 'border-stone-200 bg-white hover:border-stone-400'">
+                <div class="font-semibold" [class]="mainChallenge === opt.value ? 'text-white' : 'text-stone-900'">{{ opt.label }}</div>
+                <div class="text-sm mt-0.5" [class]="mainChallenge === opt.value ? 'text-stone-300' : 'text-stone-400'">{{ opt.hint }}</div>
               </button>
             }
           </div>
@@ -90,10 +90,10 @@ import { TranslateModule } from '@ngx-translate/core';
       }
 
       <!-- Navigation -->
-      <div class="flex justify-between mt-10 pt-6 border-t border-slate-800">
+      <div class="flex justify-between mt-10 pt-6 border-t border-stone-200">
         @if (step() > 1) {
           <button (click)="step.set(step() - 1)"
-            class="px-6 py-3 rounded-xl border border-slate-700 text-slate-300 hover:border-slate-500 transition-colors">
+            class="px-6 py-3 border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors text-sm">
             {{ 'common.back' | translate }}
           </button>
         } @else {
@@ -102,16 +102,16 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <div class="flex items-center gap-3">
           @if (!canProceed() && showHint()) {
-            <span class="text-sm text-amber-400">{{ hintMessage() }}</span>
+            <span class="text-sm text-red-600">{{ hintMessage() }}</span>
           }
           @if (step() < 3) {
             <button (click)="onNext()" [disabled]="!canProceed()"
-              class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
+              class="px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold disabled:opacity-30 transition-all text-sm">
               {{ 'common.next' | translate }}
             </button>
           } @else {
             <button (click)="submit()" [disabled]="!canProceed() || submitting()"
-              class="px-8 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 font-bold disabled:opacity-40 transition-all">
+              class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold disabled:opacity-30 transition-all text-sm">
               @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
             </button>
           }
