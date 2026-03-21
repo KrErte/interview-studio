@@ -151,7 +151,7 @@ import { TranslateModule } from '@ngx-translate/core';
       </div>
 
       <!-- Scroll Indicator -->
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div class="absolute bottom-8 left-[49%] -translate-x-1/2 animate-bounce">
         <svg class="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
@@ -264,7 +264,7 @@ import { TranslateModule } from '@ngx-translate/core';
               "{{ 'landing.testimonial3Text' | translate }}"
             </p>
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-xs font-bold text-slate-900">AL</div>
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-xs font-bold text-slate-900">AL</div>
               <div>
                 <div class="text-sm font-semibold text-white">{{ 'landing.testimonial3Name' | translate }}</div>
                 <div class="text-xs text-slate-500">{{ 'landing.testimonial3Role' | translate }}</div>
@@ -278,9 +278,9 @@ import { TranslateModule } from '@ngx-translate/core';
           <p class="text-xs text-slate-600 uppercase tracking-widest mb-4">{{ 'landing.trustedBy' | translate }}</p>
           <div class="flex flex-wrap items-center justify-center gap-8 text-slate-700">
             <span class="text-lg font-bold tracking-tight">TechCrunch</span>
-            <span class="text-lg font-bold tracking-tight">Wired</span>
+            <span class="text-base font-bold tracking-tight">WIRED</span>
             <span class="text-lg font-bold tracking-tight">Postimees</span>
-            <span class="text-lg font-bold tracking-tight">Startup Estonia</span>
+            <span class="text-sm font-bold tracking-tight">Startup Estonia</span>
           </div>
         </div>
       </div>
