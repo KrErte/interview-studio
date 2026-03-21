@@ -22,136 +22,130 @@ import { TranslateModule } from '@ngx-translate/core';
       <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
     </div>
 
-    <!-- Hero Section -->
-    <section class="min-h-screen flex flex-col items-center justify-center px-6 relative">
+    <!-- Hero Section — Split Screen -->
+    <section class="min-h-screen flex flex-col justify-center px-6 relative overflow-hidden">
       <!-- Decorative accents -->
-      <span class="absolute top-[138px] right-[18%] text-2xl text-emerald-400/30 rotate-12 pointer-events-none select-none">✦</span>
-      <span class="absolute top-[210px] left-[11%] text-sm text-cyan-400/25 -rotate-6 pointer-events-none select-none">◆</span>
-      <span class="absolute bottom-[220px] right-[9%] text-xs text-slate-500/40 rotate-3 pointer-events-none select-none">✦</span>
-      <!-- Live Stats Bar -->
-      <div class="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-6 text-xs text-slate-400">
-        <div class="flex items-center gap-2">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>{{ liveAssessments | number }} {{ 'landing.liveAssessments' | translate }}</span>
+      <span class="absolute top-[138px] right-[18%] text-2xl text-emerald-400/30 rotate-12 pointer-events-none select-none hidden lg:block">✦</span>
+      <span class="absolute bottom-[220px] left-[6%] text-sm text-cyan-400/20 -rotate-6 pointer-events-none select-none hidden lg:block">◆</span>
+
+      <div class="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center py-24">
+
+        <!-- LEFT: Text + CTA -->
+        <div class="space-y-7">
+          <!-- Live pill -->
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>{{ liveAssessments | number }} {{ 'landing.liveAssessments' | translate }}</span>
+            <span class="text-slate-700">·</span>
+            <span class="text-amber-400">⚡</span>
+            <span>{{ jobsAtRisk }}% {{ 'landing.jobsDisrupted' | translate }}</span>
+          </div>
+
+          <!-- Headline — left-aligned, tighter -->
+          <h1 class="text-5xl md:text-6xl font-black text-white leading-[1.05] tracking-tight">
+            {{ 'landing.headline' | translate }}<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{{ 'landing.headlineHighlight' | translate }}</span>
+          </h1>
+
+          <!-- Subheadline — shorter -->
+          <p class="text-lg text-slate-400 leading-relaxed max-w-md">
+            Get your personal <strong class="text-white font-semibold">Disruption Risk Score</strong> in 3 minutes. Real market data, not guesswork.
+          </p>
+
+          <!-- CTA -->
+          <div class="flex flex-col sm:flex-row gap-3 pt-1">
+            <a
+              routerLink="/session/new"
+              class="group px-7 py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-2"
+            >
+              {{ 'landing.ctaPrimary' | translate }}
+              <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+            <a
+              routerLink="/start"
+              class="px-5 py-3.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white border border-slate-800 hover:border-slate-600 transition-all cursor-pointer"
+            >
+              {{ 'landing.ctaSecondary' | translate }}
+            </a>
+          </div>
+
+          <!-- Trust -->
+          <div class="flex flex-wrap gap-5 text-sm text-slate-500 pt-1">
+            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustFree' | translate }}</span>
+            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustPrivacy' | translate }}</span>
+            <span class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span> {{ 'landing.trustRoadmap' | translate }}</span>
+          </div>
         </div>
-        <div class="hidden sm:block h-3 w-px bg-slate-700"></div>
-        <div class="hidden sm:flex items-center gap-2">
-          <span class="text-amber-400">⚡</span>
-          <span>{{ jobsAtRisk }}% {{ 'landing.jobsDisrupted' | translate }}</span>
-        </div>
-      </div>
 
-      <!-- Main Content -->
-      <div class="max-w-5xl mx-auto text-center space-y-8">
-        <!-- Brand -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/5 backdrop-blur-sm">
-          <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <span class="text-sm font-medium text-emerald-300">{{ 'landing.badge' | translate }}</span>
-        </div>
+        <!-- RIGHT: Product preview mock -->
+        <div class="relative hidden md:block">
+          <!-- Glow behind card -->
+          <div class="absolute inset-0 bg-emerald-500/5 blur-3xl rounded-3xl"></div>
 
-        <!-- Headline -->
-        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight leading-tight">
-          {{ 'landing.headline' | translate }}
-          <span class="relative inline-block">
-            <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400">{{ 'landing.headlineHighlight' | translate }}</span>
-            <span class="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 blur-2xl"></span>
-          </span>
-        </h1>
+          <!-- Main result card -->
+          <div class="relative rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden">
+            <!-- Card header -->
+            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+              <div>
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-0.5">Your Assessment</div>
+                <div class="text-sm font-semibold text-white">Senior Frontend Developer</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold border border-amber-500/20">MEDIUM RISK</span>
+            </div>
 
-        <!-- Subheadline -->
-        <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed" [innerHTML]="'landing.subheadline' | translate">
-        </p>
+            <!-- Score block -->
+            <div class="px-5 pt-5 pb-4">
+              <div class="flex items-end gap-3 mb-3">
+                <span class="text-6xl font-black text-white leading-none">{{ displayScore }}%</span>
+                <span class="text-slate-500 text-sm pb-1">automation risk</span>
+              </div>
+              <!-- Progress bar -->
+              <div class="h-1.5 bg-slate-800 rounded-full mb-1">
+                <div
+                  class="h-1.5 rounded-full bg-gradient-to-r from-emerald-500 via-amber-400 to-red-500 transition-all duration-1000"
+                  [style.width.%]="meterProgress"
+                ></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-600">
+                <span>Low</span><span>High</span>
+              </div>
+            </div>
 
-        <!-- Risk Meter Preview -->
-        <div class="flex justify-center py-6">
-          <div class="relative w-64 h-32">
-            <svg class="w-full h-full" viewBox="0 0 200 100">
-              <!-- Background arc -->
-              <path
-                d="M 20 90 A 80 80 0 0 1 180 90"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="12"
-                class="text-slate-800"
-              />
-              <!-- Gradient arc -->
-              <defs>
-                <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#10b981" />
-                  <stop offset="50%" stop-color="#eab308" />
-                  <stop offset="100%" stop-color="#ef4444" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M 20 90 A 80 80 0 0 1 180 90"
-                fill="none"
-                stroke="url(#riskGradient)"
-                stroke-width="12"
-                stroke-dasharray="251.2"
-                [attr.stroke-dashoffset]="251.2 - (meterProgress * 2.512)"
-                class="transition-all duration-1000"
-              />
-              <!-- Needle -->
-              <g [style.transform]="'rotate(' + (needleAngle) + 'deg)'" style="transform-origin: 100px 90px" class="transition-all duration-1000">
-                <line x1="100" y1="90" x2="100" y2="30" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                <circle cx="100" cy="90" r="6" fill="white"/>
-              </g>
-            </svg>
-            <div class="absolute inset-x-0 bottom-0 text-center">
-              <span class="text-3xl font-bold text-white">{{ displayScore }}%</span>
-              <span class="block text-xs text-slate-500 mt-1">{{ 'landing.averageRiskScore' | translate }}</span>
+            <!-- Action items -->
+            <div class="px-5 pb-5 space-y-2">
+              <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Top Actions This Month</div>
+              <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/60">
+                <span class="text-emerald-400 text-xs mt-0.5 shrink-0">→</span>
+                <span class="text-xs text-slate-300 leading-relaxed">Learn TypeScript & Node.js to expand into backend roles</span>
+              </div>
+              <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/60">
+                <span class="text-emerald-400 text-xs mt-0.5 shrink-0">→</span>
+                <span class="text-xs text-slate-300 leading-relaxed">Build 2 AI-integrated projects for portfolio by April</span>
+              </div>
+              <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/30 opacity-50">
+                <span class="text-slate-600 text-xs mt-0.5 shrink-0">→</span>
+                <span class="text-xs text-slate-500">5 more actions in full plan...</span>
+              </div>
             </div>
           </div>
+
+          <!-- Floating badge top-right -->
+          <div class="absolute -top-3 -right-3 px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-900 text-[11px] font-bold shadow-lg shadow-emerald-500/30 rotate-1">
+            Updated today
+          </div>
+
+          <!-- Floating mini stat bottom-left -->
+          <div class="absolute -bottom-4 -left-4 px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 shadow-xl">
+            <div class="text-[10px] text-slate-500 mb-0.5">Avg. score in your field</div>
+            <div class="text-lg font-black text-white">38% <span class="text-emerald-400 text-xs font-normal">↓ safer than most</span></div>
+          </div>
         </div>
 
-        <!-- CTA Buttons -->
-        <div class="relative z-20 flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <a
-            routerLink="/session/new"
-            class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-lg font-bold text-slate-900 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 transition-all duration-300 cursor-pointer"
-          >
-            <span class="flex items-center gap-3">
-              {{ 'landing.ctaPrimary' | translate }}
-              <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </span>
-          </a>
-          <a
-            routerLink="/start"
-            class="px-6 py-4 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 transition-all cursor-pointer"
-          >
-            {{ 'landing.ctaSecondary' | translate }}
-          </a>
-        </div>
-
-        <!-- Trust Indicators -->
-        <div class="flex flex-wrap items-center justify-center gap-8 pt-12 text-sm text-slate-500">
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <span>{{ 'landing.trustFree' | translate }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            <span>{{ 'landing.trustPrivacy' | translate }}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-            </svg>
-            <span>{{ 'landing.trustRoadmap' | translate }}</span>
-          </div>
-        </div>
       </div>
 
       <!-- Scroll Indicator -->
