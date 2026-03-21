@@ -168,7 +168,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <div class="grid md:grid-cols-3 gap-8">
           <!-- Step 1 -->
-          <div class="group relative p-8 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/50 transition-all duration-300">
+          <div class="group relative p-7 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/50 transition-all duration-300">
             <div class="absolute -top-4 left-8 px-3 py-1 bg-emerald-500 rounded-full text-sm font-bold text-slate-900">01</div>
             <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mb-6">
               <svg class="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,7 +237,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <!-- Testimonial 2 -->
           <div class="p-6 rounded-2xl border border-slate-800 bg-slate-900/50 hover:border-emerald-500/30 transition-colors">
             <div class="flex items-center gap-1 text-amber-400 mb-4">
-              <svg *ngFor="let s of [1,2,3,4,5]" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg *ngFor="let s of [1,2,3,4]" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
               </svg>
             </div>
@@ -327,7 +327,7 @@ import { TranslateModule } from '@ngx-translate/core';
       <div class="max-w-6xl mx-auto">
         <div class="grid md:grid-cols-4 gap-8 text-center">
           <div>
-            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">85M</div>
+            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">83.4M</div>
             <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsJobsDisplaced' | translate }}</div>
           </div>
           <div>
@@ -335,7 +335,7 @@ import { TranslateModule } from '@ngx-translate/core';
             <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsJobsAtRisk' | translate }}</div>
           </div>
           <div>
-            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">97M</div>
+            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">96.2M</div>
             <div class="text-sm text-slate-500 mt-2">{{ 'landing.statsNewRoles' | translate }}</div>
           </div>
           <div>
@@ -369,7 +369,7 @@ import { TranslateModule } from '@ngx-translate/core';
   `]
 })
 export class LandingComponent implements OnInit, OnDestroy {
-  liveAssessments = 1247;
+  liveAssessments = 1243;
   jobsAtRisk = 47;
   meterProgress = 5;
   displayScore = 5;
@@ -386,7 +386,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
     // Simulate live assessments counter
     this.counterInterval = setInterval(() => {
-      this.liveAssessments += Math.floor(Math.random() * 3);
+      if (Math.random() > 0.3) this.liveAssessments += Math.floor(Math.random() * 4) + 1;
     }, 5000);
   }
 
