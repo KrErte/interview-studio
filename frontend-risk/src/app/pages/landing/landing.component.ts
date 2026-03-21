@@ -32,117 +32,118 @@ import { TranslateModule } from '@ngx-translate/core';
 
         <!-- LEFT: Text + CTA -->
         <div class="space-y-7">
-          <!-- Live pill -->
+          <!-- Live social proof -->
           <div class="flex items-center gap-2 text-xs text-slate-400">
             <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
-            <span>{{ liveAssessments | number }} {{ 'landing.liveAssessments' | translate }}</span>
-            <span class="text-slate-700">·</span>
-            <span class="text-amber-400">⚡</span>
-            <span>{{ jobsAtRisk }}% {{ 'landing.jobsDisrupted' | translate }}</span>
+            <span><strong class="text-slate-200">{{ liveAssessments | number }}</strong> people checked their risk today</span>
           </div>
 
-          <!-- Headline — left-aligned, tighter -->
+          <!-- Headline — fear + doubt -->
           <h1 class="text-5xl md:text-6xl font-black text-white leading-[1.05] tracking-tight">
-            {{ 'landing.headline' | translate }}<br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{{ 'landing.headlineHighlight' | translate }}</span>
+            Your job is<br>
+            probably <span class="text-amber-400">fine.</span>
           </h1>
 
-          <!-- Subheadline — shorter -->
-          <p class="text-lg text-slate-400 leading-relaxed max-w-md">
-            Get your personal <strong class="text-white font-semibold">Disruption Risk Score</strong> in 3 minutes. Real market data, not guesswork.
+          <!-- Subheadline — fear + urgency + personalised threat -->
+          <p class="text-lg text-slate-300 leading-relaxed max-w-md">
+            But <strong class="text-white">{{ jobsAtRisk }}% of roles</strong> like yours are already being automated.
+            Find out where you stand — <em class="text-slate-400 not-italic">before your employer does.</em>
           </p>
 
           <!-- CTA -->
           <div class="flex flex-row gap-3 pt-1">
             <a
               routerLink="/session/new"
-              class="group whitespace-nowrap px-6 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl text-sm font-bold text-slate-900 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/35 hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-2"
+              class="group whitespace-nowrap px-6 py-3.5 bg-gradient-to-r from-red-500 to-amber-500 rounded-xl text-sm font-bold text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/35 hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center gap-2"
             >
-              {{ 'landing.ctaPrimary' | translate }}
-              <svg class="w-4 h-4 shrink-0 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              Check my risk →
             </a>
             <a
               routerLink="/start"
-              class="whitespace-nowrap px-5 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white border border-slate-800 hover:border-slate-600 transition-all cursor-pointer flex items-center"
+              class="whitespace-nowrap px-5 py-3.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white border border-slate-800 hover:border-slate-600 transition-all cursor-pointer flex items-center"
             >
-              {{ 'landing.ctaSecondary' | translate }}
+              How it works
             </a>
           </div>
 
-          <!-- Trust -->
-          <div class="flex flex-row flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500 pt-1">
-            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustFree' | translate }}</span>
-            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustPrivacy' | translate }}</span>
-            <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="text-emerald-500">✓</span> {{ 'landing.trustRoadmap' | translate }}</span>
+          <!-- Trust — minimalist, no icons -->
+          <div class="flex flex-row flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 pt-1">
+            <span>Free</span>
+            <span>·</span>
+            <span>3 min</span>
+            <span>·</span>
+            <span>No account needed</span>
+            <span>·</span>
+            <span>Results are private</span>
           </div>
         </div>
 
-        <!-- RIGHT: Product preview mock -->
+        <!-- RIGHT: Product preview mock — HIGH RISK to trigger fear -->
         <div class="relative hidden md:block">
-          <!-- Glow behind card -->
-          <div class="absolute inset-0 bg-emerald-500/5 blur-3xl rounded-3xl"></div>
+          <!-- Red glow — danger signal -->
+          <div class="absolute inset-0 bg-red-500/5 blur-3xl rounded-3xl"></div>
 
           <!-- Main result card -->
           <div class="relative rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden">
             <!-- Card header -->
             <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
               <div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-0.5">Your Assessment</div>
-                <div class="text-sm font-semibold text-white">Senior Frontend Developer</div>
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-0.5">Risk Assessment</div>
+                <div class="text-sm font-semibold text-white">Marketing Manager</div>
               </div>
-              <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 text-xs font-bold border border-amber-500/20">MEDIUM RISK</span>
+              <span class="px-2.5 py-1 rounded-full bg-red-500/15 text-red-400 text-xs font-bold border border-red-500/20">HIGH RISK</span>
             </div>
 
             <!-- Score block -->
             <div class="px-5 pt-5 pb-4">
               <div class="flex items-end gap-3 mb-3">
-                <span class="text-6xl font-black text-white leading-none">{{ displayScore }}%</span>
+                <span class="text-6xl font-black text-red-400 leading-none">71%</span>
                 <span class="text-slate-500 text-sm pb-1">automation risk</span>
               </div>
-              <!-- Progress bar -->
               <div class="h-1.5 bg-slate-800 rounded-full mb-1">
-                <div
-                  class="h-1.5 rounded-full bg-gradient-to-r from-emerald-500 via-amber-400 to-red-500 transition-all duration-1000"
-                  [style.width.%]="meterProgress"
-                ></div>
+                <div class="h-1.5 rounded-full bg-gradient-to-r from-emerald-500 via-amber-400 to-red-500 w-[71%]"></div>
               </div>
               <div class="flex justify-between text-[10px] text-slate-600">
                 <span>Low</span><span>High</span>
               </div>
             </div>
 
-            <!-- Action items -->
+            <!-- Action items — last one blurred/locked -->
             <div class="px-5 pb-5 space-y-2">
-              <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Top Actions This Month</div>
+              <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Your 30-Day Plan</div>
               <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/60">
                 <span class="text-emerald-400 text-xs mt-0.5 shrink-0">→</span>
-                <span class="text-xs text-slate-300 leading-relaxed">Learn TypeScript & Node.js to expand into backend roles</span>
+                <span class="text-xs text-slate-300 leading-relaxed">Reposition as AI-augmented marketer, not traditional</span>
               </div>
               <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/60">
                 <span class="text-emerald-400 text-xs mt-0.5 shrink-0">→</span>
-                <span class="text-xs text-slate-300 leading-relaxed">Build 2 AI-integrated projects for portfolio by April</span>
+                <span class="text-xs text-slate-300 leading-relaxed">Get certified in prompt engineering this month</span>
               </div>
-              <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/30 opacity-50">
-                <span class="text-slate-600 text-xs mt-0.5 shrink-0">→</span>
-                <span class="text-xs text-slate-500">5 more actions in full plan...</span>
+              <!-- Blurred paywall tease -->
+              <div class="relative">
+                <div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-800/40 blur-sm select-none">
+                  <span class="text-slate-600 text-xs mt-0.5 shrink-0">→</span>
+                  <span class="text-xs text-slate-500">Pivot to product marketing to cut risk by 31%</span>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-[10px] text-slate-400 bg-slate-900/90 px-2 py-0.5 rounded font-medium">+ 5 more in full plan</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Floating badge top-right -->
-          <div class="absolute -top-3 -right-3 px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-900 text-[11px] font-bold shadow-lg shadow-emerald-500/30 rotate-1">
-            Updated today
+          <!-- Floating urgency badge -->
+          <div class="absolute -top-3 -right-3 px-3 py-1.5 rounded-lg bg-red-500 text-white text-[11px] font-bold shadow-lg shadow-red-500/30 -rotate-1">
+            ⚠ Act this month
           </div>
 
-          <!-- Floating mini stat bottom-left -->
+          <!-- Floating social proof -->
           <div class="absolute -bottom-4 -left-4 px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 shadow-xl">
-            <div class="text-[10px] text-slate-500 mb-0.5">Avg. score in your field</div>
-            <div class="text-lg font-black text-white">38% <span class="text-emerald-400 text-xs font-normal">↓ safer than most</span></div>
+            <div class="text-[10px] text-slate-500 mb-0.5">Others in your field</div>
+            <div class="text-sm font-black text-white">68% <span class="text-red-400 text-xs font-normal">↑ at high risk</span></div>
           </div>
         </div>
 
