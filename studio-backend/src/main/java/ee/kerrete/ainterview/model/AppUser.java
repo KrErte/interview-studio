@@ -106,6 +106,10 @@ public class AppUser implements UserDetails {
     }
 
     public UserTier getEffectiveTier() {
+        // Admins always get their assigned tier
+        if (role == UserRole.ADMIN && tier != null) {
+            return tier;
+        }
         if (hasActiveSubscription()) {
             return tier;
         }

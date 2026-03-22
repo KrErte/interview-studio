@@ -9,22 +9,22 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
   imports: [CommonModule, FormsModule],
   template: `
     <div class="max-w-3xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-white mb-2">Interview Simulator</h1>
-      <p class="text-slate-400 mb-8">Practice with an AI interviewer. Get real-time feedback and a final evaluation.</p>
+      <h1 class="text-3xl font-bold text-stone-900 mb-2">Interview Simulator</h1>
+      <p class="text-stone-500 mb-8">Practice with an AI interviewer. Get real-time feedback and a final evaluation.</p>
 
       <!-- Setup Form -->
       @if (!sessionStarted()) {
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 space-y-4">
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 space-y-4">
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-1">Target Role</label>
+            <label class="block text-sm font-medium text-stone-700 mb-1">Target Role</label>
             <input [(ngModel)]="targetRole" type="text" placeholder="e.g. Senior Frontend Developer"
-              class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"/>
+              class="w-full px-4 py-3 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:border-stone-900"/>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-300 mb-1">Interview Type</label>
+              <label class="block text-sm font-medium text-stone-700 mb-1">Interview Type</label>
               <select [(ngModel)]="interviewType"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                class="w-full px-4 py-3 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 focus:outline-none focus:border-stone-900">
                 <option value="behavioral">Behavioral</option>
                 <option value="technical">Technical</option>
                 <option value="system-design">System Design</option>
@@ -32,9 +32,9 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-300 mb-1">Experience Level</label>
+              <label class="block text-sm font-medium text-stone-700 mb-1">Experience Level</label>
               <select [(ngModel)]="experienceLevel"
-                class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                class="w-full px-4 py-3 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 focus:outline-none focus:border-stone-900">
                 <option value="junior">Junior</option>
                 <option value="mid-level">Mid-Level</option>
                 <option value="senior">Senior</option>
@@ -43,7 +43,7 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
             </div>
           </div>
           <button (click)="startInterview()" [disabled]="loading() || !targetRole"
-            class="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg hover:shadow-emerald-500/40 transition-all disabled:opacity-50">
+            class="w-full py-3 rounded-xl font-bold bg-stone-900 text-white hover:bg-stone-800 transition-all disabled:opacity-50">
             @if (loading()) { Starting interview... } @else { Start Interview }
           </button>
         </div>
@@ -54,36 +54,36 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
         <div class="space-y-4">
           <!-- Progress -->
           <div class="flex items-center gap-3 mb-6">
-            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full bg-emerald-500 rounded-full transition-all"
+            <div class="flex-1 h-2 bg-stone-200 rounded-full overflow-hidden">
+              <div class="h-full bg-stone-900 rounded-full transition-all"
                 [style.width.%]="(currentQuestion() / totalQuestions()) * 100"></div>
             </div>
-            <span class="text-sm text-slate-400">Q{{ currentQuestion() }}/{{ totalQuestions() }}</span>
+            <span class="text-sm text-stone-500">Q{{ currentQuestion() }}/{{ totalQuestions() }}</span>
           </div>
 
           <!-- Messages -->
           @for (msg of messages(); track $index) {
             <div [class]="msg.role === 'interviewer'
-              ? 'bg-slate-900/80 border border-slate-800 rounded-2xl p-5'
-              : 'bg-emerald-950/30 border border-emerald-900/50 rounded-2xl p-5 ml-8'">
-              <div class="text-xs font-semibold mb-2" [class]="msg.role === 'interviewer' ? 'text-cyan-400' : 'text-emerald-400'">
+              ? 'bg-white border border-stone-200 rounded-2xl p-5'
+              : 'bg-stone-50 border border-stone-200 rounded-2xl p-5 ml-8'">
+              <div class="text-xs font-semibold mb-2" [class]="msg.role === 'interviewer' ? 'text-stone-900' : 'text-stone-600'">
                 {{ msg.role === 'interviewer' ? 'Interviewer' : 'You' }}
               </div>
-              <p class="text-slate-200 text-sm whitespace-pre-wrap">{{ msg.content }}</p>
+              <p class="text-stone-700 text-sm whitespace-pre-wrap">{{ msg.content }}</p>
             </div>
           }
 
           <!-- Answer Input -->
           <div class="space-y-3">
             <textarea [(ngModel)]="currentAnswer" rows="4" placeholder="Type your answer..."
-              class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+              class="w-full px-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:border-stone-900 resize-none"></textarea>
             <div class="flex gap-3">
               <button (click)="submitAnswer()" [disabled]="loading() || !currentAnswer"
-                class="flex-1 py-3 rounded-xl font-bold bg-emerald-500 text-slate-900 hover:bg-emerald-400 transition-all disabled:opacity-50">
+                class="flex-1 py-3 rounded-xl font-bold bg-stone-900 text-white hover:bg-stone-800 transition-all disabled:opacity-50">
                 @if (loading()) { Thinking... } @else { Submit Answer }
               </button>
               <button (click)="endEarly()"
-                class="px-6 py-3 rounded-xl font-semibold border border-slate-700 text-slate-400 hover:bg-slate-800 transition-all">
+                class="px-6 py-3 rounded-xl font-semibold border border-stone-300 text-stone-500 hover:bg-stone-100 transition-all">
                 End Early
               </button>
             </div>
@@ -95,33 +95,33 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
       @if (isComplete() && finalFeedback()) {
         <div class="space-y-6">
           <div class="text-center py-8">
-            <div class="text-6xl font-bold mb-2" [class]="finalFeedback()!.overallScore >= 70 ? 'text-emerald-400' : finalFeedback()!.overallScore >= 50 ? 'text-yellow-400' : 'text-red-400'">
+            <div class="text-6xl font-bold mb-2" [class]="finalFeedback()!.overallScore >= 70 ? 'text-green-700' : finalFeedback()!.overallScore >= 50 ? 'text-amber-600' : 'text-red-600'">
               {{ finalFeedback()!.overallScore }}
             </div>
-            <div class="text-slate-400">Overall Score</div>
+            <div class="text-stone-500">Overall Score</div>
             <div class="mt-2 px-4 py-1 rounded-full inline-block text-sm font-bold"
               [class]="getVerdictClass(finalFeedback()!.verdict)">
-              {{ finalFeedback()!.verdict.replace('_', ' ') }}
+              {{ finalFeedback()!.verdict.split('_').join(' ') }}
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="rounded-xl border border-emerald-900/50 bg-emerald-950/20 p-5">
-              <h3 class="font-semibold text-emerald-400 mb-3">Strengths</h3>
+            <div class="rounded-xl border border-green-200 bg-green-50 p-5">
+              <h3 class="font-semibold text-green-800 mb-3">Strengths</h3>
               <ul class="space-y-2">
                 @for (s of finalFeedback()!.strengths; track s) {
-                  <li class="text-sm text-slate-300 flex items-start gap-2">
-                    <span class="text-emerald-400 mt-0.5">+</span> {{ s }}
+                  <li class="text-sm text-stone-700 flex items-start gap-2">
+                    <span class="text-green-600 mt-0.5">+</span> {{ s }}
                   </li>
                 }
               </ul>
             </div>
-            <div class="rounded-xl border border-red-900/50 bg-red-950/20 p-5">
-              <h3 class="font-semibold text-red-400 mb-3">Areas to Improve</h3>
+            <div class="rounded-xl border border-red-200 bg-red-50 p-5">
+              <h3 class="font-semibold text-red-800 mb-3">Areas to Improve</h3>
               <ul class="space-y-2">
                 @for (w of finalFeedback()!.weaknesses; track w) {
-                  <li class="text-sm text-slate-300 flex items-start gap-2">
-                    <span class="text-red-400 mt-0.5">-</span> {{ w }}
+                  <li class="text-sm text-stone-700 flex items-start gap-2">
+                    <span class="text-red-600 mt-0.5">-</span> {{ w }}
                   </li>
                 }
               </ul>
@@ -129,14 +129,14 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
           </div>
 
           @if (finalFeedback()!.improvementPlan) {
-            <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-              <h3 class="font-semibold text-white mb-2">Improvement Plan</h3>
-              <p class="text-sm text-slate-300">{{ finalFeedback()!.improvementPlan }}</p>
+            <div class="rounded-xl border border-stone-200 bg-white p-5">
+              <h3 class="font-semibold text-stone-900 mb-2">Improvement Plan</h3>
+              <p class="text-sm text-stone-600">{{ finalFeedback()!.improvementPlan }}</p>
             </div>
           }
 
           <button (click)="reset()"
-            class="w-full py-3 rounded-xl font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition-all">
+            class="w-full py-3 rounded-xl font-bold border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all">
             Start New Interview
           </button>
         </div>
@@ -236,10 +236,10 @@ export class InterviewSimulatorComponent {
   }
 
   getVerdictClass(verdict: string): string {
-    if (verdict.includes('STRONG_HIRE')) return 'bg-emerald-500/20 text-emerald-300';
-    if (verdict.includes('HIRE') && !verdict.includes('NO')) return 'bg-green-500/20 text-green-300';
-    if (verdict.includes('LEAN_HIRE')) return 'bg-yellow-500/20 text-yellow-300';
-    if (verdict.includes('NO_HIRE')) return 'bg-red-500/20 text-red-300';
-    return 'bg-slate-500/20 text-slate-300';
+    if (verdict.includes('STRONG_HIRE')) return 'bg-green-100 text-green-800';
+    if (verdict.includes('HIRE') && !verdict.includes('NO')) return 'bg-green-50 text-green-700';
+    if (verdict.includes('LEAN_HIRE')) return 'bg-amber-50 text-amber-700';
+    if (verdict.includes('NO_HIRE')) return 'bg-red-50 text-red-700';
+    return 'bg-stone-100 text-stone-600';
   }
 }

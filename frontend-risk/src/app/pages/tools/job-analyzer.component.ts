@@ -233,21 +233,21 @@ Requirements:
 
     .header h1 {
       font-size: 2rem;
-      color: #f1f5f9;
+      color: #1c1917;
       margin-bottom: 0.5rem;
     }
 
     .header p {
-      color: #94a3b8;
+      color: #78716c;
     }
 
     .input-section textarea {
       width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 2px solid rgba(255,255,255,0.1);
+      background: #fff;
+      border: 2px solid #d6d3d1;
       border-radius: 12px;
       padding: 1.5rem;
-      color: #e2e8f0;
+      color: #1c1917;
       font-size: 1rem;
       line-height: 1.6;
       resize: vertical;
@@ -256,11 +256,11 @@ Requirements:
 
     .input-section textarea:focus {
       outline: none;
-      border-color: #10b981;
+      border-color: #1c1917;
     }
 
     .input-section textarea::placeholder {
-      color: #64748b;
+      color: #a8a29e;
     }
 
     .input-actions {
@@ -271,12 +271,12 @@ Requirements:
     }
 
     .char-count {
-      color: #64748b;
+      color: #78716c;
       font-size: 0.875rem;
     }
 
     .btn-analyze {
-      background: linear-gradient(135deg, #10b981, #06d6a0);
+      background: #1c1917;
       border: none;
       padding: 1rem 2rem;
       border-radius: 8px;
@@ -309,20 +309,20 @@ Requirements:
     .tips {
       margin-top: 2rem;
       padding: 1.5rem;
-      background: rgba(59, 130, 246, 0.1);
+      background: #fef3c7;
       border-radius: 12px;
-      border-left: 4px solid #3b82f6;
+      border-left: 4px solid #d97706;
     }
 
     .tips h4 {
-      color: #3b82f6;
+      color: #92400e;
       margin-bottom: 0.75rem;
     }
 
     .tips ul {
       margin: 0;
       padding-left: 1.5rem;
-      color: #94a3b8;
+      color: #78716c;
     }
 
     .tips li {
@@ -340,19 +340,24 @@ Requirements:
 
     .btn-back {
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid #d6d3d1;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
-      color: #94a3b8;
+      color: #57534e;
       cursor: pointer;
       margin-bottom: 2rem;
+    }
+
+    .btn-back:hover {
+      background: #f5f5f4;
     }
 
     .match-score-card {
       display: flex;
       align-items: center;
       gap: 2rem;
-      background: rgba(255,255,255,0.05);
+      background: #fff;
+      border: 1px solid #e7e5e4;
       padding: 2rem;
       border-radius: 16px;
       margin-bottom: 2rem;
@@ -370,28 +375,29 @@ Requirements:
       color: #fff;
     }
 
-    .score-circle.high { background: linear-gradient(135deg, #10b981, #06d6a0); }
-    .score-circle.medium { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-    .score-circle.low { background: linear-gradient(135deg, #ef4444, #f87171); }
+    .score-circle.high { background: #16a34a; }
+    .score-circle.medium { background: #d97706; }
+    .score-circle.low { background: #dc2626; }
 
     .score-info h3 {
-      color: #f1f5f9;
+      color: #1c1917;
       margin-bottom: 0.25rem;
     }
 
     .score-info p {
-      color: #94a3b8;
+      color: #78716c;
     }
 
     .section {
-      background: rgba(255,255,255,0.03);
+      background: #fff;
+      border: 1px solid #e7e5e4;
       padding: 1.5rem;
       border-radius: 12px;
       margin-bottom: 1.5rem;
     }
 
     .section h2 {
-      color: #f1f5f9;
+      color: #1c1917;
       font-size: 1.25rem;
       margin-bottom: 1rem;
     }
@@ -405,37 +411,37 @@ Requirements:
     .column h3 {
       font-size: 1rem;
       margin-bottom: 1rem;
-      color: #e2e8f0;
+      color: #44403c;
     }
 
-    .must-have h3 { color: #10b981; }
-    .nice-to-have h3 { color: #8b5cf6; }
+    .must-have h3 { color: #16a34a; }
+    .nice-to-have h3 { color: #7c3aed; }
 
     .req-item {
       display: flex;
       align-items: flex-start;
       gap: 0.5rem;
       margin-bottom: 0.75rem;
-      color: #cbd5e1;
+      color: #44403c;
     }
 
-    .check { color: #10b981; }
-    .star { color: #8b5cf6; }
+    .check { color: #16a34a; }
+    .star { color: #7c3aed; }
 
     .red-flags {
-      border-left: 4px solid #ef4444;
+      border-left: 4px solid #dc2626;
     }
 
     .flag-item {
-      background: rgba(239, 68, 68, 0.1);
+      background: #fef2f2;
       padding: 1rem;
       border-radius: 8px;
       margin-bottom: 1rem;
     }
 
-    .flag-item.high { background: rgba(239, 68, 68, 0.15); }
-    .flag-item.medium { background: rgba(245, 158, 11, 0.15); }
-    .flag-item.low { background: rgba(59, 130, 246, 0.15); }
+    .flag-item.high { background: #fee2e2; }
+    .flag-item.medium { background: #fef3c7; }
+    .flag-item.low { background: #eff6ff; }
 
     .flag-header {
       display: flex;
@@ -449,16 +455,18 @@ Requirements:
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
       text-transform: uppercase;
-      background: rgba(255,255,255,0.1);
+      background: #f5f5f4;
+      color: #57534e;
+      border: 1px solid #e7e5e4;
     }
 
     .flag-text {
-      color: #f1f5f9;
+      color: #1c1917;
       font-weight: 500;
     }
 
     .flag-explanation {
-      color: #94a3b8;
+      color: #78716c;
       font-size: 0.875rem;
       margin: 0;
     }
@@ -470,7 +478,8 @@ Requirements:
     }
 
     .tech-item {
-      background: rgba(255,255,255,0.05);
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
       padding: 1rem;
       border-radius: 8px;
       display: flex;
@@ -478,23 +487,23 @@ Requirements:
       gap: 0.25rem;
     }
 
-    .tech-item.rising { border-left: 3px solid #10b981; }
-    .tech-item.declining { border-left: 3px solid #ef4444; }
-    .tech-item.stable { border-left: 3px solid #64748b; }
+    .tech-item.rising { border-left: 3px solid #16a34a; }
+    .tech-item.declining { border-left: 3px solid #dc2626; }
+    .tech-item.stable { border-left: 3px solid #a8a29e; }
 
     .tech-name {
-      color: #f1f5f9;
+      color: #1c1917;
       font-weight: 500;
     }
 
     .tech-category {
-      color: #64748b;
+      color: #a8a29e;
       font-size: 0.75rem;
     }
 
     .tech-demand {
       font-size: 0.875rem;
-      color: #94a3b8;
+      color: #78716c;
     }
 
     .signals-list {
@@ -506,12 +515,12 @@ Requirements:
     .signal-item {
       padding: 0.75rem 1rem;
       border-radius: 8px;
-      color: #e2e8f0;
+      color: #44403c;
     }
 
-    .signal-item.positive { background: rgba(16, 185, 129, 0.1); }
-    .signal-item.negative { background: rgba(239, 68, 68, 0.1); }
-    .signal-item.neutral { background: rgba(255,255,255,0.05); }
+    .signal-item.positive { background: #f0fdf4; }
+    .signal-item.negative { background: #fef2f2; }
+    .signal-item.neutral { background: #fafaf9; }
 
     .details-grid {
       display: grid;
@@ -522,39 +531,40 @@ Requirements:
     }
 
     .detail-card {
-      background: rgba(255,255,255,0.05);
+      background: #fff;
+      border: 1px solid #e7e5e4;
       padding: 1.5rem;
       border-radius: 12px;
       text-align: center;
     }
 
     .detail-card h4 {
-      color: #94a3b8;
+      color: #78716c;
       font-size: 0.875rem;
       margin-bottom: 0.5rem;
     }
 
     .big-text {
-      color: #10b981;
+      color: #1c1917;
       font-size: 1.25rem;
       font-weight: 600;
       margin: 0;
     }
 
     .muted {
-      color: #64748b;
+      color: #a8a29e;
     }
 
     .recommendations {
-      border-left: 4px solid #10b981;
+      border-left: 4px solid #16a34a;
     }
 
     .rec-item {
       padding: 0.75rem 1rem;
-      background: rgba(16, 185, 129, 0.1);
+      background: #f0fdf4;
       border-radius: 8px;
       margin-bottom: 0.75rem;
-      color: #e2e8f0;
+      color: #44403c;
     }
 
     @media (max-width: 768px) {
@@ -567,12 +577,11 @@ Requirements:
       }
     }
 
-
     .rate-limit-banner {
       text-align: center;
       padding: 3rem 2rem;
-      background: rgba(255,255,255,0.03);
-      border: 2px solid rgba(245, 158, 11, 0.3);
+      background: #fffbeb;
+      border: 2px solid #fbbf24;
       border-radius: 16px;
       margin-bottom: 2rem;
     }
@@ -584,12 +593,12 @@ Requirements:
 
     .rate-limit-banner h3 {
       font-size: 1.5rem;
-      color: #f1f5f9;
+      color: #1c1917;
       margin-bottom: 0.5rem;
     }
 
     .rate-limit-banner p {
-      color: #94a3b8;
+      color: #78716c;
       max-width: 400px;
       margin: 0 auto 1.5rem;
     }
@@ -597,15 +606,15 @@ Requirements:
     .upgrade-btn {
       display: inline-block;
       padding: 0.75rem 2rem;
-      background: linear-gradient(135deg, #10b981, #06d6a0);
+      background: #1c1917;
       border-radius: 8px;
-      color: #0f172a;
+      color: #fff;
       font-weight: 600;
       text-decoration: none;
     }
 
     .upgrade-btn:hover {
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      background: #292524;
     }
   `]
 })
