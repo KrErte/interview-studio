@@ -9,38 +9,38 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
   imports: [CommonModule, FormsModule],
   template: `
     <div class="max-w-3xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-white mb-2">CV/LinkedIn Optimizer</h1>
-      <p class="text-slate-400 mb-8">Upload your CV and get AI-powered ATS optimization and improvement suggestions.</p>
+      <h1 class="text-3xl font-bold text-stone-900 mb-2">CV/LinkedIn Optimizer</h1>
+      <p class="text-stone-500 mb-8">Upload your CV and get AI-powered ATS optimization and improvement suggestions.</p>
 
       <!-- Upload Form -->
       @if (!result()) {
-        <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 space-y-4">
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 space-y-4">
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-1">Target Role</label>
+            <label class="block text-sm font-medium text-stone-700 mb-1">Target Role</label>
             <input [(ngModel)]="targetRole" type="text" placeholder="e.g. Backend Engineer"
-              class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"/>
+              class="w-full px-4 py-3 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:border-stone-900"/>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Upload CV (PDF)</label>
+            <label class="block text-sm font-medium text-stone-700 mb-2">Upload CV (PDF)</label>
             <div
-              class="border-2 border-dashed border-slate-700 rounded-xl p-8 text-center hover:border-emerald-500/50 transition-colors cursor-pointer"
+              class="border-2 border-dashed border-stone-300 rounded-xl p-8 text-center hover:border-stone-900 transition-colors cursor-pointer"
               (click)="fileInput.click()"
               (dragover)="$event.preventDefault()"
               (drop)="onDrop($event)">
               <input #fileInput type="file" accept=".pdf,.txt,.doc,.docx" class="hidden" (change)="onFileSelected($event)"/>
               @if (selectedFile()) {
-                <div class="text-emerald-400 font-semibold">{{ selectedFile()!.name }}</div>
-                <div class="text-sm text-slate-500 mt-1">{{ (selectedFile()!.size / 1024).toFixed(1) }} KB</div>
+                <div class="text-green-700 font-semibold">{{ selectedFile()!.name }}</div>
+                <div class="text-sm text-stone-500 mt-1">{{ (selectedFile()!.size / 1024).toFixed(1) }} KB</div>
               } @else {
-                <div class="text-slate-400">Drop your CV here or click to browse</div>
-                <div class="text-sm text-slate-600 mt-1">PDF, TXT, DOC supported</div>
+                <div class="text-stone-500">Drop your CV here or click to browse</div>
+                <div class="text-sm text-stone-500 mt-1">PDF, TXT, DOC supported</div>
               }
             </div>
           </div>
 
           <button (click)="analyze()" [disabled]="loading() || !selectedFile()"
-            class="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-900 shadow-lg hover:shadow-emerald-500/40 transition-all disabled:opacity-50">
+            class="w-full py-3 rounded-xl font-bold bg-stone-900 text-white transition-all disabled:opacity-50">
             @if (loading()) { Analyzing... } @else { Analyze CV }
           </button>
         </div>
@@ -50,32 +50,32 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
       @if (result()) {
         <div class="space-y-6">
           <!-- ATS Score Gauge -->
-          <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-8 text-center">
-            <div class="text-sm text-slate-400 mb-2">ATS Compatibility Score</div>
+          <div class="rounded-2xl border border-stone-200 bg-white p-8 text-center">
+            <div class="text-sm text-stone-500 mb-2">ATS Compatibility Score</div>
             <div class="text-6xl font-bold mb-2"
-              [class]="result()!.atsScore >= 80 ? 'text-emerald-400' : result()!.atsScore >= 60 ? 'text-yellow-400' : 'text-red-400'">
+              [class]="result()!.atsScore >= 80 ? 'text-green-700' : result()!.atsScore >= 60 ? 'text-amber-600' : 'text-red-700'">
               {{ result()!.atsScore }}
             </div>
-            <div class="w-full max-w-xs mx-auto h-3 bg-slate-800 rounded-full overflow-hidden mt-3">
+            <div class="w-full max-w-xs mx-auto h-3 bg-stone-100 rounded-full overflow-hidden mt-3">
               <div class="h-full rounded-full transition-all"
-                [class]="result()!.atsScore >= 80 ? 'bg-emerald-500' : result()!.atsScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'"
+                [class]="result()!.atsScore >= 80 ? 'bg-green-600' : result()!.atsScore >= 60 ? 'bg-amber-500' : 'bg-red-600'"
                 [style.width.%]="result()!.atsScore"></div>
             </div>
           </div>
 
           <!-- Overall Summary -->
-          <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-            <h3 class="font-semibold text-white mb-2">Overall Assessment</h3>
-            <p class="text-sm text-slate-300">{{ result()!.overallSummary }}</p>
+          <div class="rounded-xl border border-stone-200 bg-white p-5">
+            <h3 class="font-semibold text-stone-900 mb-2">Overall Assessment</h3>
+            <p class="text-sm text-stone-700">{{ result()!.overallSummary }}</p>
           </div>
 
           <!-- Missing Keywords -->
           @if (result()!.missingKeywords?.length) {
-            <div class="rounded-xl border border-red-900/50 bg-red-950/20 p-5">
-              <h3 class="font-semibold text-red-400 mb-3">Missing ATS Keywords</h3>
+            <div class="rounded-xl border border-red-200 bg-red-50 p-5">
+              <h3 class="font-semibold text-red-700 mb-3">Missing ATS Keywords</h3>
               <div class="flex flex-wrap gap-2">
                 @for (kw of result()!.missingKeywords; track kw) {
-                  <span class="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 text-sm">{{ kw }}</span>
+                  <span class="px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-800 text-sm">{{ kw }}</span>
                 }
               </div>
             </div>
@@ -83,18 +83,18 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
 
           <!-- Section Feedback -->
           @if (result()!.sectionFeedback?.length) {
-            <div class="rounded-xl border border-slate-800 bg-slate-900/80 p-5">
-              <h3 class="font-semibold text-white mb-3">Section-by-Section Review</h3>
+            <div class="rounded-xl border border-stone-200 bg-white p-5">
+              <h3 class="font-semibold text-stone-900 mb-3">Section-by-Section Review</h3>
               <div class="space-y-3">
                 @for (sf of result()!.sectionFeedback; track sf.section) {
-                  <div class="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50">
+                  <div class="flex items-start gap-3 p-3 rounded-lg bg-stone-50">
                     <span class="px-2 py-0.5 rounded text-xs font-bold"
-                      [class]="sf.status === 'GOOD' ? 'bg-emerald-500/20 text-emerald-300' : sf.status === 'MISSING' ? 'bg-red-500/20 text-red-300' : 'bg-yellow-500/20 text-yellow-300'">
+                      [class]="sf.status === 'GOOD' ? 'bg-green-100 text-green-800' : sf.status === 'MISSING' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'">
                       {{ sf.status }}
                     </span>
                     <div>
-                      <div class="text-sm font-semibold text-white">{{ sf.section }}</div>
-                      <div class="text-sm text-slate-400 mt-1">{{ sf.suggestion }}</div>
+                      <div class="text-sm font-semibold text-stone-900">{{ sf.section }}</div>
+                      <div class="text-sm text-stone-500 mt-1">{{ sf.suggestion }}</div>
                     </div>
                   </div>
                 }
@@ -104,12 +104,12 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
 
           <!-- Impact Improvements -->
           @if (result()!.impactImprovements?.length) {
-            <div class="rounded-xl border border-emerald-900/50 bg-emerald-950/20 p-5">
-              <h3 class="font-semibold text-emerald-400 mb-3">Impact Improvements</h3>
+            <div class="rounded-xl border border-green-200 bg-green-50 p-5">
+              <h3 class="font-semibold text-green-700 mb-3">Impact Improvements</h3>
               <ul class="space-y-2">
                 @for (imp of result()!.impactImprovements; track imp) {
-                  <li class="text-sm text-slate-300 flex items-start gap-2">
-                    <span class="text-emerald-400 mt-0.5">&#x2191;</span> {{ imp }}
+                  <li class="text-sm text-stone-700 flex items-start gap-2">
+                    <span class="text-green-700 mt-0.5">&#x2191;</span> {{ imp }}
                   </li>
                 }
               </ul>
@@ -118,12 +118,12 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
 
           <!-- LinkedIn Tips -->
           @if (result()!.linkedInTips?.length) {
-            <div class="rounded-xl border border-cyan-900/50 bg-cyan-950/20 p-5">
-              <h3 class="font-semibold text-cyan-400 mb-3">LinkedIn Profile Tips</h3>
+            <div class="rounded-xl border border-stone-200 bg-stone-50 p-5">
+              <h3 class="font-semibold text-stone-900 mb-3">LinkedIn Profile Tips</h3>
               <ul class="space-y-2">
                 @for (tip of result()!.linkedInTips; track tip) {
-                  <li class="text-sm text-slate-300 flex items-start gap-2">
-                    <span class="text-cyan-400 mt-0.5">&#x2022;</span> {{ tip }}
+                  <li class="text-sm text-stone-700 flex items-start gap-2">
+                    <span class="text-stone-900 mt-0.5">&#x2022;</span> {{ tip }}
                   </li>
                 }
               </ul>
@@ -131,7 +131,7 @@ import { ArenaApiService, CvOptimizerResponse } from '../../core/services/arena-
           }
 
           <button (click)="reset()"
-            class="w-full py-3 rounded-xl font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition-all">
+            class="w-full py-3 rounded-xl font-bold border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all">
             Analyze Another CV
           </button>
         </div>
