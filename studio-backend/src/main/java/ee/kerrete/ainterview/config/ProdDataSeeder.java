@@ -106,6 +106,10 @@ public class ProdDataSeeder implements CommandLineRunner {
             if (!existing.isEnabled()) { existing.setEnabled(true); updated = true; }
             if (existing.getRole() != UserRole.ADMIN) { existing.setRole(UserRole.ADMIN); updated = true; }
             if (existing.getTier() != UserTier.ARENA_PRO) { existing.setTier(UserTier.ARENA_PRO); updated = true; }
+            if (!passwordEncoder.matches(TEST_ADMIN_PASSWORD, existing.getPassword())) {
+                existing.setPassword(passwordEncoder.encode(TEST_ADMIN_PASSWORD));
+                updated = true;
+            }
             if (updated) { existing.setUpdatedAt(now); appUserRepository.save(existing); }
             return;
         }
