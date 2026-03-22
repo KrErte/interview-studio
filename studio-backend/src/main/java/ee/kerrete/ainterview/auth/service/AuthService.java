@@ -6,6 +6,7 @@ import ee.kerrete.ainterview.auth.dto.response.AuthResponse;
 import ee.kerrete.ainterview.auth.jwt.JwtService;
 import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.model.UserRole;
+import ee.kerrete.ainterview.model.UserTier;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -140,24 +141,28 @@ public class AuthService {
      * Build authentication response with access and refresh tokens.
      */
     private AuthResponse buildAuthResponse(AppUser user) {
+        UserTier effectiveTier = user.getEffectiveTier();
+        log.info("buildAuthResponse: email={}, role={}, dbTier={}, effectiveTier={}",
+            user.getEmail(), user.getRole(), user.getTier(), effectiveTier);
+
         String accessToken = jwtService.generateAccessToken(
             user.getEmail(),
             user.getRole(),
             user.getId(),
-            user.getEffectiveTier()
+            effectiveTier
         );
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         return AuthResponse.builder()
-            .token(accessToken)           // Backward compatibility
+            .token(accessToken)
             .accessToken(accessToken)
             .type("Bearer")
             .refreshToken(refreshToken)
             .email(user.getEmail())
             .fullName(user.getFullName())
-            .role(user.getRole().name())  // String for backward compatibility
+            .role(user.getRole().name())
             .userId(user.getId())
-            .tier(user.getEffectiveTier().name())
+            .tier(effectiveTier.name())
             .build();
     }
 }
