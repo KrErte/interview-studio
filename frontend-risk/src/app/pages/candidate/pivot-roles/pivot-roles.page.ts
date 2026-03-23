@@ -432,9 +432,10 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
       catchError(() => of(this.mockVisibility)),
       takeUntil(this.destroy$)
     ).subscribe((vis) => {
-      this.visibility = vis;
-      this.visibilityDraftMode = vis.mode;
-      this.visibilityDraftThreshold = vis.visibilityThreshold;
+      const resolved = vis ?? this.mockVisibility;
+      this.visibility = resolved;
+      this.visibilityDraftMode = resolved.mode;
+      this.visibilityDraftThreshold = resolved.visibilityThreshold;
       this.loadingVisibility = false;
     });
   }
