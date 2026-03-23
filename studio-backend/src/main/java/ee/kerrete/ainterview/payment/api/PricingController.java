@@ -15,7 +15,7 @@ public class PricingController {
     public List<PricingTier> getPricing() {
         return List.of(
             new PricingTier(
-                "FREE", "Free", 0, "EUR",
+                "FREE", "Free", 0, "USD",
                 List.of(
                     "Risk assessment + blockers",
                     "Teaser plan (first 3 days)",
@@ -27,7 +27,7 @@ public class PricingController {
                 null, null, null
             ),
             new PricingTier(
-                "STARTER", "Starter", 7.99, "EUR",
+                "STARTER", "Starter", 7.99, "USD",
                 List.of(
                     "Everything in Free",
                     "Full 30-day roadmap + tasks",
@@ -43,7 +43,7 @@ public class PricingController {
                 79.90, 6.66, "MOST POPULAR"
             ),
             new PricingTier(
-                "ARENA_PRO", "Pro", 15.99, "EUR",
+                "ARENA_PRO", "Pro", 15.99, "USD",
                 List.of(
                     "Everything in Starter",
                     "NEW:Interview Simulator (AI)",
