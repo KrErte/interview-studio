@@ -171,12 +171,12 @@ import { AnalyticsService } from '../../core/services/analytics.service';
               <a routerLink="/pricing"
                 class="block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800">
                 <div class="text-white font-bold">Starter</div>
-                <div class="text-stone-400 text-sm">&euro;7.99/mo &mdash; Full roadmap + tracking</div>
+                <div class="text-stone-400 text-sm">$7.99/mo &mdash; Full roadmap + tracking</div>
               </a>
               <a routerLink="/pricing"
                 class="block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700">
                 <div class="text-white font-bold">Pro</div>
-                <div class="text-red-100 text-sm">&euro;15.99/mo &mdash; 8 AI tools + unlimited</div>
+                <div class="text-red-100 text-sm">$15.99/mo &mdash; 8 AI tools + unlimited</div>
               </a>
             </div>
 

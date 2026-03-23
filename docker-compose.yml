@@ -58,7 +58,7 @@ services:
   # Main Studio Frontend (Angular)
   studio-frontend:
     build:
-      context: ./studio-frontend
+      context: ./frontend-studio/studio-frontend
       dockerfile: Dockerfile
     container_name: interview-studio-frontend
     ports:

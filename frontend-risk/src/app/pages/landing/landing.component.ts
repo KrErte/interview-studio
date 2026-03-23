@@ -290,12 +290,12 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
           <div class="p-6 border-b sm:border-b-0 sm:border-r border-stone-200 bg-stone-50">
             <div class="text-xs text-stone-400 uppercase tracking-widest mb-3">Starter</div>
-            <div class="text-3xl font-black text-stone-900 mb-1">&euro;7.99<span class="text-base font-normal text-stone-400">/mo</span></div>
+            <div class="text-3xl font-black text-stone-900 mb-1">$7.99<span class="text-base font-normal text-stone-400">/mo</span></div>
             <div class="text-sm text-stone-500">{{ 'landing.priceStarterDesc' | translate }}</div>
           </div>
           <div class="p-6">
             <div class="text-xs text-red-600 uppercase tracking-widest mb-3 font-bold">Pro</div>
-            <div class="text-3xl font-black text-stone-900 mb-1">&euro;15.99<span class="text-base font-normal text-stone-400">/mo</span></div>
+            <div class="text-3xl font-black text-stone-900 mb-1">$15.99<span class="text-base font-normal text-stone-400">/mo</span></div>
             <div class="text-sm text-stone-500">{{ 'landing.priceProDesc' | translate }}</div>
           </div>
         </div>

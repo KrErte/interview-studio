@@ -103,17 +103,17 @@ import { TranslateModule } from '@ngx-translate/core';
                     <span class="text-4xl font-bold text-stone-400">{{ 'pricing.free' | translate }}</span>
                     <span class="text-sm text-stone-400">{{ 'pricing.forever' | translate }}</span>
                   } @else if (isAnnual() && tier.annualMonthlyPrice) {
-                    <span class="text-4xl font-bold text-stone-900">&euro;{{ tier.annualMonthlyPrice | number:'1.2-2' }}</span>
+                    <span class="text-4xl font-bold text-stone-900">${{ tier.annualMonthlyPrice | number:'1.2-2' }}</span>
                     <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
-                    <span class="ml-2 text-sm text-stone-400 line-through">&euro;{{ tier.price }}</span>
+                    <span class="ml-2 text-sm text-stone-400 line-through">${{ tier.price }}</span>
                   } @else {
-                    <span class="text-4xl font-bold text-stone-900">&euro;{{ tier.price }}</span>
+                    <span class="text-4xl font-bold text-stone-900">${{ tier.price }}</span>
                     <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
                   }
                 </div>
                 @if (isAnnual() && tier.annualPrice) {
                   <div class="text-xs text-stone-400 mt-1">
-                    {{ 'pricing.billedAnnually' | translate }} &euro;{{ tier.annualPrice }}
+                    {{ 'pricing.billedAnnually' | translate }} ${{ tier.annualPrice }}
                   </div>
                 }
               </div>
