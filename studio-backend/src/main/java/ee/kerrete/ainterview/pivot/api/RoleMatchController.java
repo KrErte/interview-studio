@@ -27,14 +27,14 @@ public class RoleMatchController {
     private final PivotRoleMatchService roleMatchService;
 
     @PostMapping("/compute")
-    @PreAuthorize("hasRole('JOBSEEKER')")
+    @PreAuthorize("hasAnyRole('JOBSEEKER','ADMIN','USER')")
     public ComputeRoleMatchesResponse compute(@Valid @RequestBody ComputeRoleMatchesRequest request,
                                               @CurrentUser AuthenticatedUser user) {
         return roleMatchService.compute(user.id(), request);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('JOBSEEKER')")
+    @PreAuthorize("hasAnyRole('JOBSEEKER','ADMIN','USER')")
     public List<PivotRoleMatchDto> list(@CurrentUser AuthenticatedUser user) {
         return roleMatchService.getForUser(user.id());
     }

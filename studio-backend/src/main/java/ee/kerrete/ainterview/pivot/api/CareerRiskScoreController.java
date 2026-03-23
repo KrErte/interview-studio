@@ -21,7 +21,7 @@ public class CareerRiskScoreController {
     private final PivotCareerRiskScoreService careerRiskScoreService;
 
     @GetMapping
-    @PreAuthorize("hasRole('JOBSEEKER')")
+    @PreAuthorize("hasAnyRole('JOBSEEKER','ADMIN','USER')")
     public ResponseEntity<CareerRiskScoreResponse> latest(@CurrentUser AuthenticatedUser user) {
         CareerRiskScoreResponse response = careerRiskScoreService.getLatestForUser(user.id());
         if (response == null) {

@@ -32,7 +32,7 @@ public class MarketplaceController {
     private final CandidateSearchService candidateSearchService;
 
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('JOBSEEKER')")
+    @PreAuthorize("hasAnyRole('JOBSEEKER','ADMIN','USER')")
     public ResponseEntity<MarketplaceProfileResponse> getProfile(@CurrentUser AuthenticatedUser user) {
         MarketplaceProfileResponse response = marketplaceProfileService.getForUser(user.id());
         if (response == null) {
@@ -42,7 +42,7 @@ public class MarketplaceController {
     }
 
     @PutMapping("/profile")
-    @PreAuthorize("hasRole('JOBSEEKER')")
+    @PreAuthorize("hasAnyRole('JOBSEEKER','ADMIN','USER')")
     public MarketplaceProfileResponse upsertProfile(@Valid @RequestBody MarketplaceProfileUpdateRequest request,
                                                     @CurrentUser AuthenticatedUser user) {
         return marketplaceProfileService.upsert(user.id(), request);

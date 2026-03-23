@@ -18,6 +18,7 @@ import { KeyboardShortcutsComponent } from './shared/keyboard-shortcuts/keyboard
 export class AppComponent {
   constructor(private translate: TranslateService) {
     this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    const savedLang = localStorage.getItem('lang') || 'en';
+    this.translate.use(savedLang);
   }
 }
