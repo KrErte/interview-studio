@@ -41,7 +41,7 @@ import { TranslateModule } from '@ngx-translate/core';
       </div>
 
       <!-- Billing Toggle (hidden until annual prices are created in Stripe) -->
-      <div class="hidden flex items-center justify-center gap-4 mb-10">
+      <div class="!hidden items-center justify-center gap-4 mb-10">
         <span class="text-sm font-medium" [class]="!isAnnual() ? 'text-stone-900' : 'text-stone-400'">
           {{ 'pricing.monthly' | translate }}
         </span>
