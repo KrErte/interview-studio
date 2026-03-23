@@ -1,28 +1,28 @@
 <section class="space-y-6 max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
   <header class="space-y-3 pb-2">
     <div class="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-stone-400">
-      <span class="border-l-2 border-red-600 pl-3 font-bold text-stone-900">Future-readiness</span>
+      <span class="border-l-2 border-red-600 pl-3 font-bold text-stone-900">{{ 'dashboard.futureReadiness' | translate }}</span>
     </div>
     <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
       <div class="space-y-1">
-        <h1 class="text-3xl md:text-4xl font-black text-stone-900 tracking-tight">One flow: from profile to roadmap</h1>
+        <h1 class="text-3xl md:text-4xl font-black text-stone-900 tracking-tight">{{ 'dashboard.headline' | translate }}</h1>
         <p class="text-sm text-stone-500">
-          Create a future-readiness overview, answer questions, and unlock a roadmap on the same page.
+          {{ 'dashboard.headlineDesc' | translate }}
         </p>
       </div>
       <div class="flex items-center gap-2 text-xs text-stone-500">
         <span class="h-2 w-2 animate-pulse rounded-full bg-red-600"></span>
-        Overview updates as you learn, interview, or upload a new CV.
+        {{ 'dashboard.liveNote' | translate }}
       </div>
     </div>
   </header>
 
   <div *ngIf="currentStep === 'OVERVIEW'" class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
     <div class="border border-stone-200 bg-white p-6 shadow-sm">
-      <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Overview</p>
-      <h2 class="mt-2 text-2xl font-black text-stone-900">Future-readiness flow in one place</h2>
+      <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.overview' | translate }}</p>
+      <h2 class="mt-2 text-2xl font-black text-stone-900">{{ 'dashboard.overviewTitle' | translate }}</h2>
       <p class="mt-2 text-sm text-stone-600">
-        Start with your profile, answer short questions, view analysis, and lock a roadmap for 7/30/90 days.
+        {{ 'dashboard.overviewDesc' | translate }}
       </p>
       <div class="mt-4 flex flex-wrap gap-3">
         <button
@@ -30,7 +30,7 @@
           class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
           (click)="goToQuestions()"
         >
-          Start with questions
+          {{ 'dashboard.startQuestions' | translate }}
         </button>
         <button
           type="button"
@@ -38,52 +38,52 @@
           (click)="goToAssessment()"
           [disabled]="!hasAnyData"
         >
-          View latest assessment
+          {{ 'dashboard.viewAssessment' | translate }}
         </button>
       </div>
     </div>
     <div class="border border-stone-200 bg-white p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Current readiness</p>
-          <p class="text-sm text-stone-500">Overview of your current score and baseline.</p>
+          <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.currentReadiness' | translate }}</p>
+          <p class="text-sm text-stone-500">{{ 'dashboard.currentReadinessDesc' | translate }}</p>
         </div>
-        <span class="text-[10px] text-stone-400 uppercase tracking-widest">Real-time</span>
+        <span class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'dashboard.realtime' | translate }}</span>
       </div>
       <div class="mt-3 grid gap-3 md:grid-cols-3">
         <div class="border border-stone-200 bg-stone-50 p-4">
-          <p class="text-xs text-stone-500">Overall score</p>
+          <p class="text-xs text-stone-500">{{ 'dashboard.overallScore' | translate }}</p>
           <p class="text-3xl font-black text-stone-900">
             {{ careerRiskScore?.overall ?? '—' }}<span class="text-lg text-stone-400">/100</span>
           </p>
           <p class="text-xs text-stone-500">
-            {{ careerRiskScore ? 'Latest analysis' : 'Add CV and answers to calculate score' }}
+            {{ careerRiskScore ? ('dashboard.latestAnalysis' | translate) : ('dashboard.addCvCalc' | translate) }}
           </p>
         </div>
         <div class="border border-stone-200 bg-stone-50 p-4">
-          <p class="text-xs text-stone-500">Top %</p>
+          <p class="text-xs text-stone-500">{{ 'dashboard.topPercent' | translate }}</p>
           <p class="text-2xl font-black text-stone-900">
             {{ careerRiskScore ? 'Top ' + benchmarkPercentile + '%' : '—' }}
           </p>
-          <p class="text-xs text-stone-500">Among similar profiles</p>
+          <p class="text-xs text-stone-500">{{ 'dashboard.amongSimilar' | translate }}</p>
         </div>
         <div class="border border-stone-200 bg-stone-50 p-4">
-          <p class="text-xs text-stone-500">Field baseline</p>
+          <p class="text-xs text-stone-500">{{ 'dashboard.fieldBaseline' | translate }}</p>
           <p class="text-2xl font-black text-stone-900">
             {{ careerRiskScore ? benchmarkFieldAverage : '—' }}
           </p>
-          <p class="text-xs text-stone-500">Comparison threshold</p>
+          <p class="text-xs text-stone-500">{{ 'dashboard.comparisonThreshold' | translate }}</p>
         </div>
       </div>
       <div class="mt-4 space-y-2 text-sm text-stone-600" *ngIf="careerRiskScore; else overviewPlaceholder">
         <p>{{ careerRiskScore?.explanation }}</p>
         <p class="text-xs text-stone-400">
-          Future-readiness considers CV, interview signals, and recent learning.
+          {{ 'dashboard.readinessNote' | translate }}
         </p>
       </div>
       <ng-template #overviewPlaceholder>
         <p class="mt-4 text-sm text-stone-500">
-          Add CV and answer questions to calculate readiness overview and analysis.
+          {{ 'dashboard.addCvPlaceholder' | translate }}
         </p>
       </ng-template>
     </div>
@@ -95,23 +95,23 @@
       <div class="border border-stone-200 bg-white p-5 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Profile</p>
-            <h2 class="text-lg font-bold text-stone-900">Upload CV and note experience</h2>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.profile' | translate }}</p>
+            <h2 class="text-lg font-bold text-stone-900">{{ 'dashboard.uploadCvTitle' | translate }}</h2>
           </div>
         </div>
         <div class="mt-4 space-y-4">
           <div class="flex flex-col gap-2">
-            <label class="text-sm text-stone-700 font-medium">CV file</label>
+            <label class="text-sm text-stone-700 font-medium">{{ 'dashboard.cvFile' | translate }}</label>
             <input
               type="file"
               class="w-full border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900"
               (change)="onCvSelected($event)"
             />
-            <p class="text-xs text-stone-500" *ngIf="cvFileName">Selected: {{ cvFileName }}</p>
+            <p class="text-xs text-stone-500" *ngIf="cvFileName">{{ 'dashboard.selected' | translate }}: {{ cvFileName }}</p>
           </div>
           <div class="grid gap-3 md:grid-cols-2">
             <div class="flex flex-col gap-2">
-              <label class="text-sm text-stone-700 font-medium">Years of experience</label>
+              <label class="text-sm text-stone-700 font-medium">{{ 'dashboard.yearsExperience' | translate }}</label>
               <input
                 type="number"
                 min="0"
@@ -121,7 +121,7 @@
               />
             </div>
             <div class="flex flex-col gap-2">
-              <label class="text-sm text-stone-700 font-medium">Role</label>
+              <label class="text-sm text-stone-700 font-medium">{{ 'dashboard.role' | translate }}</label>
               <input
                 type="text"
                 [(ngModel)]="profileRole"
@@ -131,7 +131,7 @@
             </div>
           </div>
           <div class="flex flex-col gap-2 md:max-w-xs">
-            <label class="text-sm text-stone-700 font-medium">Seniority</label>
+            <label class="text-sm text-stone-700 font-medium">{{ 'dashboard.seniority' | translate }}</label>
             <select
               [(ngModel)]="profileSeniority"
               class="border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900"
@@ -147,16 +147,16 @@
     </div>
     <aside class="space-y-4">
       <div class="border border-stone-200 bg-white p-5 shadow-sm">
-        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Why start?</p>
-        <h3 class="text-base font-bold text-stone-900">One flow, four steps</h3>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.whyStart' | translate }}</p>
+        <h3 class="text-base font-bold text-stone-900">{{ 'dashboard.oneFlowFourSteps' | translate }}</h3>
         <ul class="mt-3 space-y-2 text-sm text-stone-600">
-          <li class="flex items-start gap-2"><span class="text-red-600">→</span> Profile: CV + experience</li>
-          <li class="flex items-start gap-2"><span class="text-red-600">→</span> Questions: 3 clarifying questions</li>
-          <li class="flex items-start gap-2"><span class="text-red-600">→</span> Analysis: future-readiness overview</li>
-          <li class="flex items-start gap-2"><span class="text-red-600">→</span> Roadmap: for 7/30/90 days</li>
+          <li class="flex items-start gap-2"><span class="text-red-600">→</span> {{ 'dashboard.stepProfile' | translate }}</li>
+          <li class="flex items-start gap-2"><span class="text-red-600">→</span> {{ 'dashboard.stepQuestions' | translate }}</li>
+          <li class="flex items-start gap-2"><span class="text-red-600">→</span> {{ 'dashboard.stepAnalysis' | translate }}</li>
+          <li class="flex items-start gap-2"><span class="text-red-600">→</span> {{ 'dashboard.stepRoadmap' | translate }}</li>
         </ul>
         <p class="mt-3 text-xs text-stone-400">
-          All steps happen on the same page. Stay focused and keep moving.
+          {{ 'dashboard.allStepsNote' | translate }}
         </p>
       </div>
     </aside>
@@ -166,34 +166,34 @@
   <div *ngIf="currentStep === 2" class="border border-stone-200 bg-white p-5 shadow-sm">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Questions</p>
-        <h2 class="text-lg font-bold text-stone-900">Clarifying questions</h2>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.questions' | translate }}</p>
+        <h2 class="text-lg font-bold text-stone-900">{{ 'dashboard.clarifyingQuestions' | translate }}</h2>
       </div>
-      <span class="text-[10px] text-stone-400 uppercase tracking-widest">3 questions · 2 min</span>
+      <span class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'dashboard.questionsTime' | translate }}</span>
     </div>
     <div class="mt-4 space-y-4 text-sm text-stone-600">
       <div class="border border-stone-200 bg-stone-50 p-4">
-        <p class="font-bold text-stone-900">How do you approach a new technical challenge?</p>
+        <p class="font-bold text-stone-900">{{ 'dashboard.q1' | translate }}</p>
         <textarea
           class="mt-2 w-full border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900"
           rows="3"
-          placeholder="Briefly describe your steps and metrics."
+          [placeholder]="'dashboard.q1Placeholder' | translate"
         ></textarea>
       </div>
       <div class="border border-stone-200 bg-stone-50 p-4">
-        <p class="font-bold text-stone-900">What keeps your learning pace going?</p>
+        <p class="font-bold text-stone-900">{{ 'dashboard.q2' | translate }}</p>
         <textarea
           class="mt-2 w-full border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900"
           rows="3"
-          placeholder="Methods, routines, tools."
+          [placeholder]="'dashboard.q2Placeholder' | translate"
         ></textarea>
       </div>
       <div class="border border-stone-200 bg-stone-50 p-4">
-        <p class="font-bold text-stone-900">How do you collaborate when the schedule is tight?</p>
+        <p class="font-bold text-stone-900">{{ 'dashboard.q3' | translate }}</p>
         <textarea
           class="mt-2 w-full border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900"
           rows="3"
-          placeholder="Give an example and the outcome."
+          [placeholder]="'dashboard.q3Placeholder' | translate"
         ></textarea>
       </div>
     </div>
@@ -203,14 +203,14 @@
         class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
         (click)="analyzeReadiness()"
       >
-        Analyze readiness
+        {{ 'dashboard.analyzeReadiness' | translate }}
       </button>
       <button
         type="button"
         class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors"
         (click)="goToStep(1)"
       >
-        Back to profile
+        {{ 'dashboard.backToProfile' | translate }}
       </button>
     </div>
   </div>
@@ -222,66 +222,66 @@
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div class="space-y-2">
             <p class="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-              Future-readiness overview
+              {{ 'dashboard.futureReadinessOverview' | translate }}
             </p>
             <div class="flex items-baseline gap-2">
               <span class="text-4xl font-black text-stone-900">
                 {{ careerRiskScore?.overall ?? '—' }}
               </span>
-              <span class="text-sm text-stone-500">/100 readiness</span>
+              <span class="text-sm text-stone-500">/100 {{ 'dashboard.readiness' | translate }}</span>
             </div>
             <div class="space-y-1 text-xs text-stone-600">
               <p>
-                Top {{ benchmarkPercentile }}% among similar backgrounds · Field baseline:
+                Top {{ benchmarkPercentile }}% among similar backgrounds · {{ 'dashboard.fieldBaseline' | translate }}:
                 <span class="font-bold text-stone-900">{{ benchmarkFieldAverage }}</span>
               </p>
               <p class="text-stone-500">
-                {{ careerRiskScore?.explanation || 'We combine interview signals, CV overlaps, and recent learning into a forward-looking score.' }}
+                {{ careerRiskScore?.explanation || ('dashboard.readinessNote' | translate) }}
               </p>
             </div>
           </div>
           <div class="grid grid-cols-3 gap-3 text-xs text-stone-700">
             <div class="border border-stone-200 bg-stone-50 p-3">
-              <p class="font-bold text-stone-900">Adaptability</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.adaptability' | translate }}</p>
               <p class="text-2xl font-black text-stone-900">
                 {{ careerRiskScore?.adaptability ?? '—' }}
               </p>
-              <p class="text-[11px] text-stone-500">Ease of moving between roles</p>
+              <p class="text-[11px] text-stone-500">{{ 'dashboard.adaptabilityDesc' | translate }}</p>
             </div>
             <div class="border border-stone-200 bg-stone-50 p-3">
-              <p class="font-bold text-stone-900">Automation resilience</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.automationResilience' | translate }}</p>
               <p class="text-2xl font-black text-stone-900">
                 {{ careerRiskScore?.automationResilience ?? '—' }}
               </p>
-              <p class="text-[11px] text-stone-500">Protection against commoditization</p>
+              <p class="text-[11px] text-stone-500">{{ 'dashboard.automationResilienceDesc' | translate }}</p>
             </div>
             <div class="border border-stone-200 bg-stone-50 p-3">
-              <p class="font-bold text-stone-900">Learning velocity</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.learningVelocity' | translate }}</p>
               <p class="text-2xl font-black text-stone-900">
                 {{ careerRiskScore?.learningVelocity ?? '—' }}
               </p>
-              <p class="text-[11px] text-stone-500">How fast you pick things up</p>
+              <p class="text-[11px] text-stone-500">{{ 'dashboard.learningVelocityDesc' | translate }}</p>
             </div>
           </div>
         </div>
 
         <div class="mt-4 grid gap-3 border border-stone-200 bg-stone-50 p-4 md:grid-cols-3">
           <div class="space-y-1">
-            <p class="text-xs font-bold text-stone-900">Strong signals</p>
+            <p class="text-xs font-bold text-stone-900">{{ 'dashboard.strongSignals' | translate }}</p>
             <p class="text-sm text-stone-600">
-              Workshop facilitation, architecture reviews, and rapid prototyping are your current strengths.
+              {{ 'dashboard.strongSignalsDesc' | translate }}
             </p>
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-bold text-stone-900">Development focus</p>
+            <p class="text-xs font-bold text-stone-900">{{ 'dashboard.developmentFocus' | translate }}</p>
             <p class="text-sm text-stone-600">
-              Deepen measurement, model evaluation, and prompt chaining to unlock next-level positions.
+              {{ 'dashboard.developmentFocusDesc' | translate }}
             </p>
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-bold text-stone-900">Momentum</p>
+            <p class="text-xs font-bold text-stone-900">{{ 'dashboard.momentum' | translate }}</p>
             <p class="text-sm text-stone-600">
-              Every interview adds a signal; keep the rhythm so your readiness stays ahead of market changes.
+              {{ 'dashboard.momentumDesc' | translate }}
             </p>
           </div>
         </div>
@@ -292,7 +292,7 @@
             class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
             (click)="goToRoadmap()"
           >
-            Generate roadmap →
+            {{ 'dashboard.generateRoadmap' | translate }} →
           </button>
           <p *ngIf="lastSnapshotMessage" class="text-xs text-stone-500">
             {{ lastSnapshotMessage }}
@@ -301,7 +301,7 @@
 
         <div *ngIf="loadingScore" class="mt-3 flex items-center gap-2 text-xs text-stone-500">
           <span class="h-3 w-3 animate-spin rounded-full border-2 border-stone-300 border-t-stone-900"></span>
-          Calculating your latest readiness…
+          {{ 'dashboard.calculating' | translate }}
         </div>
         <p *ngIf="scoreError" class="mt-3 border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
           {{ scoreError }}
@@ -311,10 +311,10 @@
       <div class="border border-stone-200 bg-white p-5 shadow-sm" *ngIf="insightView === 'overview' || insightView === 'strengths'">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Opportunities</p>
-            <h2 class="text-lg font-bold text-stone-900">Position matches</h2>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.opportunities' | translate }}</p>
+            <h2 class="text-lg font-bold text-stone-900">{{ 'dashboard.positionMatches' | translate }}</h2>
           </div>
-          <span *ngIf="loadingRoles" class="text-[10px] text-stone-400 uppercase tracking-widest">Refreshing…</span>
+          <span *ngIf="loadingRoles" class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'dashboard.refreshing' | translate }}</span>
         </div>
 
         <p *ngIf="rolesError" class="mt-3 border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
@@ -325,9 +325,9 @@
           *ngIf="!loadingRoles && !rolesError && !roleMatches.length"
           class="mt-3 border border-dashed border-stone-300 bg-stone-50 px-4 py-6 text-sm text-stone-600"
         >
-          <p class="font-bold text-stone-900">No pivot roles yet.</p>
+          <p class="font-bold text-stone-900">{{ 'dashboard.noPivotRoles' | translate }}</p>
           <p class="mt-1 text-stone-500">
-            Upload a CV, run a job match, or complete a mock interview to see high-overlap positions.
+            {{ 'dashboard.noPivotRolesDesc' | translate }}
           </p>
         </div>
 
@@ -338,7 +338,7 @@
           >
             <div class="flex items-start justify-between gap-2">
               <div>
-                <p class="text-[10px] uppercase tracking-widest text-stone-400">Pivot role</p>
+                <p class="text-[10px] uppercase tracking-widest text-stone-400">{{ 'dashboard.pivotRole' | translate }}</p>
                 <p class="text-base font-bold text-stone-900">
                   {{ match.targetRole }}
                 </p>
@@ -350,7 +350,7 @@
                 <p class="text-2xl font-black text-stone-900">
                   {{ match.matchPercent }}<span class="text-sm text-stone-400">%</span>
                 </p>
-                <p class="text-[10px] text-stone-400 uppercase">match</p>
+                <p class="text-[10px] text-stone-400 uppercase">{{ 'dashboard.match' | translate }}</p>
               </div>
             </div>
 
@@ -371,7 +371,7 @@
 
             <div class="space-y-2">
               <div>
-                <p class="text-xs font-bold text-stone-700">Overlapping strengths</p>
+                <p class="text-xs font-bold text-stone-700">{{ 'dashboard.overlappingStrengths' | translate }}</p>
                 <div class="mt-1 flex flex-wrap gap-1.5">
                   <span
                     *ngFor="let skill of match.overlapSkills"
@@ -380,13 +380,13 @@
                     {{ skill }}
                   </span>
                   <span *ngIf="!match.overlapSkills?.length" class="text-[11px] text-stone-400">
-                    We'll add overlaps when more data is available.
+                    {{ 'dashboard.overlapsNote' | translate }}
                   </span>
                 </div>
               </div>
 
               <div>
-                <p class="text-xs font-bold text-stone-700">Micro-gaps to close</p>
+                <p class="text-xs font-bold text-stone-700">{{ 'dashboard.microGaps' | translate }}</p>
                 <div class="mt-1 flex flex-wrap gap-1.5">
                   <span
                     *ngFor="let skill of match.gapSkills"
@@ -395,7 +395,7 @@
                     {{ skill }}
                   </span>
                   <span *ngIf="!match.gapSkills?.length" class="text-[11px] text-stone-400">
-                    No clear gaps identified at the moment.
+                    {{ 'dashboard.noGaps' | translate }}
                   </span>
                 </div>
               </div>
@@ -403,14 +403,14 @@
 
             <div class="mt-1 flex items-center justify-between">
               <p class="text-[11px] text-stone-400">
-                Turn these gaps into a concrete mini roadmap.
+                {{ 'dashboard.miniRoadmapNote' | translate }}
               </p>
               <button
                 type="button"
                 class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-stone-900 hover:bg-stone-800 transition-colors"
                 (click)="onGeneratePlan(match)"
               >
-                Generate roadmap
+                {{ 'dashboard.generateRoadmap' | translate }}
                 <span aria-hidden="true">→</span>
               </button>
             </div>
@@ -421,8 +421,8 @@
       <div *ngIf="currentStep === 4" class="border border-stone-200 bg-white p-5 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Roadmap</p>
-            <h2 class="text-lg font-bold text-stone-900">Choose 7 / 30 / 90 day view</h2>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.roadmap' | translate }}</p>
+            <h2 class="text-lg font-bold text-stone-900">{{ 'dashboard.chooseDayView' | translate }}</h2>
           </div>
           <div class="flex items-center gap-2">
             <button
@@ -471,8 +471,8 @@
 
     <aside class="space-y-4">
       <div class="border border-stone-200 bg-white p-5 shadow-sm" *ngIf="insightView === 'overview' || insightView === 'strengths'">
-        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Strengths</p>
-        <h2 class="text-base font-bold text-stone-900">What works in your favor</h2>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.strengths' | translate }}</p>
+        <h2 class="text-base font-bold text-stone-900">{{ 'dashboard.strengthsTitle' | translate }}</h2>
         <div class="mt-3 flex flex-wrap gap-2">
           <span
             *ngFor="let s of strengths"
@@ -482,7 +482,7 @@
           </span>
         </div>
         <div class="mt-4 space-y-2">
-          <p class="text-xs font-bold text-stone-700">Above benchmark</p>
+          <p class="text-xs font-bold text-stone-700">{{ 'dashboard.aboveBenchmark' | translate }}</p>
           <div class="space-y-2 text-sm text-stone-600">
             <div *ngFor="let dim of strengthsAboveBenchmark" class="flex items-center justify-between border border-stone-200 bg-stone-50 px-3 py-2">
               <span>{{ dim.name }}</span>
@@ -493,8 +493,8 @@
       </div>
 
       <div *ngIf="insightView === 'gaps'" class="border border-stone-200 bg-white p-5 shadow-sm">
-        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Growth areas</p>
-        <h2 class="text-base font-bold text-stone-900">What to improve in the next 30 days</h2>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.growthAreas' | translate }}</p>
+        <h2 class="text-base font-bold text-stone-900">{{ 'dashboard.growthAreasTitle' | translate }}</h2>
         <div class="mt-3 flex flex-wrap gap-2">
           <span
             *ngFor="let g of gaps"
@@ -504,7 +504,7 @@
           </span>
         </div>
         <div class="mt-4 space-y-2">
-          <p class="text-xs font-bold text-stone-700">Below benchmark</p>
+          <p class="text-xs font-bold text-stone-700">{{ 'dashboard.belowBenchmark' | translate }}</p>
           <div class="space-y-2 text-sm text-stone-600">
             <div *ngFor="let dim of gapsBelowBenchmark" class="flex items-center justify-between border border-stone-200 bg-stone-50 px-3 py-2">
               <span>{{ dim.name }}</span>
@@ -517,13 +517,13 @@
       <div class="border border-stone-200 bg-white p-5 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Marketplace</p>
-            <h2 class="text-base font-bold text-stone-900">Visibility settings</h2>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.marketplace' | translate }}</p>
+            <h2 class="text-base font-bold text-stone-900">{{ 'dashboard.visibilitySettings' | translate }}</h2>
           </div>
-          <span *ngIf="loadingVisibility" class="text-[10px] text-stone-400 uppercase tracking-widest">Loading…</span>
+          <span *ngIf="loadingVisibility" class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'common.loading' | translate }}</span>
         </div>
         <p class="mt-2 text-xs text-stone-500">
-          Choose how interviewers find you when your match exceeds their threshold.
+          {{ 'dashboard.visibilityDesc' | translate }}
         </p>
 
         <div class="mt-4 grid grid-cols-3 gap-2">
@@ -536,7 +536,7 @@
             }"
             (click)="setVisibilityMode('OFF')"
           >
-            Off
+            {{ 'dashboard.off' | translate }}
           </button>
           <button
             type="button"
@@ -547,7 +547,7 @@
             }"
             (click)="setVisibilityMode('ANON')"
           >
-            Anonymous
+            {{ 'dashboard.anonymous' | translate }}
           </button>
           <button
             type="button"
@@ -558,13 +558,13 @@
             }"
             (click)="setVisibilityMode('PUBLIC')"
           >
-            Public
+            {{ 'dashboard.public' | translate }}
           </button>
         </div>
 
         <div class="mt-4 space-y-2">
           <div class="flex items-center justify-between text-xs text-stone-600">
-            <span>Minimum match to show your profile</span>
+            <span>{{ 'dashboard.minMatch' | translate }}</span>
             <span class="font-bold text-stone-900">
               {{ visibilityDraftThreshold }}%
             </span>
@@ -578,7 +578,7 @@
             class="w-full accent-red-600"
           />
           <p class="text-[11px] text-stone-400">
-            Show profile when recruiter role match exceeds this threshold.
+            {{ 'dashboard.thresholdDesc' | translate }}
           </p>
         </div>
 
@@ -589,10 +589,10 @@
             (click)="saveVisibility()"
             [disabled]="savingVisibility || loadingVisibility"
           >
-            <span *ngIf="!savingVisibility">Save visibility</span>
+            <span *ngIf="!savingVisibility">{{ 'dashboard.saveVisibility' | translate }}</span>
             <span *ngIf="savingVisibility" class="flex items-center gap-2">
               <span class="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-red-300"></span>
-              Saving…
+              {{ 'dashboard.saving' | translate }}
             </span>
           </button>
           <p *ngIf="visibilityError" class="text-[11px] text-red-600">
@@ -605,24 +605,24 @@
       </div>
 
       <div class="border border-stone-200 bg-white p-5 shadow-sm">
-        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">Readiness path</p>
-        <h2 class="text-base font-bold text-stone-900">What happens next</h2>
+        <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold">{{ 'dashboard.readinessPath' | translate }}</p>
+        <h2 class="text-base font-bold text-stone-900">{{ 'dashboard.whatHappensNext' | translate }}</h2>
         <div class="mt-3 space-y-3 text-sm text-stone-600">
           <div class="flex items-start gap-3 border border-stone-200 bg-stone-50 p-3">
             <span class="text-red-600 font-bold mt-0.5">→</span>
             <div>
-              <p class="font-bold text-stone-900">Confirm your overview</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.confirmOverview' | translate }}</p>
               <p class="text-stone-500">
-                Use "Create overview" to refresh scores when you upload a CV or complete an interview.
+                {{ 'dashboard.confirmOverviewDesc' | translate }}
               </p>
             </div>
           </div>
           <div class="flex items-start gap-3 border border-stone-200 bg-stone-50 p-3">
             <span class="text-red-600 font-bold mt-0.5">→</span>
             <div>
-              <p class="font-bold text-stone-900">Choose one pivot role</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.choosePivot' | translate }}</p>
               <p class="text-stone-500">
-                Generate a mini roadmap for the position with the smallest gaps to maintain momentum.
+                {{ 'dashboard.choosePivotDesc' | translate }}
               </p>
               <p *ngIf="planSelectionMessage" class="mt-1 text-xs text-stone-500">
                 {{ planSelectionMessage }}
@@ -632,15 +632,15 @@
           <div class="flex items-start gap-3 border border-stone-200 bg-stone-50 p-3">
             <span class="text-red-600 font-bold mt-0.5">→</span>
             <div>
-              <p class="font-bold text-stone-900">Stay discoverable</p>
+              <p class="font-bold text-stone-900">{{ 'dashboard.stayDiscoverable' | translate }}</p>
               <p class="text-stone-500">
-                Tune visibility so interviewers can see you when their role matches your fit.
+                {{ 'dashboard.stayDiscoverableDesc' | translate }}
               </p>
             </div>
           </div>
         </div>
         <div *ngIf="!hasAnyData && !loadingRoles && !loadingScore && !loadingVisibility" class="mt-4 border border-dashed border-stone-300 bg-stone-50 px-3 py-2 text-xs text-stone-500">
-          Upload a CV or complete a mock interview to populate the future-readiness overview and pivot roles.
+          {{ 'dashboard.uploadCvPlaceholder' | translate }}
         </div>
       </div>
     </aside>
@@ -649,7 +649,7 @@
   <div class="sticky bottom-0 left-0 right-0 border-t border-stone-200 bg-white/80 px-4 py-3 backdrop-blur md:static md:px-0 md:py-0 md:border-none md:bg-transparent">
     <div class="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-end">
       <div class="text-xs text-stone-500 md:text-right">
-        Explore positions or move forward if the overview looks right.
+        {{ 'dashboard.explorePositions' | translate }}
       </div>
       <div class="flex flex-col gap-2 md:flex-row">
         <button
@@ -658,7 +658,7 @@
           class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors md:w-auto"
           (click)="analyzeReadiness()"
         >
-          Analyze readiness
+          {{ 'dashboard.analyzeReadiness' | translate }}
         </button>
         <button
           *ngIf="currentStep === 3"
@@ -666,7 +666,7 @@
           class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors md:w-auto"
           (click)="goToRoadmap()"
         >
-          Generate roadmap
+          {{ 'dashboard.generateRoadmap' | translate }}
         </button>
         <button
           *ngIf="currentStep === 4"
@@ -674,14 +674,14 @@
           class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors md:w-auto"
           (click)="goToStep(3)"
         >
-          Back to analysis
+          {{ 'dashboard.backToAnalysis' | translate }}
         </button>
         <button
           type="button"
           class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors md:w-auto"
           (click)="goToDashboard()"
         >
-          Continue
+          {{ 'dashboard.continue' | translate }}
           <span aria-hidden="true">→</span>
         </button>
       </div>

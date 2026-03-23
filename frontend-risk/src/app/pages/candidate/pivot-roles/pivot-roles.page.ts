@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { ApiClient } from '../../../core/api/api-client.service';
 import { Subject, takeUntil, catchError, of } from 'rxjs';
@@ -46,7 +47,7 @@ interface PlanBlock {
 @Component({
   selector: 'app-pivot-roles-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './pivot-roles.page.html',
   styleUrls: ['./pivot-roles.page.scss']
 })
