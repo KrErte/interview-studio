@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
@@ -11,6 +11,17 @@ import { SocialProofToastComponent } from '../../shared/social-proof-toast/socia
   standalone: true,
   imports: [CommonModule, RouterLink, TranslateModule, SocialProofToastComponent],
   template: `
+    <!-- Sticky CTA bar — appears after scrolling past hero -->
+    @if (showStickyCta) {
+      <div class="fixed top-[57px] left-0 right-0 z-40 bg-red-600 text-white py-2 px-4 flex items-center justify-center gap-4 shadow-md animate-fade-in">
+        <span class="text-sm font-medium hidden sm:inline">Is your career AI-proof?</span>
+        <span class="text-sm font-medium sm:hidden">Check your risk</span>
+        <a routerLink="/session/new" class="px-4 py-1 text-xs font-bold bg-white text-red-600 hover:bg-stone-100 transition-colors">
+          Free Assessment →
+        </a>
+      </div>
+    }
+
     <!-- Hero Section — Editorial Split Screen -->
     <section class="min-h-[calc(100vh-57px)] flex flex-col justify-center px-6 border-b border-stone-200 relative overflow-hidden">
       <!-- Subtle editorial texture -->
@@ -330,9 +341,15 @@ import { SocialProofToastComponent } from '../../shared/social-proof-toast/socia
       0% { transform: translate(0, 0); }
       100% { transform: translate(50px, 50px); }
     }
+    @keyframes fadeIn {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
   `]
 })
 export class LandingComponent implements OnInit, OnDestroy {
+  showStickyCta = false;
   liveAssessments = 1243;
   jobsAtRisk = 47;
   meterProgress = 5;
@@ -349,6 +366,11 @@ export class LandingComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
 
   constructor(private auth: AuthService, private router: Router) {}
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.showStickyCta = window.scrollY > 600;
+  }
 
   ngOnInit(): void {
     // Load pricing from API for dynamic currency
