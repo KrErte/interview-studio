@@ -5,11 +5,12 @@ import { AuthService } from '../../core/auth/auth-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { PaymentApiService, PricingTier } from '../../core/services/payment-api.service';
 import { SocialProofToastComponent } from '../../shared/social-proof-toast/social-proof-toast.component';
+import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, SocialProofToastComponent],
+  imports: [CommonModule, RouterLink, TranslateModule, SocialProofToastComponent, ExitIntentComponent],
   template: `
     <!-- Sticky CTA bar — appears after scrolling past hero -->
     @if (showStickyCta) {
@@ -335,6 +336,7 @@ import { SocialProofToastComponent } from '../../shared/social-proof-toast/socia
     </section>
 
     <app-social-proof-toast />
+    <app-exit-intent />
   `,
   styles: [`
     @keyframes gridMove {
