@@ -38,9 +38,10 @@ import { AuthService } from '../core/auth/auth-api.service';
               {{ currentLang === 'en' ? 'ET' : 'EN' }}
             </button>
 
-            <div class="h-4 w-px bg-stone-200 mx-2"></div>
+            <div class="h-4 w-px bg-stone-200 mx-2 hidden md:block"></div>
 
-            <nav class="flex items-center gap-1">
+            <!-- Desktop nav -->
+            <nav class="hidden md:flex items-center gap-1">
               <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="text-stone-900 font-semibold"
                 class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">{{ 'nav.home' | translate }}</a>
 
@@ -48,7 +49,7 @@ import { AuthService } from '../core/auth/auth-api.service';
                 class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">{{ 'nav.pricing' | translate }}</a>
 
               <!-- Arena Dropdown -->
-              <div class="relative group hidden sm:block">
+              <div class="relative group">
                 <button class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors flex items-center gap-1">
                   Arena
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,19 +57,19 @@ import { AuthService } from '../core/auth/auth-api.service';
                   </svg>
                 </button>
                 <div class="absolute top-full right-0 mt-1 bg-white border border-stone-200 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
-                  <a routerLink="/tools/job-analyzer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">🔬 Job X-Ray</a>
-                  <a routerLink="/arena/interview-simulator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">🎭 Interview Simulator</a>
-                  <a routerLink="/arena/salary-coach" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">💰 Salary Coach</a>
-                  <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">📄 CV Optimizer</a>
-                  <a routerLink="/arena/career-mentor" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">🧠 Career Mentor</a>
-                  <a routerLink="/arena/company-prep" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">🏢 Company Prep</a>
-                  <a routerLink="/arena/linkedin-generator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">🔗 LinkedIn Generator</a>
-                  <a routerLink="/arena/cover-letter" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">✉️ Cover Letter</a>
-                  <a routerLink="/arena/salary-benchmark" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">📊 Salary Benchmark</a>
+                  <a routerLink="/tools/job-analyzer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Job X-Ray</a>
+                  <a routerLink="/arena/interview-simulator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Interview Simulator</a>
+                  <a routerLink="/arena/salary-coach" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Salary Coach</a>
+                  <a routerLink="/arena/cv-optimizer" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">CV Optimizer</a>
+                  <a routerLink="/arena/career-mentor" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Career Mentor</a>
+                  <a routerLink="/arena/company-prep" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Company Prep</a>
+                  <a routerLink="/arena/linkedin-generator" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">LinkedIn Generator</a>
+                  <a routerLink="/arena/cover-letter" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Cover Letter</a>
+                  <a routerLink="/arena/salary-benchmark" class="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900">Salary Benchmark</a>
                 </div>
               </div>
 
-              <div class="h-4 w-px bg-stone-200 mx-1 hidden sm:block"></div>
+              <div class="h-4 w-px bg-stone-200 mx-1"></div>
 
               @if (!auth.isAuthenticated()) {
                 <a routerLink="/login" class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">{{ 'nav.signIn' | translate }}</a>
@@ -78,9 +79,46 @@ import { AuthService } from '../core/auth/auth-api.service';
                 <button (click)="logout()" class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">{{ 'auth.logout' | translate }}</button>
               }
             </nav>
+
+            <!-- Mobile hamburger -->
+            <button (click)="mobileMenuOpen = !mobileMenuOpen" class="md:hidden ml-2 text-stone-500 hover:text-stone-900">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                @if (!mobileMenuOpen) {
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                } @else {
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                }
+              </svg>
+            </button>
           </div>
         </div>
       </header>
+
+      <!-- Mobile menu -->
+      @if (mobileMenuOpen) {
+        <div class="md:hidden border-b border-stone-200 bg-white px-4 py-4 space-y-2">
+          <a routerLink="/" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Home</a>
+          <a routerLink="/pricing" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Pricing</a>
+          <a routerLink="/session/new" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">New Session</a>
+          <a routerLink="/start" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Assess Skills</a>
+          <div class="pt-2 border-t border-stone-200">
+            <span class="text-xs text-stone-400 uppercase tracking-wider">Arena</span>
+            <a routerLink="/arena/interview-simulator" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Interview Simulator</a>
+            <a routerLink="/arena/salary-coach" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Salary Coach</a>
+            <a routerLink="/arena/cv-optimizer" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">CV Optimizer</a>
+            <a routerLink="/arena/career-mentor" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Career Mentor</a>
+          </div>
+          <div class="pt-2 border-t border-stone-200">
+            @if (!auth.isAuthenticated()) {
+              <a routerLink="/login" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Sign in</a>
+              <a routerLink="/register" (click)="mobileMenuOpen = false" class="block py-2 text-sm font-bold text-red-600">Get Started</a>
+            } @else {
+              <a routerLink="/careerrisk" (click)="mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Dashboard</a>
+              <button (click)="logout(); mobileMenuOpen = false" class="block py-2 text-sm text-stone-600 hover:text-stone-900">Sign out</button>
+            }
+          </div>
+        </div>
+      }
 
       <!-- Main content -->
       <main class="flex-1">
@@ -150,6 +188,7 @@ export class PublicShellComponent {
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
   currentLang = this.translate.currentLang || 'en';
+  mobileMenuOpen = false;
 
   toggleLanguage(): void {
     this.currentLang = this.currentLang === 'en' ? 'et' : 'en';

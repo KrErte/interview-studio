@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SessionApiService, SessionResponse } from '../../core/services/session-api.service';
 import { AuthService } from '../../core/auth/auth-api.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { PaymentApiService } from '../../core/services/payment-api.service';
 
 @Component({
   selector: 'app-session-result',
@@ -171,12 +172,12 @@ import { AnalyticsService } from '../../core/services/analytics.service';
               <a routerLink="/pricing"
                 class="block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800">
                 <div class="text-white font-bold">Starter</div>
-                <div class="text-stone-400 text-sm">$7.99/mo &mdash; Full roadmap + tracking</div>
+                <div class="text-stone-400 text-sm">{{ starterPrice() }}/mo &mdash; Full roadmap + tracking</div>
               </a>
               <a routerLink="/pricing"
                 class="block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700">
                 <div class="text-white font-bold">Pro</div>
-                <div class="text-red-100 text-sm">$15.99/mo &mdash; 8 AI tools + unlimited</div>
+                <div class="text-red-100 text-sm">{{ proPrice() }}/mo &mdash; 8 AI tools + unlimited</div>
               </a>
             </div>
 
@@ -222,12 +223,22 @@ export class SessionResultComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly sessionApi = inject(SessionApiService);
   private readonly analytics = inject(AnalyticsService);
+  private readonly paymentApi = inject(PaymentApiService);
 
   loading = signal(true);
   session = signal<SessionResponse | null>(null);
   copied = signal(false);
+  starterPrice = signal('$7.99');
+  proPrice = signal('$15.99');
 
   ngOnInit() {
+    this.paymentApi.getPricing().subscribe(tiers => {
+      const symbol = tiers[0]?.currency === 'EUR' ? '€' : '$';
+      const starter = tiers.find(t => t.id === 'STARTER');
+      const pro = tiers.find(t => t.id === 'ARENA_PRO');
+      if (starter) this.starterPrice.set(symbol + starter.price.toFixed(2));
+      if (pro) this.proPrice.set(symbol + pro.price.toFixed(2));
+    });
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.sessionApi.getSession(id).subscribe({

@@ -19,6 +19,7 @@ import {
   DisruptedRole
 } from '../../../core/models/risk.models';
 import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { PaymentApiService } from '../../../core/services/payment-api.service';
 import { DisruptionTimelineComponent, DisruptionPoint } from './disruption-timeline.component';
 import { ThreatRadarComponent } from './threat-radar.component';
 import { SkillVulnerabilityMatrixComponent } from './skill-vulnerability-matrix.component';
@@ -74,13 +75,15 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
   marketMetrics: MarketMetric[] = [];
   disruptedRoles: DisruptedRole[] = [];
   analysisLoading = false;
+  starterPriceLabel = '$7.99';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private navContext: NavContextService,
     private riskApi: RiskApiService,
-    private auth: AuthService
+    private auth: AuthService,
+    private paymentApi: PaymentApiService
   ) {}
 
   ngOnInit(): void {
@@ -98,6 +101,12 @@ export class CareerriskAssessmentPageComponent implements OnInit, OnDestroy {
     this.sessionId = qpSession || storedSession;
 
     this.loadAssessment();
+
+    this.paymentApi.getPricing().subscribe(tiers => {
+      const symbol = tiers[0]?.currency === 'EUR' ? '€' : '$';
+      const starter = tiers.find(t => t.id === 'STARTER');
+      if (starter) this.starterPriceLabel = symbol + starter.price.toFixed(2);
+    });
   }
 
   ngOnDestroy(): void {
