@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
-import { PaymentApiService } from '../../core/services/payment-api.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { PaymentApiService, PricingTier } from '../../core/services/payment-api.service';
 
 @Component({
   selector: 'app-landing',
@@ -336,15 +336,25 @@ export class LandingComponent implements OnInit, OnDestroy {
   displayScore = 5;
   needleAngle = -81;
 
-  starterPrice = signal('$7.99');
-  proPrice = signal('$15.99');
+  private readonly paymentApi = inject(PaymentApiService);
+  readonly starterPrice = signal('$7.99');
+  readonly proPrice = signal('$15.99');
 
   private animationInterval: any;
   private counterInterval: any;
 
-  constructor(private auth: AuthService, private router: Router, private paymentApi: PaymentApiService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
+    // Load pricing from API for dynamic currency
+    this.paymentApi.getPricing().subscribe(tiers => {
+      const symbol = tiers[0]?.currency === 'EUR' ? '€' : '$';
+      const starter = tiers.find(t => t.id === 'STARTER');
+      const pro = tiers.find(t => t.id === 'ARENA_PRO');
+      if (starter) this.starterPrice.set(symbol + starter.price.toFixed(2));
+      if (pro) this.proPrice.set(symbol + pro.price.toFixed(2));
+    });
+
     // Animate the meter on load — no delay so 0% never flashes
     this.animateMeter();
 
@@ -352,15 +362,6 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.counterInterval = setInterval(() => {
       if (Math.random() > 0.3) this.liveAssessments += Math.floor(Math.random() * 4) + 1;
     }, 5000);
-
-    // Load pricing for currency-aware display
-    this.paymentApi.getPricing().subscribe(tiers => {
-      const sym = tiers[0]?.currency === 'EUR' ? '\u20ac' : '$';
-      const starter = tiers.find(t => t.id === 'STARTER');
-      const pro = tiers.find(t => t.id === 'ARENA_PRO');
-      if (starter) this.starterPrice.set(sym + starter.price.toFixed(2));
-      if (pro) this.proPrice.set(sym + pro.price.toFixed(2));
-    });
   }
 
   ngOnDestroy(): void {

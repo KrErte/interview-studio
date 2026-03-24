@@ -270,10 +270,11 @@ export class PricingComponent implements OnInit {
   readonly checkoutLoading = signal(false);
   readonly isAnnual = signal(false);
   readonly currentTier = this.tierService.tier;
+
   readonly currencySymbol = computed(() => {
     const tiers = this.allTiers();
     if (tiers.length === 0) return '$';
-    return tiers[0].currency === 'EUR' ? '\u20ac' : '$';
+    return tiers[0].currency === 'EUR' ? '€' : '$';
   });
 
   ngOnInit() {

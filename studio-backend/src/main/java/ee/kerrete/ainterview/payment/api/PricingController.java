@@ -22,69 +22,12 @@ public class PricingController {
     @GetMapping
     public List<PricingTier> getPricing(HttpServletRequest request) {
         String ip = getClientIp(request);
-        String currency = geoService.getCurrency(ip);
+        String currency = geoService.getCurrencyForIp(ip);
 
         if ("EUR".equals(currency)) {
-            return buildTiers("EUR", 7.49, 74.90, 6.24, 14.99, 149.90, 12.49);
+            return eurPricing();
         }
-        return buildTiers("USD", 7.99, 79.90, 6.66, 15.99, 159.90, 13.33);
-    }
-
-    private List<PricingTier> buildTiers(String currency,
-                                          double starterPrice, double starterAnnual, double starterAnnualMonthly,
-                                          double proPrice, double proAnnual, double proAnnualMonthly) {
-        return List.of(
-            new PricingTier(
-                "FREE", "Free", 0, currency,
-                List.of(
-                    "Risk assessment + blockers",
-                    "Teaser plan (first 3 days)",
-                    "Job X-Ray (3x/month)",
-                    "Basic assessment",
-                    "No credit card needed"
-                ),
-                false, false, false, null,
-                null, null, null
-            ),
-            new PricingTier(
-                "STARTER", "Starter", starterPrice, currency,
-                List.of(
-                    "Everything in Free",
-                    "Full 30-day roadmap + tasks",
-                    "Task tracking & progress",
-                    "Session history",
-                    "Shareable reports",
-                    "Progress analytics",
-                    "Email reminders",
-                    "Job X-Ray (3x/month)",
-                    "Cancel anytime"
-                ),
-                false, true, true, "month",
-                starterAnnual, starterAnnualMonthly, "MOST POPULAR"
-            ),
-            new PricingTier(
-                "ARENA_PRO", "Pro", proPrice, currency,
-                List.of(
-                    "Everything in Starter",
-                    "NEW:Interview Simulator (AI)",
-                    "NEW:Salary Negotiation Coach",
-                    "NEW:CV/LinkedIn Optimizer",
-                    "NEW:AI Career Mentor",
-                    "NEW:Company-Specific Prep",
-                    "NEW:LinkedIn Summary Generator",
-                    "NEW:Cover Letter Generator",
-                    "NEW:Salary Benchmark Dashboard",
-                    "Interview score tracking",
-                    "PDF report export",
-                    "Unlimited Job X-Ray",
-                    "Priority AI processing",
-                    "Multiple CV sessions",
-                    "Cancel anytime"
-                ),
-                false, false, true, "month",
-                proAnnual, proAnnualMonthly, "BEST VALUE"
-            )
-        );
+        return usdPricing();
     }
 
     private String getClientIp(HttpServletRequest request) {
@@ -97,5 +40,92 @@ public class PricingController {
             return realIp;
         }
         return request.getRemoteAddr();
+    }
+
+    private List<PricingTier> usdPricing() {
+        return List.of(
+            new PricingTier(
+                "FREE", "Free", 0, "USD",
+                features("free"),
+                false, false, false, null,
+                null, null, null
+            ),
+            new PricingTier(
+                "STARTER", "Starter", 7.99, "USD",
+                features("starter"),
+                false, true, true, "month",
+                79.90, 6.66, "MOST POPULAR"
+            ),
+            new PricingTier(
+                "ARENA_PRO", "Pro", 15.99, "USD",
+                features("pro"),
+                false, false, true, "month",
+                159.90, 13.33, "BEST VALUE"
+            )
+        );
+    }
+
+    private List<PricingTier> eurPricing() {
+        return List.of(
+            new PricingTier(
+                "FREE", "Free", 0, "EUR",
+                features("free"),
+                false, false, false, null,
+                null, null, null
+            ),
+            new PricingTier(
+                "STARTER", "Starter", 7.49, "EUR",
+                features("starter"),
+                false, true, true, "month",
+                74.90, 6.24, "MOST POPULAR"
+            ),
+            new PricingTier(
+                "ARENA_PRO", "Pro", 14.99, "EUR",
+                features("pro"),
+                false, false, true, "month",
+                149.90, 12.49, "BEST VALUE"
+            )
+        );
+    }
+
+    private List<String> features(String tier) {
+        return switch (tier) {
+            case "free" -> List.of(
+                "Risk assessment + blockers",
+                "Teaser plan (first 3 days)",
+                "Job X-Ray (3x/month)",
+                "Basic assessment",
+                "No credit card needed"
+            );
+            case "starter" -> List.of(
+                "Everything in Free",
+                "Full 30-day roadmap + tasks",
+                "Task tracking & progress",
+                "Session history",
+                "Shareable reports",
+                "Progress analytics",
+                "Email reminders",
+                "Job X-Ray (3x/month)",
+                "Cancel anytime"
+            );
+            case "pro" -> List.of(
+                "Everything in Starter",
+                "NEW:Interview Simulator (AI)",
+                "NEW:Salary Negotiation Coach",
+                "NEW:CV/LinkedIn Optimizer",
+                "NEW:AI Career Mentor",
+                "NEW:Company-Specific Prep",
+                "NEW:LinkedIn Summary Generator",
+                "NEW:Cover Letter Generator",
+                "NEW:Salary Benchmark Dashboard",
+                "Interview score tracking",
+                "PDF report export",
+                "Unlimited Job X-Ray",
+                "Priority AI processing",
+                "Multiple CV sessions",
+                "Cancel anytime"
+            );
+            default -> List.of();
+        };
     }
 }
