@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { PaymentApiService, PricingTier } from '../../core/services/payment-api.service';
+import { SocialProofToastComponent } from '../../shared/social-proof-toast/social-proof-toast.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule, SocialProofToastComponent],
   template: `
     <!-- Hero Section — Editorial Split Screen -->
     <section class="min-h-[calc(100vh-57px)] flex flex-col justify-center px-6 border-b border-stone-200 relative overflow-hidden">
@@ -321,6 +322,8 @@ import { PaymentApiService, PricingTier } from '../../core/services/payment-api.
         </a>
       </div>
     </section>
+
+    <app-social-proof-toast />
   `,
   styles: [`
     @keyframes gridMove {
