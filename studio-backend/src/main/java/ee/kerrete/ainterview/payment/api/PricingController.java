@@ -7,11 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/pricing")
 public class PricingController {
+
+    private static final Logger log = LoggerFactory.getLogger(PricingController.class);
 
     private final GeoService geoService;
 
@@ -23,6 +28,12 @@ public class PricingController {
     public List<PricingTier> getPricing(HttpServletRequest request) {
         String ip = getClientIp(request);
         String currency = geoService.getCurrencyForIp(ip);
+        log.info("Pricing request: ip={}, xff={}, realIp={}, remoteAddr={}, currency={}",
+                ip,
+                request.getHeader("X-Forwarded-For"),
+                request.getHeader("X-Real-IP"),
+                request.getRemoteAddr(),
+                currency);
 
         if ("EUR".equals(currency)) {
             return eurPricing();
