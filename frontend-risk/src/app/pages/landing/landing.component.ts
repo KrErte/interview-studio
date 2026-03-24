@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
@@ -343,6 +343,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   private animationInterval: any;
   private counterInterval: any;
 
+  private readonly cdr = inject(ChangeDetectorRef);
+
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
@@ -353,6 +355,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       const pro = tiers.find(t => t.id === 'ARENA_PRO');
       if (starter) this.starterPrice.set(symbol + starter.price.toFixed(2));
       if (pro) this.proPrice.set(symbol + pro.price.toFixed(2));
+      this.cdr.markForCheck();
     });
 
     // Animate the meter on load — no delay so 0% never flashes
