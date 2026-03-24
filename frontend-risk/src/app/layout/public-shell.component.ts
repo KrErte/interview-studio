@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
+import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../core/auth/auth-api.service';
 
 @Component({
   selector: 'app-public-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent, TranslateModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent, TranslateModule, CookieConsentComponent],
   template: `
     <div class="min-h-screen bg-stone-50 text-stone-900 flex flex-col">
 
@@ -180,6 +181,8 @@ import { AuthService } from '../core/auth/auth-api.service';
           </div>
         </div>
       </footer>
+
+      <app-cookie-consent />
     </div>
   `
 })

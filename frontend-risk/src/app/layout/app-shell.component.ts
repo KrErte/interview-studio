@@ -10,11 +10,12 @@ import { UiModeService } from '../core/services/ui-mode.service';
 import { TierService } from '../core/services/tier.service';
 import { AuthService } from '../core/auth/auth-api.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.component';
 
 @Component({
   selector: 'app-app-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule, CookieConsentComponent],
   template: `
     <div class="min-h-screen bg-stone-50 text-stone-900 flex flex-col">
       <header class="border-b border-stone-200 bg-white sticky top-0 z-50">
@@ -166,6 +167,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         <app-careerrisk-stepper *ngIf="isCareerRiskRoute && isOnboarding"></app-careerrisk-stepper>
         <router-outlet />
       </main>
+
+      <app-cookie-consent />
     </div>
   `
 })
