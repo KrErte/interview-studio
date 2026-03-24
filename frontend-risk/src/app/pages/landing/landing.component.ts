@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth-api.service';
+import { PaymentApiService } from '../../core/services/payment-api.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -290,12 +291,12 @@ import { TranslateModule } from '@ngx-translate/core';
           </div>
           <div class="p-6 border-b sm:border-b-0 sm:border-r border-stone-200 bg-stone-50">
             <div class="text-xs text-stone-400 uppercase tracking-widest mb-3">Starter</div>
-            <div class="text-3xl font-black text-stone-900 mb-1">$7.99<span class="text-base font-normal text-stone-400">/mo</span></div>
+            <div class="text-3xl font-black text-stone-900 mb-1">{{ starterPrice() }}<span class="text-base font-normal text-stone-400">/mo</span></div>
             <div class="text-sm text-stone-500">{{ 'landing.priceStarterDesc' | translate }}</div>
           </div>
           <div class="p-6">
             <div class="text-xs text-red-600 uppercase tracking-widest mb-3 font-bold">Pro</div>
-            <div class="text-3xl font-black text-stone-900 mb-1">$15.99<span class="text-base font-normal text-stone-400">/mo</span></div>
+            <div class="text-3xl font-black text-stone-900 mb-1">{{ proPrice() }}<span class="text-base font-normal text-stone-400">/mo</span></div>
             <div class="text-sm text-stone-500">{{ 'landing.priceProDesc' | translate }}</div>
           </div>
         </div>
@@ -335,10 +336,13 @@ export class LandingComponent implements OnInit, OnDestroy {
   displayScore = 5;
   needleAngle = -81;
 
+  starterPrice = signal('$7.99');
+  proPrice = signal('$15.99');
+
   private animationInterval: any;
   private counterInterval: any;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private paymentApi: PaymentApiService) {}
 
   ngOnInit(): void {
     // Animate the meter on load — no delay so 0% never flashes
@@ -348,6 +352,15 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.counterInterval = setInterval(() => {
       if (Math.random() > 0.3) this.liveAssessments += Math.floor(Math.random() * 4) + 1;
     }, 5000);
+
+    // Load pricing for currency-aware display
+    this.paymentApi.getPricing().subscribe(tiers => {
+      const sym = tiers[0]?.currency === 'EUR' ? '\u20ac' : '$';
+      const starter = tiers.find(t => t.id === 'STARTER');
+      const pro = tiers.find(t => t.id === 'ARENA_PRO');
+      if (starter) this.starterPrice.set(sym + starter.price.toFixed(2));
+      if (pro) this.proPrice.set(sym + pro.price.toFixed(2));
+    });
   }
 
   ngOnDestroy(): void {

@@ -147,15 +147,15 @@
     "faqFreeTitle": "What's included in Free?",
     "faqFreeDesc": "You get a career risk assessment, blockers analysis, a teaser action plan (first 3 days), and 3 Job X-Ray analyses per month. No credit card required.",
     "faqStarterTitle": "What does Starter unlock?",
-    "faqStarterDesc": "Starter ($7.99/mo) gives you the full 30-day roadmap with tasks, task tracking and progress, session history, shareable reports, progress analytics, email reminders, and 3 Job X-Ray analyses per month.",
+    "faqStarterDesc": "Starter gives you the full 30-day roadmap with tasks, task tracking and progress, session history, shareable reports, progress analytics, email reminders, and 3 Job X-Ray analyses per month. See current pricing above.",
     "faqProTitle": "What does Pro unlock?",
-    "faqProDesc": "Pro ($15.99/mo) includes everything in Starter plus 8 AI-powered Arena tools: Interview Simulator, Salary Coach, CV Optimizer, AI Career Mentor, Company-Specific Prep, LinkedIn Summary Generator, Cover Letter Generator, Salary Benchmark Dashboard, plus interview score tracking, PDF export, and unlimited Job X-Ray.",
+    "faqProDesc": "Pro includes everything in Starter plus 8 AI-powered Arena tools: Interview Simulator, Salary Coach, CV Optimizer, AI Career Mentor, Company-Specific Prep, LinkedIn Summary Generator, Cover Letter Generator, Salary Benchmark Dashboard, plus interview score tracking, PDF export, and unlimited Job X-Ray. See current pricing above.",
     "faqCancelTitle": "Can I cancel anytime?",
     "faqCancelDesc": "Yes! Cancel anytime from your Stripe billing portal. You'll keep access until the end of your billing period.",
     "faqBillingTitle": "How does billing work?",
     "faqBillingDesc": "Subscriptions are billed via Stripe. Choose monthly or annual billing. Annual plans save you 2 months compared to monthly.",
     "faqAnnualTitle": "How does annual billing work?",
-    "faqAnnualDesc": "Annual plans are billed once per year at a discounted rate. Starter is $79.90/year ($6.66/mo) and Pro is $159.90/year ($13.33/mo) \u2014 saving you 2 months each year."
+    "faqAnnualDesc": "Annual plans are billed once per year at a discounted rate, saving you 2 months compared to monthly billing. Check the toggle above to see annual prices."
   },
   "contact": {
     "title": "Get in Touch",

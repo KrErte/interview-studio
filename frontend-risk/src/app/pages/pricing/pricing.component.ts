@@ -103,17 +103,17 @@ import { TranslateModule } from '@ngx-translate/core';
                     <span class="text-4xl font-bold text-stone-400">{{ 'pricing.free' | translate }}</span>
                     <span class="text-sm text-stone-400">{{ 'pricing.forever' | translate }}</span>
                   } @else if (isAnnual() && tier.annualMonthlyPrice) {
-                    <span class="text-4xl font-bold text-stone-900">&#36;{{ tier.annualMonthlyPrice | number:'1.2-2' }}</span>
+                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.annualMonthlyPrice | number:'1.2-2' }}</span>
                     <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
-                    <span class="ml-2 text-sm text-stone-400 line-through">&#36;{{ tier.price }}</span>
+                    <span class="ml-2 text-sm text-stone-400 line-through">{{ currencySymbol() }}{{ tier.price }}</span>
                   } @else {
-                    <span class="text-4xl font-bold text-stone-900">&#36;{{ tier.price }}</span>
+                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.price }}</span>
                     <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
                   }
                 </div>
                 @if (isAnnual() && tier.annualPrice) {
                   <div class="text-xs text-stone-400 mt-1">
-                    {{ 'pricing.billedAnnually' | translate }} &#36;{{ tier.annualPrice }}
+                    {{ 'pricing.billedAnnually' | translate }} {{ currencySymbol() }}{{ tier.annualPrice }}
                   </div>
                 }
               </div>
@@ -270,6 +270,11 @@ export class PricingComponent implements OnInit {
   readonly checkoutLoading = signal(false);
   readonly isAnnual = signal(false);
   readonly currentTier = this.tierService.tier;
+  readonly currencySymbol = computed(() => {
+    const tiers = this.allTiers();
+    if (tiers.length === 0) return '$';
+    return tiers[0].currency === 'EUR' ? '\u20ac' : '$';
+  });
 
   ngOnInit() {
     this.paymentApi.getPricing().subscribe({
