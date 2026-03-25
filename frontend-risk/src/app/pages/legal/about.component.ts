@@ -82,21 +82,6 @@ import { RouterLink } from '@angular/router';
         </div>
       </div>
 
-      <!-- Team -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-black text-stone-900 text-center mb-8">The Team</h2>
-        <div class="max-w-lg mx-auto p-8 border border-stone-200 bg-white text-center">
-          <div class="w-20 h-20 mx-auto bg-stone-900 flex items-center justify-center text-2xl font-bold text-white mb-4">
-            KE
-          </div>
-          <h4 class="text-lg font-bold text-stone-900">Kristo Erte</h4>
-          <p class="text-red-600 text-sm mb-3">Founder & Developer</p>
-          <p class="text-stone-500 text-sm leading-relaxed">
-            Full-stack developer with a passion for career tech. Building tools that help people make better career decisions using data and AI.
-          </p>
-        </div>
-      </div>
-
       <!-- CTA -->
       <div class="text-center">
         <h2 class="text-2xl font-black text-stone-900 mb-4">Ready to check your career risk?</h2>
