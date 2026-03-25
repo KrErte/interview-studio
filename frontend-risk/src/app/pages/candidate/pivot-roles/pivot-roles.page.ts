@@ -208,7 +208,11 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   goToQuestions(): void {
-    this.router.navigateByUrl('/careerrisk/questions');
+    const queryParams: any = {};
+    if (this.profileRole) {
+      queryParams.role = this.profileRole;
+    }
+    this.router.navigate(['/careerrisk/questions'], { queryParams });
   }
 
   goToAssessment(): void {

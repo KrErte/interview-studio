@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavContextService } from '../../../core/services/nav-context.service';
 import { RiskApiService } from '../../../core/services/risk-api.service';
 import { ExperienceInput, RiskQuestion } from '../../../core/models/risk.models';
@@ -28,10 +28,13 @@ export class CareerriskQuestionsPageComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
+  private currentRole = '';
+
   constructor(
     private riskApi: RiskApiService,
     private navContext: NavContextService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +46,7 @@ export class CareerriskQuestionsPageComponent implements OnInit, OnDestroy {
       { label: 'Roadmap', key: 'ROADMAP' }
     ]);
     this.navContext.setActiveKey('QUESTIONS');
+    this.currentRole = this.route.snapshot.queryParamMap.get('role') || '';
     this.startAssessment();
   }
 
@@ -56,7 +60,7 @@ export class CareerriskQuestionsPageComponent implements OnInit, OnDestroy {
     this.error = null;
     const experience: ExperienceInput = {
       yearsOfExperience: 0,
-      currentRole: '',
+      currentRole: this.currentRole,
       seniority: 'Mid',
       industry: '',
       stack: ''

@@ -3,6 +3,7 @@ package ee.kerrete.ainterview.risk.api;
 import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.model.UserTier;
 import ee.kerrete.ainterview.repository.AppUserRepository;
+import ee.kerrete.ainterview.risk.service.RoleQuestionBank;
 import ee.kerrete.ainterview.security.AuthenticatedUser;
 import ee.kerrete.ainterview.support.SessionIdParser;
 import lombok.RequiredArgsConstructor;
@@ -25,36 +26,12 @@ public class AssessmentController {
 
     private final SessionIdParser sessionIdParser;
     private final AppUserRepository appUserRepository;
+    private final RoleQuestionBank roleQuestionBank;
 
     // Track question progress per session
     private final java.util.concurrent.ConcurrentHashMap<String, Integer> sessionQuestionIndex = new java.util.concurrent.ConcurrentHashMap<>();
-
-    private static final List<Map<String, Object>> QUESTIONS = List.of(
-        Map.of(
-            "id", "q1",
-            "type", "TEXT",
-            "text", "Can you describe a recent professional challenge you faced and how you approached solving it?",
-            "title", "Problem-Solving",
-            "placeholder", "Describe the challenge, your approach, and the outcome...",
-            "required", true
-        ),
-        Map.of(
-            "id", "q2",
-            "type", "TEXT",
-            "text", "How do you typically stay updated with new skills and industry trends in your field?",
-            "title", "Continuous Learning",
-            "placeholder", "Share your learning strategies and recent skill acquisitions...",
-            "required", true
-        ),
-        Map.of(
-            "id", "q3",
-            "type", "TEXT",
-            "text", "Describe your experience collaborating with cross-functional teams. What communication practices work best for you?",
-            "title", "Team Collaboration",
-            "placeholder", "Discuss team dynamics, communication methods, and collaboration outcomes...",
-            "required", true
-        )
-    );
+    // Store role-specific questions per session
+    private final java.util.concurrent.ConcurrentHashMap<String, List<Map<String, Object>>> sessionQuestions = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
      * Start a new assessment session.
@@ -63,6 +40,13 @@ public class AssessmentController {
     public ResponseEntity<StartAssessmentResponse> startAssessment(@RequestBody(required = false) StartAssessmentRequest request) {
         String sessionId = "session-" + System.currentTimeMillis();
         sessionQuestionIndex.put(sessionId, 0);
+
+        String currentRole = "";
+        if (request != null && request.experience() != null) {
+            currentRole = request.experience().currentRole();
+        }
+        sessionQuestions.put(sessionId, roleQuestionBank.getQuestionsForRole(currentRole));
+
         return ResponseEntity.ok(new StartAssessmentResponse(sessionId));
     }
 
@@ -82,7 +66,9 @@ public class AssessmentController {
         String sessionId = request.get("sessionId");
         int idx = sessionQuestionIndex.getOrDefault(sessionId, 0);
 
-        if (idx >= QUESTIONS.size()) {
+        List<Map<String, Object>> questions = sessionQuestions.getOrDefault(sessionId, roleQuestionBank.getQuestionsForRole(""));
+
+        if (idx >= questions.size()) {
             return ResponseEntity.status(404).body(Map.of(
                 "sessionId", sessionId,
                 "error", "No more questions",
@@ -90,12 +76,12 @@ public class AssessmentController {
             ));
         }
 
-        Map<String, Object> question = QUESTIONS.get(idx);
+        Map<String, Object> question = questions.get(idx);
         return ResponseEntity.ok(Map.of(
             "sessionId", sessionId,
             "question", question,
             "index", idx + 1,
-            "total", QUESTIONS.size()
+            "total", questions.size()
         ));
     }
 
