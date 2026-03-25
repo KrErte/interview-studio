@@ -1,9 +1,12 @@
 import { inject } from '@angular/core';
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenStorage = inject(TokenStorageService);
+  const router = inject(Router);
   const token = tokenStorage.getToken();
 
   const path = (() => {
@@ -30,5 +33,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     }
   });
 
-  return next(authReq);
+  return next(authReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        tokenStorage.clear();
+        router.navigateByUrl('/login');
+      }
+      return throwError(() => error);
+    })
+  );
 };
