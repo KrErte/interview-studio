@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.model.CareerSession;
 import ee.kerrete.ainterview.repository.CareerSessionRepository;
-import ee.kerrete.ainterview.service.ClaudeApiService;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionRequest;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionResponse;
 import ee.kerrete.ainterview.session.dto.CreateSessionRequest;
@@ -13,12 +12,15 @@ import ee.kerrete.ainterview.session.dto.SessionResponse;
 import ee.kerrete.ainterview.session.dto.SessionSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,16 @@ public class CareerSessionService {
 
     private final CareerSessionRepository repository;
     private final ObjectMapper objectMapper;
-    private final ClaudeApiService claudeApiService;
+    private final RestTemplate clarifyingRestTemplate = new RestTemplate();
+
+    @Value("${openai.api-key:${OPENAI_API_KEY:dummy-openai-key}}")
+    private String openaiApiKey;
+
+    @Value("${openai.base-url:https://api.openai.com/v1}")
+    private String openaiBaseUrl;
+
+    @Value("${openai.model:gpt-4.1-mini}")
+    private String openaiModel;
 
     private static final int TOTAL_CLARIFYING_QUESTIONS = 3;
 
@@ -104,18 +115,20 @@ public class CareerSessionService {
         }
 
         try {
-            String question = callClaudeForQuestion(request, questionNumber);
+            String question = callOpenAiForQuestion(request, questionNumber);
             return new ClarifyingQuestionResponse(question, questionNumber, TOTAL_CLARIFYING_QUESTIONS,
                     questionNumber >= TOTAL_CLARIFYING_QUESTIONS);
         } catch (Exception e) {
-            log.error("Failed to generate clarifying question via Claude, using fallback", e);
+            log.error("Failed to generate clarifying question via OpenAI, using fallback", e);
             String fallback = getFallbackQuestion(questionNumber, request.targetRole());
             return new ClarifyingQuestionResponse(fallback, questionNumber, TOTAL_CLARIFYING_QUESTIONS,
                     questionNumber >= TOTAL_CLARIFYING_QUESTIONS);
         }
     }
 
-    private String callClaudeForQuestion(ClarifyingQuestionRequest request, int questionNumber) {
+    private String callOpenAiForQuestion(ClarifyingQuestionRequest request, int questionNumber) throws Exception {
+        String url = openaiBaseUrl.endsWith("/") ? openaiBaseUrl + "chat/completions" : openaiBaseUrl + "/chat/completions";
+
         StringBuilder previousContext = new StringBuilder();
         if (request.previousQAs() != null) {
             for (var qa : request.previousQAs()) {
@@ -141,20 +154,32 @@ public class CareerSessionService {
                     previousContext.toString()
                 );
 
-        String response = claudeApiService.createChatCompletion(systemPrompt, userPrompt);
+        Map<String, Object> body = Map.of(
+                "model", openaiModel,
+                "messages", List.of(
+                        Map.of("role", "system", "content", systemPrompt),
+                        Map.of("role", "user", "content", userPrompt)
+                ),
+                "temperature", 0.7
+        );
 
-        // Extract JSON from response
-        String jsonStr = extractJson(response);
-        try {
-            JsonNode json = objectMapper.readTree(jsonStr);
-            String question = json.path("question").asText();
-            if (question == null || question.isBlank()) {
-                throw new RuntimeException("Empty question in Claude response");
-            }
-            return question;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse Claude response: " + response, e);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(openaiApiKey);
+
+        ResponseEntity<String> response = clarifyingRestTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(body, headers), String.class);
+
+        String responseBody = response.getBody();
+        if (responseBody == null || responseBody.isBlank()) {
+            throw new RuntimeException("Empty response from OpenAI");
         }
+
+        JsonNode root = objectMapper.readTree(responseBody);
+        String content = root.path("choices").get(0).path("message").path("content").asText();
+        String jsonStr = extractJson(content);
+        JsonNode json = objectMapper.readTree(jsonStr);
+        return json.path("question").asText();
     }
 
     private String extractJson(String content) {
