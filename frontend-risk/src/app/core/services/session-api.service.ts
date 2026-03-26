@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiClient } from '../api/api-client.service';
 
+export interface QAPair {
+  question: string;
+  answer: string;
+}
+
 export interface CreateSessionRequest {
   mode: 'SIMPLE' | 'ADVANCED';
   targetRole: string;
@@ -12,6 +17,21 @@ export interface CreateSessionRequest {
   recentWorkExamples?: string;
   mainBlocker?: string;
   cvText?: string;
+  clarifyingAnswers?: QAPair[];
+}
+
+export interface ClarifyingQuestionRequest {
+  targetRole: string;
+  experienceLevel: string;
+  mainChallenge: string;
+  previousQAs: QAPair[];
+}
+
+export interface ClarifyingQuestionResponse {
+  question: string;
+  questionNumber: number;
+  totalQuestions: number;
+  done: boolean;
 }
 
 export interface PlanItem {
@@ -64,6 +84,10 @@ export class SessionApiService {
 
   getSharedSession(shareId: string): Observable<SessionResponse> {
     return this.api.get<SessionResponse>(`/sessions/share/${shareId}`);
+  }
+
+  getClarifyingQuestion(request: ClarifyingQuestionRequest): Observable<ClarifyingQuestionResponse> {
+    return this.api.post<ClarifyingQuestionResponse>('/sessions/clarifying-questions', request);
   }
 
   // ─── Mock Interview ───────────────────────────────────────────────────────

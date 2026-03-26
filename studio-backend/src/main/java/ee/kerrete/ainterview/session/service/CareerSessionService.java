@@ -1,9 +1,13 @@
 package ee.kerrete.ainterview.session.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.model.CareerSession;
 import ee.kerrete.ainterview.repository.CareerSessionRepository;
+import ee.kerrete.ainterview.service.ClaudeApiService;
+import ee.kerrete.ainterview.session.dto.ClarifyingQuestionRequest;
+import ee.kerrete.ainterview.session.dto.ClarifyingQuestionResponse;
 import ee.kerrete.ainterview.session.dto.CreateSessionRequest;
 import ee.kerrete.ainterview.session.dto.SessionResponse;
 import ee.kerrete.ainterview.session.dto.SessionSummary;
@@ -23,6 +27,9 @@ public class CareerSessionService {
 
     private final CareerSessionRepository repository;
     private final ObjectMapper objectMapper;
+    private final ClaudeApiService claudeApiService;
+
+    private static final int TOTAL_CLARIFYING_QUESTIONS = 3;
 
     @Transactional
     public SessionResponse createSession(CreateSessionRequest request, Long userId) {
@@ -37,6 +44,7 @@ public class CareerSessionService {
             .recentWorkExamples(request.recentWorkExamples())
             .mainBlocker(request.mainBlocker())
             .cvText(request.cvText())
+            .clarifyingAnswersJson(request.clarifyingAnswers() != null ? toJson(request.clarifyingAnswers()) : null)
             .build();
 
         // Deterministic scoring
@@ -83,6 +91,88 @@ public class CareerSessionService {
                 s.getCreatedAt() != null ? s.getCreatedAt().toString() : null
             ))
             .toList();
+    }
+
+    // ================= Clarifying Questions =================
+
+    public ClarifyingQuestionResponse generateClarifyingQuestion(ClarifyingQuestionRequest request) {
+        int answered = request.previousQAs() != null ? request.previousQAs().size() : 0;
+        int questionNumber = answered + 1;
+
+        if (questionNumber > TOTAL_CLARIFYING_QUESTIONS) {
+            return new ClarifyingQuestionResponse(null, TOTAL_CLARIFYING_QUESTIONS, TOTAL_CLARIFYING_QUESTIONS, true);
+        }
+
+        try {
+            String question = callClaudeForQuestion(request, questionNumber);
+            return new ClarifyingQuestionResponse(question, questionNumber, TOTAL_CLARIFYING_QUESTIONS,
+                    questionNumber >= TOTAL_CLARIFYING_QUESTIONS);
+        } catch (Exception e) {
+            log.error("Failed to generate clarifying question via Claude, using fallback", e);
+            String fallback = getFallbackQuestion(questionNumber, request.targetRole());
+            return new ClarifyingQuestionResponse(fallback, questionNumber, TOTAL_CLARIFYING_QUESTIONS,
+                    questionNumber >= TOTAL_CLARIFYING_QUESTIONS);
+        }
+    }
+
+    private String callClaudeForQuestion(ClarifyingQuestionRequest request, int questionNumber) {
+        StringBuilder previousContext = new StringBuilder();
+        if (request.previousQAs() != null) {
+            for (var qa : request.previousQAs()) {
+                previousContext.append("Q: ").append(qa.question()).append("\nA: ").append(qa.answer()).append("\n\n");
+            }
+        }
+
+        String systemPrompt = """
+            You are a career advisor helping someone prepare for job applications.
+            Given the user's target role, experience level, main challenge, and their previous answers,
+            generate ONE specific clarifying question to better understand their situation.
+            The question should be practical and help produce a better career assessment.
+            This is question %d of %d total.
+            Output MUST be ONLY a JSON object, no markdown, no backticks.
+            Schema: {"question": "your question here"}
+            """.formatted(questionNumber, TOTAL_CLARIFYING_QUESTIONS);
+
+        String userPrompt = "Target role: %s\nExperience level: %s\nMain challenge: %s\n\nPrevious Q&As:\n%s\nGenerate the next clarifying question."
+                .formatted(
+                    request.targetRole() != null ? request.targetRole() : "",
+                    request.experienceLevel() != null ? request.experienceLevel() : "",
+                    request.mainChallenge() != null ? request.mainChallenge() : "",
+                    previousContext.toString()
+                );
+
+        String response = claudeApiService.createChatCompletion(systemPrompt, userPrompt);
+
+        // Extract JSON from response
+        String jsonStr = extractJson(response);
+        try {
+            JsonNode json = objectMapper.readTree(jsonStr);
+            String question = json.path("question").asText();
+            if (question == null || question.isBlank()) {
+                throw new RuntimeException("Empty question in Claude response");
+            }
+            return question;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse Claude response: " + response, e);
+        }
+    }
+
+    private String extractJson(String content) {
+        int start = content.indexOf('{');
+        int end = content.lastIndexOf('}');
+        if (start == -1 || end == -1 || end <= start) {
+            throw new RuntimeException("No JSON in response: " + content);
+        }
+        return content.substring(start, end + 1);
+    }
+
+    private String getFallbackQuestion(int num, String role) {
+        String r = role != null ? role : "this role";
+        return switch (num) {
+            case 1 -> "What specific aspect of " + r + " interests you most, and what experience do you have in that area?";
+            case 2 -> "Can you describe a recent project or achievement that's most relevant to " + r + "?";
+            default -> "What would you say is the biggest gap between your current skills and what's needed for " + r + "?";
+        };
     }
 
     // ================= Deterministic Scoring =================

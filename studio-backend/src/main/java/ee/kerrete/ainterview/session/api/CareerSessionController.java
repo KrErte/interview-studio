@@ -1,6 +1,8 @@
 package ee.kerrete.ainterview.session.api;
 
 import ee.kerrete.ainterview.model.AppUser;
+import ee.kerrete.ainterview.session.dto.ClarifyingQuestionRequest;
+import ee.kerrete.ainterview.session.dto.ClarifyingQuestionResponse;
 import ee.kerrete.ainterview.session.dto.CreateSessionRequest;
 import ee.kerrete.ainterview.session.dto.SessionResponse;
 import ee.kerrete.ainterview.session.dto.SessionSummary;
@@ -27,6 +29,12 @@ public class CareerSessionController {
         Long userId = extractUserId(auth);
         SessionResponse response = service.createSession(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/clarifying-questions")
+    public ClarifyingQuestionResponse getClarifyingQuestion(
+            @RequestBody ClarifyingQuestionRequest request) {
+        return service.generateClarifyingQuestion(request);
     }
 
     @GetMapping("/{id}")

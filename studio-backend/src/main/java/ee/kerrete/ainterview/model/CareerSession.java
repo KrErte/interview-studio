@@ -86,6 +86,10 @@ public class CareerSession {
     @Column(name = "pivot_suggestion", length = 500)
     private String pivotSuggestion;
 
+    @Lob
+    @Column(name = "clarifying_answers_json", columnDefinition = "CLOB")
+    private String clarifyingAnswersJson;
+
     @Column(name = "payment_intent_id", length = 100)
     private String paymentIntentId;
 

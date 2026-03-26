@@ -140,7 +140,18 @@
     "getAssessment": "Get My Assessment",
     "getFullAssessment": "Get Full Assessment",
     "analyzing": "Analyzing...",
-    "skipSubmit": "Skip & Submit"
+    "skipSubmit": "Skip & Submit",
+    "clarifying": {
+      "title": "A few more questions",
+      "subtitle": "Our AI is generating personalized questions based on your profile to give you a better assessment.",
+      "aiPersonalized": "AI-Personalized",
+      "generating": "Generating question...",
+      "question": "Question",
+      "answerPlaceholder": "Type your answer here...",
+      "answerAndNext": "Answer & Next",
+      "finishAndAssess": "Finish & Get Assessment",
+      "skipAll": "Skip all"
+    }
   },
   "pricing": {
     "title": "Simple, transparent pricing",

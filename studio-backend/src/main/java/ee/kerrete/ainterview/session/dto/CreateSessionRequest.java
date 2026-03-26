@@ -1,5 +1,7 @@
 package ee.kerrete.ainterview.session.dto;
 
+import java.util.List;
+
 public record CreateSessionRequest(
     String mode,           // SIMPLE or ADVANCED
     String targetRole,
@@ -9,5 +11,6 @@ public record CreateSessionRequest(
     String urgency,            // Advanced Q3
     String recentWorkExamples, // Advanced Q4
     String mainBlocker,        // Advanced Q5
-    String cvText              // Advanced CV upload
+    String cvText,             // Advanced CV upload
+    List<ClarifyingQuestionRequest.QAPair> clarifyingAnswers
 ) {}
