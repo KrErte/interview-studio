@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { CommandPaletteComponent } from './shared/command-palette/command-palette.component';
 import { KeyboardShortcutsComponent } from './shared/keyboard-shortcuts/keyboard-shortcuts.component';
 
@@ -16,9 +15,5 @@ import { KeyboardShortcutsComponent } from './shared/keyboard-shortcuts/keyboard
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang('en');
-    const savedLang = localStorage.getItem('lang') || 'en';
-    this.translate.use(savedLang);
-  }
+  constructor() {}
 }
