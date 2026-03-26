@@ -125,6 +125,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/arena/**").authenticated()
                     // Career Sessions - public endpoints
                     .requestMatchers(HttpMethod.POST, "/api/sessions").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/sessions/clarifying-questions").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/sessions/share/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/sessions/*").permitAll()
                     // Mock Interview - access controlled in controller (paid session OR STARTER+)
