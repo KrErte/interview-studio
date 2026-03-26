@@ -104,6 +104,9 @@ public class SecurityConfig {
                     // Risk analysis endpoints - all public for now
                     .requestMatchers("/api/risk/**").permitAll()
                     .requestMatchers("/api/risk-analysis/**").permitAll()
+                    // Marketplace search - public
+                    .requestMatchers(HttpMethod.GET, "/api/marketplace/search").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/candidate/marketplace/search").permitAll()
                     // TaskExposure V1 - public (no auth required)
                     .requestMatchers("/api/taskexposure/**").permitAll()
                     // Payment - public endpoints

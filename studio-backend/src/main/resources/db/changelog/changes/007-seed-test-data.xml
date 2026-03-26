@@ -9,6 +9,7 @@
         $2a$10$53Yz0CTqkl8D1yWdp4inYOZsNT85aR1dVw73w.wHkmVckTcoyWA9C -->
 
     <changeSet id="007-seed-demo-users" author="seed">
+        <validCheckSum>any</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <tableIsEmpty tableName="app_users"/>
         </preConditions>
@@ -52,7 +53,7 @@
             <column name="email" value="hr@demo.local"/>
             <column name="password" value="$2a$10$53Yz0CTqkl8D1yWdp4inYOZsNT85aR1dVw73w.wHkmVckTcoyWA9C"/>
             <column name="full_name" value="HR Demo"/>
-            <column name="role" value="HR"/>
+            <column name="role" value="USER"/>
             <column name="enabled" valueBoolean="true"/>
             <column name="created_at" valueDate="2024-01-01T08:04:00"/>
             <column name="updated_at" valueDate="2024-01-01T08:04:00"/>
@@ -60,6 +61,7 @@
     </changeSet>
 
     <changeSet id="007-seed-related-data" author="seed">
+        <validCheckSum>any</validCheckSum>
         <!-- Only seed rows for test users if not already present -->
         <preConditions onFail="MARK_RAN">
             <tableIsEmpty tableName="training_progress"/>
@@ -98,7 +100,7 @@
             <column name="total_job_analyses" valueNumeric="5"/>
             <column name="total_training_sessions" valueNumeric="2"/>
             <column name="training_progress_percent" valueNumeric="100"/>
-            <column name="status" value="COMPLETE"/>
+            <column name="status" value="COMPLETED"/>
             <column name="last_activity_at" valueDate="2024-01-06T12:00:00"/>
             <column name="last_updated" valueDate="2024-01-06T12:00:00"/>
             <column name="last_match_score" valueNumeric="95.3"/>

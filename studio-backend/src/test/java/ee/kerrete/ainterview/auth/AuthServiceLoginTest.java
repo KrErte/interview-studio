@@ -5,6 +5,7 @@ import ee.kerrete.ainterview.auth.service.AuthService;
 import ee.kerrete.ainterview.auth.jwt.JwtService;
 import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.model.UserRole;
+import ee.kerrete.ainterview.model.UserTier;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,7 +106,7 @@ class AuthServiceLoginTest {
                 );
             });
 
-        when(jwtService.generateAccessToken(enabledUser.getEmail(), enabledUser.getRole(), enabledUser.getId()))
+        when(jwtService.generateAccessToken(eq(enabledUser.getEmail()), eq(enabledUser.getRole()), eq(enabledUser.getId()), any(UserTier.class)))
             .thenReturn("access-token");
         when(jwtService.generateRefreshToken(enabledUser.getEmail()))
             .thenReturn("refresh-token");

@@ -1,5 +1,7 @@
 package ee.kerrete.ainterview.api;
 
+import ee.kerrete.ainterview.auth.jwt.JwtAuthenticationFilter;
+import ee.kerrete.ainterview.auth.jwt.JwtService;
 import ee.kerrete.ainterview.dto.RoadmapExportResponse;
 import ee.kerrete.ainterview.roadmap.MarkdownRenderer;
 import ee.kerrete.ainterview.service.RoadmapExportService;
@@ -7,6 +9,7 @@ import ee.kerrete.ainterview.service.RoadmapPdfExporter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -23,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RoadmapExportController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @Import(RoadmapPdfExporter.class)
 class RoadmapExportControllerPdfTest {
 
@@ -34,6 +38,12 @@ class RoadmapExportControllerPdfTest {
 
     @MockBean
     private MarkdownRenderer markdownRenderer;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtService jwtService;
 
     @Test
     void pdfExport_returnsAttachment() throws Exception {

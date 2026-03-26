@@ -19,7 +19,7 @@ class InterviewSessionFlowControllerTest extends AbstractIntegrationTest {
 
     @BeforeEach
     void stubAi() {
-        when(openAiClient.complete(anyString()))
+        when(aiService.complete(anyString()))
             .thenReturn("""
                 [
                   {"question":"Q1?","modelAnswerHint":"H1"},

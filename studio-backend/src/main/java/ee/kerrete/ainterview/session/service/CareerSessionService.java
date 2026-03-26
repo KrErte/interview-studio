@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.model.CareerSession;
 import ee.kerrete.ainterview.repository.CareerSessionRepository;
-import ee.kerrete.ainterview.service.ClaudeApiService;
+import ee.kerrete.ainterview.service.AiService;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionRequest;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionResponse;
 import ee.kerrete.ainterview.session.dto.CreateSessionRequest;
@@ -27,7 +27,7 @@ public class CareerSessionService {
 
     private final CareerSessionRepository repository;
     private final ObjectMapper objectMapper;
-    private final ClaudeApiService claudeApiService;
+    private final AiService claudeApiService;
 
     private static final int TOTAL_CLARIFYING_QUESTIONS = 3;
 

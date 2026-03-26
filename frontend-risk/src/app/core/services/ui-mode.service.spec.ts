@@ -43,11 +43,9 @@ describe('UiModeService', () => {
     });
 
     it('should load "advanced" mode from localStorage if present', () => {
-      // Pre-set localStorage before creating a new service instance
       mockStorage[STORAGE_KEY] = 'advanced';
 
-      // Create a new instance that will read from storage
-      const newService = new UiModeService();
+      const newService = TestBed.runInInjectionContext(() => new UiModeService());
       expect(newService.getMode()).toBe('advanced');
       expect(newService.isAdvanced()).toBe(true);
       expect(newService.isSimple()).toBe(false);
@@ -56,7 +54,7 @@ describe('UiModeService', () => {
     it('should load "simple" mode from localStorage if present', () => {
       mockStorage[STORAGE_KEY] = 'simple';
 
-      const newService = new UiModeService();
+      const newService = TestBed.runInInjectionContext(() => new UiModeService());
       expect(newService.getMode()).toBe('simple');
       expect(newService.isSimple()).toBe(true);
     });
@@ -64,7 +62,7 @@ describe('UiModeService', () => {
     it('should default to "simple" if localStorage contains invalid value', () => {
       mockStorage[STORAGE_KEY] = 'invalid-mode';
 
-      const newService = new UiModeService();
+      const newService = TestBed.runInInjectionContext(() => new UiModeService());
       expect(newService.getMode()).toBe('simple');
     });
   });

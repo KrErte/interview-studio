@@ -1,10 +1,11 @@
 package ee.kerrete.ainterview.softskills.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Builder
 @With
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonDeserialize(builder = SoftSkillMergedProfileDto.SoftSkillMergedProfileDtoBuilder.class)
 public class SoftSkillMergedProfileDto {
 
     @Builder.Default
@@ -29,5 +31,9 @@ public class SoftSkillMergedProfileDto {
     @Builder.Default
     List<MergedDimensionScore> dimensionScoresMerged = List.of();
     Meta meta;
-}
 
+    @JsonPOJOBuilder(withPrefix = "")
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class SoftSkillMergedProfileDtoBuilder {
+    }
+}

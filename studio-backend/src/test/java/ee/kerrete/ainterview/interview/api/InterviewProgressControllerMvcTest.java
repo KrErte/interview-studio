@@ -9,6 +9,9 @@ import ee.kerrete.ainterview.interview.service.InterviewSessionPersistenceServic
 import ee.kerrete.ainterview.model.InterviewSession;
 import ee.kerrete.ainterview.auth.jwt.JwtAuthenticationFilter;
 import ee.kerrete.ainterview.auth.jwt.JwtService;
+import ee.kerrete.ainterview.support.SessionIdParser;
+import ee.kerrete.ainterview.support.SessionIdParser.SessionIdentifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -44,6 +48,22 @@ class InterviewProgressControllerMvcTest {
 
     @MockBean
     private JwtService jwtService;
+
+    @MockBean
+    private SessionIdParser sessionIdParser;
+
+    @BeforeEach
+    void stubSessionIdParser() {
+        when(sessionIdParser.parseRequired(anyString())).thenAnswer(invocation -> {
+            String raw = invocation.getArgument(0);
+            try {
+                UUID uuid = UUID.fromString(raw);
+                return SessionIdentifier.ofUuid(uuid, raw);
+            } catch (IllegalArgumentException e) {
+                throw new ee.kerrete.ainterview.config.BadRequestException("Invalid sessionId. Expected UUID.");
+            }
+        });
+    }
 
     @Test
     void startEndpointIsMapped() throws Exception {
@@ -93,4 +113,3 @@ class InterviewProgressControllerMvcTest {
             .andExpect(status().isOk());
     }
 }
-

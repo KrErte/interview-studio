@@ -80,3 +80,4 @@ ssh_output.txt
 **/gradle_out.txt
 **/output.txt
 .claude/
+.playwright-mcp/

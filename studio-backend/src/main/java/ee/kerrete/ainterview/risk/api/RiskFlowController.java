@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/risk/flow")
@@ -36,9 +37,9 @@ public class RiskFlowController {
     )
     public ResponseEntity<RiskFlowStartResponse> start(
             @Valid @RequestBody RiskFlowStartRequest req,
-            Authentication auth
+            Principal principal
     ) {
-        String email = auth != null ? auth.getName() : null;
+        String email = principal != null ? principal.getName() : null;
         if (!StringUtils.hasText(email)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
         }
@@ -53,9 +54,9 @@ public class RiskFlowController {
     )
     public ResponseEntity<RiskFlowNextResponse> next(
             @Valid @RequestBody RiskFlowNextRequest req,
-            Authentication auth
+            Principal principal
     ) {
-        String email = auth != null ? auth.getName() : null;
+        String email = principal != null ? principal.getName() : null;
         if (!StringUtils.hasText(email)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
         }
@@ -70,9 +71,9 @@ public class RiskFlowController {
     )
     public ResponseEntity<RiskFlowAnswerResponse> answer(
             @Valid @RequestBody RiskFlowAnswerRequest req,
-            Authentication auth
+            Principal principal
     ) {
-        String email = auth != null ? auth.getName() : null;
+        String email = principal != null ? principal.getName() : null;
         if (!StringUtils.hasText(email)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
         }
@@ -87,9 +88,9 @@ public class RiskFlowController {
     )
     public ResponseEntity<RiskFlowEvaluateResponse> evaluate(
             @Valid @RequestBody RiskFlowEvaluateRequest req,
-            Authentication auth
+            Principal principal
     ) {
-        String email = auth != null ? auth.getName() : null;
+        String email = principal != null ? principal.getName() : null;
         if (!StringUtils.hasText(email)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
         }
@@ -97,4 +98,3 @@ public class RiskFlowController {
         return ResponseEntity.ok(response);
     }
 }
-

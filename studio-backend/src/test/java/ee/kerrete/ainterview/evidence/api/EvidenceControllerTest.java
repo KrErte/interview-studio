@@ -1,5 +1,7 @@
 package ee.kerrete.ainterview.evidence.api;
 
+import ee.kerrete.ainterview.auth.jwt.JwtAuthenticationFilter;
+import ee.kerrete.ainterview.auth.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ee.kerrete.ainterview.evidence.dto.CreateEvidenceRequest;
 import ee.kerrete.ainterview.evidence.dto.EvidenceAuditPreviewDto;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -41,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Controller tests for EvidenceController.
  */
 @WebMvcTest(EvidenceController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class EvidenceControllerTest {
 
     @Autowired
@@ -51,6 +55,12 @@ class EvidenceControllerTest {
 
     @MockBean
     private EvidenceService evidenceService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtService jwtService;
 
     private static final String TEST_EMAIL = "test@example.com";
     private static final UUID TEST_ID = UUID.randomUUID();

@@ -38,12 +38,12 @@ public class SessionIdParser {
     private SessionIdentifier parseInternal(String raw) {
         if (isMock(raw)) {
             if (mockAllowed()) {
-                return SessionIdentifier.mock(raw);
+                return SessionIdentifier.ofMock(raw);
             }
             throw new BadRequestException("Invalid sessionId. Expected UUID.");
         }
         try {
-            return SessionIdentifier.uuid(UUID.fromString(raw), raw);
+            return SessionIdentifier.ofUuid(UUID.fromString(raw), raw);
         } catch (IllegalArgumentException ex) {
             throw new BadRequestException("Invalid sessionId. Expected UUID.");
         }
@@ -59,15 +59,15 @@ public class SessionIdParser {
     }
 
     public record SessionIdentifier(UUID uuid, boolean mock, boolean present, String raw) {
-        static SessionIdentifier uuid(UUID uuid, String raw) {
+        public static SessionIdentifier ofUuid(UUID uuid, String raw) {
             return new SessionIdentifier(uuid, false, true, raw);
         }
 
-        static SessionIdentifier mock(String raw) {
+        public static SessionIdentifier ofMock(String raw) {
             return new SessionIdentifier(null, true, true, raw);
         }
 
-        static SessionIdentifier absent() {
+        public static SessionIdentifier absent() {
             return new SessionIdentifier(null, false, false, null);
         }
 

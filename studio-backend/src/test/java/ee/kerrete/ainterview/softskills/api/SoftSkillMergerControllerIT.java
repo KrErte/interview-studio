@@ -32,7 +32,7 @@ class SoftSkillMergerControllerIT extends AbstractIntegrationTest {
                   "growthAreas": ["Stakeholder updates"]
                 }
                 """;
-        when(openAiClient.createChatCompletion(anyString(), anyString()))
+        when(aiService.createChatCompletion(anyString(), anyString()))
                 .thenReturn(aiJson);
 
         SoftSkillMergeRequest request = SoftSkillMergeRequest.builder()

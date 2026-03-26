@@ -45,6 +45,9 @@ dependencies {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+    maxParallelForks = 1
+    forkEvery = 30
+    jvmArgs '-Xmx512m'
 }
 
 bootJar {

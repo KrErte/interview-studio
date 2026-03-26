@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController("interviewObserverLogController")
+@RequestMapping("/api/observer-log")
 @RequiredArgsConstructor
 public class ObserverLogController {
 

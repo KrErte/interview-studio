@@ -1,16 +1,23 @@
 package ee.kerrete.ainterview.risk.api;
 
+import ee.kerrete.ainterview.auth.jwt.JwtAuthenticationFilter;
+import ee.kerrete.ainterview.auth.jwt.JwtService;
 import ee.kerrete.ainterview.dto.ObserverLogCreateCommand;
+import ee.kerrete.ainterview.risk.service.MockRiskService;
+import ee.kerrete.ainterview.support.SessionIdParser;
+import ee.kerrete.ainterview.support.SessionIdParser.SessionIdentifier;
 import ee.kerrete.ainterview.model.ObserverStage;
 import ee.kerrete.ainterview.risk.dto.RefineResponse;
 import ee.kerrete.ainterview.risk.service.ReplaceabilityRiskService;
 import ee.kerrete.ainterview.interview.service.InterviewProfileService;
 import ee.kerrete.ainterview.repository.TrainingTaskRepository;
 import ee.kerrete.ainterview.service.ObserverLogService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,10 +27,12 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RiskController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class RiskControllerLogTest {
 
     @Autowired
@@ -33,6 +42,18 @@ class RiskControllerLogTest {
     private ReplaceabilityRiskService replaceabilityRiskService;
 
     @MockBean
+    private SessionIdParser sessionIdParser;
+
+    @MockBean
+    private MockRiskService mockRiskService;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @MockBean
     private InterviewProfileService interviewProfileService;
 
     @MockBean
@@ -40,6 +61,21 @@ class RiskControllerLogTest {
 
     @MockBean
     private ObserverLogService observerLogService;
+
+    @BeforeEach
+    void stubSessionIdParser() {
+        Mockito.when(sessionIdParser.parseOptional(anyString())).thenAnswer(invocation -> {
+            String raw = invocation.getArgument(0);
+            if (raw == null) return SessionIdentifier.absent();
+            try {
+                UUID uuid = UUID.fromString(raw);
+                return SessionIdentifier.ofUuid(uuid, raw);
+            } catch (IllegalArgumentException e) {
+                return SessionIdentifier.absent();
+            }
+        });
+        Mockito.when(sessionIdParser.parseOptional((String) null)).thenReturn(SessionIdentifier.absent());
+    }
 
     @Test
     @SuppressWarnings("DataFlowIssue")
@@ -77,4 +113,3 @@ class RiskControllerLogTest {
         assertThat(cmd.getRationaleSummary().length()).isLessThanOrEqualTo(600);
     }
 }
-
