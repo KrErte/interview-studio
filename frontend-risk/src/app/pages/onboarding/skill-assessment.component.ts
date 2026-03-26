@@ -845,32 +845,78 @@ export class SkillAssessmentComponent {
     'Security Engineer'
   ];
 
-  skillCategories: SkillCategory[] = [
-    {
-      name: 'Programming Languages',
-      skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin']
-    },
-    {
-      name: 'Frontend',
-      skills: ['React', 'Angular', 'Vue', 'Next.js', 'HTML/CSS', 'Tailwind', 'SASS']
-    },
-    {
-      name: 'Backend',
-      skills: ['Node.js', 'Spring Boot', '.NET', 'Django', 'FastAPI', 'Express', 'NestJS']
-    },
-    {
-      name: 'Databases',
-      skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'DynamoDB']
-    },
-    {
-      name: 'Cloud & DevOps',
-      skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Linux']
-    },
-    {
-      name: 'AI & Data',
-      skills: ['Machine Learning', 'TensorFlow', 'PyTorch', 'SQL', 'Pandas', 'Spark']
-    }
+  private static readonly ROLE_SKILL_MAP: Record<string, SkillCategory[]> = {
+    'Software Engineer': [
+      { name: 'Programming Languages', skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin'] },
+      { name: 'Frontend', skills: ['React', 'Angular', 'Vue', 'Next.js', 'HTML/CSS', 'Tailwind', 'SASS'] },
+      { name: 'Backend', skills: ['Node.js', 'Spring Boot', '.NET', 'Django', 'FastAPI', 'Express', 'NestJS'] },
+      { name: 'Databases', skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'DynamoDB'] },
+      { name: 'Cloud & DevOps', skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Linux'] },
+      { name: 'AI & Data', skills: ['Machine Learning', 'TensorFlow', 'PyTorch', 'SQL', 'Pandas', 'Spark'] }
+    ],
+    'DevOps Engineer': [
+      { name: 'Cloud & DevOps', skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Linux'] },
+      { name: 'CI/CD & Automation', skills: ['Jenkins', 'GitHub Actions', 'GitLab CI', 'ArgoCD', 'Helm', 'Bash/Shell'] },
+      { name: 'Programming Languages', skills: ['Python', 'Go', 'Bash', 'JavaScript', 'TypeScript'] },
+      { name: 'Databases', skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'DynamoDB'] },
+      { name: 'Monitoring', skills: ['Prometheus', 'Grafana', 'Datadog', 'ELK Stack', 'PagerDuty', 'New Relic'] }
+    ],
+    'Data Analyst': [
+      { name: 'Data & Analytics', skills: ['SQL', 'Excel', 'ETL', 'Data Modeling', 'Statistics', 'A/B Testing'] },
+      { name: 'Programming Languages', skills: ['Python', 'R', 'SQL', 'JavaScript'] },
+      { name: 'Databases', skills: ['PostgreSQL', 'MySQL', 'BigQuery', 'Snowflake', 'Redshift'] },
+      { name: 'Visualization', skills: ['Tableau', 'Power BI', 'Looker', 'Matplotlib', 'D3.js'] },
+      { name: 'AI & ML', skills: ['Machine Learning', 'Pandas', 'Scikit-learn', 'TensorFlow', 'Spark'] }
+    ],
+    'Product Manager': [
+      { name: 'Product Tools', skills: ['Jira', 'Confluence', 'Notion', 'Miro', 'Figma', 'Productboard'] },
+      { name: 'Analytics', skills: ['Google Analytics', 'Mixpanel', 'Amplitude', 'Hotjar', 'SQL'] },
+      { name: 'Technical Knowledge', skills: ['APIs', 'Agile/Scrum', 'A/B Testing', 'SQL', 'HTML/CSS'] },
+      { name: 'Methodologies', skills: ['Lean', 'Design Thinking', 'OKRs', 'User Story Mapping', 'Roadmapping'] }
+    ],
+    'UX Designer': [
+      { name: 'Design Tools', skills: ['Figma', 'Sketch', 'Adobe XD', 'InVision', 'Framer', 'Principle'] },
+      { name: 'Research & Testing', skills: ['User Interviews', 'Usability Testing', 'A/B Testing', 'Surveys', 'Heuristic Evaluation', 'Card Sorting'] },
+      { name: 'Frontend Knowledge', skills: ['HTML/CSS', 'Responsive Design', 'Design Systems', 'Accessibility', 'Tailwind'] },
+      { name: 'Collaboration', skills: ['Miro', 'FigJam', 'Notion', 'Jira', 'Zeplin', 'Storybook'] }
+    ],
+    'QA Engineer': [
+      { name: 'Testing Tools', skills: ['Selenium', 'Cypress', 'Playwright', 'Jest', 'JUnit', 'Postman', 'k6'] },
+      { name: 'Programming Languages', skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#'] },
+      { name: 'CI/CD', skills: ['Jenkins', 'GitHub Actions', 'GitLab CI', 'Docker', 'BrowserStack'] },
+      { name: 'Databases', skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQL'] }
+    ],
+    'Security Engineer': [
+      { name: 'Security Tools', skills: ['Burp Suite', 'OWASP ZAP', 'Nessus', 'Metasploit', 'Wireshark', 'Snort'] },
+      { name: 'Cloud & DevOps', skills: ['AWS Security', 'Azure Security', 'Docker', 'Kubernetes', 'Terraform'] },
+      { name: 'Programming Languages', skills: ['Python', 'Bash', 'Go', 'C', 'JavaScript'] },
+      { name: 'Networking', skills: ['TCP/IP', 'DNS', 'Firewalls', 'VPN', 'IDS/IPS', 'SIEM'] }
+    ]
+  };
+
+  private static readonly ROLE_ALIASES: Record<string, string> = {
+    'Full Stack Developer': 'Software Engineer',
+    'Frontend Developer': 'Software Engineer',
+    'Backend Developer': 'Software Engineer',
+    'System Administrator': 'DevOps Engineer',
+    'Data Scientist': 'Data Analyst'
+  };
+
+  private static readonly DEFAULT_CATEGORIES: SkillCategory[] = [
+    { name: 'Programming Languages', skills: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin'] },
+    { name: 'Frontend', skills: ['React', 'Angular', 'Vue', 'Next.js', 'HTML/CSS', 'Tailwind', 'SASS'] },
+    { name: 'Backend', skills: ['Node.js', 'Spring Boot', '.NET', 'Django', 'FastAPI', 'Express', 'NestJS'] },
+    { name: 'Databases', skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'DynamoDB'] },
+    { name: 'Cloud & DevOps', skills: ['AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Linux'] },
+    { name: 'AI & Data', skills: ['Machine Learning', 'TensorFlow', 'PyTorch', 'SQL', 'Pandas', 'Spark'] }
   ];
+
+  get skillCategories(): SkillCategory[] {
+    const role = this.assessment.currentRole;
+    if (!role) return SkillAssessmentComponent.DEFAULT_CATEGORIES;
+    const mapped = SkillAssessmentComponent.ROLE_ALIASES[role] || role;
+    return SkillAssessmentComponent.ROLE_SKILL_MAP[mapped] || SkillAssessmentComponent.DEFAULT_CATEGORIES;
+  }
 
   industries = [
     'Fintech', 'E-commerce', 'SaaS', 'Healthcare', 'Gaming',
