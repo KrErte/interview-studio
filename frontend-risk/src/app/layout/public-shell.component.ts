@@ -199,10 +199,8 @@ export class PublicShellComponent {
   }
 
   constructor() {
-    const saved = localStorage.getItem('lang');
-    if (saved && ['en', 'et'].includes(saved)) {
-      this.currentLang = saved;
-      this.translate.use(saved);
-    }
+    // Sync display with already-active language (set by AppComponent)
+    // Don't call translate.use() again — it triggers async reload causing empty text flicker
+    this.currentLang = this.translate.currentLang || localStorage.getItem('lang') || 'en';
   }
 }

@@ -15,10 +15,10 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
     <!-- Sticky CTA bar — appears after scrolling past hero -->
     @if (showStickyCta) {
       <div class="fixed top-[57px] left-0 right-0 z-40 bg-red-600 text-white py-2 px-4 flex items-center justify-center gap-4 shadow-md animate-fade-in">
-        <span class="text-sm font-medium hidden sm:inline">Is your career AI-proof?</span>
-        <span class="text-sm font-medium sm:hidden">Check your risk</span>
+        <span class="text-sm font-medium hidden sm:inline">{{ 'landing.heroStickyCta' | translate }}</span>
+        <span class="text-sm font-medium sm:hidden">{{ 'landing.heroStickyCtaMobile' | translate }}</span>
         <a routerLink="/session/new" class="px-4 py-1 text-xs font-bold bg-white text-red-600 hover:bg-stone-100 transition-colors">
-          Free Assessment →
+          {{ 'landing.heroStickyCtaBtn' | translate }}
         </a>
       </div>
     }
@@ -39,19 +39,19 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
               <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
             </span>
-            <span><strong class="text-stone-900">{{ liveAssessments | number }}</strong> people checked their risk today</span>
+            <span><strong class="text-stone-900">{{ liveAssessments | number }}</strong> {{ 'landing.heroPeopleChecked' | translate }}</span>
           </div>
 
           <!-- Headline — fear + doubt, editorial weight -->
           <h1 class="text-5xl md:text-6xl font-black text-stone-900 leading-[1.02] tracking-tight">
-            Your job is<br>
-            probably <span class="text-red-600">fine.</span>
+            {{ 'landing.heroHeadline1' | translate }}<br>
+            {{ 'landing.heroHeadline2' | translate }} <span class="text-red-600">{{ 'landing.heroHeadline3' | translate }}</span>
           </h1>
 
           <!-- Subheadline -->
           <p class="text-lg text-stone-600 leading-relaxed max-w-md">
-            But <strong class="text-stone-900">{{ jobsAtRisk }}% of roles</strong> like yours are already being automated.
-            Find out where you stand — <em class="text-stone-500 not-italic">before your employer does.</em>
+            {{ 'landing.heroSubtext1' | translate }} <strong class="text-stone-900">{{ jobsAtRisk }}% {{ 'landing.heroSubtext2' | translate }}</strong> {{ 'landing.heroSubtext3' | translate }}
+            <em class="text-stone-500 not-italic">{{ 'landing.heroSubtext4' | translate }}</em>
           </p>
 
           <!-- CTA — editorial buttons, sharp corners -->
@@ -60,19 +60,19 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
               routerLink="/session/new"
               class="whitespace-nowrap px-6 py-3 bg-red-600 hover:bg-red-700 text-sm font-bold text-white transition-colors cursor-pointer flex items-center gap-2"
             >
-              Check my risk →
+              {{ 'landing.heroCta' | translate }}
             </a>
             <a
               routerLink="/start"
               class="whitespace-nowrap px-5 py-3 text-sm font-medium text-stone-600 hover:text-stone-900 border border-stone-300 hover:border-stone-900 transition-colors cursor-pointer flex items-center"
             >
-              How it works
+              {{ 'landing.heroCtaSecondary' | translate }}
             </a>
           </div>
 
           <!-- Trust — plain text, no icons -->
           <div class="flex flex-row flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400 pt-1">
-            <span>Free</span><span>·</span><span>3 min</span><span>·</span><span>No account needed</span><span>·</span><span>Results are private</span>
+            <span>{{ 'landing.heroTrustFree' | translate }}</span><span>·</span><span>{{ 'landing.heroTrust3min' | translate }}</span><span>·</span><span>{{ 'landing.heroTrustNoAccount' | translate }}</span><span>·</span><span>{{ 'landing.heroTrustPrivate' | translate }}</span>
           </div>
         </div>
 
@@ -359,8 +359,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   needleAngle = -81;
 
   private readonly paymentApi = inject(PaymentApiService);
-  readonly starterPrice = signal('$7.99');
-  readonly proPrice = signal('$15.99');
+  readonly starterPrice = signal('€7.49');
+  readonly proPrice = signal('€14.99');
 
   private animationInterval: any;
   private counterInterval: any;
