@@ -136,10 +136,11 @@ export const routes: Routes = [
       }
     ]
   },
-  // Job Analyzer Tool (no auth, public tool)
+  // Job Analyzer Tool (auth required)
   {
     path: 'tools',
-    component: PublicShellComponent,
+    component: AppShellComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'job-analyzer',
