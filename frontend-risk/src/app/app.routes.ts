@@ -139,7 +139,7 @@ export const routes: Routes = [
   // Job Analyzer Tool (no auth, public tool)
   {
     path: 'tools',
-    component: AppShellComponent,
+    component: PublicShellComponent,
     children: [
       {
         path: 'job-analyzer',
