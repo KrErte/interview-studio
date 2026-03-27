@@ -106,6 +106,13 @@ type LoginForm = {
             </button>
           </form>
 
+          <!-- Forgot password -->
+          <div class="mt-4 text-right">
+            <a routerLink="/forgot-password" class="text-sm text-stone-500 hover:text-stone-900 transition-colors">
+              Forgot password?
+            </a>
+          </div>
+
           <!-- Register link -->
           <div class="mt-6 text-center border-t border-stone-200 pt-6">
             <p class="text-sm text-stone-500">

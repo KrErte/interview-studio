@@ -41,6 +41,14 @@ export class AuthService {
     );
   }
 
+  forgotPassword(email: string) {
+    return this.api.post('/auth/forgot-password', { email });
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.api.post('/auth/reset-password', { token, newPassword });
+  }
+
   register(email: string, password: string, fullName?: string) {
     return this.api.post<AuthResponse>('/auth/register', { email, password, fullName: fullName || 'User' }).pipe(
       tap((res) => {

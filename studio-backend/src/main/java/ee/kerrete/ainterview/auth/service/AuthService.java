@@ -10,6 +10,7 @@ import ee.kerrete.ainterview.model.UserTier;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -20,6 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Service handling authentication operations: login, register, and token refresh.
@@ -33,6 +37,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+
+    @Value("${FRONTEND_BASE_URL:https://careerrisk.ee}")
+    private String frontendBaseUrl;
 
     /**
      * Register a new user.
@@ -135,6 +143,40 @@ public class AuthService {
 
         log.info("Token refreshed for user: {}", email);
         return buildAuthResponse(user);
+    }
+
+    @Transactional
+    public void forgotPassword(String email) {
+        appUserRepository.findByEmailIgnoreCase(email).ifPresent(user -> {
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            user.setResetTokenExpiresAt(LocalDateTime.now().plusHours(1));
+            appUserRepository.save(user);
+
+            String resetLink = frontendBaseUrl + "/reset-password?token=" + token;
+            try {
+                emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+            } catch (Exception e) {
+                log.error("Failed to send reset email to: {}", email, e);
+            }
+        });
+        // Always silent - don't leak whether email exists
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        AppUser user = appUserRepository.findByResetToken(token)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or expired reset token"));
+
+        if (user.getResetTokenExpiresAt() == null || user.getResetTokenExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or expired reset token");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiresAt(null);
+        appUserRepository.save(user);
+        log.info("Password reset successfully for user: {}", user.getEmail());
     }
 
     /**

@@ -18,7 +18,21 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', component: LandingComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./pages/login/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent
+          )
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () =>
+          import('./pages/login/reset-password.component').then(
+            (m) => m.ResetPasswordComponent
+          )
+      }
     ]
   },
   // Session wizards (public, no auth for simple mode)

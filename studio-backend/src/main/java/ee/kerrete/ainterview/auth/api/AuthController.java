@@ -11,6 +11,9 @@ import ee.kerrete.ainterview.model.UserTier;
 import ee.kerrete.ainterview.repository.AppUserRepository;
 import ee.kerrete.ainterview.security.AuthenticatedUser;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -109,4 +112,17 @@ public class AuthController {
     }
 
     public record MeResponse(String username, List<String> roles, String tier) {}
+
+    @PostMapping("/forgot-password")
+    public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.forgotPassword(request.email());
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.token(), request.newPassword());
+    }
+
+    public record ForgotPasswordRequest(@NotBlank @Email String email) {}
+    public record ResetPasswordRequest(@NotBlank String token, @NotBlank @Size(min = 6) String newPassword) {}
 }

@@ -40,6 +40,8 @@ services:
       STRIPE_PRO_MONTHLY_PRICE_ID: ${STRIPE_PRO_MONTHLY_PRICE_ID:-price_pro_monthly_dummy}
       STRIPE_PRO_ANNUAL_PRICE_ID: ${STRIPE_PRO_ANNUAL_PRICE_ID:-price_pro_annual_dummy}
       FRONTEND_BASE_URL: ${FRONTEND_BASE_URL:-https://careerrisk.ee}
+      GMAIL_USER: ${GMAIL_USER:-}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:-}
     depends_on:
       postgres:
         condition: service_healthy

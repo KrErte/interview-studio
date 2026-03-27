@@ -75,6 +75,12 @@ public class AppUser implements UserDetails {
     @Column(name = "subscription_created_at")
     private LocalDateTime subscriptionCreatedAt;
 
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expires_at")
+    private LocalDateTime resetTokenExpiresAt;
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
