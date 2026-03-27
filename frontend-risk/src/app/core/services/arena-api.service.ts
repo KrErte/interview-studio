@@ -85,6 +85,16 @@ export interface CoverLetterResponse {
   summary: string;
 }
 
+export interface InterviewRoadmapResponse {
+  weeks: {
+    week: number;
+    theme: string;
+    tasks: string[];
+    milestone: string;
+  }[];
+  summary: string;
+}
+
 export interface SalaryBenchmarkResponse {
   sessionId: number;
   role: string;
@@ -130,6 +140,14 @@ export class ArenaApiService {
 
   endInterview(sessionId: number): Observable<InterviewSimResponse> {
     return this.api.post<InterviewSimResponse>(`/arena/interview-sim/end/${sessionId}`, {});
+  }
+
+  generateInterviewRoadmap(data: {
+    targetRole: string;
+    weaknesses: string[];
+    improvementPlan?: string;
+  }): Observable<InterviewRoadmapResponse> {
+    return this.api.post<InterviewRoadmapResponse>('/arena/interview-sim/roadmap', data);
   }
 
   // Salary Coach

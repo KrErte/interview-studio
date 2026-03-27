@@ -216,6 +216,51 @@ public class InterviewSimulatorService {
             .build();
     }
 
+    public ee.kerrete.ainterview.arena.api.InterviewSimulatorController.InterviewRoadmapResponse generateRoadmap(
+            ee.kerrete.ainterview.arena.api.InterviewSimulatorController.InterviewRoadmapRequest request) {
+
+        String systemPrompt = """
+            You are a career coach. Based on interview weaknesses, create a 4-week improvement roadmap.
+            Return ONLY valid JSON (no markdown):
+            {
+              "weeks": [
+                {
+                  "week": 1,
+                  "theme": "Week theme",
+                  "tasks": ["task 1", "task 2", "task 3"],
+                  "milestone": "What to achieve by end of week"
+                }
+              ],
+              "summary": "1-2 sentence overview of the plan"
+            }
+            Create exactly 4 weeks. Make tasks specific and actionable based on the weaknesses provided.
+            """;
+
+        String userPrompt = "Target role: " + request.targetRole() +
+            "\nWeaknesses identified: " + String.join(", ", request.weaknesses()) +
+            (request.improvementPlan() != null ? "\nImprovement advice: " + request.improvementPlan() : "");
+
+        String aiResponse = aiService.createChatCompletion(systemPrompt, userPrompt);
+
+        try {
+            return objectMapper.readValue(stripCodeFence(aiResponse.trim()),
+                ee.kerrete.ainterview.arena.api.InterviewSimulatorController.InterviewRoadmapResponse.class);
+        } catch (Exception e) {
+            log.warn("Failed to parse roadmap AI response: {}", aiResponse, e);
+            // Fallback
+            var weeks = request.weaknesses().stream().limit(4).map(w ->
+                new ee.kerrete.ainterview.arena.api.InterviewSimulatorController.RoadmapWeek(
+                    request.weaknesses().indexOf(w) + 1,
+                    "Improve: " + w,
+                    List.of("Research best practices for " + w, "Practice daily", "Get feedback from peers"),
+                    "Measurable improvement in " + w
+                )
+            ).toList();
+            return new ee.kerrete.ainterview.arena.api.InterviewSimulatorController.InterviewRoadmapResponse(
+                weeks, "Personalized improvement plan based on your interview results.");
+        }
+    }
+
     private String buildConversationHistory(SessionState state) {
         StringBuilder sb = new StringBuilder();
         sb.append("Interview for: ").append(state.targetRole).append(" (").append(state.interviewType).append(")\n\n");

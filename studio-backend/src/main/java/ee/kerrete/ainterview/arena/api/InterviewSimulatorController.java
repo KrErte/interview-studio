@@ -15,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/arena/interview-sim")
 @RequiredArgsConstructor
@@ -49,6 +51,33 @@ public class InterviewSimulatorController {
         requireProTier(user);
         return interviewSimService.endSession(sessionId, user.id());
     }
+
+    @PostMapping("/roadmap")
+    public InterviewRoadmapResponse generateRoadmap(
+        @RequestBody InterviewRoadmapRequest request,
+        @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        requireProTier(user);
+        return interviewSimService.generateRoadmap(request);
+    }
+
+    public record InterviewRoadmapRequest(
+        String targetRole,
+        List<String> weaknesses,
+        String improvementPlan
+    ) {}
+
+    public record InterviewRoadmapResponse(
+        List<RoadmapWeek> weeks,
+        String summary
+    ) {}
+
+    public record RoadmapWeek(
+        int week,
+        String theme,
+        List<String> tasks,
+        String milestone
+    ) {}
 
     private void requireProTier(AuthenticatedUser user) {
         AppUser appUser = appUserRepository.findById(user.id())

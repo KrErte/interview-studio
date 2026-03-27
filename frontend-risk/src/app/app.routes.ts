@@ -164,6 +164,14 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'interview-roadmap',
+        canActivate: [authGuard, tierGuard('ARENA_PRO')],
+        loadComponent: () =>
+          import('./pages/arena/interview-roadmap.component').then(
+            (m) => m.InterviewRoadmapComponent
+          )
+      },
+      {
         path: 'salary-coach',
         canActivate: [authGuard, tierGuard('ARENA_PRO')],
         loadComponent: () =>

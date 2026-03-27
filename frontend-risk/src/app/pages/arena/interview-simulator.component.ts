@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena-api.service';
 
 @Component({
@@ -135,6 +136,11 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
             </div>
           }
 
+          <button (click)="generateRoadmap()"
+            class="w-full py-3 rounded-xl font-bold bg-stone-900 text-white hover:bg-stone-800 transition-all">
+            Generate Improvement Roadmap
+          </button>
+
           <button (click)="reset()"
             class="w-full py-3 rounded-xl font-bold border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all">
             Start New Interview
@@ -146,6 +152,7 @@ import { ArenaApiService, InterviewSimResponse } from '../../core/services/arena
 })
 export class InterviewSimulatorComponent {
   private readonly arenaApi = inject(ArenaApiService);
+  private readonly router = inject(Router);
 
   targetRole = '';
   interviewType = 'behavioral';
@@ -233,6 +240,17 @@ export class InterviewSimulatorComponent {
     this.messages.set([]);
     this.finalFeedback.set(null);
     this.currentAnswer = '';
+  }
+
+  generateRoadmap() {
+    const feedback = this.finalFeedback();
+    if (!feedback) return;
+    sessionStorage.setItem('interview_roadmap_data', JSON.stringify({
+      targetRole: this.targetRole,
+      weaknesses: feedback.weaknesses,
+      improvementPlan: feedback.improvementPlan
+    }));
+    this.router.navigate(['/arena/interview-roadmap']);
   }
 
   getVerdictClass(verdict: string): string {
