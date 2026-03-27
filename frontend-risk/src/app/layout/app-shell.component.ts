@@ -4,7 +4,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { TokenStorageService } from '../core/auth/token-storage.service';
 import { NavContextService, NavState } from '../core/services/nav-context.service';
 import { Observable, Subject, filter, takeUntil } from 'rxjs';
-import { CareerriskStepperComponent } from './careerrisk-stepper.component';
+
 import { UiModeToggleComponent } from '../shared/ui-mode-toggle/ui-mode-toggle.component';
 import { UiModeService } from '../core/services/ui-mode.service';
 import { TierService } from '../core/services/tier.service';
@@ -15,7 +15,7 @@ import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.
 @Component({
   selector: 'app-app-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, CareerriskStepperComponent, UiModeToggleComponent, TranslateModule, CookieConsentComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, UiModeToggleComponent, TranslateModule, CookieConsentComponent],
   template: `
     <div class="min-h-screen bg-stone-50 text-stone-900 flex flex-col">
       <header class="border-b border-stone-200 bg-white sticky top-0 z-50">
@@ -101,8 +101,7 @@ import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.
             <nav class="flex items-center gap-1 text-sm overflow-x-auto" *ngIf="navState$ | async as nav">
               <ng-container [ngSwitch]="nav.mode">
                 <ng-container *ngSwitchCase="'careerrisk'">
-                  <ng-container *ngIf="!isOnboarding; else onboardingNavPlaceholder">
-                    <button
+                  <button
                       *ngFor="let item of nav.items"
                       type="button"
                       class="px-3 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors"
@@ -114,12 +113,6 @@ import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.
                     >
                       {{ item.label }}
                     </button>
-                  </ng-container>
-                  <ng-template #onboardingNavPlaceholder>
-                    <a routerLink="/careerrisk/overview" class="text-xs text-stone-500 hover:text-stone-900 transition-colors cursor-pointer">
-                      Onboarding
-                    </a>
-                  </ng-template>
                   <button type="button" (click)="logout()"
                     class="px-3 py-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors">
                     Logout
@@ -164,7 +157,6 @@ import { CookieConsentComponent } from '../shared/cookie-consent/cookie-consent.
       </div>
 
       <main class="flex-1 mx-auto max-w-7xl w-full px-4 py-8">
-        <app-careerrisk-stepper *ngIf="isCareerRiskRoute && isOnboarding"></app-careerrisk-stepper>
         <router-outlet />
       </main>
 
@@ -176,7 +168,7 @@ export class AppShellComponent implements OnDestroy {
   navState$: Observable<NavState>;
   activeCareerRiskKey: string | null = null;
   isCareerRiskRoute = false;
-  isOnboarding = true;
+
   mobileMenuOpen = false;
   currentLang = 'en';
   private destroy$ = new Subject<void>();
@@ -243,8 +235,6 @@ export class AppShellComponent implements OnDestroy {
   }
 
   private updateCompletionState(): void {
-    const completedFlag = localStorage.getItem('careerriskCompleted') === 'true';
-    this.isOnboarding = this.isCareerRiskRoute && !completedFlag;
   }
 
   private pathForKey(key: string): string {
