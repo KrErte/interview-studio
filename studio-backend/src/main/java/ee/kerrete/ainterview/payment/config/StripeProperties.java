@@ -7,9 +7,16 @@ public record StripeProperties(
     String secretKey,
     String publishableKey,
     String webhookSecret,
-    String arenaProPriceId,
+    // USD price IDs
     String starterMonthlyPriceId,
     String starterAnnualPriceId,
     String proMonthlyPriceId,
-    String proAnnualPriceId
+    String proAnnualPriceId,
+    // EUR price IDs
+    String starterMonthlyEurPriceId,
+    String starterAnnualEurPriceId,
+    String proMonthlyEurPriceId,
+    String proAnnualEurPriceId,
+    // Legacy
+    String arenaProPriceId
 ) {}

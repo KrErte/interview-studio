@@ -5,6 +5,7 @@ import ee.kerrete.ainterview.payment.dto.CheckoutResponse;
 import ee.kerrete.ainterview.payment.dto.TierResponse;
 import ee.kerrete.ainterview.payment.service.PaymentService;
 import ee.kerrete.ainterview.security.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,9 +25,23 @@ public class PaymentController {
     @PreAuthorize("isAuthenticated()")
     public CheckoutResponse createCheckout(
         @AuthenticationPrincipal AuthenticatedUser user,
-        @Valid @RequestBody CheckoutRequest request
+        @Valid @RequestBody CheckoutRequest request,
+        HttpServletRequest httpRequest
     ) {
-        return paymentService.createCheckout(user.id(), request);
+        String clientIp = getClientIp(httpRequest);
+        return paymentService.createCheckout(user.id(), request, clientIp);
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String xff = request.getHeader("X-Forwarded-For");
+        if (xff != null && !xff.isBlank()) {
+            return xff.split(",")[0].trim();
+        }
+        String realIp = request.getHeader("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp;
+        }
+        return request.getRemoteAddr();
     }
 
     @PostMapping("/webhook")

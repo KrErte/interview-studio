@@ -62,3 +62,7 @@ app:
     starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID:price_starter_annual_dummy}
     pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID:price_pro_monthly_dummy}
     pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID:price_pro_annual_dummy}
+    starter-monthly-eur-price-id: ${STRIPE_STARTER_MONTHLY_EUR_PRICE_ID:price_starter_monthly_eur_dummy}
+    starter-annual-eur-price-id: ${STRIPE_STARTER_ANNUAL_EUR_PRICE_ID:price_starter_annual_eur_dummy}
+    pro-monthly-eur-price-id: ${STRIPE_PRO_MONTHLY_EUR_PRICE_ID:price_pro_monthly_eur_dummy}
+    pro-annual-eur-price-id: ${STRIPE_PRO_ANNUAL_EUR_PRICE_ID:price_pro_annual_eur_dummy}

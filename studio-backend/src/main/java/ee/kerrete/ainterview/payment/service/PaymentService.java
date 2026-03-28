@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +36,9 @@ public class PaymentService {
     private final StripeProperties stripeProperties;
     private final AppUserRepository appUserRepository;
     private final ObjectMapper objectMapper;
+    private final GeoService geoService;
 
-    public CheckoutResponse createCheckout(Long userId, CheckoutRequest request) {
+    public CheckoutResponse createCheckout(Long userId, CheckoutRequest request, String clientIp) {
         AppUser user = appUserRepository.findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -46,7 +48,8 @@ public class PaymentService {
 
         try {
             String customerId = getOrCreateStripeCustomer(user);
-            String priceId = resolvePriceId(request.tier(), request.billingInterval());
+            String currency = geoService.getCurrencyForIp(clientIp);
+            String priceId = resolvePriceId(request.tier(), request.billingInterval(), currency);
 
             SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
@@ -134,30 +137,39 @@ public class PaymentService {
         );
     }
 
-    private String resolvePriceId(String tier, String interval) {
+    private String resolvePriceId(String tier, String interval, String currency) {
         String normalizedTier = (tier != null) ? tier.toUpperCase() : "STARTER";
         String normalizedInterval = (interval != null) ? interval.toLowerCase() : "month";
+        boolean eur = "EUR".equals(currency);
 
         return switch (normalizedTier) {
             case "STARTER" -> "year".equals(normalizedInterval)
-                ? stripeProperties.starterAnnualPriceId()
-                : stripeProperties.starterMonthlyPriceId();
+                ? (eur ? stripeProperties.starterAnnualEurPriceId() : stripeProperties.starterAnnualPriceId())
+                : (eur ? stripeProperties.starterMonthlyEurPriceId() : stripeProperties.starterMonthlyPriceId());
             case "ARENA_PRO" -> "year".equals(normalizedInterval)
-                ? stripeProperties.proAnnualPriceId()
-                : stripeProperties.proMonthlyPriceId();
-            default -> stripeProperties.starterMonthlyPriceId();
+                ? (eur ? stripeProperties.proAnnualEurPriceId() : stripeProperties.proAnnualPriceId())
+                : (eur ? stripeProperties.proMonthlyEurPriceId() : stripeProperties.proMonthlyPriceId());
+            default -> eur ? stripeProperties.starterMonthlyEurPriceId() : stripeProperties.starterMonthlyPriceId();
         };
     }
 
     private UserTier resolveTierFromPriceId(String priceId) {
         if (priceId == null) return UserTier.FREE;
-        if (priceId.equals(stripeProperties.starterMonthlyPriceId())
-                || priceId.equals(stripeProperties.starterAnnualPriceId())) {
+        if (Set.of(
+                stripeProperties.starterMonthlyPriceId(),
+                stripeProperties.starterAnnualPriceId(),
+                stripeProperties.starterMonthlyEurPriceId(),
+                stripeProperties.starterAnnualEurPriceId()
+        ).contains(priceId)) {
             return UserTier.STARTER;
         }
-        if (priceId.equals(stripeProperties.proMonthlyPriceId())
-                || priceId.equals(stripeProperties.proAnnualPriceId())
-                || priceId.equals(stripeProperties.arenaProPriceId())) {
+        if (Set.of(
+                stripeProperties.proMonthlyPriceId(),
+                stripeProperties.proAnnualPriceId(),
+                stripeProperties.proMonthlyEurPriceId(),
+                stripeProperties.proAnnualEurPriceId(),
+                stripeProperties.arenaProPriceId()
+        ).contains(priceId)) {
             return UserTier.ARENA_PRO;
         }
         return UserTier.FREE;

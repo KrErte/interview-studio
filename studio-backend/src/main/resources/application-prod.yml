@@ -58,4 +58,8 @@ app:
     starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID}
     pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID}
     pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID}
+    starter-monthly-eur-price-id: ${STRIPE_STARTER_MONTHLY_EUR_PRICE_ID}
+    starter-annual-eur-price-id: ${STRIPE_STARTER_ANNUAL_EUR_PRICE_ID}
+    pro-monthly-eur-price-id: ${STRIPE_PRO_MONTHLY_EUR_PRICE_ID}
+    pro-annual-eur-price-id: ${STRIPE_PRO_ANNUAL_EUR_PRICE_ID}
 
