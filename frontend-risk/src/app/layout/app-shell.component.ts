@@ -229,9 +229,17 @@ export class AppShellComponent implements OnDestroy {
   }
 
   onCareerRiskNav(key: string): void {
-    const path = this.pathForKey(key);
     this.navContext.setActiveKey(key);
-    this.router.navigateByUrl(path);
+    this.navContext.emitCommand(key);
+    const path = this.pathForKey(key);
+    if (path.includes('?')) {
+      const [url, qs] = path.split('?');
+      const params: Record<string, string> = {};
+      qs.split('&').forEach(p => { const [k, v] = p.split('='); params[k] = v; });
+      this.router.navigate([url], { queryParams: params });
+    } else {
+      this.router.navigateByUrl(path);
+    }
   }
 
   private updateCompletionState(): void {
@@ -240,8 +248,9 @@ export class AppShellComponent implements OnDestroy {
   private pathForKey(key: string): string {
     switch (key) {
       case 'OVERVIEW':
-      case 'PROFILE':
         return '/careerrisk/overview';
+      case 'PROFILE':
+        return '/careerrisk/overview?step=PROFILE';
       case 'QUESTIONS':
         return '/careerrisk/questions';
       case 'ANALYSIS':

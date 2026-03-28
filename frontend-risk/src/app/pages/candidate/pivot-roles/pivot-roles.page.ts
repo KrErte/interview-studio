@@ -236,7 +236,8 @@ export class PivotRolesPageComponent implements OnInit, OnDestroy {
   }
 
   startFlow(): void {
-    this.goToQuestions();
+    // Go to Profile step first so user enters their role before questions
+    this.goToStep(1);
   }
 
   analyzeReadiness(): void {

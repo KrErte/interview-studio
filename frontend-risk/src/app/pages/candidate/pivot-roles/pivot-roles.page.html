@@ -28,7 +28,7 @@
         <button
           type="button"
           class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors"
-          (click)="goToQuestions()"
+          (click)="goToStep(1)"
         >
           {{ 'dashboard.startQuestions' | translate }}
         </button>
@@ -141,6 +141,17 @@
               <option value="Senior">Senior</option>
               <option value="Lead">Lead</option>
             </select>
+          </div>
+          <div class="mt-5 flex gap-3">
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50"
+              (click)="goToQuestions()"
+              [disabled]="!profileRole.trim()"
+            >
+              Continue to Questions &rarr;
+            </button>
+            <p class="text-xs text-stone-400 self-center" *ngIf="!profileRole.trim()">Enter your role to continue</p>
           </div>
         </div>
       </div>
