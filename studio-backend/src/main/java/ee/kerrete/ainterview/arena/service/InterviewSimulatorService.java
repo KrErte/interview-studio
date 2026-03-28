@@ -29,15 +29,19 @@ public class InterviewSimulatorService {
 
     public InterviewSimResponse startSession(InterviewSimStartRequest request, Long userId) {
         // Generate first question
+        String focusInstruction = request.focusTopic() != null && !request.focusTopic().isBlank()
+            ? "\nFOCUS: All questions MUST specifically target this area: " + request.focusTopic() + ". Do not ask generic questions."
+            : "";
         String systemPrompt = """
-            You are a professional interviewer conducting a %s interview for a %s position (%s level).
+            You are a professional interviewer conducting a %s interview for a %s position (%s level).%s
             Generate the first interview question.
             Return ONLY valid JSON (no markdown):
             {"question": "your interview question here"}
             """.formatted(
                 request.interviewType() != null ? request.interviewType() : "behavioral",
                 request.targetRole(),
-                request.experienceLevel() != null ? request.experienceLevel() : "mid-level"
+                request.experienceLevel() != null ? request.experienceLevel() : "mid-level",
+                focusInstruction
             );
 
         String aiResponse = aiService.createChatCompletion(systemPrompt, "Start the interview with your first question.");
@@ -55,6 +59,7 @@ public class InterviewSimulatorService {
         state.targetRole = request.targetRole();
         state.interviewType = request.interviewType() != null ? request.interviewType() : "behavioral";
         state.experienceLevel = request.experienceLevel() != null ? request.experienceLevel() : "mid-level";
+        state.focusTopic = request.focusTopic();
         state.currentQuestion = 1;
         state.questions = new ArrayList<>();
         state.questions.add(question);
@@ -96,12 +101,15 @@ public class InterviewSimulatorService {
 
         // Generate next question + feedback on current answer
         String history = buildConversationHistory(state);
+        String focusLine = state.focusTopic != null && !state.focusTopic.isBlank()
+            ? "\nFOCUS: All questions MUST specifically target this area: " + state.focusTopic + ". Do not ask generic questions."
+            : "";
         String systemPrompt = """
-            You are a professional interviewer conducting a %s interview for a %s position.
+            You are a professional interviewer conducting a %s interview for a %s position.%s
             Based on the conversation so far, provide brief feedback on the last answer and ask the next question.
             Return ONLY valid JSON (no markdown):
             {"feedback": "1-2 sentence feedback on the answer", "question": "your next interview question"}
-            """.formatted(state.interviewType, state.targetRole);
+            """.formatted(state.interviewType, state.targetRole, focusLine);
 
         String aiResponse = aiService.createChatCompletion(systemPrompt, history);
 
@@ -261,6 +269,48 @@ public class InterviewSimulatorService {
         }
     }
 
+    public ee.kerrete.ainterview.arena.api.InterviewSimulatorController.LearnResourcesResponse generateLearnResources(
+            ee.kerrete.ainterview.arena.api.InterviewSimulatorController.LearnResourcesRequest request) {
+
+        String systemPrompt = """
+            You are a career learning advisor. Based on the topic and tasks, recommend 4-6 high-quality learning resources.
+            Include a mix of: articles, videos, courses, and documentation.
+            Use REAL, well-known resources (e.g. official docs, MDN, Coursera, YouTube channels, books, blog posts from known authors).
+            Return ONLY valid JSON (no markdown):
+            {
+              "resources": [
+                {
+                  "title": "Resource title",
+                  "type": "article|video|course|docs|book",
+                  "url": "https://real-url-here",
+                  "description": "1 sentence why this is useful",
+                  "difficulty": "beginner|intermediate|advanced"
+                }
+              ]
+            }
+            """;
+
+        String userPrompt = "Target role: " + request.targetRole() +
+            "\nTopic: " + request.theme() +
+            "\nSpecific skills to learn: " + String.join(", ", request.tasks());
+
+        String aiResponse = aiService.createChatCompletion(systemPrompt, userPrompt);
+
+        try {
+            return objectMapper.readValue(stripCodeFence(aiResponse.trim()),
+                ee.kerrete.ainterview.arena.api.InterviewSimulatorController.LearnResourcesResponse.class);
+        } catch (Exception e) {
+            log.warn("Failed to parse learn resources AI response: {}", aiResponse, e);
+            return new ee.kerrete.ainterview.arena.api.InterviewSimulatorController.LearnResourcesResponse(
+                List.of(new ee.kerrete.ainterview.arena.api.InterviewSimulatorController.LearnResource(
+                    "Search for: " + request.theme(), "article",
+                    "https://www.google.com/search?q=" + request.theme().replace(" ", "+"),
+                    "Search for learning resources on this topic", "beginner"
+                ))
+            );
+        }
+    }
+
     private String buildConversationHistory(SessionState state) {
         StringBuilder sb = new StringBuilder();
         sb.append("Interview for: ").append(state.targetRole).append(" (").append(state.interviewType).append(")\n\n");
@@ -298,6 +348,7 @@ public class InterviewSimulatorService {
         String targetRole;
         String interviewType;
         String experienceLevel;
+        String focusTopic;
         int currentQuestion;
         List<String> questions = new ArrayList<>();
         List<String> answers = new ArrayList<>();

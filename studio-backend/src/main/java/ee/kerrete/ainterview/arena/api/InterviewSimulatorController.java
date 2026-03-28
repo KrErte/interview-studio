@@ -61,6 +61,15 @@ public class InterviewSimulatorController {
         return interviewSimService.generateRoadmap(request);
     }
 
+    @PostMapping("/learn")
+    public LearnResourcesResponse generateLearnResources(
+        @RequestBody LearnResourcesRequest request,
+        @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        requireProTier(user);
+        return interviewSimService.generateLearnResources(request);
+    }
+
     public record InterviewRoadmapRequest(
         String targetRole,
         List<String> weaknesses,
@@ -77,6 +86,24 @@ public class InterviewSimulatorController {
         String theme,
         List<String> tasks,
         String milestone
+    ) {}
+
+    public record LearnResourcesRequest(
+        String targetRole,
+        String theme,
+        List<String> tasks
+    ) {}
+
+    public record LearnResourcesResponse(
+        List<LearnResource> resources
+    ) {}
+
+    public record LearnResource(
+        String title,
+        String type,
+        String url,
+        String description,
+        String difficulty
     ) {}
 
     private void requireProTier(AuthenticatedUser user) {

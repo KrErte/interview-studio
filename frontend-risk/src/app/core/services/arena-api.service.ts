@@ -95,6 +95,18 @@ export interface InterviewRoadmapResponse {
   summary: string;
 }
 
+export interface LearnResourcesResponse {
+  resources: LearnResource[];
+}
+
+export interface LearnResource {
+  title: string;
+  type: string;
+  url: string;
+  description: string;
+  difficulty: string;
+}
+
 export interface SalaryBenchmarkResponse {
   sessionId: number;
   role: string;
@@ -123,11 +135,12 @@ export class ArenaApiService {
   }
 
   // Interview Simulator
-  startInterview(targetRole: string, interviewType?: string, experienceLevel?: string): Observable<InterviewSimResponse> {
+  startInterview(targetRole: string, interviewType?: string, experienceLevel?: string, focusTopic?: string): Observable<InterviewSimResponse> {
     return this.api.post<InterviewSimResponse>('/arena/interview-sim/start', {
       targetRole,
       interviewType,
-      experienceLevel
+      experienceLevel,
+      focusTopic
     });
   }
 
@@ -148,6 +161,14 @@ export class ArenaApiService {
     improvementPlan?: string;
   }): Observable<InterviewRoadmapResponse> {
     return this.api.post<InterviewRoadmapResponse>('/arena/interview-sim/roadmap', data);
+  }
+
+  generateLearnResources(data: {
+    targetRole: string;
+    theme: string;
+    tasks: string[];
+  }): Observable<LearnResourcesResponse> {
+    return this.api.post<LearnResourcesResponse>('/arena/interview-sim/learn', data);
   }
 
   // Salary Coach
