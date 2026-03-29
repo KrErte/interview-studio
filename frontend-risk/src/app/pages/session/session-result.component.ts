@@ -161,42 +161,132 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
             </div>
           }
         } @else {
+          <!-- Blurred 30-Day Plan Preview -->
+          <div class="border border-stone-200 bg-white p-6 mb-6 relative overflow-hidden">
+            <h2 class="text-lg font-bold text-stone-900 mb-4">Your 30-Day Action Plan</h2>
+            <div class="space-y-3">
+              <div class="flex gap-4 p-4 bg-stone-50 border border-stone-100">
+                <div class="flex-shrink-0 w-12 h-12 bg-stone-900 flex items-center justify-center">
+                  <span class="text-sm font-bold text-white">W1</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-stone-900">Update your positioning & online profiles</div>
+                  <div class="text-sm text-stone-500 mt-1">Reframe your experience using current {{ session()!.targetRole }} terminology...</div>
+                </div>
+              </div>
+              <div class="flex gap-4 p-4 bg-stone-50 border border-stone-100 blur-[6px] select-none" aria-hidden="true">
+                <div class="flex-shrink-0 w-12 h-12 bg-stone-900 flex items-center justify-center">
+                  <span class="text-sm font-bold text-white">W2</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-stone-900">Build a portfolio project demonstrating key skills</div>
+                  <div class="text-sm text-stone-500 mt-1">Create a hands-on project that showcases your strongest competencies...</div>
+                </div>
+              </div>
+              <div class="flex gap-4 p-4 bg-stone-50 border border-stone-100 blur-[6px] select-none" aria-hidden="true">
+                <div class="flex-shrink-0 w-12 h-12 bg-stone-900 flex items-center justify-center">
+                  <span class="text-sm font-bold text-white">W3</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-stone-900">Target 15 companies and customize your applications</div>
+                  <div class="text-sm text-stone-500 mt-1">Research companies actively hiring for your role and tailor each...</div>
+                </div>
+              </div>
+              <div class="flex gap-4 p-4 bg-stone-50 border border-stone-100 blur-[6px] select-none" aria-hidden="true">
+                <div class="flex-shrink-0 w-12 h-12 bg-stone-900 flex items-center justify-center">
+                  <span class="text-sm font-bold text-white">W4</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-stone-900">Interview prep and salary negotiation strategy</div>
+                  <div class="text-sm text-stone-500 mt-1">Practice with AI mock interviews and prepare your negotiation...</div>
+                </div>
+              </div>
+            </div>
+            <!-- Locked overlay -->
+            <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-white via-white/95 to-transparent flex items-end justify-center pb-4">
+              <div class="flex items-center gap-2 text-sm text-stone-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Unlock to see your full personalized plan
+              </div>
+            </div>
+          </div>
+
+          <!-- Blurred CV Rewrite Preview -->
+          <div class="border border-stone-200 bg-white p-6 mb-6 relative overflow-hidden">
+            <h2 class="text-lg font-bold text-stone-900 mb-4">CV Rewrite Suggestions</h2>
+            <div class="space-y-2 blur-[6px] select-none" aria-hidden="true">
+              <div class="flex items-start gap-2 text-sm text-stone-600">
+                <svg class="w-5 h-5 text-stone-900 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Replace "responsible for" with impact-driven language showing measurable outcomes
+              </div>
+              <div class="flex items-start gap-2 text-sm text-stone-600">
+                <svg class="w-5 h-5 text-stone-900 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Add a skills section matching the top 8 keywords from job descriptions
+              </div>
+              <div class="flex items-start gap-2 text-sm text-stone-600">
+                <svg class="w-5 h-5 text-stone-900 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Restructure experience to lead with most relevant role achievements
+              </div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+          </div>
+
           <!-- Upgrade CTA -->
-          <div class="border border-stone-200 bg-white p-8 mb-6">
-            <div class="text-center mb-6">
-              <h2 class="text-xl font-black text-stone-900 mb-2">{{ upgradeTitle() }}</h2>
-              <p class="text-stone-500">{{ upgradeMessage() }}</p>
+          <div class="border-2 border-red-200 bg-gradient-to-b from-red-50 to-white p-8 mb-6">
+            <div class="text-center mb-2">
+              <div class="inline-flex items-center gap-2 bg-red-100 text-red-700 text-xs font-bold px-3 py-1 mb-4 uppercase tracking-wider">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                {{ urgencyBadge() }}
+              </div>
+              <h2 class="text-2xl font-black text-stone-900 mb-2">{{ upgradeTitle() }}</h2>
+              <p class="text-stone-500 max-w-md mx-auto">{{ upgradeMessage() }}</p>
             </div>
 
-            <!-- Dual CTA -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <!-- What's included -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-6 max-w-md mx-auto">
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Full 30-day action plan
+              </div>
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                CV rewrite suggestions
+              </div>
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                AI mock interview (5 Qs)
+              </div>
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Roles to avoid warning
+              </div>
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Career pivot analysis
+              </div>
+              <div class="flex items-center gap-2 text-sm text-stone-700">
+                <svg class="w-4 h-4 text-green-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Shareable report link
+              </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
               <a routerLink="/pricing"
-                class="block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800">
-                <div class="text-white font-bold">Starter</div>
-                <div class="text-stone-400 text-sm">{{ starterPrice() }}/mo &mdash; Full roadmap + tracking</div>
+                class="flex-1 block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800 hover:scale-[1.02]">
+                <div class="text-white font-bold text-lg">Get Starter</div>
+                <div class="text-stone-400 text-sm">{{ starterPrice() }}/mo</div>
               </a>
               <a routerLink="/pricing"
-                class="block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700">
-                <div class="text-white font-bold">Pro</div>
-                <div class="text-red-100 text-sm">{{ proPrice() }}/mo &mdash; 8 AI tools + unlimited</div>
+                class="flex-1 block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700 hover:scale-[1.02] ring-2 ring-red-300 ring-offset-2">
+                <div class="text-white font-bold text-lg">Get Pro</div>
+                <div class="text-red-100 text-sm">{{ proPrice() }}/mo — Most popular</div>
               </a>
             </div>
 
-            <!-- Locked Feature Previews -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div class="border border-stone-200 bg-stone-50 p-3 text-center opacity-50">
-                <div class="text-xs text-stone-400">Career Mentor</div>
-              </div>
-              <div class="border border-stone-200 bg-stone-50 p-3 text-center opacity-50">
-                <div class="text-xs text-stone-400">Interview Sim</div>
-              </div>
-              <div class="border border-stone-200 bg-stone-50 p-3 text-center opacity-50">
-                <div class="text-xs text-stone-400">PDF Export</div>
-              </div>
-              <div class="border border-stone-200 bg-stone-50 p-3 text-center opacity-50">
-                <div class="text-xs text-stone-400">Salary Data</div>
-              </div>
-            </div>
+            <p class="text-center text-xs text-stone-400 mt-4">Cancel anytime. No long-term commitment.</p>
           </div>
         }
 
@@ -322,6 +412,13 @@ export class SessionResultComponent implements OnInit {
     if (s === 'RED') return 'You need a plan \u2014 urgently';
     if (s === 'GREEN') return 'You\'re close \u2014 get the edge';
     return 'Unlock your full action plan';
+  }
+
+  urgencyBadge(): string {
+    const s = this.session()?.status;
+    if (s === 'RED') return 'Action needed this week';
+    if (s === 'GREEN') return 'Small gaps closing fast';
+    return 'Don\'t wait — gaps grow over time';
   }
 
   upgradeMessage(): string {
