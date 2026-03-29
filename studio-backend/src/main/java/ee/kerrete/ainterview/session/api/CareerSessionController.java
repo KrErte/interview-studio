@@ -4,9 +4,12 @@ import ee.kerrete.ainterview.model.AppUser;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionRequest;
 import ee.kerrete.ainterview.session.dto.ClarifyingQuestionResponse;
 import ee.kerrete.ainterview.session.dto.CreateSessionRequest;
+import ee.kerrete.ainterview.session.dto.SaveByEmailRequest;
 import ee.kerrete.ainterview.session.dto.SessionResponse;
 import ee.kerrete.ainterview.session.dto.SessionSummary;
 import ee.kerrete.ainterview.session.service.CareerSessionService;
+import ee.kerrete.ainterview.auth.service.EmailService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import java.util.List;
 public class CareerSessionController {
 
     private final CareerSessionService service;
+    private final EmailService emailService;
 
     @PostMapping
     public ResponseEntity<SessionResponse> create(
@@ -54,6 +58,23 @@ public class CareerSessionController {
     @GetMapping("/share/{shareId}")
     public SessionResponse getShared(@PathVariable String shareId) {
         return service.getByShareId(shareId);
+    }
+
+    @PostMapping("/{id}/save-email")
+    public ResponseEntity<Void> saveByEmail(
+            @PathVariable Long id,
+            @Valid @RequestBody SaveByEmailRequest request) {
+        SessionResponse session = service.getSession(id);
+        String shareLink = "https://careerrisk.ee/share/" + session.shareId();
+        emailService.sendSessionResultsEmail(
+                request.getEmail(),
+                session.targetRole(),
+                session.status(),
+                session.blockers(),
+                session.teaserAction(),
+                shareLink
+        );
+        return ResponseEntity.ok().build();
     }
 
     private Long extractUserId(Authentication auth) {

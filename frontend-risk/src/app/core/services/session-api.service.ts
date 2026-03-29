@@ -90,6 +90,10 @@ export class SessionApiService {
     return this.api.post<ClarifyingQuestionResponse>('/sessions/clarifying-questions', request);
   }
 
+  saveByEmail(sessionId: number, email: string): Observable<void> {
+    return this.api.post<void>(`/sessions/${sessionId}/save-email`, { email });
+  }
+
   // ─── Mock Interview ───────────────────────────────────────────────────────
 
   startMockInterview(sessionId: number): Observable<MockInterviewStartResponse> {

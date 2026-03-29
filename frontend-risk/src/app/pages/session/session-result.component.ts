@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SessionApiService, SessionResponse } from '../../core/services/session-api.service';
 import { AuthService } from '../../core/auth/auth-api.service';
@@ -9,7 +10,7 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
 @Component({
   selector: 'app-session-result',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="max-w-3xl mx-auto px-4 py-12">
       @if (loading()) {
@@ -199,6 +200,27 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
           </div>
         }
 
+        <!-- Save Results by Email -->
+        <div class="border border-stone-200 bg-white p-6 mb-6">
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <div class="flex-1 min-w-0">
+              <h3 class="text-base font-bold text-stone-900">Save your results</h3>
+              <p class="text-sm text-stone-500">Get your 30-day plan by email</p>
+            </div>
+            <div class="flex w-full sm:w-auto gap-2">
+              <input type="email" [(ngModel)]="saveEmail"
+                placeholder="your@email.com"
+                class="flex-1 sm:w-56 px-4 py-2.5 border border-stone-300 text-sm focus:outline-none focus:border-stone-900 transition-colors"
+              />
+              <button (click)="saveByEmail()"
+                [disabled]="saving() || saved()"
+                class="px-5 py-2.5 bg-stone-900 text-white text-sm font-semibold hover:bg-stone-800 transition-colors disabled:opacity-50 whitespace-nowrap">
+                {{ saved() ? 'Sent!' : saving() ? 'Sending...' : 'Save' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Share Button -->
         @if (session()!.shareId) {
           <div class="flex items-center justify-center gap-4 mt-8">
@@ -230,6 +252,9 @@ export class SessionResultComponent implements OnInit {
   copied = signal(false);
   starterPrice = signal('$7.99');
   proPrice = signal('$15.99');
+  saveEmail = '';
+  saving = signal(false);
+  saved = signal(false);
 
   ngOnInit() {
     this.paymentApi.getPricing().subscribe(tiers => {
@@ -304,6 +329,21 @@ export class SessionResultComponent implements OnInit {
     if (s === 'RED') return 'Your assessment shows significant gaps. Get a full 30-day roadmap with step-by-step tasks, AI career tools, and interview prep to close those gaps fast.';
     if (s === 'GREEN') return 'You have strong alignment! Unlock your full plan to refine your positioning, optimize your CV, and practice with AI interview simulation.';
     return 'Get your complete 30-day action plan, task tracking, session history, shareable reports, and 8 AI-powered career tools.';
+  }
+
+  saveByEmail() {
+    if (!this.saveEmail || this.saving()) return;
+    this.saving.set(true);
+    this.sessionApi.saveByEmail(this.session()!.id!, this.saveEmail).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.saved.set(true);
+        this.analytics.trackEvent('save_by_email', { sessionId: this.session()?.id });
+      },
+      error: () => {
+        this.saving.set(false);
+      }
+    });
   }
 
   copyShareLink() {
