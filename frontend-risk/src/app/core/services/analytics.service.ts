@@ -8,6 +8,7 @@ export type AnalyticsEvent =
   | 'checkout_initiated'
   | 'tier_upgraded'
   | 'share_created'
+  | 'save_by_email'
   | 'arena_tool_used'
   | 'command_palette_opened'
   | 'shortcut_used'
