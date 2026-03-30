@@ -33,15 +33,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
 
         <!-- LEFT: Text + CTA -->
         <div class="space-y-7">
-          <!-- Live social proof — editorial style -->
-          <div class="flex items-center gap-2 text-xs text-stone-500 border-l-2 border-red-600 pl-3">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-            </span>
-            <span><strong class="text-stone-900">{{ liveAssessments | number }}</strong> {{ 'landing.heroPeopleChecked' | translate }}</span>
-          </div>
-
           <!-- Headline — fear + doubt, editorial weight -->
           <h1 class="text-5xl md:text-6xl font-black text-stone-900 leading-[1.02] tracking-tight">
             {{ 'landing.heroHeadline1' | translate }}<br>
@@ -352,7 +343,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
 })
 export class LandingComponent implements OnInit, OnDestroy {
   showStickyCta = false;
-  liveAssessments = 1243;
   jobsAtRisk = 47;
   meterProgress = 5;
   displayScore = 5;
@@ -363,7 +353,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   readonly proPrice = signal('€14.99');
 
   private animationInterval: any;
-  private counterInterval: any;
 
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -388,15 +377,10 @@ export class LandingComponent implements OnInit, OnDestroy {
     // Animate the meter on load — no delay so 0% never flashes
     this.animateMeter();
 
-    // Simulate live assessments counter
-    this.counterInterval = setInterval(() => {
-      if (Math.random() > 0.3) this.liveAssessments += Math.floor(Math.random() * 4) + 1;
-    }, 5000);
   }
 
   ngOnDestroy(): void {
     if (this.animationInterval) clearInterval(this.animationInterval);
-    if (this.counterInterval) clearInterval(this.counterInterval);
   }
 
   private animateMeter(): void {
