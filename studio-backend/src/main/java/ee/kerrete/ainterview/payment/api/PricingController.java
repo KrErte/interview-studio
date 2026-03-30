@@ -62,16 +62,16 @@ public class PricingController {
                 null, null, null
             ),
             new PricingTier(
-                "STARTER", "Starter", 7.99, "USD",
+                "STARTER", "Starter", 9, "USD",
                 features("starter"),
-                false, true, true, "month",
-                79.90, 6.66, "MOST POPULAR"
+                false, false, false, null,
+                null, null, "ONE-TIME PAYMENT"
             ),
             new PricingTier(
-                "ARENA_PRO", "Pro", 15.99, "USD",
+                "ARENA_PRO", "Pro", 19, "USD",
                 features("pro"),
-                false, false, true, "month",
-                159.90, 13.33, "BEST VALUE"
+                false, true, true, "year",
+                null, null, "BEST VALUE"
             )
         );
     }
@@ -85,16 +85,16 @@ public class PricingController {
                 null, null, null
             ),
             new PricingTier(
-                "STARTER", "Starter", 7.49, "EUR",
+                "STARTER", "Starter", 9, "EUR",
                 features("starter"),
-                false, true, true, "month",
-                74.90, 6.24, "MOST POPULAR"
+                false, false, false, null,
+                null, null, "ONE-TIME PAYMENT"
             ),
             new PricingTier(
-                "ARENA_PRO", "Pro", 14.99, "EUR",
+                "ARENA_PRO", "Pro", 19, "EUR",
                 features("pro"),
-                false, false, true, "month",
-                149.90, 12.49, "BEST VALUE"
+                false, true, true, "year",
+                null, null, "BEST VALUE"
             )
         );
     }
@@ -109,32 +109,20 @@ public class PricingController {
                 "No credit card needed"
             );
             case "starter" -> List.of(
-                "Everything in Free",
-                "Full 30-day roadmap + tasks",
-                "Task tracking & progress",
-                "Session history",
-                "Shareable reports",
-                "Progress analytics",
-                "Email reminders",
-                "Job X-Ray (3x/month)",
-                "Cancel anytime"
+                "Full report + 30-day action plan",
+                "CV rewrite suggestions",
+                "Shareable report link",
+                "Roles to avoid warning",
+                "Career pivot analysis",
+                "One-time purchase, yours forever"
             );
             case "pro" -> List.of(
-                "Everything in Starter",
-                "NEW:Interview Simulator (AI)",
-                "NEW:Salary Negotiation Coach",
-                "NEW:CV/LinkedIn Optimizer",
-                "NEW:AI Career Mentor",
-                "NEW:Company-Specific Prep",
-                "NEW:LinkedIn Summary Generator",
-                "NEW:Cover Letter Generator",
-                "NEW:Salary Benchmark Dashboard",
-                "Interview score tracking",
-                "PDF report export",
-                "Unlimited Job X-Ray",
-                "Priority AI processing",
-                "Multiple CV sessions",
-                "Cancel anytime"
+                "Full report + 30-day action plan",
+                "AI interview simulator (5 questions)",
+                "Quarterly risk score updates",
+                "CV rewrite suggestions",
+                "Shareable report link",
+                "12 months access"
             );
             default -> List.of();
         };

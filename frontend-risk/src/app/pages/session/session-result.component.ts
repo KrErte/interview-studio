@@ -71,6 +71,39 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
           <p class="text-stone-700">{{ session()!.teaserAction }}</p>
         </div>
 
+        <!-- Email Capture (shown before blurred content for free users) -->
+        @if (!session()!.paid && !saved()) {
+          <div class="border-2 border-stone-900 bg-stone-50 p-6 mb-6">
+            <div class="text-center mb-4">
+              <h3 class="text-xl font-black text-stone-900">Get your full 30-day plan by email — free</h3>
+              <p class="text-sm text-stone-500 mt-1">We'll send Week 1 immediately. No spam.</p>
+            </div>
+            <div class="flex justify-center gap-2 max-w-md mx-auto">
+              <input type="email" [(ngModel)]="saveEmail"
+                placeholder="your@email.com"
+                class="flex-1 px-4 py-2.5 border border-stone-300 text-sm focus:outline-none focus:border-stone-900 transition-colors"
+              />
+              <button (click)="saveByEmail()"
+                [disabled]="saving()"
+                class="px-5 py-2.5 bg-stone-900 text-white text-sm font-semibold hover:bg-stone-800 transition-colors disabled:opacity-50 whitespace-nowrap">
+                {{ saving() ? 'Sending...' : 'Save & send' }}
+              </button>
+            </div>
+            <p class="text-center text-xs text-stone-400 mt-3">
+              Or <a href="#upgrade-cta" class="underline hover:text-stone-600">unlock everything instantly →</a>
+            </p>
+          </div>
+        }
+        @if (!session()!.paid && saved()) {
+          <div class="border-2 border-green-200 bg-green-50 p-6 mb-6 text-center">
+            <svg class="w-8 h-8 text-green-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <h3 class="text-lg font-bold text-green-800">Check your inbox!</h3>
+            <p class="text-sm text-green-600 mt-1">We sent your Week 1 plan to {{ saveEmail }}</p>
+          </div>
+        }
+
         <!-- Paid Content OR Upgrade CTA -->
         @if (session()!.paid) {
 
@@ -234,7 +267,7 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
           </div>
 
           <!-- Upgrade CTA -->
-          <div class="border-2 border-red-200 bg-gradient-to-b from-red-50 to-white p-8 mb-6">
+          <div id="upgrade-cta" class="border-2 border-red-200 bg-gradient-to-b from-red-50 to-white p-8 mb-6">
             <div class="text-center mb-2">
               <div class="inline-flex items-center gap-2 bg-red-100 text-red-700 text-xs font-bold px-3 py-1 mb-4 uppercase tracking-wider">
                 <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
@@ -276,40 +309,24 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
             <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
               <a routerLink="/pricing"
                 class="flex-1 block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800 hover:scale-[1.02]">
-                <div class="text-white font-bold text-lg">Get Starter</div>
-                <div class="text-stone-400 text-sm">{{ starterPrice() }}/mo</div>
+                <div class="text-white font-bold text-lg">Unlock Full Report — {{ starterPrice() }}</div>
+                <div class="text-stone-400 text-sm">One-time, no subscription</div>
               </a>
               <a routerLink="/pricing"
                 class="flex-1 block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700 hover:scale-[1.02] ring-2 ring-red-300 ring-offset-2">
-                <div class="text-white font-bold text-lg">Get Pro</div>
-                <div class="text-red-100 text-sm">{{ proPrice() }}/mo — Most popular</div>
+                <div class="text-white font-bold text-lg">Get Pro — {{ proPrice() }} per year</div>
+                <div class="text-red-100 text-sm">Interview simulator + quarterly score updates</div>
               </a>
             </div>
 
-            <p class="text-center text-xs text-stone-400 mt-4">Cancel anytime. No long-term commitment.</p>
+            <div class="flex items-center justify-center gap-2 mt-4 text-xs text-stone-400">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              Secure payment via Stripe
+            </div>
           </div>
         }
-
-        <!-- Save Results by Email -->
-        <div class="border border-stone-200 bg-white p-6 mb-6">
-          <div class="flex flex-col sm:flex-row items-center gap-4">
-            <div class="flex-1 min-w-0">
-              <h3 class="text-base font-bold text-stone-900">Save your results</h3>
-              <p class="text-sm text-stone-500">Get your 30-day plan by email</p>
-            </div>
-            <div class="flex w-full sm:w-auto gap-2">
-              <input type="email" [(ngModel)]="saveEmail"
-                placeholder="your@email.com"
-                class="flex-1 sm:w-56 px-4 py-2.5 border border-stone-300 text-sm focus:outline-none focus:border-stone-900 transition-colors"
-              />
-              <button (click)="saveByEmail()"
-                [disabled]="saving() || saved()"
-                class="px-5 py-2.5 bg-stone-900 text-white text-sm font-semibold hover:bg-stone-800 transition-colors disabled:opacity-50 whitespace-nowrap">
-                {{ saved() ? 'Sent!' : saving() ? 'Sending...' : 'Save' }}
-              </button>
-            </div>
-          </div>
-        </div>
 
         <!-- Share Button -->
         @if (session()!.shareId) {
@@ -340,8 +357,8 @@ export class SessionResultComponent implements OnInit {
   loading = signal(true);
   session = signal<SessionResponse | null>(null);
   copied = signal(false);
-  starterPrice = signal('$7.99');
-  proPrice = signal('$15.99');
+  starterPrice = signal('$9');
+  proPrice = signal('$19');
   saveEmail = '';
   saving = signal(false);
   saved = signal(false);
@@ -351,8 +368,8 @@ export class SessionResultComponent implements OnInit {
       const symbol = tiers[0]?.currency === 'EUR' ? '€' : '$';
       const starter = tiers.find(t => t.id === 'STARTER');
       const pro = tiers.find(t => t.id === 'ARENA_PRO');
-      if (starter) this.starterPrice.set(symbol + starter.price.toFixed(2));
-      if (pro) this.proPrice.set(symbol + pro.price.toFixed(2));
+      if (starter) this.starterPrice.set(symbol + Math.round(starter.price));
+      if (pro) this.proPrice.set(symbol + Math.round(pro.price));
     });
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {

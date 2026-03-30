@@ -7,16 +7,19 @@ public record StripeProperties(
     String secretKey,
     String publishableKey,
     String webhookSecret,
-    // USD price IDs
+    // New simplified price IDs (Starter = one-time, Pro = yearly subscription)
+    String starterUsdPriceId,
+    String starterEurPriceId,
+    String proUsdPriceId,
+    String proEurPriceId,
+    // Legacy (kept for backward compat with existing subscribers)
     String starterMonthlyPriceId,
     String starterAnnualPriceId,
     String proMonthlyPriceId,
     String proAnnualPriceId,
-    // EUR price IDs
     String starterMonthlyEurPriceId,
     String starterAnnualEurPriceId,
     String proMonthlyEurPriceId,
     String proAnnualEurPriceId,
-    // Legacy
     String arenaProPriceId
 ) {}

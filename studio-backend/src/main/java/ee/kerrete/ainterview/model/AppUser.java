@@ -116,6 +116,10 @@ public class AppUser implements UserDetails {
         if (role == UserRole.ADMIN && tier != null) {
             return tier;
         }
+        // Starter is a one-time purchase — always active if status is ACTIVE
+        if (tier == UserTier.STARTER && subscriptionStatus == SubscriptionStatus.ACTIVE) {
+            return tier;
+        }
         if (hasActiveSubscription()) {
             return tier;
         }

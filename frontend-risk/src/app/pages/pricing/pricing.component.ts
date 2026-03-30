@@ -40,30 +40,6 @@ import { TranslateModule } from '@ngx-translate/core';
         </div>
       </div>
 
-      <!-- Billing Toggle -->
-      <div class="flex items-center justify-center gap-4 mb-10">
-        <span class="text-sm font-medium" [class]="!isAnnual() ? 'text-stone-900' : 'text-stone-400'">
-          {{ 'pricing.monthly' | translate }}
-        </span>
-        <button
-          (click)="toggleBilling()"
-          class="relative w-14 h-7 transition-colors duration-300"
-          [class]="isAnnual() ? 'bg-stone-900' : 'bg-stone-300'">
-          <div
-            class="absolute top-0.5 w-6 h-6 bg-white shadow transition-transform duration-300"
-            [class]="isAnnual() ? 'translate-x-7' : 'translate-x-0.5'">
-          </div>
-        </button>
-        <span class="text-sm font-medium" [class]="isAnnual() ? 'text-stone-900' : 'text-stone-400'">
-          {{ 'pricing.annual' | translate }}
-        </span>
-        @if (isAnnual()) {
-          <span class="px-2.5 py-1 bg-red-600 text-white text-xs font-bold">
-            {{ 'pricing.saveBadge' | translate }}
-          </span>
-        }
-      </div>
-
       <!-- Loading -->
       @if (loading()) {
         <div class="flex justify-center py-16">
@@ -82,9 +58,9 @@ import { TranslateModule } from '@ngx-translate/core';
               <!-- Badge -->
               @if (tier.badge) {
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 text-xs font-bold"
-                  [class]="tier.id === 'STARTER'
-                    ? 'bg-stone-900 text-white'
-                    : 'bg-red-600 text-white'">
+                  [class]="tier.id === 'ARENA_PRO'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-stone-900 text-white'">
                   {{ tier.badge }}
                 </div>
               }
@@ -97,84 +73,36 @@ import { TranslateModule } from '@ngx-translate/core';
 
               <div class="mb-6">
                 <h3 class="text-xl font-bold text-stone-900 mb-1">{{ tier.name }}</h3>
-                <div class="text-xs text-stone-400 mb-2">{{ tier.features.length }} features included</div>
-                <div class="flex items-baseline gap-1">
+                <div class="flex items-baseline gap-1 mt-3">
                   @if (tier.price === 0) {
                     <span class="text-4xl font-bold text-stone-400">{{ 'pricing.free' | translate }}</span>
                     <span class="text-sm text-stone-400">{{ 'pricing.forever' | translate }}</span>
-                  } @else if (isAnnual() && tier.annualMonthlyPrice) {
-                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.annualMonthlyPrice | number:'1.2-2' }}</span>
-                    <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
-                    <span class="ml-2 text-sm text-stone-400 line-through">{{ currencySymbol() }}{{ tier.price }}</span>
+                  } @else if (tier.id === 'STARTER') {
+                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.price | number:'1.0-0' }}</span>
+                    <span class="text-sm text-stone-500">one-time</span>
                   } @else {
-                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.price }}</span>
-                    <span class="text-sm text-stone-500">{{ 'pricing.perMonth' | translate }}</span>
+                    <span class="text-4xl font-bold text-stone-900">{{ currencySymbol() }}{{ tier.price | number:'1.0-0' }}</span>
+                    <span class="text-sm text-stone-500">per year</span>
                   }
                 </div>
-                @if (isAnnual() && tier.annualPrice) {
-                  <div class="text-xs text-stone-400 mt-1">
-                    {{ 'pricing.billedAnnually' | translate }} {{ currencySymbol() }}{{ tier.annualPrice }}
-                  </div>
+                @if (tier.id === 'STARTER') {
+                  <div class="text-xs text-stone-400 mt-1">No subscription. Yours forever.</div>
+                }
+                @if (tier.id === 'ARENA_PRO') {
+                  <div class="text-xs text-stone-400 mt-1">12 months access</div>
                 }
               </div>
 
-              <!-- Pro tier gets category headers -->
-              @if (tier.id === 'ARENA_PRO') {
-                <div class="space-y-4 mb-8 flex-1">
-                  <ul class="space-y-2">
-                    @for (feature of getProBaseFeatures(tier); track feature) {
-                      <li class="flex items-start gap-2 text-sm text-stone-600">
-                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        {{ feature }}
-                      </li>
-                    }
-                  </ul>
-
-                  <div>
-                    <div class="text-xs font-bold text-red-600 uppercase tracking-wider mb-2 mt-3">AI Tools</div>
-                    <ul class="space-y-2">
-                      @for (feature of getProAiFeatures(tier); track feature) {
-                        <li class="flex items-start gap-2 text-sm text-stone-600">
-                          <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          @if (isNewFeature(feature)) {
-                            <span class="px-1.5 py-0.5 text-[10px] font-bold bg-red-600 text-white mr-1">NEW</span>
-                          }
-                          {{ stripNewPrefix(feature) }}
-                        </li>
-                      }
-                    </ul>
-                  </div>
-
-                  <div>
-                    <div class="text-xs font-bold text-red-600 uppercase tracking-wider mb-2 mt-3">Analytics & Unlimited</div>
-                    <ul class="space-y-2">
-                      @for (feature of getProExtraFeatures(tier); track feature) {
-                        <li class="flex items-start gap-2 text-sm text-stone-600">
-                          <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          {{ feature }}
-                        </li>
-                      }
-                    </ul>
-                  </div>
-                </div>
-              } @else {
-                <ul class="space-y-3 mb-8 flex-1">
-                  @for (feature of tier.features; track feature) {
-                    <li class="flex items-start gap-2 text-sm text-stone-600">
-                      <svg class="w-5 h-5 flex-shrink-0 mt-0.5" [class]="tierCheckClass(tier)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {{ feature }}
-                    </li>
-                  }
-                </ul>
-              }
+              <ul class="space-y-3 mb-8 flex-1">
+                @for (feature of tier.features; track feature) {
+                  <li class="flex items-start gap-2 text-sm text-stone-600">
+                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" [class]="tierCheckClass(tier)" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ feature }}
+                  </li>
+                }
+              </ul>
 
               @if (tier.id === 'FREE') {
                 <a
@@ -182,7 +110,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   class="w-full py-3 border border-stone-300 text-sm font-semibold text-stone-600 text-center block hover:border-stone-900 hover:text-stone-900 transition-all">
                   {{ 'pricing.getStartedFree' | translate }}
                 </a>
-              } @else if (currentTier() === tier.id && tierService.hasSubscription()) {
+              } @else if (currentTier() === tier.id && tier.id === 'ARENA_PRO' && tierService.hasSubscription()) {
                 <button
                   (click)="manageSubscription()"
                   class="w-full py-3 border text-sm font-semibold transition-all border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900">
@@ -207,13 +135,23 @@ import { TranslateModule } from '@ngx-translate/core';
                     : 'bg-red-600 text-white hover:bg-red-700'">
                   @if (checkoutLoading()) {
                     {{ 'pricing.processing' | translate }}
+                  } @else if (tier.id === 'STARTER') {
+                    Unlock Full Report
                   } @else {
-                    {{ tier.id === 'STARTER' ? ('pricing.subscribeStarter' | translate) : ('pricing.subscribePro' | translate) }}
+                    Get Pro
                   }
                 </button>
               }
             </div>
           }
+        </div>
+
+        <!-- Secure payment note -->
+        <div class="flex items-center justify-center gap-2 mt-6 text-xs text-stone-400">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Secure payment via Stripe
         </div>
       }
 
@@ -246,14 +184,6 @@ import { TranslateModule } from '@ngx-translate/core';
             <h3 class="font-semibold text-stone-900 mb-2">{{ 'pricing.faqCancelTitle' | translate }}</h3>
             <p class="text-sm text-stone-500">{{ 'pricing.faqCancelDesc' | translate }}</p>
           </div>
-          <div class="border border-stone-200 bg-white p-5">
-            <h3 class="font-semibold text-stone-900 mb-2">{{ 'pricing.faqBillingTitle' | translate }}</h3>
-            <p class="text-sm text-stone-500">{{ 'pricing.faqBillingDesc' | translate }}</p>
-          </div>
-          <div class="border border-stone-200 bg-white p-5">
-            <h3 class="font-semibold text-stone-900 mb-2">{{ 'pricing.faqAnnualTitle' | translate }}</h3>
-            <p class="text-sm text-stone-500">{{ 'pricing.faqAnnualDesc' | translate }}</p>
-          </div>
         </div>
       </div>
     </div>
@@ -268,7 +198,6 @@ export class PricingComponent implements OnInit {
   readonly allTiers = signal<PricingTier[]>([]);
   readonly loading = signal(true);
   readonly checkoutLoading = signal(false);
-  readonly isAnnual = signal(false);
   readonly currentTier = this.tierService.tier;
 
   readonly currencySymbol = computed(() => {
@@ -289,10 +218,6 @@ export class PricingComponent implements OnInit {
     });
   }
 
-  toggleBilling() {
-    this.isAnnual.update(v => !v);
-  }
-
   tierCardClass(tier: PricingTier): string {
     if (tier.id === 'STARTER') {
       return 'border-stone-900 bg-white shadow-lg';
@@ -309,39 +234,15 @@ export class PricingComponent implements OnInit {
     return 'text-stone-400';
   }
 
-  isNewFeature(feature: string): boolean {
-    return feature.startsWith('NEW:');
-  }
-
-  stripNewPrefix(feature: string): string {
-    return feature.startsWith('NEW:') ? feature.substring(4) : feature;
-  }
-
-  getProBaseFeatures(tier: PricingTier): string[] {
-    return tier.features.filter(f => f === 'Everything in Starter');
-  }
-
-  getProAiFeatures(tier: PricingTier): string[] {
-    const aiKeywords = ['Interview Simulator', 'Salary Negotiation', 'CV/LinkedIn', 'Career Mentor', 'Company-Specific', 'LinkedIn Summary', 'Cover Letter', 'Salary Benchmark'];
-    return tier.features.filter(f => aiKeywords.some(k => f.includes(k)));
-  }
-
-  getProExtraFeatures(tier: PricingTier): string[] {
-    const base = this.getProBaseFeatures(tier);
-    const ai = this.getProAiFeatures(tier);
-    return tier.features.filter(f => !base.includes(f) && !ai.includes(f));
-  }
-
   checkoutError = '';
 
   checkout(tierId: string) {
     this.checkoutLoading.set(true);
     this.checkoutError = '';
-    const billingInterval = this.isAnnual() ? 'year' : 'month';
     const successUrl = `${window.location.origin}/payment/success?tier=${tierId}`;
     const cancelUrl = `${window.location.origin}/pricing`;
 
-    this.paymentApi.createCheckout(tierId, successUrl, cancelUrl, billingInterval).subscribe({
+    this.paymentApi.createCheckout(tierId, successUrl, cancelUrl).subscribe({
       next: (res) => {
         window.location.href = res.checkoutUrl;
       },

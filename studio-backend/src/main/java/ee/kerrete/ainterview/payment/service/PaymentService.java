@@ -42,17 +42,23 @@ public class PaymentService {
         AppUser user = appUserRepository.findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (user.hasActiveSubscription()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Already has an active subscription");
+        if (user.hasActiveSubscription() || isStarterPurchased(user)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Already has an active plan");
         }
 
         try {
             String customerId = getOrCreateStripeCustomer(user);
             String currency = geoService.getCurrencyForIp(clientIp);
-            String priceId = resolvePriceId(request.tier(), request.billingInterval(), currency);
+            String tier = request.tier() != null ? request.tier().toUpperCase() : "STARTER";
+            String priceId = resolveNewPriceId(tier, currency);
+
+            // Starter = one-time payment, Pro = subscription
+            SessionCreateParams.Mode mode = "STARTER".equals(tier)
+                ? SessionCreateParams.Mode.PAYMENT
+                : SessionCreateParams.Mode.SUBSCRIPTION;
 
             SessionCreateParams params = SessionCreateParams.builder()
-                .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+                .setMode(mode)
                 .setCustomer(customerId)
                 .setSuccessUrl(request.successUrl() + "&session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(request.cancelUrl())
@@ -63,7 +69,8 @@ public class PaymentService {
                         .build()
                 )
                 .putMetadata("user_id", String.valueOf(user.getId()))
-                .putMetadata("tier", request.tier())
+                .putMetadata("tier", tier)
+                .putMetadata("payment_type", "STARTER".equals(tier) ? "one_time" : "subscription")
                 .build();
 
             com.stripe.model.checkout.Session session =
@@ -74,6 +81,20 @@ public class PaymentService {
             log.error("Failed to create Stripe checkout session", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create checkout");
         }
+    }
+
+    private boolean isStarterPurchased(AppUser user) {
+        return user.getTier() == UserTier.STARTER
+            && user.getSubscriptionStatus() == SubscriptionStatus.ACTIVE;
+    }
+
+    private String resolveNewPriceId(String tier, String currency) {
+        boolean eur = "EUR".equals(currency);
+        return switch (tier) {
+            case "STARTER" -> eur ? stripeProperties.starterEurPriceId() : stripeProperties.starterUsdPriceId();
+            case "ARENA_PRO" -> eur ? stripeProperties.proEurPriceId() : stripeProperties.proUsdPriceId();
+            default -> eur ? stripeProperties.starterEurPriceId() : stripeProperties.starterUsdPriceId();
+        };
     }
 
     public String createPortalSession(Long userId) {
@@ -137,6 +158,7 @@ public class PaymentService {
         );
     }
 
+    // Legacy method kept for existing subscribers
     private String resolvePriceId(String tier, String interval, String currency) {
         String normalizedTier = (tier != null) ? tier.toUpperCase() : "STARTER";
         String normalizedInterval = (interval != null) ? interval.toLowerCase() : "month";
@@ -155,6 +177,22 @@ public class PaymentService {
 
     private UserTier resolveTierFromPriceId(String priceId) {
         if (priceId == null) return UserTier.FREE;
+
+        // New price IDs
+        if (Set.of(
+                stripeProperties.starterUsdPriceId(),
+                stripeProperties.starterEurPriceId()
+        ).contains(priceId)) {
+            return UserTier.STARTER;
+        }
+        if (Set.of(
+                stripeProperties.proUsdPriceId(),
+                stripeProperties.proEurPriceId()
+        ).contains(priceId)) {
+            return UserTier.ARENA_PRO;
+        }
+
+        // Legacy price IDs
         if (Set.of(
                 stripeProperties.starterMonthlyPriceId(),
                 stripeProperties.starterAnnualPriceId(),
@@ -203,7 +241,6 @@ public class PaymentService {
         com.stripe.model.checkout.Session session =
             (com.stripe.model.checkout.Session) deserializer.getObject().get();
 
-        String subscriptionId = session.getSubscription();
         Map<String, String> metadata = session.getMetadata();
         long userId = Long.parseLong(metadata.getOrDefault("user_id", "0"));
 
@@ -212,8 +249,8 @@ public class PaymentService {
             return;
         }
 
-        // Read tier from metadata, fallback to ARENA_PRO for backwards compatibility
         String tierStr = metadata.getOrDefault("tier", "ARENA_PRO");
+        String paymentType = metadata.getOrDefault("payment_type", "subscription");
         UserTier purchasedTier;
         try {
             purchasedTier = UserTier.valueOf(tierStr.toUpperCase());
@@ -222,19 +259,31 @@ public class PaymentService {
         }
 
         final UserTier finalTier = purchasedTier;
+        final String finalPaymentType = paymentType;
+
         appUserRepository.findById(userId).ifPresent(user -> {
             user.setTier(finalTier);
             user.setTierPurchasedAt(LocalDateTime.now());
-            user.setSubscriptionId(subscriptionId);
             user.setSubscriptionStatus(SubscriptionStatus.ACTIVE);
-            user.setSubscriptionCreatedAt(LocalDateTime.now());
+
+            if ("one_time".equals(finalPaymentType)) {
+                // Starter: one-time payment, no expiry, no subscription ID
+                user.setSubscriptionId(null);
+                user.setSubscriptionEndsAt(null);
+            } else {
+                // Pro: yearly subscription, 12 months access
+                String subscriptionId = session.getSubscription();
+                user.setSubscriptionId(subscriptionId);
+                user.setSubscriptionCreatedAt(LocalDateTime.now());
+                user.setSubscriptionEndsAt(LocalDateTime.now().plusMonths(12));
+            }
 
             if (user.getStripeCustomerId() == null && session.getCustomer() != null) {
                 user.setStripeCustomerId(session.getCustomer());
             }
 
             appUserRepository.save(user);
-            log.info("User {} upgraded to {} via Stripe checkout", userId, finalTier);
+            log.info("User {} upgraded to {} via Stripe checkout ({})", userId, finalTier, finalPaymentType);
         });
     }
 

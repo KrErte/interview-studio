@@ -53,13 +53,17 @@ app:
     secret-key: ${STRIPE_SECRET_KEY}
     publishable-key: ${STRIPE_PUBLISHABLE_KEY}
     webhook-secret: ${STRIPE_WEBHOOK_SECRET}
-    arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID}
-    starter-monthly-price-id: ${STRIPE_STARTER_MONTHLY_PRICE_ID}
-    starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID}
-    pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID}
-    pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID}
-    starter-monthly-eur-price-id: ${STRIPE_STARTER_MONTHLY_EUR_PRICE_ID}
-    starter-annual-eur-price-id: ${STRIPE_STARTER_ANNUAL_EUR_PRICE_ID}
-    pro-monthly-eur-price-id: ${STRIPE_PRO_MONTHLY_EUR_PRICE_ID}
-    pro-annual-eur-price-id: ${STRIPE_PRO_ANNUAL_EUR_PRICE_ID}
+    starter-usd-price-id: ${STRIPE_PRICE_STARTER_USD}
+    starter-eur-price-id: ${STRIPE_PRICE_STARTER_EUR}
+    pro-usd-price-id: ${STRIPE_PRICE_PRO_USD}
+    pro-eur-price-id: ${STRIPE_PRICE_PRO_EUR}
+    arena-pro-price-id: ${STRIPE_ARENA_PRO_PRICE_ID:price_dummy}
+    starter-monthly-price-id: ${STRIPE_STARTER_MONTHLY_PRICE_ID:price_dummy}
+    starter-annual-price-id: ${STRIPE_STARTER_ANNUAL_PRICE_ID:price_dummy}
+    pro-monthly-price-id: ${STRIPE_PRO_MONTHLY_PRICE_ID:price_dummy}
+    pro-annual-price-id: ${STRIPE_PRO_ANNUAL_PRICE_ID:price_dummy}
+    starter-monthly-eur-price-id: ${STRIPE_STARTER_MONTHLY_EUR_PRICE_ID:price_dummy}
+    starter-annual-eur-price-id: ${STRIPE_STARTER_ANNUAL_EUR_PRICE_ID:price_dummy}
+    pro-monthly-eur-price-id: ${STRIPE_PRO_MONTHLY_EUR_PRICE_ID:price_dummy}
+    pro-annual-eur-price-id: ${STRIPE_PRO_ANNUAL_EUR_PRICE_ID:price_dummy}
 
