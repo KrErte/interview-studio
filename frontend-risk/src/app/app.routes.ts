@@ -16,9 +16,9 @@ export const routes: Routes = [
     path: '',
     component: PublicShellComponent,
     children: [
-      { path: '', pathMatch: 'full', component: LandingComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
+      { path: '', pathMatch: 'full', component: LandingComponent, data: { title: 'CareerRisk — Is Your Career at Risk from AI?', description: 'Free 3-minute AI career risk assessment. Find out if your job is at risk and get a personalized action plan.' } },
+      { path: 'login', component: LoginComponent, data: { title: 'Login — CareerRisk', description: 'Log in to your CareerRisk account.' } },
+      { path: 'register', component: RegisterComponent, data: { title: 'Register — CareerRisk', description: 'Create your CareerRisk account.' } },
       {
         path: 'forgot-password',
         loadComponent: () =>
@@ -114,6 +114,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: { title: 'Pricing — CareerRisk', description: 'Simple pricing for AI career risk assessments. Free preview, full plan from €9.' },
         loadComponent: () =>
           import('./pages/pricing/pricing.component').then(
             (m) => m.PricingComponent
@@ -286,6 +287,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'about',
+        data: { title: 'About — CareerRisk', description: 'Learn about CareerRisk and our mission to help professionals navigate AI career disruption.' },
         loadComponent: () =>
           import('./pages/legal/about.component').then(
             (m) => m.AboutComponent
@@ -293,6 +295,7 @@ export const routes: Routes = [
       },
       {
         path: 'privacy',
+        data: { title: 'Privacy Policy — CareerRisk', description: 'CareerRisk privacy policy.' },
         loadComponent: () =>
           import('./pages/legal/privacy.component').then(
             (m) => m.PrivacyComponent
@@ -300,6 +303,7 @@ export const routes: Routes = [
       },
       {
         path: 'terms',
+        data: { title: 'Terms of Service — CareerRisk', description: 'CareerRisk terms of service.' },
         loadComponent: () =>
           import('./pages/legal/terms.component').then(
             (m) => m.TermsComponent
@@ -307,6 +311,7 @@ export const routes: Routes = [
       },
       {
         path: 'contact',
+        data: { title: 'Contact — CareerRisk', description: 'Get in touch with the CareerRisk team.' },
         loadComponent: () =>
           import('./pages/legal/contact.component').then(
             (m) => m.ContactComponent

@@ -100,6 +100,8 @@ public class SecurityConfig {
 
                 auth
                     .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                    // OG meta endpoint for social media crawlers
+                    .requestMatchers(HttpMethod.GET, "/api/og/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/trainer/status").permitAll()
                     // Risk analysis endpoints - all public for now
                     .requestMatchers("/api/risk/**").permitAll()
