@@ -124,6 +124,31 @@
   <!-- Main assessment content -->
   <div *ngIf="assessment" class="space-y-6">
 
+    <!-- Loss-frame warning for free users -->
+    <div *ngIf="tierService.isFree()" class="border border-red-300 bg-red-50 p-5 shadow-sm">
+      <div class="flex items-start gap-3">
+        <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <div>
+          <h3 class="font-bold text-red-800">At {{ assessment.riskPercent }}% risk, every week without a plan costs you</h3>
+          <p class="text-sm text-red-700 mt-1">Professionals who act on their career defense plan within 30 days are 3x more likely to maintain their earning potential. Your full plan is ready below.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar for free users -->
+    <div *ngIf="tierService.isFree()" class="border border-stone-200 bg-white p-5 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-bold text-stone-900">Your Career Defense Plan</h3>
+        <span class="text-xs font-bold text-red-600">1 of 7 steps completed</span>
+      </div>
+      <div class="h-2.5 bg-stone-100 overflow-hidden mb-2">
+        <div class="h-full bg-gradient-to-r from-red-500 to-red-400" style="width: 14%"></div>
+      </div>
+      <p class="text-xs text-stone-500">You've completed the assessment. Unlock the remaining 6 steps to build your full career defense.</p>
+    </div>
+
     <!-- SECTION 1: Top 3 Actions -->
     <div class="border border-stone-200 bg-white p-6 shadow-sm">
       <div class="flex items-center gap-3 mb-5">
@@ -137,6 +162,7 @@
       </div>
 
       <div class="space-y-3">
+        <!-- Step 1 — always visible -->
         <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
           <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">1</div>
           <div class="flex-1">
@@ -149,32 +175,52 @@
           </div>
         </div>
 
-        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
+        <!-- Step 2 — title visible, details blurred for free -->
+        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 relative overflow-hidden"
+             [class.hover:border-stone-400]="!tierService.isFree()">
           <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">2</div>
           <div class="flex-1">
             <h3 class="font-bold text-stone-900">Develop "human" skills</h3>
-            <p class="text-sm text-stone-500 mt-1">Client communication, teamwork, understanding problems - AI can't replace this</p>
-            <div class="mt-2 flex flex-wrap gap-2">
+            <p class="text-sm text-stone-500 mt-1" [class.blur-sm]="tierService.isFree()" [class.select-none]="tierService.isFree()">Client communication, teamwork, understanding problems - AI can't replace this</p>
+            <div class="mt-2 flex flex-wrap gap-2" [class.blur-sm]="tierService.isFree()" [class.select-none]="tierService.isFree()">
               <span class="px-2 py-1 bg-stone-100 text-stone-700 border border-stone-300 text-xs font-bold">Medium priority</span>
               <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 text-xs">Ongoing</span>
             </div>
           </div>
+          <div *ngIf="tierService.isFree()" class="absolute top-3 right-3">
+            <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
         </div>
 
-        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 hover:border-stone-400 transition-colors">
+        <!-- Step 3 — title visible, details blurred for free -->
+        <div class="flex items-start gap-4 p-4 border border-stone-200 bg-stone-50 relative overflow-hidden"
+             [class.hover:border-stone-400]="!tierService.isFree()">
           <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">3</div>
           <div class="flex-1">
             <h3 class="font-bold text-stone-900">Specialize in higher-level work</h3>
-            <p class="text-sm text-stone-500 mt-1">Architecture, system design, business logic - AI handles routine, you handle strategy</p>
-            <div class="mt-2 flex flex-wrap gap-2">
+            <p class="text-sm text-stone-500 mt-1" [class.blur-sm]="tierService.isFree()" [class.select-none]="tierService.isFree()">Architecture, system design, business logic - AI handles routine, you handle strategy</p>
+            <div class="mt-2 flex flex-wrap gap-2" [class.blur-sm]="tierService.isFree()" [class.select-none]="tierService.isFree()">
               <span class="px-2 py-1 bg-stone-100 text-stone-700 border border-stone-300 text-xs font-bold">Long-term</span>
               <span class="px-2 py-1 bg-stone-100 text-stone-600 border border-stone-200 text-xs">6-12 months</span>
             </div>
           </div>
+          <div *ngIf="tierService.isFree()" class="absolute top-3 right-3">
+            <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
         </div>
       </div>
 
-      <button
+      <!-- Upgrade CTA for free users instead of "View full action plan" -->
+      <div *ngIf="tierService.isFree()" class="mt-4">
+        <a routerLink="/pricing"
+          class="w-full py-3 bg-red-600 hover:bg-red-700 text-sm font-bold text-white transition-colors flex items-center justify-center gap-2">
+          Unlock all 7 steps — from {{ starterPriceLabel }}/mo
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      <button *ngIf="!tierService.isFree()"
         type="button"
         class="mt-4 w-full py-3 border border-stone-300 text-sm font-bold text-stone-700 hover:border-stone-900 hover:text-stone-900 transition-colors flex items-center justify-center gap-2"
         (click)="setActiveTab('actions'); showAdvanced = true"

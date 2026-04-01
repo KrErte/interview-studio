@@ -50,22 +50,60 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
           <p class="text-stone-400 mt-1">{{ session()!.mode === 'ADVANCED' ? 'Advanced' : 'Quick' }} Assessment</p>
         </div>
 
-        <!-- Blockers -->
+        <!-- Loss-frame warning -->
+        @if (!session()!.paid) {
+          <div class="border border-red-300 bg-red-50 p-5 mb-6">
+            <div class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <h3 class="font-bold text-red-800">{{ lossFrameTitle() }}</h3>
+                <p class="text-sm text-red-700 mt-1">{{ lossFrameMessage() }}</p>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Progress Bar — career defense plan completion -->
+        @if (!session()!.paid) {
+          <div class="border border-stone-200 bg-white p-5 mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-bold text-stone-900">Your Career Defense Plan</h3>
+              <span class="text-xs text-stone-400">2 of 8 steps completed</span>
+            </div>
+            <div class="h-2 bg-stone-100 overflow-hidden mb-2">
+              <div class="h-full bg-gradient-to-r from-red-500 to-red-400 transition-all duration-1000" style="width: 25%"></div>
+            </div>
+            <p class="text-xs text-stone-500">Unlock the full plan to complete all 8 steps and close your career gaps.</p>
+          </div>
+        }
+
+        <!-- Blockers — show titles only, content blurred for free -->
         <div class="border border-stone-200 bg-white p-6 mb-6">
           <h2 class="text-lg font-bold text-stone-900 mb-4">Key Blockers</h2>
           <div class="space-y-3">
-            @for (blocker of session()!.blockers; track blocker) {
-              <div class="flex items-start gap-3 p-3 bg-stone-50 border border-stone-100">
-                <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span class="text-sm text-stone-700">{{ blocker }}</span>
-              </div>
+            @for (blocker of session()!.blockers; track blocker; let i = $index) {
+              @if (i === 0 || session()!.paid) {
+                <div class="flex items-start gap-3 p-3 bg-stone-50 border border-stone-100">
+                  <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span class="text-sm text-stone-700">{{ blocker }}</span>
+                </div>
+              } @else {
+                <div class="flex items-start gap-3 p-3 bg-stone-50 border border-stone-100 relative overflow-hidden">
+                  <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span class="text-sm text-stone-700 blur-[5px] select-none">{{ blocker }}</span>
+                </div>
+              }
             }
           </div>
         </div>
 
-        <!-- Teaser Action -->
+        <!-- Teaser Action — first step visible, rest locked -->
         <div class="border border-red-200 bg-red-50 p-6 mb-6">
           <h2 class="text-lg font-bold text-red-600 mb-2">Your First Action</h2>
           <p class="text-stone-700">{{ session()!.teaserAction }}</p>
@@ -422,6 +460,22 @@ export class SessionResultComponent implements OnInit {
     if (s === 'RED') return 'High Risk \u2014 Significant gaps detected';
     if (s === 'GREEN') return 'Low Risk \u2014 Strong alignment';
     return 'Medium Risk \u2014 Some areas need work';
+  }
+
+  lossFrameTitle(): string {
+    const s = this.session()?.status;
+    const risk = this.riskPercent();
+    if (s === 'RED') return `At ${risk}% risk, your earning potential could drop significantly within 2 years`;
+    if (s === 'GREEN') return `Low risk now — but ${risk}% of your tasks are still automatable`;
+    return `At ${risk}% risk, competitors with AI skills are already pulling ahead`;
+  }
+
+  lossFrameMessage(): string {
+    const role = this.session()?.targetRole || 'your role';
+    const s = this.session()?.status;
+    if (s === 'RED') return `Professionals in ${role} who don't adapt now face salary cuts of 20-40% as automation increases. Your full defense plan is ready — don't leave without it.`;
+    if (s === 'GREEN') return `You're well positioned, but the gap between prepared and unprepared professionals in ${role} is widening fast. Lock in your advantage now.`;
+    return `${role} professionals who invest in career defense now will be 3x more competitive in 18 months. Your personalized plan has 8 steps — you've only completed 2.`;
   }
 
   upgradeTitle(): string {

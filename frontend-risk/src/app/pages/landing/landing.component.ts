@@ -265,15 +265,9 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
           </div>
         </div>
 
-        <!-- As Seen In -->
+        <!-- Origin badge -->
         <div>
-          <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-5">{{ 'landing.trustedBy' | translate }}</p>
-          <div class="flex flex-wrap items-center gap-8 text-stone-300">
-            <span class="text-lg font-bold tracking-tight">TechCrunch</span>
-            <span class="text-base font-bold tracking-tight">WIRED</span>
-            <span class="text-lg font-bold tracking-tight">Postimees</span>
-            <span class="text-sm font-bold tracking-tight">Startup Estonia</span>
-          </div>
+          <p class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'landing.trustedBy' | translate }}</p>
         </div>
       </div>
     </section>
