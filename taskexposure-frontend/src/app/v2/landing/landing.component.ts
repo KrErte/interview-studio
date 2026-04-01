@@ -37,13 +37,13 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       <main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div class="text-center max-w-2xl mx-auto mb-12">
           <h2 class="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Prepare for every interview
+            Are you actually ready for that interview?
           </h2>
           <p class="text-gray-400 text-lg sm:text-xl mb-2">
-            Get a clear assessment of your job market position
+            Find out in 2 minutes — before the recruiter does
           </p>
           <p class="text-gray-500 text-base">
-            Actionable 30-day plan. CV suggestions. Roles to target (and avoid).
+            Get your status. See your blockers. Fix them in 30 days.
           </p>
         </div>
 

@@ -93,32 +93,68 @@ import { AuthService } from '../../core/services/auth.service';
                   <p class="text-gray-300 mb-4">{{ session()!.teaserAction }}</p>
                   <div class="relative">
                     <p class="text-gray-400 blur-sm select-none">
-                      The full action plan includes 7 specific steps across 30 days, tailored to your situation.
-                      Each step has clear outcomes so you know exactly what success looks like.
+                      Your personalized {{ session()!.targetRole }} action plan includes specific daily steps,
+                      CV rewrites targeting {{ session()!.targetRole }} roles, and a list of companies to avoid.
+                      Day 1 starts with the highest-impact action based on your current blockers.
                     </p>
                     <div class="absolute inset-0 flex items-center justify-center">
                       <span class="bg-gray-950/90 text-emerald-400 px-4 py-2 rounded-lg text-sm font-medium">
-                        Unlock full plan
+                        6 more steps hidden
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
+              <!-- What you get after 30 days — social proof before paywall -->
+              <div class="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
+                <h3 class="text-lg font-semibold text-white mb-4">What happens after 30 days</h3>
+                <ul class="space-y-2 text-gray-300">
+                  <li class="flex items-start gap-2">
+                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    You should have interviews lined up — or know exactly what's blocking you.
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Your CV will be rewritten for {{ session()!.targetRole }} positions.
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    No more guessing — every day has a clear action and outcome.
+                  </li>
+                </ul>
+              </div>
+
               <!-- Payment CTA -->
               <div class="bg-gradient-to-r from-emerald-900/30 to-blue-900/30 border border-emerald-800/50 rounded-xl p-6 text-center">
-                <h3 class="text-xl font-semibold text-white mb-2">Get Your Complete 30-Day Plan</h3>
-                <p class="text-gray-400 mb-6">
-                  Specific actions, CV suggestions, roles to target (and avoid).
+                <h3 class="text-xl font-semibold text-white mb-2">
+                  Don't leave your {{ session()!.targetRole }} search to guesswork
+                </h3>
+                <p class="text-gray-400 mb-4">
+                  7 steps. 30 days. CV rewrite. Roles to avoid. Everything you need.
                 </p>
                 <button
                   (click)="pay()"
                   [disabled]="paying()"
-                  class="bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+                  class="bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-700 text-white font-bold px-10 py-4 rounded-lg transition-colors text-lg shadow-lg shadow-emerald-900/30"
                 >
-                  {{ paying() ? 'Processing...' : 'Unlock Full Plan — €9.99' }}
+                  {{ paying() ? 'Processing...' : 'Get My 30-Day Plan — €9.99' }}
                 </button>
-                <p class="text-gray-500 text-sm mt-3">One-time purchase. Instant access.</p>
+                <div class="flex items-center justify-center gap-4 mt-4 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    24h money-back guarantee
+                  </span>
+                  <span>One-time. No subscription.</span>
+                </div>
               </div>
             } @else {
               <!-- Paid content -->
