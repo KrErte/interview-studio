@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -50,8 +50,22 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
           <p class="text-stone-400 mt-1">{{ session()!.mode === 'ADVANCED' ? 'Advanced' : 'Quick' }} Assessment</p>
         </div>
 
-        <!-- Loss-frame warning -->
+        <!-- Countdown Timer + Loss-frame warning -->
         @if (!session()!.paid) {
+          <!-- Countdown urgency bar -->
+          <div class="border border-red-400 bg-red-600 text-white p-4 mb-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 flex-shrink-0 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="text-sm font-bold">Your personalized analysis is ready</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs opacity-80">Expires in</span>
+              <span class="font-mono font-bold text-lg tabular-nums bg-red-700 px-2 py-0.5">{{ countdownMinutes }}:{{ countdownSeconds }}</span>
+            </div>
+          </div>
+
           <div class="border border-red-300 bg-red-50 p-5 mb-6">
             <div class="flex items-start gap-3">
               <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,10 +77,54 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
               </div>
             </div>
           </div>
-        }
 
-        <!-- Progress Bar — career defense plan completion -->
-        @if (!session()!.paid) {
+          <!-- Before / After comparison -->
+          <div class="grid grid-cols-2 gap-0 mb-6 border border-stone-200">
+            <div class="p-5 bg-red-50 border-r border-stone-200">
+              <div class="text-xs text-red-600 font-bold uppercase tracking-widest mb-3">Without plan</div>
+              <div class="space-y-2.5">
+                <div class="flex items-center gap-2 text-sm text-red-800">
+                  <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  Gaps keep growing
+                </div>
+                <div class="flex items-center gap-2 text-sm text-red-800">
+                  <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  Competitors advance
+                </div>
+                <div class="flex items-center gap-2 text-sm text-red-800">
+                  <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  Risk score increases
+                </div>
+                <div class="flex items-center gap-2 text-sm text-red-800">
+                  <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  Same CV, fewer callbacks
+                </div>
+              </div>
+            </div>
+            <div class="p-5 bg-emerald-50">
+              <div class="text-xs text-emerald-700 font-bold uppercase tracking-widest mb-3">With full plan</div>
+              <div class="space-y-2.5">
+                <div class="flex items-center gap-2 text-sm text-emerald-900">
+                  <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  30-day action roadmap
+                </div>
+                <div class="flex items-center gap-2 text-sm text-emerald-900">
+                  <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  AI interview practice
+                </div>
+                <div class="flex items-center gap-2 text-sm text-emerald-900">
+                  <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  CV optimized for role
+                </div>
+                <div class="flex items-center gap-2 text-sm text-emerald-900">
+                  <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  Risk score drops 40%+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
           <div class="border border-stone-200 bg-white p-5 mb-6">
             <div class="flex items-center justify-between mb-3">
               <h3 class="text-sm font-bold text-stone-900">Your Career Defense Plan</h3>
@@ -386,7 +444,7 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
     </div>
   `
 })
-export class SessionResultComponent implements OnInit {
+export class SessionResultComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly sessionApi = inject(SessionApiService);
   private readonly analytics = inject(AnalyticsService);
@@ -401,6 +459,45 @@ export class SessionResultComponent implements OnInit {
   saving = signal(false);
   saved = signal(false);
 
+  // Countdown timer
+  countdownMinutes = '14';
+  countdownSeconds = '59';
+  private countdownTotal = 14 * 60 + 59;
+  private countdownInterval: any;
+
+  ngOnDestroy(): void {
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+  }
+
+  private startCountdown(): void {
+    // Check if there's a saved countdown for this session
+    const sessionId = this.route.snapshot.paramMap.get('id');
+    const savedEnd = sessionStorage.getItem('countdown_' + sessionId);
+    if (savedEnd) {
+      const remaining = Math.max(0, Math.floor((parseInt(savedEnd) - Date.now()) / 1000));
+      this.countdownTotal = remaining;
+    } else {
+      sessionStorage.setItem('countdown_' + sessionId, String(Date.now() + this.countdownTotal * 1000));
+    }
+
+    this.updateCountdownDisplay();
+    this.countdownInterval = setInterval(() => {
+      if (this.countdownTotal > 0) {
+        this.countdownTotal--;
+        this.updateCountdownDisplay();
+      } else {
+        clearInterval(this.countdownInterval);
+      }
+    }, 1000);
+  }
+
+  private updateCountdownDisplay(): void {
+    const m = Math.floor(this.countdownTotal / 60);
+    const s = this.countdownTotal % 60;
+    this.countdownMinutes = String(m).padStart(2, '0');
+    this.countdownSeconds = String(s).padStart(2, '0');
+  }
+
   ngOnInit() {
     this.paymentApi.getPricing().subscribe(tiers => {
       const symbol = tiers[0]?.currency === 'EUR' ? '€' : '$';
@@ -412,7 +509,7 @@ export class SessionResultComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.sessionApi.getSession(id).subscribe({
-        next: (s) => { this.session.set(s); this.loading.set(false); },
+        next: (s) => { this.session.set(s); this.loading.set(false); if (!s.paid) this.startCountdown(); },
         error: () => {
           const cached = sessionStorage.getItem('lastSession');
           if (cached) {

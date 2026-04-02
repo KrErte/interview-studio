@@ -124,6 +124,8 @@
     "riskDatabaseRisk": "risk",
     "riskDatabaseCheck": "Check",
     "riskDatabaseFooter": "Risk scores based on WEF, McKinsey, and OpenAI data. Your personal score may differ.",
+    "heroLiveToday": "assessments today",
+    "heroMobilePreviewHint": "Type your role to see your score",
     "heroStickyCta": "Is your career AI-proof?",
     "heroStickyCtaMobile": "Check your risk",
     "heroStickyCtaBtn": "Free Assessment →"
