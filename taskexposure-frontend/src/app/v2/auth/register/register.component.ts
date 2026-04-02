@@ -15,7 +15,7 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
       <header class="border-b border-gray-800">
         <div class="max-w-md mx-auto px-4 py-4">
           <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
-            Interview Studio
+            CareerRisk
           </a>
         </div>
       </header>

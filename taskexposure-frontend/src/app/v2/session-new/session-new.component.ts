@@ -15,7 +15,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       <header class="border-b border-gray-800">
         <div class="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
-            Interview Studio
+            CareerRisk
           </a>
           <div class="flex items-center gap-2 text-sm text-gray-500">
             Step {{ step() }} of 3
@@ -213,6 +213,15 @@ export class SessionNewComponent implements OnInit {
   ngOnInit(): void {
     this.analytics.pageView('/session/new', 'New Session (Simple)');
     this.analytics.track('questionnaire_started', { mode: 'simple' });
+
+    // Pre-fill role from landing page
+    const prefillRole = sessionStorage.getItem('prefill_role');
+    if (prefillRole) {
+      this.form.targetRole = prefillRole;
+      sessionStorage.removeItem('prefill_role');
+      // Auto-advance to step 2
+      this.step.set(2);
+    }
   }
 
   canProceed(): boolean {

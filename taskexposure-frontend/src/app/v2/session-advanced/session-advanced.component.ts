@@ -16,7 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
       <header class="border-b border-gray-800">
         <div class="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
-            Interview Studio
+            CareerRisk
           </a>
           <div class="flex items-center gap-4 text-sm">
             <span class="text-gray-500">Step {{ step() }} of 5</span>

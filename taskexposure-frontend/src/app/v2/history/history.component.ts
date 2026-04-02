@@ -15,7 +15,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       <header class="border-b border-gray-800">
         <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
-            Interview Studio
+            CareerRisk
           </a>
           <div class="flex items-center gap-4 text-sm">
             <span class="text-gray-400">{{ user()?.email }}</span>

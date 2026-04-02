@@ -13,7 +13,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       <header class="border-b border-gray-800">
         <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <a routerLink="/" class="text-xl font-bold text-white hover:text-emerald-400 transition-colors">
-            Interview Studio
+            CareerRisk
           </a>
           <a routerLink="/" class="text-gray-400 hover:text-white text-sm">Back to Home</a>
         </div>
@@ -174,7 +174,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       <!-- Footer -->
       <footer class="border-t border-gray-800 py-6">
         <div class="max-w-4xl mx-auto px-4 text-center text-sm text-gray-500">
-          <p>Interview Studio V2 — Simple tools for job seekers.</p>
+          <p>CareerRisk.ee — Know your real status before you apply.</p>
         </div>
       </footer>
     </div>
