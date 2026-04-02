@@ -112,6 +112,18 @@
     "heroTrustNoAccount": "Kontot pole vaja",
     "heroTrustPrivate": "Tulemused on privaatsed",
     "heroPeopleChecked": "inimest kontrollis t\u00e4na oma riski",
+    "heroInputLabel": "Sisesta oma ametinimetus",
+    "heroInputPlaceholder": "nt. Turundusjuht, Tarkvaraarendaja...",
+    "heroInputBtn": "Kontrolli riski \u2192",
+    "actThisMonth": "Tegutse sel kuul",
+    "othersInField": "Teised sinu valdkonnas",
+    "atHighRisk": "k\u00f5rge riskiga",
+    "riskDatabase": "RISKIANDMEBAAS",
+    "riskDatabaseSubtitle": "Milline on sinu ameti automatiseerimisrisk?",
+    "riskDatabaseDesc": "Kliki oma ametile allpool v\u00f5i sisesta see \u00fclal. Saa isiklik riskihinnang 3 minutiga.",
+    "riskDatabaseRisk": "risk",
+    "riskDatabaseCheck": "Kontrolli",
+    "riskDatabaseFooter": "Riskiskoorid p\u00f5hinevad WEF, McKinsey ja OpenAI andmetel. Sinu isiklik skoor v\u00f5ib erineda.",
     "heroStickyCta": "Kas sinu karj\u00e4\u00e4r on AI-kindel?",
     "heroStickyCtaMobile": "Kontrolli oma riski",
     "heroStickyCtaBtn": "Tasuta hindamine \u2192"
@@ -315,6 +327,12 @@
     "backToAnalysis": "Tagasi anal\u00fc\u00fcsi juurde",
     "readinessNote": "Tulevikuvalmidus arvestab CV-d, intervjuusignaale ja hiljutist \u00f5ppimist.",
     "selected": "Valitud"
+  },
+  "exitIntent": {
+    "title": "Oota \u2014 \u00e4ra lahku teadmata oma riski",
+    "desc": "47% professionaalidest on k\u00f5rge automatiseerimisriskiga. 3-minutiline kontroll v\u00f5ib muuta sinu karj\u00e4\u00e4riplaane.",
+    "cta": "Kontrolli oma riski \u2014 Tasuta",
+    "dismiss": "Ei t\u00e4na, v\u00f5tan riski"
   },
   "footer": {
     "product": "Toode",

@@ -1,11 +1,12 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-exit-intent',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     @if (visible()) {
       <div class="fixed inset-0 z-[9999] flex items-center justify-center p-4" (click)="dismiss()">
@@ -23,15 +24,15 @@ import { RouterLink } from '@angular/router';
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h3 class="text-xl font-black text-stone-900 mb-2">Wait — don't leave without knowing your risk</h3>
+            <h3 class="text-xl font-black text-stone-900 mb-2">{{ 'exitIntent.title' | translate }}</h3>
             <p class="text-sm text-stone-500 mb-6 leading-relaxed">
-              47% of professionals are at high automation risk. A 3-minute check could change how you plan your career.
+              {{ 'exitIntent.desc' | translate }}
             </p>
             <a routerLink="/session/new" (click)="dismiss()" class="block w-full py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold transition-colors text-center mb-3">
-              Check My Risk — Free
+              {{ 'exitIntent.cta' | translate }}
             </a>
             <button (click)="dismiss()" class="text-xs text-stone-400 hover:text-stone-600 transition-colors">
-              No thanks, I'll take my chances
+              {{ 'exitIntent.dismiss' | translate }}
             </button>
           </div>
         </div>
@@ -51,7 +52,6 @@ export class ExitIntentComponent {
   @HostListener('document:mouseleave', ['$event'])
   onMouseLeave(event: MouseEvent): void {
     if (this.triggered) return;
-    // Only trigger when mouse exits toward the top (closing tab)
     if (event.clientY <= 0) {
       this.triggered = true;
       this.visible.set(true);

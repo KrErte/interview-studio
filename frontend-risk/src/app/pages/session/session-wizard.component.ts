@@ -1,7 +1,7 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SessionApiService, QAPair } from '../../core/services/session-api.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -187,9 +187,10 @@ import { TranslateModule } from '@ngx-translate/core';
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
-export class SessionWizardComponent {
+export class SessionWizardComponent implements OnInit {
   private readonly sessionApi = inject(SessionApiService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly analytics = inject(AnalyticsService);
 
   step = signal(1);
@@ -211,6 +212,14 @@ export class SessionWizardComponent {
 
   displayStep = computed(() => Math.min(this.step(), 4));
   totalSteps = computed(() => 4);
+
+  ngOnInit(): void {
+    const role = this.route.snapshot.queryParamMap.get('role');
+    if (role) {
+      this.targetRole = role;
+      this.step.set(2); // Skip step 1 since role is already provided
+    }
+  }
 
   suggestedRoles = [
     'Software Engineer', 'Product Manager', 'Data Analyst', 'UX Designer',

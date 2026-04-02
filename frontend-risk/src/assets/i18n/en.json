@@ -112,6 +112,18 @@
     "heroTrustNoAccount": "No account needed",
     "heroTrustPrivate": "Results are private",
     "heroPeopleChecked": "people checked their risk today",
+    "heroInputLabel": "Enter your job title",
+    "heroInputPlaceholder": "e.g. Marketing Manager, Software Engineer...",
+    "heroInputBtn": "Check risk →",
+    "actThisMonth": "Act this month",
+    "othersInField": "Others in your field",
+    "atHighRisk": "at high risk",
+    "riskDatabase": "RISK DATABASE",
+    "riskDatabaseSubtitle": "What's the automation risk for your role?",
+    "riskDatabaseDesc": "Click your role below or type it above. Get a personalized risk assessment in 3 minutes.",
+    "riskDatabaseRisk": "risk",
+    "riskDatabaseCheck": "Check",
+    "riskDatabaseFooter": "Risk scores based on WEF, McKinsey, and OpenAI data. Your personal score may differ.",
     "heroStickyCta": "Is your career AI-proof?",
     "heroStickyCtaMobile": "Check your risk",
     "heroStickyCtaBtn": "Free Assessment →"
@@ -315,6 +327,12 @@
     "backToAnalysis": "Back to analysis",
     "readinessNote": "Future-readiness considers CV, interview signals, and recent learning.",
     "selected": "Selected"
+  },
+  "exitIntent": {
+    "title": "Wait — don't leave without knowing your risk",
+    "desc": "47% of professionals are at high automation risk. A 3-minute check could change how you plan your career.",
+    "cta": "Check My Risk — Free",
+    "dismiss": "No thanks, I'll take my chances"
   },
   "footer": {
     "product": "Product",

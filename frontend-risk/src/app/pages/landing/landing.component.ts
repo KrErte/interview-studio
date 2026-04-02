@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth-api.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaymentApiService, PricingTier } from '../../core/services/payment-api.service';
-import { SocialProofToastComponent } from '../../shared/social-proof-toast/social-proof-toast.component';
 import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, SocialProofToastComponent, ExitIntentComponent],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, ExitIntentComponent],
   template: `
     <!-- Sticky CTA bar — appears after scrolling past hero -->
     @if (showStickyCta) {
@@ -23,56 +23,64 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
       </div>
     }
 
-    <!-- Hero Section — Editorial Split Screen -->
+    <!-- Hero Section — Interactive Role Input -->
     <section class="min-h-[calc(100vh-57px)] flex flex-col justify-center px-6 border-b border-stone-200 relative overflow-hidden">
-      <!-- Subtle editorial texture -->
       <span class="absolute top-[110px] right-[17%] text-xl text-stone-200 rotate-12 pointer-events-none select-none hidden lg:block">✦</span>
       <span class="absolute bottom-[180px] left-[5%] text-sm text-stone-200 -rotate-6 pointer-events-none select-none hidden lg:block">◆</span>
 
       <div class="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center py-24">
 
-        <!-- LEFT: Text + CTA -->
+        <!-- LEFT: Text + Interactive Input -->
         <div class="space-y-7">
-          <!-- Headline — fear + doubt, editorial weight -->
           <h1 class="text-5xl md:text-6xl font-black text-stone-900 leading-[1.02] tracking-tight">
             {{ 'landing.heroHeadline1' | translate }}<br>
             {{ 'landing.heroHeadline2' | translate }} <span class="text-red-600">{{ 'landing.heroHeadline3' | translate }}</span>
           </h1>
 
-          <!-- Subheadline -->
           <p class="text-lg text-stone-600 leading-relaxed max-w-md">
             {{ 'landing.heroSubtext1' | translate }} <strong class="text-stone-900">{{ jobsAtRisk }}% {{ 'landing.heroSubtext2' | translate }}</strong> {{ 'landing.heroSubtext3' | translate }}
             <em class="text-stone-500 not-italic">{{ 'landing.heroSubtext4' | translate }}</em>
           </p>
 
-          <!-- CTA — editorial buttons, sharp corners -->
-          <div class="flex flex-row gap-3 pt-1">
-            <a
-              routerLink="/session/new"
-              class="whitespace-nowrap px-6 py-3 bg-red-600 hover:bg-red-700 text-sm font-bold text-white transition-colors cursor-pointer flex items-center gap-2"
-            >
-              {{ 'landing.heroCta' | translate }}
-            </a>
-            <a
-              routerLink="/start"
-              class="whitespace-nowrap px-5 py-3 text-sm font-medium text-stone-600 hover:text-stone-900 border border-stone-300 hover:border-stone-900 transition-colors cursor-pointer flex items-center"
-            >
-              {{ 'landing.heroCtaSecondary' | translate }}
-            </a>
+          <!-- Inline role input — type and go -->
+          <div class="pt-1">
+            <label class="text-xs text-stone-500 uppercase tracking-widest mb-2 block">{{ 'landing.heroInputLabel' | translate }}</label>
+            <div class="flex gap-0">
+              <input
+                type="text"
+                [(ngModel)]="heroRole"
+                (keydown.enter)="goWithRole()"
+                [placeholder]="'landing.heroInputPlaceholder' | translate"
+                class="flex-1 px-5 py-4 border border-stone-300 border-r-0 text-stone-900 placeholder-stone-400 focus:border-stone-900 focus:outline-none text-base"
+              >
+              <button
+                (click)="goWithRole()"
+                class="px-6 py-4 bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition-colors whitespace-nowrap"
+              >
+                {{ 'landing.heroInputBtn' | translate }}
+              </button>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-3">
+              @for (role of quickRoles; track role) {
+                <button
+                  (click)="heroRole = role; goWithRole()"
+                  class="px-3 py-1.5 text-xs border border-stone-200 text-stone-500 hover:border-stone-900 hover:text-stone-900 transition-colors bg-white"
+                >
+                  {{ role }}
+                </button>
+              }
+            </div>
           </div>
 
-          <!-- Trust — plain text, no icons -->
+          <!-- Trust — plain text -->
           <div class="flex flex-row flex-wrap gap-x-4 gap-y-1 text-xs text-stone-400 pt-1">
             <span>{{ 'landing.heroTrustFree' | translate }}</span><span>·</span><span>{{ 'landing.heroTrust3min' | translate }}</span><span>·</span><span>{{ 'landing.heroTrustNoAccount' | translate }}</span><span>·</span><span>{{ 'landing.heroTrustPrivate' | translate }}</span>
           </div>
         </div>
 
-        <!-- RIGHT: Product preview mock — HIGH RISK to trigger fear -->
+        <!-- RIGHT: Product preview mock -->
         <div class="relative hidden md:block">
-
-          <!-- Main result card — editorial white -->
           <div class="relative border border-stone-300 bg-white shadow-sm overflow-hidden">
-            <!-- Card header -->
             <div class="flex items-center justify-between px-5 py-4 border-b border-stone-200 bg-stone-50">
               <div>
                 <div class="text-[10px] text-stone-400 uppercase tracking-widest mb-0.5">Risk Assessment</div>
@@ -80,8 +88,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
               </div>
               <span class="px-2.5 py-1 bg-red-50 text-red-700 text-xs font-bold border border-red-200">HIGH RISK</span>
             </div>
-
-            <!-- Score block -->
             <div class="px-5 pt-5 pb-4">
               <div class="flex items-end gap-3 mb-3">
                 <span class="text-6xl font-black text-red-600 leading-none">71%</span>
@@ -94,8 +100,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
                 <span>Low</span><span>High</span>
               </div>
             </div>
-
-            <!-- Action items — last one blurred/locked -->
             <div class="px-5 pb-5 space-y-2">
               <div class="text-[10px] text-stone-400 uppercase tracking-widest mb-2">Your 30-Day Plan</div>
               <div class="flex items-start gap-2.5 p-2.5 bg-stone-50 border border-stone-100">
@@ -106,7 +110,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
                 <span class="text-stone-900 text-xs mt-0.5 shrink-0 font-bold">→</span>
                 <span class="text-xs text-stone-600 leading-relaxed">Get certified in prompt engineering this month</span>
               </div>
-              <!-- Blurred paywall tease -->
               <div class="relative">
                 <div class="flex items-start gap-2.5 p-2.5 bg-stone-50 border border-stone-100 blur-sm select-none">
                   <span class="text-stone-300 text-xs mt-0.5 shrink-0 font-bold">→</span>
@@ -118,22 +121,17 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
               </div>
             </div>
           </div>
-
-          <!-- Floating urgency badge — editorial red label -->
           <div class="absolute -top-3 -right-3 px-3 py-1.5 bg-red-600 text-white text-[11px] font-bold -rotate-1">
-            ⚠ Act this month
+            ⚠ {{ 'landing.actThisMonth' | translate }}
           </div>
-
-          <!-- Floating social proof — white card -->
           <div class="absolute -bottom-4 -left-4 px-4 py-2.5 bg-white border border-stone-200 shadow-md">
-            <div class="text-[10px] text-stone-400 mb-0.5">Others in your field</div>
-            <div class="text-sm font-black text-stone-900">68% <span class="text-red-600 text-xs font-normal">↑ at high risk</span></div>
+            <div class="text-[10px] text-stone-400 mb-0.5">{{ 'landing.othersInField' | translate }}</div>
+            <div class="text-sm font-black text-stone-900">68% <span class="text-red-600 text-xs font-normal">↑ {{ 'landing.atHighRisk' | translate }}</span></div>
           </div>
         </div>
 
       </div>
 
-      <!-- Scroll Indicator -->
       <div class="absolute bottom-8 left-[49%] -translate-x-1/2 animate-bounce">
         <svg class="w-5 h-5 text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -198,76 +196,43 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
       </div>
     </section>
 
-    <!-- Testimonials — editorial quote style -->
+    <!-- Role Risk Database — interactive grid replaces fake testimonials -->
     <section class="py-24 px-6 border-b border-stone-200 bg-stone-50">
       <div class="max-w-6xl mx-auto">
         <div class="mb-14">
-          <div class="text-[10px] text-stone-400 uppercase tracking-widest mb-3">{{ 'landing.testimonials' | translate }}</div>
-          <h2 class="text-2xl font-black text-stone-900">{{ 'landing.testimonialsSubtitle' | translate }}</h2>
+          <div class="text-[10px] text-stone-400 uppercase tracking-widest mb-3">{{ 'landing.riskDatabase' | translate }}</div>
+          <h2 class="text-2xl md:text-3xl font-black text-stone-900">{{ 'landing.riskDatabaseSubtitle' | translate }}</h2>
+          <p class="text-stone-500 mt-2 max-w-xl">{{ 'landing.riskDatabaseDesc' | translate }}</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-0 border border-stone-200 bg-white mb-14">
-          <!-- Testimonial 1 -->
-          <div class="p-6 border-b md:border-b-0 md:border-r border-stone-200">
-            <div class="flex items-center gap-0.5 text-amber-500 mb-4">
-              <svg *ngFor="let s of [1,2,3,4,5]" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-            </div>
-            <p class="text-stone-700 text-sm leading-relaxed mb-5 italic">
-              "{{ 'landing.testimonial1Text' | translate }}"
-            </p>
-            <div class="flex items-center gap-3 pt-4 border-t border-stone-100">
-              <div class="w-8 h-8 bg-stone-900 flex items-center justify-center text-xs font-bold text-white shrink-0">KT</div>
-              <div>
-                <div class="text-sm font-semibold text-stone-900">{{ 'landing.testimonial1Name' | translate }}</div>
-                <div class="text-xs text-stone-400">{{ 'landing.testimonial1Role' | translate }}</div>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
+          @for (role of riskRoles; track role.name) {
+            <button
+              (click)="heroRole = role.name; goWithRole()"
+              class="group p-5 border bg-white text-left transition-all hover:border-stone-900 hover:shadow-sm"
+              [class]="role.level === 'HIGH' ? 'border-red-200' : role.level === 'MEDIUM' ? 'border-amber-200' : 'border-emerald-200'"
+            >
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-bold text-stone-900 group-hover:text-red-600 transition-colors">{{ role.name }}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5"
+                  [class]="role.level === 'HIGH' ? 'bg-red-50 text-red-700 border border-red-200' : role.level === 'MEDIUM' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'"
+                >{{ role.level }}</span>
               </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 2 — 4 stars -->
-          <div class="p-6 border-b md:border-b-0 md:border-r border-stone-200">
-            <div class="flex items-center gap-0.5 text-amber-500 mb-4">
-              <svg *ngFor="let s of [1,2,3,4]" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-            </div>
-            <p class="text-stone-700 text-sm leading-relaxed mb-5 italic">
-              "{{ 'landing.testimonial2Text' | translate }}"
-            </p>
-            <div class="flex items-center gap-3 pt-4 border-t border-stone-100">
-              <div class="w-9 h-9 bg-stone-800 flex items-center justify-center text-xs font-bold text-white shrink-0">MJ</div>
-              <div>
-                <div class="text-sm font-semibold text-stone-900">{{ 'landing.testimonial2Name' | translate }}</div>
-                <div class="text-xs text-stone-400">{{ 'landing.testimonial2Role' | translate }}</div>
+              <div class="h-1 bg-stone-100 mb-2">
+                <div class="h-1 transition-all"
+                  [style.width.%]="role.risk"
+                  [class]="role.level === 'HIGH' ? 'bg-red-500' : role.level === 'MEDIUM' ? 'bg-amber-500' : 'bg-emerald-500'"></div>
               </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 3 -->
-          <div class="p-6">
-            <div class="flex items-center gap-0.5 text-amber-500 mb-4">
-              <svg *ngFor="let s of [1,2,3,4,5]" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-            </div>
-            <p class="text-stone-700 text-sm leading-relaxed mb-5 italic">
-              "{{ 'landing.testimonial3Text' | translate }}"
-            </p>
-            <div class="flex items-center gap-3 pt-4 border-t border-stone-100">
-              <div class="w-8 h-8 bg-stone-700 flex items-center justify-center text-xs font-bold text-white shrink-0">AL</div>
-              <div>
-                <div class="text-sm font-semibold text-stone-900">{{ 'landing.testimonial3Name' | translate }}</div>
-                <div class="text-xs text-stone-400">{{ 'landing.testimonial3Role' | translate }}</div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-stone-400">{{ role.risk }}% {{ 'landing.riskDatabaseRisk' | translate }}</span>
+                <span class="text-xs text-stone-400 group-hover:text-stone-900 transition-colors">{{ 'landing.riskDatabaseCheck' | translate }} →</span>
               </div>
-            </div>
-          </div>
+            </button>
+          }
         </div>
 
-        <!-- Origin badge -->
-        <div>
-          <p class="text-[10px] text-stone-400 uppercase tracking-widest">{{ 'landing.trustedBy' | translate }}</p>
+        <div class="flex items-center gap-4">
+          <p class="text-xs text-stone-400">{{ 'landing.riskDatabaseFooter' | translate }}</p>
         </div>
       </div>
     </section>
@@ -320,7 +285,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
       </div>
     </section>
 
-    <app-social-proof-toast />
     <app-exit-intent />
   `,
   styles: [`
@@ -341,14 +305,32 @@ export class LandingComponent implements OnInit, OnDestroy {
   meterProgress = 5;
   displayScore = 5;
   needleAngle = -81;
+  heroRole = '';
 
   private readonly paymentApi = inject(PaymentApiService);
+  private readonly translate = inject(TranslateService);
   readonly starterPrice = signal('€7.49');
   readonly proPrice = signal('€14.99');
 
   private animationInterval: any;
 
   private readonly cdr = inject(ChangeDetectorRef);
+
+  // Quick role suggestions shown under the input
+  quickRoles = ['Software Engineer', 'Marketing Manager', 'Data Analyst', 'Project Manager', 'Accountant', 'Teacher'];
+
+  // Role risk database — replaces fake testimonials
+  riskRoles = [
+    { name: 'Marketing Manager', risk: 71, level: 'HIGH' },
+    { name: 'Accountant', risk: 82, level: 'HIGH' },
+    { name: 'Content Writer', risk: 76, level: 'HIGH' },
+    { name: 'Software Engineer', risk: 34, level: 'MEDIUM' },
+    { name: 'Data Analyst', risk: 61, level: 'MEDIUM' },
+    { name: 'Project Manager', risk: 52, level: 'MEDIUM' },
+    { name: 'UX Designer', risk: 43, level: 'MEDIUM' },
+    { name: 'Nurse', risk: 12, level: 'LOW' },
+    { name: 'Electrician', risk: 8, level: 'LOW' },
+  ];
 
   constructor(private auth: AuthService, private router: Router) {}
 
@@ -396,8 +378,16 @@ export class LandingComponent implements OnInit, OnDestroy {
     }, duration / steps);
   }
 
+  goWithRole(): void {
+    const role = this.heroRole.trim();
+    if (role) {
+      this.router.navigate(['/session/new'], { queryParams: { role } });
+    } else {
+      this.router.navigate(['/session/new']);
+    }
+  }
+
   startAssessment(): void {
-    // Guide users through skill assessment questionnaire first
     this.router.navigateByUrl('/start');
   }
 }
