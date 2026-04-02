@@ -154,29 +154,10 @@ import { TranslateModule } from '@ngx-translate/core';
               {{ 'common.next' | translate }}
             </button>
           } @else if (step() === 3) {
-            <button (click)="startClarifyingQuestions()" [disabled]="!canProceed()"
-              class="px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold disabled:opacity-30 transition-all text-sm">
-              {{ 'common.next' | translate }}
+            <button (click)="submit()" [disabled]="!canProceed() || submitting()"
+              class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold disabled:opacity-30 transition-all text-sm">
+              @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
             </button>
-          } @else {
-            <!-- Clarifying questions step -->
-            @if (!clarifyingDone()) {
-              <button (click)="skipClarifying()"
-                class="px-6 py-3 border border-stone-300 text-stone-600 hover:border-stone-900 hover:text-stone-900 transition-colors text-sm">
-                {{ 'common.skip' | translate }}
-              </button>
-              <button (click)="submitClarifyingAnswer()" [disabled]="!currentAnswer.trim() || loadingQuestion()"
-                class="px-8 py-3 bg-stone-900 hover:bg-stone-800 text-white font-bold disabled:opacity-30 transition-all text-sm">
-                @if (loadingQuestion()) { {{ 'wizard.clarifying.generating' | translate }} }
-                @else if (currentQuestionNumber() >= totalClarifyingQuestions()) { {{ 'wizard.clarifying.finishAndAssess' | translate }} }
-                @else { {{ 'wizard.clarifying.answerAndNext' | translate }} }
-              </button>
-            } @else {
-              <button (click)="submit()" [disabled]="submitting()"
-                class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold disabled:opacity-30 transition-all text-sm">
-                @if (submitting()) { {{ 'wizard.analyzing' | translate }} } @else { {{ 'wizard.getAssessment' | translate }} }
-              </button>
-            }
           }
         </div>
       </div>
@@ -210,8 +191,8 @@ export class SessionWizardComponent implements OnInit {
   experienceLevel = '';
   mainChallenge = '';
 
-  displayStep = computed(() => Math.min(this.step(), 4));
-  totalSteps = computed(() => 4);
+  displayStep = computed(() => Math.min(this.step(), 3));
+  totalSteps = computed(() => 3);
 
   ngOnInit(): void {
     const role = this.route.snapshot.queryParamMap.get('role');

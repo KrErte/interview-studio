@@ -403,16 +403,16 @@ import { PaymentApiService } from '../../core/services/payment-api.service';
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-              <a routerLink="/pricing"
-                class="flex-1 block px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800 hover:scale-[1.02]">
-                <div class="text-white font-bold text-lg">Unlock Full Report — {{ starterPrice() }}</div>
+              <button (click)="checkout('STARTER')" [disabled]="checkoutLoading()"
+                class="flex-1 px-6 py-4 bg-stone-900 text-center transition-all hover:bg-stone-800 hover:scale-[1.02] disabled:opacity-50 cursor-pointer">
+                <div class="text-white font-bold text-lg">{{ checkoutLoading() ? 'Redirecting...' : 'Unlock Full Report — ' + starterPrice() }}</div>
                 <div class="text-stone-400 text-sm">One-time, no subscription</div>
-              </a>
-              <a routerLink="/pricing"
-                class="flex-1 block px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700 hover:scale-[1.02] ring-2 ring-red-300 ring-offset-2">
-                <div class="text-white font-bold text-lg">Get Pro — {{ proPrice() }} per year</div>
+              </button>
+              <button (click)="checkout('ARENA_PRO')" [disabled]="checkoutLoading()"
+                class="flex-1 px-6 py-4 bg-red-600 text-center transition-all hover:bg-red-700 hover:scale-[1.02] ring-2 ring-red-300 ring-offset-2 disabled:opacity-50 cursor-pointer">
+                <div class="text-white font-bold text-lg">{{ checkoutLoading() ? 'Redirecting...' : 'Get Pro — ' + proPrice() + ' per year' }}</div>
                 <div class="text-red-100 text-sm">Interview simulator + quarterly score updates</div>
-              </a>
+              </button>
             </div>
 
             <div class="flex items-center justify-center gap-2 mt-4 text-xs text-stone-400">
@@ -478,8 +478,11 @@ export class SessionResultComponent implements OnInit, OnDestroy {
   private readonly sessionApi = inject(SessionApiService);
   private readonly analytics = inject(AnalyticsService);
   private readonly paymentApi = inject(PaymentApiService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   loading = signal(true);
+  checkoutLoading = signal(false);
   session = signal<SessionResponse | null>(null);
   copied = signal(false);
   starterPrice = signal('$9');
@@ -623,6 +626,35 @@ export class SessionResultComponent implements OnInit, OnDestroy {
     if (s === 'RED') return 'Your assessment shows significant gaps. Get a full 30-day roadmap with step-by-step tasks, AI career tools, and interview prep to close those gaps fast.';
     if (s === 'GREEN') return 'You have strong alignment! Unlock your full plan to refine your positioning, optimize your CV, and practice with AI interview simulation.';
     return 'Get your complete 30-day action plan, task tracking, session history, shareable reports, and 8 AI-powered career tools.';
+  }
+
+  checkout(tier: string): void {
+    if (this.checkoutLoading()) return;
+
+    // If not authenticated, redirect to register with return URL
+    if (!this.authService.isAuthenticated()) {
+      const returnUrl = window.location.pathname;
+      this.router.navigate(['/register'], { queryParams: { returnUrl } });
+      return;
+    }
+
+    this.checkoutLoading.set(true);
+    this.analytics.trackEvent('checkout_initiated', { tier, sessionId: this.session()?.id });
+
+    const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = window.location.href;
+    const interval = tier === 'ARENA_PRO' ? 'year' : 'month';
+
+    this.paymentApi.createCheckout(tier, successUrl, cancelUrl, interval).subscribe({
+      next: (res) => {
+        window.location.href = res.checkoutUrl;
+      },
+      error: () => {
+        this.checkoutLoading.set(false);
+        // Fallback to pricing page
+        this.router.navigate(['/pricing']);
+      }
+    });
   }
 
   saveByEmail() {
