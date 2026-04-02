@@ -378,7 +378,7 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Auto-type effect
   autoTypePlaceholder = '';
-  private autoTypeRoles = ['Marketing Manager', 'Software Engineer', 'Accountant', 'Data Analyst', 'Project Manager', 'Teacher', 'UX Designer', 'Nurse'];
+  private autoTypeRoles = ['Marketing Manager', 'Accountant', 'Paralegal', 'Software Engineer', 'HR Manager', 'Data Analyst', 'Financial Analyst', 'Registered Nurse'];
   private autoTypeIndex = 0;
   private autoTypeCharIndex = 0;
   private autoTypeTimer: any;
@@ -401,17 +401,17 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly cdr = inject(ChangeDetectorRef);
 
-  quickRoles = ['Software Engineer', 'Marketing Manager', 'Data Analyst', 'Project Manager', 'Accountant', 'Teacher'];
+  quickRoles = ['Software Engineer', 'Marketing Manager', 'Data Analyst', 'Accountant', 'HR Manager', 'Paralegal'];
 
   riskRoles = [
-    { name: 'Marketing Manager', risk: 71, level: 'HIGH' },
     { name: 'Accountant', risk: 82, level: 'HIGH' },
+    { name: 'Paralegal', risk: 79, level: 'HIGH' },
     { name: 'Content Writer', risk: 76, level: 'HIGH' },
-    { name: 'Software Engineer', risk: 34, level: 'MEDIUM' },
+    { name: 'Marketing Manager', risk: 71, level: 'HIGH' },
+    { name: 'HR Manager', risk: 67, level: 'HIGH' },
     { name: 'Data Analyst', risk: 61, level: 'MEDIUM' },
-    { name: 'Project Manager', risk: 52, level: 'MEDIUM' },
-    { name: 'UX Designer', risk: 43, level: 'MEDIUM' },
-    { name: 'Nurse', risk: 12, level: 'LOW' },
+    { name: 'Software Engineer', risk: 34, level: 'MEDIUM' },
+    { name: 'Registered Nurse', risk: 12, level: 'LOW' },
     { name: 'Electrician', risk: 8, level: 'LOW' },
   ];
 
@@ -425,8 +425,14 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     'project manager': { score: 52, level: 'MEDIUM', peer: 46, a1: 'Develop technical fluency in your domain', a2: 'Focus on stakeholder management AI can not do' },
     'ux designer': { score: 43, level: 'MEDIUM', peer: 38, a1: 'Master AI-native design patterns and tools', a2: 'Shift to research and strategy from wireframing' },
     'nurse': { score: 12, level: 'LOW', peer: 8, a1: 'Your role has strong human-contact protection', a2: 'Consider specializing to increase earning potential' },
+    'registered nurse': { score: 12, level: 'LOW', peer: 8, a1: 'Your role has strong human-contact protection', a2: 'Consider specializing to increase earning potential' },
     'electrician': { score: 8, level: 'LOW', peer: 5, a1: 'Physical skilled trades are highly automation-resistant', a2: 'Add smart home / EV charging expertise for premium rates' },
     'teacher': { score: 28, level: 'MEDIUM', peer: 22, a1: 'Integrate AI tools into your teaching methods', a2: 'Focus on mentoring and social-emotional skills' },
+    'paralegal': { score: 79, level: 'HIGH', peer: 73, a1: 'AI is already drafting contracts and reviewing docs faster', a2: 'Pivot toward litigation strategy and client advisory' },
+    'hr manager': { score: 67, level: 'HIGH', peer: 61, a1: 'AI is automating screening, scheduling, and onboarding', a2: 'Focus on culture strategy and employee experience' },
+    'financial analyst': { score: 72, level: 'HIGH', peer: 65, a1: 'AI models are replacing manual financial modeling', a2: 'Move into strategic advisory and stakeholder communication' },
+    'customer service rep': { score: 88, level: 'HIGH', peer: 82, a1: 'Chatbots are replacing 80% of routine support queries', a2: 'Upskill to customer success or account management' },
+    'graphic designer': { score: 69, level: 'HIGH', peer: 62, a1: 'AI image tools are disrupting production design work', a2: 'Specialize in brand strategy and creative direction' },
   };
 
   constructor(private auth: AuthService, private router: Router) {}

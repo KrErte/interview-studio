@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 const DEFAULTS = {
-  title: 'CareerRisk — Is Your Career at Risk from AI?',
-  description: 'Free 3-minute AI career risk assessment. Find out if your job is at risk and get a personalized action plan.',
+  title: 'CareerRisk — Will AI Replace Your Job? Free Risk Score',
+  description: '47% of US jobs are at high risk from AI. Check your automation risk score in 3 minutes — free. Get a personalized defense plan before it\'s too late.',
   image: 'https://careerrisk.ee/assets/og-image.png',
   url: 'https://careerrisk.ee/'
 };
