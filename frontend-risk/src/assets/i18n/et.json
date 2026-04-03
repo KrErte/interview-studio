@@ -101,10 +101,7 @@
     "heroHeadline1": "AI tuleb",
     "heroHeadline2": "sinu karj\u00e4\u00e4ri",
     "heroHeadline3": "j\u00e4rele.",
-    "heroSubtext1": "Juba",
-    "heroSubtext2": "rollidest",
-    "heroSubtext3": "nagu sinu oma automatiseeritakse. Uuri, mida sa kaotad \u2014",
-    "heroSubtext4": "enne kui on liiga hilja.",
+    "heroSubtitle": "AI automatiseerib ja kaotab rolle nagu sinu oma. Uuri, kus sa seisad — enne kui on liiga hilja.",
     "heroCta": "Kontrolli oma riski \u2192",
     "heroCtaSecondary": "Kuidas see t\u00f6\u00f6tab",
     "heroTrustFree": "Tasuta",
@@ -332,7 +329,7 @@
   },
   "exitIntent": {
     "title": "Oota \u2014 \u00e4ra lahku teadmata oma riski",
-    "desc": "47% professionaalidest on k\u00f5rge automatiseerimisriskiga. 3-minutiline kontroll v\u00f5ib muuta sinu karj\u00e4\u00e4riplaane.",
+    "desc": "Ettev\u00f5tted asendavad vaikselt rolle AI-ga. 3-minutiline kontroll v\u00f5ib muuta sinu karj\u00e4\u00e4riplaane.",
     "cta": "Kontrolli oma riski \u2014 Tasuta",
     "dismiss": "Ei t\u00e4na, v\u00f5tan riski"
   },

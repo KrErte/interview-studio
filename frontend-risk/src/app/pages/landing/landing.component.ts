@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,8 +38,7 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
           </h1>
 
           <p class="text-base sm:text-lg text-stone-600 leading-relaxed max-w-md">
-            {{ 'landing.heroSubtext1' | translate }} <strong class="text-stone-900">{{ jobsAtRisk }}% {{ 'landing.heroSubtext2' | translate }}</strong> {{ 'landing.heroSubtext3' | translate }}
-            <em class="text-stone-500 not-italic">{{ 'landing.heroSubtext4' | translate }}</em>
+            {{ 'landing.heroSubtitle' | translate }}
           </p>
 
           <!-- Inline role input with auto-type -->
@@ -57,13 +56,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
                   class="w-full px-5 py-4 border border-stone-300 border-r-0 text-stone-900 placeholder-stone-400 focus:border-stone-900 focus:outline-none text-base"
                   [placeholder]="autoTypePlaceholder"
                 >
-                <!-- Live assessment count -->
-                @if (!heroRole) {
-                  <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-[11px] text-stone-400">{{ liveCount }} {{ 'landing.heroLiveToday' | translate }}</span>
-                  </div>
-                }
               </div>
               <button
                 (click)="goWithRole()"
@@ -151,11 +143,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
             ⚠ {{ 'landing.actThisMonth' | translate }}
           </div>
 
-          <!-- Floating social proof -->
-          <div class="absolute -bottom-4 -left-4 px-4 py-2.5 bg-white border border-stone-200 shadow-md transition-all duration-500">
-            <div class="text-[10px] text-stone-400 mb-0.5">{{ 'landing.othersInField' | translate }}</div>
-            <div class="text-sm font-black text-stone-900">{{ previewPeerRisk }}% <span class="text-xs font-normal" [class]="previewRiskLevel === 'HIGH' ? 'text-red-600' : previewRiskLevel === 'LOW' ? 'text-emerald-600' : 'text-amber-600'">↑ {{ 'landing.atHighRisk' | translate }}</span></div>
-          </div>
         </div>
       </div>
 
@@ -197,29 +184,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
       </div>
     </section>
 
-    <!-- Stats Bar — with animated counters -->
-    <section class="border-b border-stone-200 bg-stone-100">
-      <div class="max-w-6xl mx-auto px-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-stone-200">
-          <div class="py-6 px-4 text-center">
-            <div class="text-3xl font-black text-stone-900">{{ animatedJobs }}M</div>
-            <div class="text-xs text-stone-500 mt-1">{{ 'landing.statsJobsDisplaced' | translate }}</div>
-          </div>
-          <div class="py-6 px-4 text-center">
-            <div class="text-3xl font-black text-red-600">{{ animatedPercent }}%</div>
-            <div class="text-xs text-stone-500 mt-1">{{ 'landing.statsJobsAtRisk' | translate }}</div>
-          </div>
-          <div class="py-6 px-4 text-center">
-            <div class="text-3xl font-black text-stone-900">{{ animatedNew }}M</div>
-            <div class="text-xs text-stone-500 mt-1">{{ 'landing.statsNewRoles' | translate }}</div>
-          </div>
-          <div class="py-6 px-4 text-center">
-            <div class="text-3xl font-black text-stone-900">3 min</div>
-            <div class="text-xs text-stone-500 mt-1">{{ 'landing.statsTimeToKnow' | translate }}</div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- How It Works -->
     <section class="py-24 px-6 border-b border-stone-200">
@@ -338,10 +302,6 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
           >
             {{ 'landing.startFreeAssessment' | translate }}
           </a>
-          <div class="flex items-center gap-2 text-stone-500 text-sm py-4">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            {{ liveCount }} {{ 'landing.heroLiveToday' | translate }}
-          </div>
         </div>
       </div>
     </section>
@@ -361,7 +321,7 @@ import { ExitIntentComponent } from '../../shared/exit-intent/exit-intent.compon
     .animate-cta-pulse { animation: ctaPulse 2s infinite; }
   `]
 })
-export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LandingComponent implements OnInit, OnDestroy {
   @ViewChild('heroInput') heroInput!: ElementRef<HTMLInputElement>;
 
   showStickyCta = false;
@@ -384,15 +344,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
   private autoTypeTimer: any;
   private autoTypeActive = true;
 
-  // Animated counters
-  animatedJobs = '0.0';
-  animatedPercent = 0;
-  animatedNew = '0.0';
-  private statsAnimated = false;
-  private statsObserver: IntersectionObserver | null = null;
-
-  // Live counter
-  liveCount = 0;
 
   private readonly paymentApi = inject(PaymentApiService);
   private readonly translate = inject(TranslateService);
@@ -452,39 +403,11 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cdr.markForCheck();
     });
 
-    // Generate believable live count based on time of day
-    const hour = new Date().getHours();
-    const base = hour >= 9 && hour <= 20 ? 40 + Math.floor(Math.random() * 30) : 12 + Math.floor(Math.random() * 15);
-    this.liveCount = base;
-
-    // Slowly increment
-    setInterval(() => {
-      if (Math.random() > 0.7) {
-        this.liveCount++;
-        this.cdr.markForCheck();
-      }
-    }, 15000);
-
     this.startAutoType();
-  }
-
-  ngAfterViewInit(): void {
-    // Observe stats section for scroll-triggered animation
-    const statsSection = document.querySelector('.bg-stone-100');
-    if (statsSection) {
-      this.statsObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !this.statsAnimated) {
-          this.statsAnimated = true;
-          this.animateCounters();
-        }
-      }, { threshold: 0.5 });
-      this.statsObserver.observe(statsSection);
-    }
   }
 
   ngOnDestroy(): void {
     if (this.autoTypeTimer) clearTimeout(this.autoTypeTimer);
-    if (this.statsObserver) this.statsObserver.disconnect();
   }
 
   // --- Auto-type placeholder ---
@@ -573,26 +496,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
     return Math.abs(hash);
   }
 
-  // --- Animated counters ---
-  private animateCounters(): void {
-    const duration = 1500;
-    const frames = 40;
-    let frame = 0;
-
-    const interval = setInterval(() => {
-      frame++;
-      const progress = this.easeOut(frame / frames);
-      this.animatedJobs = (83.4 * progress).toFixed(1);
-      this.animatedPercent = Math.round(47 * progress);
-      this.animatedNew = (96.2 * progress).toFixed(1);
-      this.cdr.markForCheck();
-      if (frame >= frames) clearInterval(interval);
-    }, duration / frames);
-  }
-
-  private easeOut(t: number): number {
-    return 1 - Math.pow(1 - t, 3);
-  }
 
   goWithRole(): void {
     const role = this.heroRole.trim();

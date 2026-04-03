@@ -83,7 +83,7 @@ import { SeoService } from '../../core/services/seo.service';
         <!-- CTA -->
         <div class="border-2 border-red-200 bg-gradient-to-b from-red-50 to-white p-8 text-center">
           <h2 class="text-2xl font-black text-stone-900 mb-2">Is YOUR career at risk from AI?</h2>
-          <p class="text-stone-500 mb-6 max-w-md mx-auto">This person checked their risk. 47% of jobs are at high automation risk. Find out where you stand — free, in 3 minutes.</p>
+          <p class="text-stone-500 mb-6 max-w-md mx-auto">This person checked their AI risk. Find out where you stand — free, in 3 minutes.</p>
           <a routerLink="/session/new"
             class="inline-block px-8 py-4 bg-red-600 text-white font-bold text-lg hover:bg-red-700 transition-colors">
             Check My Career Risk — Free
