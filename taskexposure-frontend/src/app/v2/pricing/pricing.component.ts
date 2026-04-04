@@ -139,6 +139,12 @@ import { AnalyticsService } from '../../core/services/analytics.service';
               <p class="text-center text-gray-500 text-sm mt-3">
                 Pay after you see your free preview
               </p>
+              <div class="flex items-center justify-center gap-2 mt-4 text-emerald-400 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span>30-day money-back guarantee</span>
+              </div>
             </div>
           </div>
 
@@ -166,15 +172,30 @@ import { AnalyticsService } from '../../core/services/analytics.service';
                 <h3 class="text-white font-medium mb-2">Do I need an account?</h3>
                 <p class="text-gray-400">Not for the Quick Check. Create an account only if you want to save your history and share reports.</p>
               </div>
+
+              <div>
+                <h3 class="text-white font-medium mb-2">Who built this?</h3>
+                <p class="text-gray-400">CareerRisk is built by a small team in Estonia. Our scoring methodology is based on real hiring patterns and market signals — not generic AI advice. We use deterministic rules, not black-box models.</p>
+              </div>
             </div>
           </div>
         </div>
       </main>
 
       <!-- Footer -->
-      <footer class="border-t border-gray-800 py-6">
-        <div class="max-w-4xl mx-auto px-4 text-center text-sm text-gray-500">
-          <p>CareerRisk.ee — Know your real status before you apply.</p>
+      <footer class="border-t border-gray-800 py-8">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col items-center gap-4 text-sm text-gray-600">
+          <div class="flex flex-wrap justify-center gap-6">
+            <a routerLink="/pricing" class="hover:text-gray-400 transition-colors">Pricing</a>
+            <a routerLink="/privacy" class="hover:text-gray-400 transition-colors">Privacy Policy</a>
+            <a routerLink="/terms" class="hover:text-gray-400 transition-colors">Terms of Service</a>
+            <a href="mailto:hello&#64;careerrisk.ee" class="hover:text-gray-400 transition-colors">Contact</a>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <span>&copy; 2024 CareerRisk.ee</span>
+            <span>&bull;</span>
+            <span>Made in Estonia</span>
+          </div>
         </div>
       </footer>
     </div>

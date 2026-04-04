@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -30,22 +30,21 @@ import { AnalyticsService } from '../../core/services/analytics.service';
         <!-- Hero — single focused message -->
         <section class="px-4 pt-16 pb-12 sm:pt-24 sm:pb-16">
           <div class="max-w-2xl mx-auto text-center">
-            <!-- Urgency pill -->
-            <div class="inline-flex items-center gap-2 bg-red-950/60 border border-red-800/40 rounded-full px-4 py-1.5 mb-8">
-              <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-              <span class="text-red-400 text-sm font-medium">{{ activeSessions }} people checked today</span>
+            <!-- Clean badge -->
+            <div class="inline-flex items-center gap-2 bg-gray-800/60 border border-gray-700/40 rounded-full px-4 py-1.5 mb-8">
+              <span class="text-gray-300 text-sm font-medium">Free &bull; 2 min &bull; No signup</span>
             </div>
 
             <h1 class="text-4xl sm:text-6xl font-extrabold text-white leading-tight mb-6">
-              You're applying wrong.<br>
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-amber-400">Find out how.</span>
+              Not getting interviews?<br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Find out why.</span>
             </h1>
 
             <p class="text-gray-400 text-lg sm:text-xl mb-4 max-w-lg mx-auto">
-              Answer 3 questions. Get a brutally honest assessment of your job search — and a plan to fix it.
+              Answer 3 questions. Get an honest assessment of your job search — and a plan to fix it.
             </p>
 
-            <p class="text-gray-500 text-sm mb-8">Takes under 2 minutes. No signup needed.</p>
+            <p class="text-gray-500 text-sm mb-8">Used by job seekers in 30+ countries.</p>
 
             <!-- Inline role input + CTA -->
             <div class="max-w-md mx-auto">
@@ -194,21 +193,26 @@ import { AnalyticsService } from '../../core/services/analytics.service';
       </main>
 
       <!-- Footer -->
-      <footer class="border-t border-gray-800 py-6">
-        <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-600">
-          <p>CareerRisk.ee</p>
-          <div class="flex gap-6">
-            <a routerLink="/pricing" class="hover:text-gray-400">Pricing</a>
+      <footer class="border-t border-gray-800 py-8">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4 text-sm text-gray-600">
+          <div class="flex flex-wrap justify-center gap-6">
+            <a routerLink="/pricing" class="hover:text-gray-400 transition-colors">Pricing</a>
+            <a routerLink="/privacy" class="hover:text-gray-400 transition-colors">Privacy Policy</a>
+            <a routerLink="/terms" class="hover:text-gray-400 transition-colors">Terms of Service</a>
+            <a href="mailto:hello&#64;careerrisk.ee" class="hover:text-gray-400 transition-colors">Contact</a>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <span>&copy; 2024 CareerRisk.ee</span>
+            <span>&bull;</span>
+            <span>Made in Estonia</span>
           </div>
         </div>
       </footer>
     </div>
   `,
 })
-export class LandingComponent implements OnInit, OnDestroy {
+export class LandingComponent implements OnInit {
   targetRole = '';
-  activeSessions = 0;
-  private intervalId: any;
 
   quickRoles = [
     'Software Engineer',
@@ -227,17 +231,6 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.analytics.pageView('/', 'Landing');
-    // Simulate realistic active session count
-    this.activeSessions = 14 + Math.floor(Math.random() * 23);
-    this.intervalId = setInterval(() => {
-      this.activeSessions += Math.random() > 0.5 ? 1 : -1;
-      if (this.activeSessions < 10) this.activeSessions = 12;
-      if (this.activeSessions > 50) this.activeSessions = 38;
-    }, 30000);
-  }
-
-  ngOnDestroy(): void {
-    if (this.intervalId) clearInterval(this.intervalId);
   }
 
   isAuthenticated = this.authService.isAuthenticated;

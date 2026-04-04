@@ -62,6 +62,16 @@ export const routes: Routes = [
     loadComponent: () => import('./v2/pricing/pricing.component').then(m => m.PricingComponent),
   },
 
+  // Legal
+  {
+    path: 'privacy',
+    loadComponent: () => import('./v2/privacy/privacy.component').then(m => m.PrivacyComponent),
+  },
+  {
+    path: 'terms',
+    loadComponent: () => import('./v2/terms/terms.component').then(m => m.TermsComponent),
+  },
+
   // Auth
   {
     path: 'login',

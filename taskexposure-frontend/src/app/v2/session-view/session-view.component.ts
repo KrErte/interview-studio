@@ -286,6 +286,23 @@ import { AuthService } from '../../core/services/auth.service';
           </div>
         }
       </main>
+
+      <!-- Footer -->
+      <footer class="border-t border-gray-800 py-8">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col items-center gap-4 text-sm text-gray-600">
+          <div class="flex flex-wrap justify-center gap-6">
+            <a routerLink="/pricing" class="hover:text-gray-400 transition-colors">Pricing</a>
+            <a routerLink="/privacy" class="hover:text-gray-400 transition-colors">Privacy Policy</a>
+            <a routerLink="/terms" class="hover:text-gray-400 transition-colors">Terms of Service</a>
+            <a href="mailto:hello&#64;careerrisk.ee" class="hover:text-gray-400 transition-colors">Contact</a>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <span>&copy; 2024 CareerRisk.ee</span>
+            <span>&bull;</span>
+            <span>Made in Estonia</span>
+          </div>
+        </div>
+      </footer>
     </div>
   `,
 })
